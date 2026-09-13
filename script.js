@@ -1,89 +1,154 @@
-(()=>{
-'use strict';
-const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-const root=document.documentElement, body=document.body;
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const coarse=matchMedia('(pointer: coarse)').matches;
-
-// Load the final polish layer without making core content depend on it.
-if(!$('link[data-pk-upgrade]')){const l=document.createElement('link');l.rel='stylesheet';l.href='upgrade.css?v=1';l.dataset.pkUpgrade='1';document.head.appendChild(l)}
-
-// Upgrade the hero visual to the new styled design while keeping all hero text as real HTML.
-const heroArt=$('.hero-art');
-if(heroArt){heroArt.innerHTML=`
-  <div class="pk-ring r1" aria-hidden="true"></div><div class="pk-ring r2" aria-hidden="true"></div>
-  <span class="pk-node ai">AI</span><span class="pk-node api">API</span><span class="pk-node cloud">CLOUD</span><span class="pk-node iot">IoT</span>
-  <figure class="pk-poster tilt" data-tilt="3.2">
-    <img src="assets/images/poojana-hero.webp" width="800" height="1000" alt="Creative engineering portrait of Poojana Kaveesh" fetchpriority="high" decoding="async">
-    <div class="pk-poster-meta"><div><strong>Poojana Kaveesh</strong><small>Software Engineering Undergraduate</small></div><i class="pk-status-dot" aria-hidden="true"></i></div>
-    <div class="pk-float one">SLIIT<small>BSc (Hons) IT</small></div>
-    <div class="pk-float two">&lt;/&gt; AI + BACKEND<small>Build · Automate · Scale</small></div>
-    <div class="pk-float three">● OPEN TO WORK<small>Internships · Junior roles</small></div>
-  </figure>`}
-
-// Replace the abstract FloodGuard wave with a meaningful level/risk visualization.
-const water=$('.water');
-if(water){const panel=document.createElement('div');panel.className='telemetry-panel';panel.setAttribute('aria-label','FloodGuard demo water-level telemetry');panel.innerHTML=`
-  <div class="telemetry-head"><span>DEMO TELEMETRY</span><b>SAFE</b></div>
-  <div class="telemetry-reading"><strong>24.2 cm</strong><small>Water level</small></div>
-  <div class="telemetry-track" aria-hidden="true"><i></i></div>
-  <div class="telemetry-labels"><small>SAFE</small><small>WARNING</small><small>DANGER</small></div>`;water.replaceWith(panel)}
-
-// Theme.
-const themeToggle=$('#themeToggle');
-const saved=localStorage.getItem('pk-theme');
-if(saved) root.dataset.theme=saved; else if(matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme='light';
-function setTheme(next){root.dataset.theme=next;localStorage.setItem('pk-theme',next);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',next==='dark'?'#060913':'#f4f7fc')}
-themeToggle?.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
-
-// Intro: never leave the page hidden if storage/animation fails.
-const intro=$('#intro');
-if(intro){if(reduce||sessionStorage.getItem('pk-intro')) intro.classList.add('done'); else setTimeout(()=>{intro.classList.add('done');try{sessionStorage.setItem('pk-intro','1')}catch{}},1250)}
-
-// Header, progress and timeline.
-const header=$('#header'),progress=$('#progress');
-const timeline=$('#timeline'),timelineFill=$('#timelineFill');
-function updateTimeline(){if(!timeline||!timelineFill)return;const r=timeline.getBoundingClientRect(),span=r.height+innerHeight*.25,done=Math.max(0,Math.min(1,(innerHeight*.68-r.top)/span));timelineFill.style.height=`${done*100}%`}
-function onScroll(){const y=scrollY,max=Math.max(1,document.documentElement.scrollHeight-innerHeight);header?.classList.toggle('scrolled',y>26);if(progress)progress.style.width=`${Math.min(100,(y/max)*100)}%`;updateTimeline()}
-addEventListener('scroll',onScroll,{passive:true});onScroll();
-
-// Mobile navigation.
-const menuBtn=$('#menuToggle'),mobile=$('#mobileNav');
-function closeMenu(){mobile?.classList.remove('open');menuBtn?.classList.remove('open');menuBtn?.setAttribute('aria-expanded','false');body.classList.remove('menu-open')}
-menuBtn?.addEventListener('click',()=>{const open=!mobile?.classList.contains('open');mobile?.classList.toggle('open',open);menuBtn.classList.toggle('open',open);menuBtn.setAttribute('aria-expanded',String(open));body.classList.toggle('menu-open',open)});
-$$('#mobileNav a').forEach(a=>a.addEventListener('click',closeMenu));
-
-// Reveal choreography, progressive enhancement only.
-const reveals=$$('.reveal');
-if(!reduce&&'IntersectionObserver' in window){reveals.forEach(el=>{el.style.opacity='0';el.style.transform='translateY(22px)'});const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.animate([{opacity:0,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'});io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -35px'});reveals.forEach(el=>io.observe(el))}
-
-// Active navigation.
-const sections=$$('main section[id]'),navLinks=$$('.desktop-nav a'),navMap=new Map(navLinks.map(a=>[a.getAttribute('href')?.slice(1),a]));
-if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>{const v=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!v)return;navLinks.forEach(a=>a.classList.remove('active'));navMap.get(v.target.id)?.classList.add('active')},{rootMargin:'-35% 0px -55%',threshold:[0,.15,.4]});sections.forEach(s=>obs.observe(s))}
-
-// Rotating role.
-const role=$('#roleText'),roles=['Software Engineer','AI Systems Builder','Backend Developer','IoT Engineer'];let roleIndex=0;
-if(role&&!reduce)setInterval(()=>{role.classList.add('swap');setTimeout(()=>{roleIndex=(roleIndex+1)%roles.length;role.textContent=roles[roleIndex];role.classList.remove('swap')},190)},2700);
-
-// Subtle tilt and magnetic feedback.
-if(!coarse&&!reduce){$$('.tilt').forEach(card=>{const amount=Number(card.dataset.tilt||3);card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(1100px) rotateX(${(-y*amount).toFixed(2)}deg) rotateY(${(x*amount).toFixed(2)}deg) translateY(-2px)`});card.addEventListener('pointerleave',()=>card.style.transform='')});$$('.magnetic').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${((e.clientX-r.left-r.width/2)*.07).toFixed(1)}px,${((e.clientY-r.top-r.height/2)*.09).toFixed(1)}px)`});el.addEventListener('pointerleave',()=>el.style.transform='')})}
-
-// Engineering principle sync.
-const principles=$$('.principle'),engBtns=$$('.eng-orbit button');
-function selectEng(id){principles.forEach(x=>x.classList.toggle('active',x.dataset.eng===id));engBtns.forEach(x=>x.classList.toggle('active',x.dataset.id===id))}
-principles.forEach(p=>{p.addEventListener('mouseenter',()=>selectEng(p.dataset.eng));p.addEventListener('click',()=>selectEng(p.dataset.eng))});engBtns.forEach(b=>b.addEventListener('click',()=>selectEng(b.dataset.id)));
-
-// Command palette.
-const cmd=$('#command'),cmdOpen=$('#cmdOpen'),cmdClose=$('#cmdClose'),cmdInput=$('#commandInput'),cmdList=$('#commandList');let cmdIndex=0;
-const cmdButtons=()=>$$('button[data-cmd]',cmdList);function visibleBtns(){return cmdButtons().filter(b=>!b.hidden)}function paint(){const v=visibleBtns();v.forEach((b,i)=>b.classList.toggle('selected',i===cmdIndex));v[cmdIndex]?.scrollIntoView({block:'nearest'})}function openCmd(){if(!cmd?.open)cmd.showModal();cmdIndex=0;paint();setTimeout(()=>cmdInput?.focus(),30)}function closeCmd(){if(cmd?.open)cmd.close()}function runCmd(name){const go=id=>{closeCmd();document.getElementById(id)?.scrollIntoView({behavior:reduce?'auto':'smooth'})};({projects:()=>go('projects'),skills:()=>go('skills'),contact:()=>go('contact'),github:()=>open('https://github.com/teldigi5-wq','_blank','noopener'),linkedin:()=>open('https://www.linkedin.com/in/poojana-kaveesh-3048b8387','_blank','noopener'),resume:()=>open('assets/Poojana_Kaveesh_CV.pdf','_blank','noopener'),theme:()=>{setTheme(root.dataset.theme==='dark'?'light':'dark');closeCmd()}}[name]||(()=>{}))()}
-cmdOpen?.addEventListener('click',openCmd);cmdClose?.addEventListener('click',closeCmd);cmdButtons().forEach(b=>b.addEventListener('click',()=>runCmd(b.dataset.cmd)));cmdInput?.addEventListener('input',()=>{const q=cmdInput.value.toLowerCase().trim();cmdButtons().forEach(b=>b.hidden=q&&!b.textContent.toLowerCase().includes(q));cmdIndex=0;paint()});
-addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCmd();return}if(!cmd?.open)return;const v=visibleBtns();if(!v.length)return;if(e.key==='ArrowDown'){e.preventDefault();cmdIndex=(cmdIndex+1)%v.length;paint()}if(e.key==='ArrowUp'){e.preventDefault();cmdIndex=(cmdIndex-1+v.length)%v.length;paint()}if(e.key==='Enter'){e.preventDefault();runCmd(v[cmdIndex]?.dataset.cmd)}});
-
-// Custom cursor.
-const dot=$('#cursorDot'),ring=$('#cursorRing');if(!coarse&&!reduce&&dot&&ring){let mx=0,my=0,rx=0,ry=0;addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;dot.style.opacity='1';ring.style.opacity='1';dot.style.transform=`translate(${mx-2.5}px,${my-2.5}px)`},{passive:true});(function follow(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.transform=`translate(${rx-15.5}px,${ry-15.5}px)`;requestAnimationFrame(follow)})()}
-
-// Lightweight ambient network.
-const canvas=$('#network');if(canvas&&!reduce){const ctx=canvas.getContext('2d',{alpha:true});let nodes=[],w=0,h=0,dpr=1,raf=0;function resize(){dpr=Math.min(devicePixelRatio||1,1.5);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);const count=w<700?20:w<1100?31:44;nodes=Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*1.1+.4}))}function draw(){ctx.clearRect(0,0,w,h);const dark=root.dataset.theme!=='light',line=dark?'rgba(86,168,255,.10)':'rgba(18,108,224,.07)',point=dark?'rgba(85,241,230,.38)':'rgba(18,108,224,.25)';nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>w)n.vx*=-1;if(n.y<0||n.y>h)n.vy*=-1;ctx.fillStyle=point;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill()});for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const a=nodes[i],b=nodes[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<130){ctx.strokeStyle=line;ctx.globalAlpha=1-d/130;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1}}raf=requestAnimationFrame(draw)}resize();draw();addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();draw()},{passive:true})}
-
-const year=$('#year');if(year)year.textContent=new Date().getFullYear();
+(() => {
+  'use strict';
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const root = document.documentElement;
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  // Storage is optional; privacy modes must never break navigation.
+  const themeButton = $('#themeToggle');
+  function setTheme(theme) {
+    root.dataset.theme = theme;
+    themeButton.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
+    $('meta[name="theme-color"]').content = theme === 'dark' ? '#080812' : '#f4f2fa';
+  }
+  let savedTheme;
+  try { savedTheme = localStorage.getItem('pk-theme'); } catch { /* Use the default. */ }
+  setTheme(savedTheme === 'light' ? 'light' : 'dark');
+  themeButton.addEventListener('click', () => {
+    setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+    try { localStorage.setItem('pk-theme', root.dataset.theme); } catch { /* Optional preference. */ }
+  });
+  const menu = $('#mobileNav');
+  const menuButton = $('#menuToggle');
+  function closeMenu(returnFocus = false) {
+    menu.hidden = true;
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-label', 'Open menu');
+    document.body.classList.remove('menu-open');
+    if (returnFocus) menuButton.focus();
+  }
+  menuButton.addEventListener('click', () => {
+    const opening = menu.hidden;
+    menu.hidden = !opening;
+    menuButton.setAttribute('aria-expanded', String(opening));
+    menuButton.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
+    document.body.classList.toggle('menu-open', opening);
+  });
+  $$('a', menu).forEach(link => link.addEventListener('click', () => closeMenu()));
+  matchMedia('(min-width: 741px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  // Case studies work without JavaScript; deep links open them when enhanced.
+  function openCase(hash) {
+    if (!hash || !hash.startsWith('#')) return;
+    const element = document.getElementById(hash.slice(1));
+    if (element?.matches('details')) element.open = true;
+  }
+  $$('a[href^="#"]').forEach(link => link.addEventListener('click', () => openCase(link.hash)));
+  addEventListener('hashchange', () => openCase(location.hash));
+  openCase(location.hash);
+  if (location.hash && document.getElementById(location.hash.slice(1))?.matches('details')) {
+    requestAnimationFrame(() => document.getElementById(location.hash.slice(1)).scrollIntoView());
+  }
+  const progress = $('#progress');
+  let scrollPending = false;
+  function updateScroll() {
+    const max = root.scrollHeight - innerHeight;
+    progress.style.width = `${max > 0 ? Math.min(100, scrollY / max * 100) : 0}%`;
+    scrollPending = false;
+  }
+  addEventListener('scroll', () => {
+    if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateScroll); }
+  }, { passive: true });
+  updateScroll();
+  if ('IntersectionObserver' in window) {
+    const navLinks = $$('.desktop-nav a');
+    const navObserver = new IntersectionObserver(entries => {
+      const current = entries.find(entry => entry.isIntersecting);
+      if (!current) return;
+      navLinks.forEach(link => {
+        const active = link.hash === `#${current.target.id}`;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
+    ['home', 'projects', 'about', 'engineering'].forEach(id => navObserver.observe(document.getElementById(id)));
+  }
+  // Bounded pointer feedback; no perpetual canvas or background animation loop.
+  $$('.tilt').forEach(card => {
+    let frame = 0;
+    card.addEventListener('pointermove', event => {
+      if (motion.matches || !finePointer.matches) return;
+      cancelAnimationFrame(frame);
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      frame = requestAnimationFrame(() => {
+        card.style.transform = `perspective(1000px) rotateX(${-y * 3}deg) rotateY(${x * 3}deg) translateY(-3px)`;
+      });
+    });
+    function reset() { cancelAnimationFrame(frame); card.style.transform = ''; }
+    card.addEventListener('pointerleave', reset);
+    motion.addEventListener('change', reset);
+  });
+  const command = $('#command');
+  const input = $('#commandInput');
+  const commandButtons = $$('#commandList button');
+  const empty = $('#commandEmpty');
+  let selected = 0;
+  let previousFocus;
+  const visible = () => commandButtons.filter(button => !button.hidden);
+  function select() { visible().forEach((button, index) => button.classList.toggle('selected', selected === index)); }
+  function closeCommand() { command.close(); previousFocus?.focus(); }
+  function openCommand() {
+    if (command.open) return;
+    closeMenu();
+    previousFocus = document.activeElement;
+    input.value = '';
+    commandButtons.forEach(button => button.hidden = false);
+    empty.hidden = true;
+    selected = 0;
+    select();
+    command.showModal();
+    input.focus();
+  }
+  $('#cmdOpen').addEventListener('click', openCommand);
+  $('#cmdClose').addEventListener('click', closeCommand);
+  command.addEventListener('cancel', event => { event.preventDefault(); closeCommand(); });
+  command.addEventListener('click', event => {
+    const rect = command.getBoundingClientRect();
+    if (event.target === command && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeCommand();
+  });
+  commandButtons.forEach(button => button.addEventListener('click', () => {
+    closeCommand();
+    location.hash = button.dataset.target;
+    document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth' });
+  }));
+  input.addEventListener('input', () => {
+    const query = input.value.trim().toLowerCase();
+    commandButtons.forEach(button => button.hidden = !button.textContent.toLowerCase().includes(query));
+    selected = 0;
+    empty.hidden = visible().length > 0;
+    select();
+  });
+  input.addEventListener('keydown', event => {
+    const buttons = visible();
+    if (!buttons.length) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+      select();
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      buttons[selected]?.click();
+    }
+  });
+  addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      command.open ? closeCommand() : openCommand();
+    }
+    if (event.key === 'Escape' && !menu.hidden) closeMenu(true);
+  });
+  $('#year').textContent = new Date().getFullYear();
 })();

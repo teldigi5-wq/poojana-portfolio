@@ -1,28 +1,38 @@
-# Poojana Kaveesh - Professional Engineering Portfolio V3
+# Poojana Kaveesh — Engineering Portfolio
 
-A clean, recruiter-focused software engineering portfolio for internships and junior roles.
+A static portfolio with a violet visual identity, a portrait-led introduction and evidence-focused case studies for software engineering opportunities.
 
-## Purpose
+## Content
 
-This portfolio is intentionally professional instead of flashy. It is designed for engineering-focused companies such as WSO2, Sysco LABS, IFS, 99x and similar teams.
+- Aetheris Platform: identity, distributed services and deployment.
+- FloodGuard: embedded-to-cloud integration and notification reliability.
+- AnyDL Pro Ultra: native processes, typed IPC and desktop packaging.
+- SLIIT education, engineering approach, technology toolkit and existing PDF CV.
 
-## Highlights
+Project descriptions are based on their public repository documentation. Development status and limitations are stated explicitly; illustrations describe architecture rather than pretend to be live product data. No invented testimonials, experience totals or employer affiliations.
 
-- Professional one-page portfolio
-- Real project case-study structure
-- Clean responsive UI
-- Light/dark mode
-- New professional headshot
-- SEO metadata and JSON-LD
-- robots.txt and sitemap.xml
-- Static deployment ready for Vercel or GitHub Pages
+## Run locally
 
-## Featured projects
+No package installation or build step is required:
 
-- Aetheris Platform - backend and distributed-systems direction
-- FloodGuard - IoT, Firebase and alerting prototype
-- AnyDL Pro Ultra - Electron desktop application
+```sh
+python -m http.server 8080
+```
 
-## Free deployment
+Open `http://localhost:8080`.
 
-This site can be hosted for free on Vercel or GitHub Pages.
+## Interaction and accessibility
+
+- Native expandable case studies with working deep links.
+- Keyboard-accessible command palette (`Ctrl/Cmd + K`), search, arrow navigation and Escape.
+- Mobile navigation with Escape dismissal.
+- Optional persistent light/dark theme; blocked storage does not break the page.
+- Subtle pointer tilt, disabled for touch and reduced-motion preferences.
+- Core content, CV and navigation available without JavaScript.
+- Local image assets and no runtime third-party JavaScript dependencies.
+
+## Deployment
+
+Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css` and `script.js` are the active implementation. Legacy `upgrade.css` and `cv.css` are retained but no longer loaded.
+
+The previous `poojana-hero.webp` is invalid and is not used. The homepage uses the working `poojana-kaveesh-profile.webp` portrait.
