@@ -1,0 +1,31 @@
+/* Portfolio live polish layer — keeps the existing site progressively enhanced. */
+:root{--pk-blue:#5ca8ff;--pk-cyan:#62f4e8;--pk-purple:#8b6cff;--pk-green:#5cf0b2}
+.reveal{opacity:1!important;transform:none!important}
+.hero{min-height:100svh;background:radial-gradient(circle at 12% 20%,rgba(40,122,255,.11),transparent 30%),radial-gradient(circle at 86% 45%,rgba(128,79,255,.14),transparent 35%)}
+.hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(360px,.98fr);gap:clamp(32px,5vw,78px)}
+.hero-art{min-height:620px;position:relative;isolation:isolate}
+.hero-art::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(92,168,255,.15),rgba(139,108,255,.07) 42%,transparent 70%);filter:blur(14px);z-index:-2;animation:pkPulse 7s ease-in-out infinite}
+.hero-art::after{content:"";position:absolute;width:520px;height:520px;border:1px solid rgba(98,244,232,.12);border-radius:50%;z-index:-1;animation:pkOrbit 30s linear infinite}
+.pk-poster{position:relative;width:min(465px,92%);height:600px;border-radius:32px;overflow:hidden;border:1px solid rgba(124,159,231,.27);background:linear-gradient(145deg,#0b1020,#0e1427);box-shadow:0 34px 100px rgba(0,0,0,.48),0 0 70px rgba(88,120,255,.12);transform-style:preserve-3d}
+.pk-poster::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(5,8,18,.02) 45%,rgba(4,7,17,.78) 100%)}
+.pk-poster::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(92,168,255,.55),transparent 34%,rgba(139,108,255,.52));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;pointer-events:none;z-index:5}
+.pk-poster img{width:100%;height:100%;object-fit:cover;object-position:center 32%;transform:scale(1.09);filter:saturate(.98) contrast(1.02);display:block}
+.pk-poster-meta{position:absolute;left:24px;right:24px;bottom:22px;z-index:3;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;color:white}
+.pk-poster-meta strong{font-size:1rem;letter-spacing:-.01em}.pk-poster-meta small{display:block;margin-top:4px;color:rgba(255,255,255,.68);font-size:.69rem}.pk-status-dot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:var(--pk-green);box-shadow:0 0 18px var(--pk-green)}
+.pk-float{position:absolute;z-index:6;padding:9px 11px;border:1px solid rgba(119,160,230,.24);border-radius:11px;background:rgba(8,15,30,.75);backdrop-filter:blur(14px);box-shadow:0 12px 35px rgba(0,0,0,.24);font:700 .56rem/1.15 JetBrains Mono,monospace;color:#e9f1ff;letter-spacing:.025em}
+.pk-float small{display:block;margin-top:4px;font-size:.48rem;color:#8392ae;font-weight:600}.pk-float.one{left:-24px;top:17%;color:#b9aaff}.pk-float.two{right:-30px;top:39%;color:#71c7ff}.pk-float.three{left:-30px;bottom:18%;color:var(--pk-green)}
+.pk-ring{position:absolute;z-index:-1;border:1px dashed rgba(91,171,255,.18);border-radius:50%;animation:pkOrbit 25s linear infinite}.pk-ring.r1{width:520px;height:520px}.pk-ring.r2{width:430px;height:430px;animation-direction:reverse;animation-duration:19s}.pk-node{position:absolute;z-index:0;padding:6px 9px;border:1px solid rgba(106,156,237,.19);border-radius:999px;background:#0b1221;color:#6e7d97;font:700 .49rem JetBrains Mono,monospace}.pk-node.ai{top:10%;right:7%}.pk-node.api{top:45%;left:-1%}.pk-node.cloud{bottom:10%;right:5%}.pk-node.iot{bottom:4%;left:13%}
+
+/* FloodGuard: replace the decorative wave blob with an actual telemetry card. */
+.water{display:none!important}.telemetry-panel{margin:22px 0 20px;padding:16px;border:1px solid rgba(112,151,218,.18);border-radius:16px;background:linear-gradient(160deg,rgba(7,13,25,.92),rgba(9,18,35,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.telemetry-head,.telemetry-reading,.telemetry-labels{display:flex;align-items:center;justify-content:space-between;gap:12px}.telemetry-head{margin-bottom:14px}.telemetry-head span{font:700 .52rem JetBrains Mono,monospace;letter-spacing:.1em;color:var(--muted)}.telemetry-head b{font:700 .54rem JetBrains Mono,monospace;padding:5px 8px;border-radius:999px;color:var(--pk-green);border:1px solid rgba(92,240,178,.28);background:rgba(92,240,178,.08)}
+.telemetry-reading{margin-bottom:12px}.telemetry-reading strong{font-size:1.75rem;line-height:1;letter-spacing:-.04em}.telemetry-reading small{color:var(--muted);font-size:.68rem}.telemetry-track{height:12px;border-radius:999px;overflow:hidden;border:1px solid rgba(120,153,211,.16);background:linear-gradient(90deg,rgba(75,221,169,.16) 0 48%,rgba(255,196,77,.14) 48% 73%,rgba(255,95,110,.14) 73%)}.telemetry-track i{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--pk-blue),var(--pk-cyan));box-shadow:0 0 18px rgba(92,168,255,.3)}.telemetry-labels{margin-top:8px}.telemetry-labels small{font:600 .45rem JetBrains Mono,monospace;color:var(--muted)}
+.flow{background:linear-gradient(180deg,rgba(6,11,22,.55),rgba(10,17,31,.75));border-color:rgba(115,151,211,.2)}.flow span{font-weight:700}.flow>b{background:var(--pk-cyan);box-shadow:0 0 14px var(--pk-cyan)}
+
+/* Resume card and buttons */
+.resume-card{border-color:rgba(106,151,228,.2);background:radial-gradient(circle at 15% 15%,rgba(79,132,255,.1),transparent 32%),linear-gradient(145deg,var(--surface),var(--surface2))}.resume-card .btn,.hero .btn{box-shadow:0 10px 28px rgba(0,0,0,.14)}
+
+@keyframes pkPulse{50%{transform:scale(1.04);opacity:.72}}@keyframes pkOrbit{to{transform:rotate(360deg)}}
+@media(max-width:1020px){.hero-grid{grid-template-columns:1fr}.hero-art{min-height:570px}.pk-poster{height:560px;width:min(440px,86%)}.pk-ring.r1{width:500px;height:500px}.pk-ring.r2{width:410px;height:410px}}
+@media(max-width:680px){.hero-art{min-height:480px}.pk-poster{height:470px;width:min(360px,82%);border-radius:24px}.pk-poster img{object-position:center 31%;transform:scale(1.07)}.pk-float{font-size:.47rem;padding:7px 8px}.pk-float.one{left:-12px}.pk-float.two{right:-12px}.pk-float.three{left:-10px}.pk-ring.r1{width:410px;height:410px}.pk-ring.r2{width:330px;height:330px}.pk-node{display:none}.pk-poster-meta{left:18px;right:18px;bottom:18px}}
+@media(prefers-reduced-motion:reduce){.hero-art::before,.hero-art::after,.pk-ring{animation:none!important}}
