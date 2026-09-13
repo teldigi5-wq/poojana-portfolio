@@ -35,4 +35,4 @@ Open `http://localhost:8080`.
 
 Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css` and `script.js` are the active implementation. Legacy `upgrade.css` and `cv.css` are retained but no longer loaded.
 
-The previous `poojana-hero.webp` is invalid and is not used. The homepage uses the working `poojana-kaveesh-profile.webp` portrait.
+The previous `poojana-hero.webp` is invalid and is not used. The homepage uses `poojana-hero-composition.png`, the original user-supplied 441 × 375 PNG, copied byte-for-byte with no recompression or cropping. CSS keeps its display width at or below 441 CSS pixels. The existing profile WebP remains available for social metadata. A larger source is needed for full sharpness at large sizes on high-density displays.
