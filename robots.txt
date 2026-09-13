@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://poojana-portfolio-teldigi5-wq.vercel.app/sitemap.xml

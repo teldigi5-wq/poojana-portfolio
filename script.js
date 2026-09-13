@@ -1,11 +1,1 @@
-const menuButton = document.getElementById('menuButton');
-const mobileNav = document.getElementById('mobileNav');
-menuButton?.addEventListener('click', () => {
-  const open = mobileNav.classList.toggle('open');
-  menuButton.setAttribute('aria-expanded', String(open));
-});
-mobileNav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  mobileNav.classList.remove('open');
-  menuButton.setAttribute('aria-expanded', 'false');
-}));
-document.getElementById('year').textContent = new Date().getFullYear();
+const root=document.documentElement,themeToggle=document.getElementById('themeToggle'),menuToggle=document.getElementById('menuToggle'),mobileNav=document.getElementById('mobileNav');const saved=localStorage.getItem('portfolio-theme');if(saved){root.dataset.theme=saved}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){root.dataset.theme='dark'}function syncTheme(){themeToggle.textContent=root.dataset.theme==='dark'?'Light':'Dark';themeToggle.setAttribute('aria-label',root.dataset.theme==='dark'?'Switch to light mode':'Switch to dark mode')}syncTheme();themeToggle.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('portfolio-theme',root.dataset.theme);syncTheme()});menuToggle.addEventListener('click',()=>{const open=mobileNav.classList.toggle('open');menuToggle.setAttribute('aria-expanded',String(open))});mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobileNav.classList.remove('open');menuToggle.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();
