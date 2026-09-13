@@ -1,49 +1,138 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0b1220" />
-  <meta name="description" content="Poojana Kaveesh Sellahewa — software engineering undergraduate portfolio focused on backend systems, cloud-native engineering, IoT projects and AI direction." />
-  <meta property="og:title" content="Poojana Kaveesh — Software Engineering Portfolio" />
-  <meta property="og:description" content="Professional engineering portfolio with real project evidence, case studies, resume and GitHub links." />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <title>Poojana Kaveesh | Software Engineering Portfolio</title>
-  <link rel="preload" as="image" href="assets/images/poojana-kaveesh-website-profile.svg?v=12" />
-  <link rel="stylesheet" href="styles.css?v=12" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://poojana-portfolio-teldigi5-wq.vercel.app","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Java","Spring Boot","Backend Engineering","Cloud Native Development","IoT","AI Systems"]}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#060913">
+  <meta name="description" content="Poojana Kaveesh Sellahewa — software engineering undergraduate building backend systems, AI-focused platforms, cloud-native software and IoT projects.">
+  <meta name="author" content="Poojana Kaveesh Sellahewa">
+  <meta property="og:title" content="Poojana Kaveesh — Software Engineering Portfolio">
+  <meta property="og:description" content="Backend systems, AI platforms, cloud-native engineering and IoT — presented through real project evidence.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://poojana-portfolio-teldigi5-wq.vercel.app/">
+  <meta property="og:image" content="https://poojana-portfolio-teldigi5-wq.vercel.app/assets/images/poojana-kaveesh-profile.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://poojana-portfolio-teldigi5-wq.vercel.app/">
+  <link rel="preload" as="image" href="assets/images/poojana-kaveesh-profile.webp">
+  <link rel="stylesheet" href="styles.css?v=30">
+  <title>Poojana Kaveesh | Software Engineer · AI · Backend · IoT</title>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://poojana-portfolio-teldigi5-wq.vercel.app/","image":"https://poojana-portfolio-teldigi5-wq.vercel.app/assets/images/poojana-kaveesh-profile.webp","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Java","Spring Boot","Backend Engineering","Cloud Native Development","IoT","AI Systems","Docker","Kubernetes"]}</script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="#top" aria-label="Poojana Kaveesh portfolio home"><span>PK</span><strong>Poojana Kaveesh<small>Software Engineering Portfolio</small></strong></a>
-      <nav class="desktop" aria-label="Primary navigation"><a href="#about">About</a><a href="#projects">Projects</a><a href="#engineering">Engineering</a><a href="#skills">Skills</a><a href="#resume">Resume</a><a href="#contact">Contact</a></nav>
-      <div class="actions"><button id="themeToggle" type="button">Light</button><button id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav">Menu</button></div>
-    </div>
-    <nav id="mobileNav" class="mobile container" aria-label="Mobile navigation"><a href="#about">About</a><a href="#projects">Projects</a><a href="#engineering">Engineering</a><a href="#skills">Skills</a><a href="#resume">Resume</a><a href="#contact">Contact</a></nav>
-  </header>
-  <main id="main">
-    <section class="hero container" id="top">
-      <div class="hero-copy">
-        <p class="status"><span></span>Available for internships and entry-level software roles</p>
-        <h1>Building reliable software systems with real project evidence.</h1>
-        <p class="lead">I’m <b>Poojana Kaveesh Sellahewa</b>, a BSc (Hons) Information Technology undergraduate at SLIIT. My work focuses on backend development, cloud-native platforms, IoT systems and AI-focused engineering.</p>
-        <div class="buttons"><a class="btn primary" href="#projects">View case studies</a><a class="btn" href="assets/resume/Poojana_Kaveesh_Resume.pdf">Download resume</a><a class="btn" href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub</a><a class="btn ghost" href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noreferrer">LinkedIn</a></div>
-        <dl class="facts"><div><dt>Focus</dt><dd>Backend + IoT + Cloud</dd></div><div><dt>Current</dt><dd>SLIIT undergraduate</dd></div><div><dt>Location</dt><dd>Sri Lanka</dd></div></dl>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <canvas id="network" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-logo">PK</div><div class="scan"></div>
+    <strong>Poojana Kaveesh</strong><span>SOFTWARE · AI · SYSTEMS</span>
+  </div>
+
+  <header class="header" id="header">
+    <div class="nav container">
+      <a class="brand" href="#home" aria-label="Poojana Kaveesh home"><b>PK</b><span>Poojana Kaveesh<small>Software Engineering</small></span></a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#about">About</a><a href="#projects">Projects</a><a href="#engineering">Engineering</a><a href="#skills">Skills</a><a href="#journey">Journey</a><a href="#resume">Resume</a><a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="key-btn" id="cmdOpen" type="button" aria-label="Open command palette">⌘K</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch color theme"><span class="theme-icon">◐</span></button>
+        <button class="menu-btn" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu"><i></i><i></i></button>
       </div>
-      <aside class="profile" aria-label="Profile summary"><img src="assets/images/poojana-kaveesh-website-profile.svg?v=12" width="720" height="960" alt="Portrait of Poojana Kaveesh" /><div class="profile-meta"><strong>Poojana Kaveesh</strong><span>Software Engineering Undergraduate</span></div></aside>
+    </div>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+      <div class="container">
+        <a href="#about"><span>01</span>About</a><a href="#projects"><span>02</span>Projects</a><a href="#engineering"><span>03</span>Engineering</a><a href="#skills"><span>04</span>Skills</a><a href="#journey"><span>05</span>Journey</a><a href="#resume"><span>06</span>Resume</a><a href="#contact"><span>07</span>Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="aurora a1"></div><div class="aurora a2"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <p class="status"><i></i> Available for internships & software engineering opportunities</p>
+          <p class="overline">SLIIT · SRI LANKA · SOFTWARE / AI / SYSTEMS</p>
+          <h1><span>POOJANA</span><span class="gradient">KAVEESH</span></h1>
+          <div class="role"><small>I build as a</small><strong id="roleText">Software Engineer</strong></div>
+          <p class="lead">BSc (Hons) IT undergraduate at SLIIT building reliable backend systems, AI-focused platforms, cloud-native software and practical IoT solutions.</p>
+          <div class="actions"><a class="btn primary magnetic" href="#projects">Explore my work <b>↗</b></a><a class="btn magnetic" href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub <b>↗</b></a><a class="btn magnetic" href="assets/Poojana_Kaveesh_CV.pdf" target="_blank">Resume <b>↓</b></a></div>
+          <div class="facts"><article><small>FOCUS</small><strong>Backend · AI · Cloud · IoT</strong></article><article><small>CURRENT</small><strong>SLIIT Undergraduate</strong></article><article><small>CORE STACK</small><strong>Java 21 · Spring Boot</strong></article></div>
+        </div>
+
+        <div class="hero-art reveal">
+          <div class="core" aria-hidden="true">
+            <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+            <div class="core-center"><b>PK</b><small>ENGINEERING CORE</small></div>
+            <span class="orb o1">AI</span><span class="orb o2">BACKEND</span><span class="orb o3">CLOUD</span><span class="orb o4">IoT</span><span class="orb o5">DEVOPS</span>
+          </div>
+          <figure class="portrait tilt" data-tilt="5">
+            <div class="photo"><img src="assets/images/poojana-kaveesh-profile.webp" width="240" height="300" alt="Portrait of Poojana Kaveesh" fetchpriority="high"><span></span></div>
+            <figcaption><div><strong>Poojana Kaveesh</strong><small>Software Engineering Undergraduate</small></div><i></i></figcaption>
+            <em class="tag t1">SLIIT</em><em class="tag t2">AI + BACKEND</em><em class="tag t3">OPEN TO WORK</em>
+          </figure>
+        </div>
+      </div>
+      <a class="scroll" href="#about"><i></i>SCROLL TO EXPLORE</a>
     </section>
-    <section class="strip" aria-label="Portfolio principles"><div class="container strip-grid"><article><b>Truthful profile</b><span>No fake experience or inflated claims.</span></article><article><b>Engineering depth</b><span>Architecture, documentation, decisions and trade-offs.</span></article><article><b>Recruiter ready</b><span>Fast, public, responsive and easy to review.</span></article></div></section>
-    <section class="section container" id="about"><div class="heading"><span>About</span><h2>Software engineering student with a systems-first mindset.</h2><p>I’m building strong foundations in programming, backend engineering, cloud deployment and practical system design. This portfolio is shaped for technical reviewers: it shows what was built, why it was built, and what can be verified.</p></div><div class="grid3"><article class="card"><h3>Education</h3><p>BSc (Hons) Information Technology undergraduate at SLIIT, Faculty of Computing, with long-term interest in AI and software engineering.</p></article><article class="card"><h3>Engineering focus</h3><p>Backend services, REST APIs, databases, cloud-native deployment, observability, IoT data flows and desktop software.</p></article><article class="card"><h3>Career direction</h3><p>Targeting internships and junior software engineering opportunities where learning speed, code quality and documentation matter.</p></article></div></section>
-    <section class="section muted" id="projects"><div class="container"><div class="heading split"><div><span>Case studies</span><h2>Projects presented as engineering work.</h2></div><p>Each project preview focuses on the problem, solution, stack and verifiable evidence instead of only screenshots.</p></div><div class="cases"><article class="case"><div class="num">01<span>Backend + Distributed Systems</span></div><div><h3>Aetheris Platform</h3><p class="summary">A staged Java/Spring Boot platform exploring service boundaries, identity, auditing, caching, messaging, observability and container-first deployment.</p><div class="cols"><div><h4>Problem</h4><p>Move beyond simple CRUD by building a platform that demonstrates backend architecture and operational thinking.</p></div><div><h4>Solution</h4><p>Use Spring Boot services, database-backed identity, Redis/RabbitMQ patterns and Kubernetes/Helm deployment concepts.</p></div><div><h4>Evidence</h4><p>Repository documents staged progress, core services and planned AI-agent governance.</p></div></div><p class="tags"><span>Java 21</span><span>Spring Boot</span><span>PostgreSQL</span><span>Redis</span><span>RabbitMQ</span><span>Docker</span><span>Kubernetes</span></p><a class="link" href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noreferrer">Open repository</a></div></article><article class="case"><div class="num">02<span>IoT + Cloud Alerts</span></div><div><h3>FloodGuard</h3><p class="summary">Academic flood-monitoring prototype connecting Arduino/ESP8266 sensing to Firebase-backed monitoring and WhatsApp alerting.</p><div class="architecture"><span>Sensor</span><i></i><span>Arduino</span><i></i><span>ESP8266</span><i></i><span>Firebase</span><i></i><span>Dashboard</span><i></i><span>Alerts</span></div><div class="cols"><div><h4>Problem</h4><p>Flood-risk data must move from physical sensing to users quickly and clearly.</p></div><div><h4>Solution</h4><p>Water-level validation, staged hardware states, cloud database updates and status/alert commands.</p></div><div><h4>Evidence</h4><p>Public notification-service code and documented sensor-to-cloud behavior.</p></div></div><p class="tags"><span>Arduino</span><span>ESP8266</span><span>Firebase</span><span>Node.js</span><span>AWS EC2</span><span>WhatsApp</span></p><a class="link" href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noreferrer">Open repository</a></div></article><article class="case"><div class="num">03<span>Desktop Engineering</span></div><div><h3>AnyDL Pro Ultra</h3><p class="summary">Electron desktop application that integrates external media tooling through a clean UI, progress reporting and Windows packaging experiments.</p><div class="cols"><div><h4>Problem</h4><p>Media tooling can be powerful but difficult to use without a structured desktop workflow.</p></div><div><h4>Solution</h4><p>React/TypeScript interface, Electron main process handling, child processes, live status and persistent settings.</p></div><div><h4>Evidence</h4><p>Desktop app repo showing UI, process integration and packaging direction.</p></div></div><p class="tags"><span>Electron</span><span>React</span><span>TypeScript</span><span>Node.js</span><span>FFmpeg</span><span>Windows</span></p><a class="link" href="https://github.com/teldigi5-wq/anydl-pro-ultra" target="_blank" rel="noreferrer">Open repository</a></div></article></div></div></section>
-    <section class="section container" id="engineering"><div class="heading"><span>Engineering</span><h2>How I want my work to be reviewed.</h2><p>The portfolio is structured around engineering signals: maintainability, system design, deployment, security awareness and honest project maturity.</p></div><div class="grid3 principles"><article><b>System design</b><p>Define components, responsibilities, data flow and operational boundaries before polishing UI.</p></article><article><b>API thinking</b><p>Use clear resource naming, validation, authentication and predictable error handling.</p></article><article><b>Deployment readiness</b><p>Prefer reproducible setup, environment configuration, health checks and documented commands.</p></article><article><b>Security awareness</b><p>Keep secrets out of repositories, use least privilege and validate user input.</p></article><article><b>Observability</b><p>Design systems so behavior can be inspected with logs, metrics and status endpoints.</p></article><article><b>Documentation</b><p>Explain decisions, limitations, current status and next steps clearly for reviewers.</p></article></div></section>
-    <section class="section muted" id="skills"><div class="container"><div class="heading"><span>Skills</span><h2>Grouped by practical engineering use.</h2></div><div class="grid3 skills"><article><h3>Languages</h3><p>Java 21, Python, JavaScript, TypeScript, C/C++ basics</p></article><article><h3>Backend</h3><p>Spring Boot, REST APIs, JWT/RBAC concepts, validation, service design</p></article><article><h3>Databases</h3><p>PostgreSQL, MySQL concepts, Redis caching, Firebase RTDB</p></article><article><h3>Cloud & DevOps</h3><p>Docker, Docker Compose, Kubernetes, Helm, GitHub Actions, AWS EC2 basics</p></article><article><h3>IoT</h3><p>Arduino Uno, ESP8266, sensors, LCD, buzzer/LED states, servo control</p></article><article><h3>Tools</h3><p>Git, GitHub, VS Code, Postman, Linux/terminal basics, Figma direction</p></article></div></div></section>
-    <section class="section container" id="resume"><div class="resume-card"><div><span class="eyebrow">Resume</span><h2>ATS-friendly resume backed by project evidence.</h2><p>The downloadable resume stays aligned with the website: SLIIT education, software engineering direction, GitHub links and truthful project status.</p><div class="buttons"><a class="btn primary" href="assets/resume/Poojana_Kaveesh_Resume.pdf">Open resume</a><a class="btn" href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub profile</a></div></div><div class="resume-preview" aria-label="Resume summary"><b>Poojana Kaveesh</b><span>Software Engineering Undergraduate</span><hr /><p>Java • Spring Boot • Python • Cloud • IoT</p></div></div></section>
-    <section class="section container" id="contact"><div class="contact-card"><div><span class="eyebrow">Contact</span><h2>Let’s connect professionally.</h2><p>For internships, technical collaboration or project discussion, use GitHub or LinkedIn. This portfolio is focused on verifiable work and steady improvement.</p></div><div class="contact-links"><a href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noreferrer">LinkedIn</a><a href="assets/resume/Poojana_Kaveesh_Resume.pdf">Resume</a></div></div></section>
+
+    <section class="signal"><div class="container signal-grid"><article><b>01</b><span><strong>Systems-first</strong><small>Architecture before decoration.</small></span></article><article><b>02</b><span><strong>Project evidence</strong><small>Real repositories, real decisions.</small></span></article><article><b>03</b><span><strong>Built to grow</strong><small>Backend, AI, cloud and IoT.</small></span></article></div></section>
+
+    <section class="section" id="about"><div class="container">
+      <div class="section-head reveal"><div><span>01 / ABOUT</span><h2>Engineering with curiosity,<br><em>clarity and momentum.</em></h2></div><p>I care about the layer beneath the interface: data flow, service boundaries, deployment, reliability and the reasoning behind technical decisions.</p></div>
+      <div class="about-grid">
+        <article class="glass about-main reveal"><small>01 — WHO I AM</small><h3>Software engineering student with a systems-first mindset.</h3><p>I’m studying BSc (Hons) Information Technology at SLIIT, Faculty of Computing, while building practical software across backend engineering, cloud, AI direction and connected devices.</p><div class="terminal"><p><i>$</i> whoami</p><b>Poojana Kaveesh</b><p><i>$</i> focus</p><b>Backend · AI · Cloud · IoT</b><p><i>$</i> mode</p><b>Learning by building</b></div></article>
+        <div class="about-stack"><article class="glass reveal"><small>02 — WHAT I BUILD</small><h3>From sensor signals to service architecture.</h3><p>My projects range from Arduino + ESP8266 flood monitoring to Java/Spring Boot platform architecture and desktop software integrations.</p></article><article class="glass reveal"><small>03 — WHERE I’M GOING</small><h3>Deeper into AI-enabled software systems.</h3><p>I’m strengthening backend engineering, distributed systems, DevOps and AI-agent architecture with an emphasis on maintainable software.</p></article></div>
+      </div>
+    </div></section>
+
+    <section class="section projects" id="projects"><div class="container">
+      <div class="section-head reveal"><div><span>02 / FEATURED WORK</span><h2>Projects built as<br><em class="gradient-text">engineering case studies.</em></h2></div><p>Each project is presented through the problem, system design, technologies and evidence — not just screenshots.</p></div>
+
+      <article class="project flagship tilt reveal" data-tilt="2.5">
+        <div class="project-top"><span>PROJECT 01 / FLAGSHIP</span><b><i></i> ACTIVE DEVELOPMENT</b></div>
+        <div class="project-grid"><div class="project-copy"><small>BACKEND · DISTRIBUTED SYSTEMS · AI DIRECTION</small><h3>Aetheris Platform</h3><p>A staged Java/Spring Boot platform exploring identity, service boundaries, caching, messaging, observability, container-first deployment and governed AI-agent direction.</p><div class="two-col"><div><b>CHALLENGE</b><p>Move beyond simple CRUD and demonstrate architectural thinking.</p></div><div><b>APPROACH</b><p>Build incrementally around modular services, state, messaging and operations.</p></div></div><div class="chips"><span>Java 21</span><span>Spring Boot</span><span>PostgreSQL</span><span>Redis</span><span>RabbitMQ</span><span>Docker</span><span>Kubernetes</span><span>Helm</span></div><a class="text-link" href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noreferrer">Explore repository <b>↗</b></a></div>
+          <div class="architecture" aria-label="Aetheris system architecture"><svg viewBox="0 0 600 420" aria-hidden="true"><path d="M300 210C220 130 160 120 85 90M300 210C385 130 445 120 525 90M300 210C410 245 455 270 525 330M300 210C210 270 160 300 80 335M300 210V55M300 210V365"/></svg><div class="sys core-sys"><b>AETHERIS</b><small>CORE</small></div><div class="sys s1">Gateway<small>ENTRY</small></div><div class="sys s2">Identity<small>AUTH</small></div><div class="sys s3">Messaging<small>EVENTS</small></div><div class="sys s4">Data<small>POSTGRES</small></div><div class="sys s5">Cache<small>REDIS</small></div><div class="sys s6">Agents<small>AI DIRECTION</small></div><i class="pulse p1"></i><i class="pulse p2"></i></div>
+        </div>
+      </article>
+
+      <div class="project-pair">
+        <article class="project compact tilt reveal" data-tilt="3.5"><div class="project-top"><span>PROJECT 02</span><b><i></i> ACADEMIC PROTOTYPE</b></div><small>IOT · CLOUD · ALERTING</small><h3>FloodGuard</h3><p>Arduino/ESP8266 flood monitoring that moves validated water-level data from physical sensors into Firebase-backed monitoring and WhatsApp alerts.</p><div class="flow"><span>Sensor</span><i>→</i><span>Arduino</span><i>→</i><span>ESP8266</span><i>→</i><span>Firebase</span><i>→</i><span>Alerts</span><b></b></div><div class="water"><i></i><span>LIVE LEVEL MODEL</span></div><div class="chips"><span>Arduino</span><span>ESP8266</span><span>Firebase</span><span>Node.js</span><span>AWS EC2</span></div><a class="text-link" href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noreferrer">Explore repository <b>↗</b></a></article>
+        <article class="project compact tilt reveal" data-tilt="3.5"><div class="project-top"><span>PROJECT 03</span><b>DESKTOP ENGINEERING</b></div><small>ELECTRON · REACT · MEDIA TOOLING</small><h3>AnyDL Pro Ultra</h3><p>A Windows desktop application integrating media tooling behind a clean UI with live progress, process control and packaging experiments.</p><div class="desktop-demo"><div><i></i><i></i><i></i></div><p><span></span><b>78%</b></p><section><span>UI</span><i>→</i><span>Electron</span><i>→</i><span>FFmpeg</span></section></div><div class="chips"><span>Electron</span><span>React</span><span>TypeScript</span><span>Node.js</span><span>FFmpeg</span></div><a class="text-link" href="https://github.com/teldigi5-wq/anydl-pro-ultra" target="_blank" rel="noreferrer">Explore repository <b>↗</b></a></article>
+      </div>
+    </div></section>
+
+    <section class="section" id="engineering"><div class="container">
+      <div class="section-head reveal"><div><span>03 / ENGINEERING</span><h2>How I think about<br><em>building software.</em></h2></div><p>Good software is more than code that runs. I’m learning to think in boundaries, contracts, observability, security and deployment from the beginning.</p></div>
+      <div class="eng-grid"><div class="principles"><article class="principle active reveal" data-eng="design"><b>01</b><span><h3>System Design</h3><p>Components, responsibilities and data flow before implementation detail.</p></span></article><article class="principle reveal" data-eng="api"><b>02</b><span><h3>API Thinking</h3><p>Clear resources, validation, authentication and predictable errors.</p></span></article><article class="principle reveal" data-eng="security"><b>03</b><span><h3>Security Awareness</h3><p>Secrets stay out of code. Inputs are validated. Access stays intentional.</p></span></article><article class="principle reveal" data-eng="deploy"><b>04</b><span><h3>Deployment Readiness</h3><p>Configuration, containers, health checks and reproducible setup matter.</p></span></article><article class="principle reveal" data-eng="observe"><b>05</b><span><h3>Observability</h3><p>Logs, metrics and status surfaces make behavior inspectable.</p></span></article><article class="principle reveal" data-eng="docs"><b>06</b><span><h3>Documentation</h3><p>Decisions, limitations and next steps should be obvious to a reviewer.</p></span></article></div>
+        <div class="eng-orbit glass reveal"><small>HOW I ENGINEER</small><div class="eng-core">BUILD<span>WITH INTENT</span></div><button data-id="design" class="e1 active">Design</button><button data-id="api" class="e2">API</button><button data-id="security" class="e3">Security</button><button data-id="deploy" class="e4">Deploy</button><button data-id="observe" class="e5">Observe</button><button data-id="docs" class="e6">Docs</button></div>
+      </div>
+    </div></section>
+
+    <section class="section skills" id="skills"><div class="container">
+      <div class="section-head reveal"><div><span>04 / STACK</span><h2>Technologies I use,<br><em class="gradient-text">learn and connect.</em></h2></div><p>No fake percentages. The labels show how each technology currently fits into my work and learning path.</p></div>
+      <div class="skill-grid"><article class="skill-card reveal"><header><h3>Languages</h3><span>CORE</span></header><p><b>Java 21</b><b>Python</b><b>JavaScript</b><b>TypeScript</b><b>C / C++ basics</b></p></article><article class="skill-card reveal"><header><h3>Backend</h3><span>WORKING WITH</span></header><p><b>Spring Boot</b><b>REST APIs</b><b>JWT / RBAC concepts</b><b>Validation</b><b>Service design</b></p></article><article class="skill-card reveal"><header><h3>Data</h3><span>WORKING WITH</span></header><p><b>PostgreSQL</b><b>MySQL concepts</b><b>Redis</b><b>Firebase RTDB</b></p></article><article class="skill-card reveal"><header><h3>Cloud & DevOps</h3><span>EXPLORING</span></header><p><b>Docker</b><b>Compose</b><b>Kubernetes</b><b>Helm</b><b>GitHub Actions</b><b>AWS EC2</b></p></article><article class="skill-card reveal"><header><h3>AI Systems</h3><span>EXPLORING</span></header><p><b>Local AI</b><b>LLM integration</b><b>Agent architecture</b><b>Automation</b></p></article><article class="skill-card reveal"><header><h3>IoT & Tools</h3><span>BUILDING WITH</span></header><p><b>Arduino</b><b>ESP8266</b><b>Git</b><b>GitHub</b><b>Postman</b><b>VS Code</b><b>Figma</b></p></article></div>
+    </div></section>
+
+    <section class="section" id="journey"><div class="container">
+      <div class="section-head reveal"><div><span>05 / JOURNEY</span><h2>Learning in public,<br><em>one system at a time.</em></h2></div><p>A phase-based timeline — no invented dates or inflated milestones.</p></div>
+      <div class="timeline" id="timeline"><i class="timeline-fill" id="timelineFill"></i><article class="reveal"><b>01</b><div><small>FOUNDATION</small><h3>SLIIT · BSc (Hons) IT</h3><p>Building the academic foundation for software engineering and an AI-focused direction.</p></div></article><article class="reveal"><b>02</b><div><small>PROGRAMMING</small><h3>Java foundations</h3><p>Strengthening problem solving, OOP and the discipline of writing clear programs.</p></div></article><article class="reveal"><b>03</b><div><small>CONNECTED SYSTEMS</small><h3>FloodGuard</h3><p>Connecting embedded sensors, networking, cloud state, dashboards and alerts.</p></div></article><article class="reveal"><b>04</b><div><small>PLATFORM ENGINEERING</small><h3>Aetheris</h3><p>Moving deeper into backend architecture, containers, messaging, observability and AI-agent direction.</p></div></article></div>
+    </div></section>
+
+    <section class="section github-section"><div class="container"><div class="github-card glass reveal"><div><span>GITHUB / BUILD LOG</span><h2>Code is part of the evidence.</h2><p>My repositories show staged progress, technical experiments, documentation and the gap between what is built today and what comes next.</p><a class="btn primary magnetic" href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">Open GitHub profile <b>↗</b></a></div><div class="repo-list"><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noreferrer"><span><b>aetheris-platform</b><small>Backend · Platform · AI direction</small></span><i>↗</i></a><a href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noreferrer"><span><b>floodguard-whatsapp-bot</b><small>IoT · Cloud · Alerts</small></span><i>↗</i></a><a href="https://github.com/teldigi5-wq/anydl-pro-ultra" target="_blank" rel="noreferrer"><span><b>anydl-pro-ultra</b><small>Electron · Desktop engineering</small></span><i>↗</i></a></div></div></div></section>
+
+    <section class="section" id="resume"><div class="container"><div class="resume-card reveal tilt" data-tilt="2"><div><span>06 / RESUME</span><h2>One page. Clear evidence.</h2><p>My resume stays aligned with the portfolio: SLIIT education, software engineering direction, public projects and the technologies I can discuss honestly.</p><div class="actions"><a class="btn primary" href="assets/Poojana_Kaveesh_CV.pdf" target="_blank">View resume <b>↗</b></a><a class="btn" href="assets/Poojana_Kaveesh_CV.pdf" download>Download PDF <b>↓</b></a></div></div><div class="paper"><b>POOJANA KAVEESH</b><small>SOFTWARE ENGINEERING UNDERGRADUATE</small><hr><p>JAVA 21 · BACKEND · CLOUD<br>AI SYSTEMS · IoT</p><span>SLIIT · SRI LANKA</span></div></div></div></section>
+
+    <section class="section contact" id="contact"><div class="container contact-grid reveal"><div><span>07 / CONTACT</span><h2>LET’S BUILD<br><em>SOMETHING</em><br>MEANINGFUL.</h2></div><div><p>Open to internships, junior software engineering opportunities, technical collaboration and conversations around practical systems.</p><div class="contact-links"><a href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub <b>↗</b></a><a href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noreferrer">LinkedIn <b>↗</b></a><a href="assets/Poojana_Kaveesh_CV.pdf" target="_blank">Resume <b>↗</b></a></div></div></div></section>
   </main>
-  <footer><div class="container foot"><span>© <span id="year"></span> Poojana Kaveesh Sellahewa</span><span>Built for clarity, performance and truthful engineering presentation.</span></div></footer>
-  <script src="script.js?v=12"></script>
+
+  <footer><div class="container"><div class="brand"><b>PK</b><span>Poojana Kaveesh<small>Designed & engineered with intent.</small></span></div><p>© <span id="year"></span> · Sri Lanka</p><div><a href="https://github.com/teldigi5-wq" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noreferrer">LinkedIn</a></div></div></footer>
+
+  <dialog class="command" id="command"><div class="command-search"><span>⌘</span><input id="commandInput" autocomplete="off" placeholder="Type a command…" aria-label="Command search"><button id="cmdClose" aria-label="Close command palette">Esc</button></div><div class="command-list" id="commandList"><button data-cmd="projects"><span>Go to Projects</span><kbd>P</kbd></button><button data-cmd="skills"><span>Go to Skills</span><kbd>S</kbd></button><button data-cmd="github"><span>Open GitHub</span><kbd>G</kbd></button><button data-cmd="linkedin"><span>Open LinkedIn</span><kbd>L</kbd></button><button data-cmd="resume"><span>Open Resume</span><kbd>R</kbd></button><button data-cmd="theme"><span>Switch Theme</span><kbd>T</kbd></button><button data-cmd="contact"><span>Go to Contact</span><kbd>C</kbd></button></div><p class="command-help">Ctrl / ⌘ + K to open · ↑ ↓ to navigate · Enter to select</p></dialog>
+
+  <div class="cursor-dot" id="cursorDot"></div><div class="cursor-ring" id="cursorRing"></div>
+  <script src="script.js?v=30"></script>
 </body>
 </html>
