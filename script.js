@@ -6,6 +6,31 @@
   root.classList.add('js');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const portraitImage = $('.studio-portrait img');
+  const portraitFigure = portraitImage?.closest('.studio-portrait');
+  const portraitHero = portraitImage?.closest('.studio-hero');
+  if (portraitImage && portraitFigure && portraitHero) {
+    const portraitContainers = [portraitFigure, portraitHero];
+    portraitContainers.forEach(container => {
+      container.classList.add('portrait-loading');
+      container.classList.remove('portrait-loaded');
+    });
+    const revealPortrait = () => {
+      portraitContainers.forEach(container => {
+        container.classList.remove('portrait-loading');
+        container.classList.add('portrait-loaded');
+      });
+      portraitFigure.removeAttribute('aria-busy');
+    };
+    const settlePortraitError = () => portraitFigure.removeAttribute('aria-busy');
+    if (portraitImage.complete) {
+      if (portraitImage.naturalWidth > 0) revealPortrait();
+      else settlePortraitError();
+    } else {
+      portraitImage.addEventListener('load', revealPortrait, { once: true });
+      portraitImage.addEventListener('error', settlePortraitError, { once: true });
+    }
+  }
   const menu = $('#mobileNav');
   const menuButton = $('#menuToggle');
   function closeMenu(returnFocus = false) {
