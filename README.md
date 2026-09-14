@@ -1,5 +1,7 @@
 # Poojana Kaveesh — Engineering Portfolio
 
+[![Portfolio CI](https://github.com/teldigi5-wq/poojana-portfolio/actions/workflows/portfolio-ci.yml/badge.svg)](https://github.com/teldigi5-wq/poojana-portfolio/actions/workflows/portfolio-ci.yml)
+
 A static portfolio with a spacious navy and blue-violet visual identity, a portrait-led introduction and evidence-focused case studies for software engineering opportunities.
 
 ## Content
@@ -34,6 +36,12 @@ Open `http://localhost:8080`.
 - Person structured data, verified social-image dimensions, Vercel Web Analytics and a portfolio-matched 404 page.
 - Core content, CV and navigation available without JavaScript.
 - Local image assets and no runtime third-party JavaScript dependencies.
+
+## Automated validation
+
+Every push and pull request to `main` now runs **Portfolio CI**. The workflow checks JavaScript syntax, verifies the required site files are present, validates local `src`/`href` references from `index.html`, and confirms `vercel.json` is valid JSON.
+
+This keeps a static portfolio lightweight while still giving repository visitors visible evidence that core structure and assets are automatically checked.
 
 ## Deployment
 
