@@ -130,7 +130,7 @@
     motion.addEventListener('change', reset);
   });
   if ('IntersectionObserver' in window && !motion.matches) {
-    const revealTargets = $$('.section-heading, .project, .case, .about-title, .journey, .principles article, .skill-grid article, .closing > *');
+    const revealTargets = $$('.section-heading, .project, .case, .about-title, .journey, .principles article, .skill-grid article, .writing-card, .closing > *');
     revealTargets.forEach((element, index) => {
       element.classList.add('reveal');
       element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);

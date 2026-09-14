@@ -30,6 +30,8 @@ Open `http://localhost:8080`.
 - Subtle pointer tilt, disabled for touch and reduced-motion preferences.
 - Layered 3D hero depth, cursor parallax and animated engineering diagrams, all progressively enhanced.
 - Viewport-based content reveals that run once and preserve the complete page without JavaScript.
+- A single persistent CV link, matching desktop/mobile navigation, full-card case-study accordions and visible keyboard navigation.
+- Person structured data, verified social-image dimensions, Vercel Web Analytics and a portfolio-matched 404 page.
 - Core content, CV and navigation available without JavaScript.
 - Local image assets and no runtime third-party JavaScript dependencies.
 
