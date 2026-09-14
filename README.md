@@ -37,6 +37,6 @@ Open `http://localhost:8080`.
 
 ## Deployment
 
-Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css`, `studio.css` and `script.js` are the active implementation. Legacy `upgrade.css` and `cv.css` are retained but no longer loaded.
+Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css`, `studio.css` and `script.js` are the complete implementation; unused legacy stylesheets have been removed.
 
-The homepage uses `poojana-studio-v2.webp`, a 1254 × 1254 AI-edited portrait derived from the user's supplied reference, exported as lossless WebP. It is not pixel-identical to the original photograph. CSS masks blend its edges into the hero without modifying the asset. The previous supplied composition and profile assets are preserved; the existing profile WebP remains available for social metadata. An original high-resolution photograph is preferable when exact photographic fidelity is required.
+The homepage uses `poojana-studio-v2.webp`, a 1254 × 1254 designed portrait asset based on the supplied reference and exported as lossless WebP. CSS masks blend its edges into the hero without modifying the asset. A high-resolution original photograph remains the preferred future replacement when exact photographic authenticity is required.
