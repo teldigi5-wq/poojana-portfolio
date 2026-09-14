@@ -28,6 +28,8 @@ Open `http://localhost:8080`.
 - Mobile navigation with Escape dismissal.
 - Optional persistent light/dark theme; blocked storage does not break the page.
 - Subtle pointer tilt, disabled for touch and reduced-motion preferences.
+- Layered 3D hero depth, cursor parallax and animated engineering diagrams, all progressively enhanced.
+- Viewport-based content reveals that run once and preserve the complete page without JavaScript.
 - Core content, CV and navigation available without JavaScript.
 - Local image assets and no runtime third-party JavaScript dependencies.
 

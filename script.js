@@ -3,6 +3,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const root = document.documentElement;
+  root.classList.add('js');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   // Storage is optional; privacy modes must never break navigation.
@@ -74,7 +75,33 @@
     }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
     ['home', 'projects', 'about', 'skills', 'journey', 'contact'].forEach(id => navObserver.observe(document.getElementById(id)));
   }
-  // Bounded pointer feedback; no perpetual canvas or background animation loop.
+  // Bounded 3D pointer feedback; animation is disabled for touch and reduced motion.
+  const hero = $('.studio-hero');
+  let pointerFrame = 0;
+  function resetHeroDepth() {
+    ['--hero-x','--hero-y','--hero-x-neg','--hero-y-neg'].forEach(name => hero?.style.setProperty(name, '0px'));
+    hero?.style.setProperty('--hero-rotate', '0deg');
+  }
+  if (hero) {
+    hero.addEventListener('pointermove', event => {
+      if (motion.matches || !finePointer.matches) return;
+      cancelAnimationFrame(pointerFrame);
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width * 2 - 1;
+      const y = (event.clientY - rect.top) / rect.height * 2 - 1;
+      pointerFrame = requestAnimationFrame(() => {
+        hero.style.setProperty('--hero-x', `${(x * 12).toFixed(2)}px`);
+        hero.style.setProperty('--hero-y', `${(y * 10).toFixed(2)}px`);
+        hero.style.setProperty('--hero-x-neg', `${(x * -12).toFixed(2)}px`);
+        hero.style.setProperty('--hero-y-neg', `${(y * -10).toFixed(2)}px`);
+        hero.style.setProperty('--hero-rotate', `${(x * -1.2).toFixed(2)}deg`);
+        document.body.style.setProperty('--pointer-x', `${event.clientX}px`);
+        document.body.style.setProperty('--pointer-y', `${event.clientY + scrollY}px`);
+      });
+    });
+    hero.addEventListener('pointerleave', resetHeroDepth);
+    motion.addEventListener('change', resetHeroDepth);
+  }
   $$('.tilt').forEach(card => {
     let frame = 0;
     card.addEventListener('pointermove', event => {
@@ -84,13 +111,39 @@
       const x = (event.clientX - rect.left) / rect.width - .5;
       const y = (event.clientY - rect.top) / rect.height - .5;
       frame = requestAnimationFrame(() => {
-        card.style.transform = `perspective(1000px) rotateX(${-y * 3}deg) rotateY(${x * 3}deg) translateY(-3px)`;
+        card.style.setProperty('--tilt-x', `${-y * 5}deg`);
+        card.style.setProperty('--tilt-y', `${x * 5}deg`);
+        card.style.setProperty('--shine-x', `${(x + .5) * 100}%`);
+        card.style.setProperty('--shine-y', `${(y + .5) * 100}%`);
+        card.style.setProperty('--lift', '-5px');
       });
     });
-    function reset() { cancelAnimationFrame(frame); card.style.transform = ''; }
+    function reset() {
+      cancelAnimationFrame(frame);
+      card.style.removeProperty('--tilt-x');
+      card.style.removeProperty('--tilt-y');
+      card.style.removeProperty('--shine-x');
+      card.style.removeProperty('--shine-y');
+      card.style.removeProperty('--lift');
+    }
     card.addEventListener('pointerleave', reset);
     motion.addEventListener('change', reset);
   });
+  if ('IntersectionObserver' in window && !motion.matches) {
+    const revealTargets = $$('.section-heading, .project, .case, .about-title, .journey, .principles article, .skill-grid article, .closing > *');
+    revealTargets.forEach((element, index) => {
+      element.classList.add('reveal');
+      element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+    });
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+    revealTargets.forEach(element => revealObserver.observe(element));
+  }
   const command = $('#command');
   const input = $('#commandInput');
   const commandButtons = $$('#commandList button');
