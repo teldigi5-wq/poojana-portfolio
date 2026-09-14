@@ -1,0 +1,97 @@
+name: Portfolio CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check JavaScript syntax
+        run: node --check script.js
+
+      - name: Verify required portfolio files
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(index.html styles.css studio.css script.js README.md vercel.json)
+          for file in "${required[@]}"; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
+
+      - name: Validate local HTML asset references
+        shell: python
+        run: |
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlparse, unquote
+
+          root = Path('.').resolve()
+          html_path = root / 'index.html'
+
+          class RefParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.refs = []
+
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  for key in ('src', 'href'):
+                      value = data.get(key)
+                      if value:
+                          self.refs.append(value)
+
+          parser = RefParser()
+          parser.feed(html_path.read_text(encoding='utf-8'))
+
+          missing = []
+          for ref in parser.refs:
+              if ref.startswith(('#', 'mailto:', 'tel:', 'javascript:')):
+                  continue
+              parsed = urlparse(ref)
+              if parsed.scheme or parsed.netloc:
+                  continue
+              path_text = unquote(parsed.path)
+              if not path_text or path_text == '/':
+                  continue
+              local = root / path_text.lstrip('/')
+              if path_text.endswith('/'):
+                  local = local / 'index.html'
+              if not local.exists():
+                  missing.append(ref)
+
+          if missing:
+              print('Missing local references:')
+              for ref in sorted(set(missing)):
+                  print(f' - {ref}')
+              raise SystemExit(1)
+
+          print(f'Validated {len(parser.refs)} HTML references.')
+
+      - name: Verify Vercel configuration is valid JSON
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          json.loads(Path('vercel.json').read_text(encoding='utf-8'))
+          print('vercel.json is valid JSON')
