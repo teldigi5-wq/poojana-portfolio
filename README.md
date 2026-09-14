@@ -1,6 +1,6 @@
 # Poojana Kaveesh — Engineering Portfolio
 
-A static portfolio with a violet visual identity, a portrait-led introduction and evidence-focused case studies for software engineering opportunities.
+A static portfolio with a spacious navy and blue-violet visual identity, a portrait-led introduction and evidence-focused case studies for software engineering opportunities.
 
 ## Content
 
@@ -33,6 +33,6 @@ Open `http://localhost:8080`.
 
 ## Deployment
 
-Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css` and `script.js` are the active implementation. Legacy `upgrade.css` and `cv.css` are retained but no longer loaded.
+Serve the repository root as a static website. The existing `vercel.json` preserves clean URLs and PDF/image headers. `index.html`, `styles.css`, `studio.css` and `script.js` are the active implementation. Legacy `upgrade.css` and `cv.css` are retained but no longer loaded.
 
-The previous `poojana-hero.webp` is invalid and is not used. The homepage uses `poojana-hero-composition.png`, the original user-supplied 441 × 375 PNG, copied byte-for-byte with no recompression or cropping. CSS keeps its display width at or below 441 CSS pixels. The existing profile WebP remains available for social metadata. A larger source is needed for full sharpness at large sizes on high-density displays.
+The homepage uses `poojana-studio-v2.webp`, a 1254 × 1254 AI-edited portrait derived from the user's supplied reference, exported as lossless WebP. It is not pixel-identical to the original photograph. CSS masks blend its edges into the hero without modifying the asset. The previous supplied composition and profile assets are preserved; the existing profile WebP remains available for social metadata. An original high-resolution photograph is preferable when exact photographic fidelity is required.

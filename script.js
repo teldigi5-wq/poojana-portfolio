@@ -10,7 +10,7 @@
   function setTheme(theme) {
     root.dataset.theme = theme;
     themeButton.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
-    $('meta[name="theme-color"]').content = theme === 'dark' ? '#080812' : '#f4f2fa';
+    $('meta[name="theme-color"]').content = theme === 'dark' ? '#080f17' : '#f3f6fc';
   }
   let savedTheme;
   try { savedTheme = localStorage.getItem('pk-theme'); } catch { /* Use the default. */ }
@@ -36,7 +36,7 @@
     document.body.classList.toggle('menu-open', opening);
   });
   $$('a', menu).forEach(link => link.addEventListener('click', () => closeMenu()));
-  matchMedia('(min-width: 741px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
   // Case studies work without JavaScript; deep links open them when enhanced.
   function openCase(hash) {
     if (!hash || !hash.startsWith('#')) return;
@@ -72,7 +72,7 @@
         else link.removeAttribute('aria-current');
       });
     }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
-    ['home', 'projects', 'about', 'engineering'].forEach(id => navObserver.observe(document.getElementById(id)));
+    ['home', 'projects', 'about', 'skills', 'journey', 'contact'].forEach(id => navObserver.observe(document.getElementById(id)));
   }
   // Bounded pointer feedback; no perpetual canvas or background animation loop.
   $$('.tilt').forEach(card => {
