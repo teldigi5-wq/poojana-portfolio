@@ -6,20 +6,6 @@
   root.classList.add('js');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  // Storage is optional; privacy modes must never break navigation.
-  const themeButton = $('#themeToggle');
-  function setTheme(theme) {
-    root.dataset.theme = theme;
-    themeButton.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
-    $('meta[name="theme-color"]').content = theme === 'dark' ? '#080f17' : '#f3f6fc';
-  }
-  let savedTheme;
-  try { savedTheme = localStorage.getItem('pk-theme'); } catch { /* Use the default. */ }
-  setTheme(savedTheme === 'light' ? 'light' : 'dark');
-  themeButton.addEventListener('click', () => {
-    setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
-    try { localStorage.setItem('pk-theme', root.dataset.theme); } catch { /* Optional preference. */ }
-  });
   const menu = $('#mobileNav');
   const menuButton = $('#menuToggle');
   function closeMenu(returnFocus = false) {
