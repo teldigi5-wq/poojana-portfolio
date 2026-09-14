@@ -75,33 +75,6 @@
     }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
     ['home', 'projects', 'about', 'skills', 'journey', 'contact'].forEach(id => navObserver.observe(document.getElementById(id)));
   }
-  // Bounded 3D pointer feedback; animation is disabled for touch and reduced motion.
-  const hero = $('.studio-hero');
-  let pointerFrame = 0;
-  function resetHeroDepth() {
-    ['--hero-x','--hero-y','--hero-x-neg','--hero-y-neg'].forEach(name => hero?.style.setProperty(name, '0px'));
-    hero?.style.setProperty('--hero-rotate', '0deg');
-  }
-  if (hero) {
-    hero.addEventListener('pointermove', event => {
-      if (motion.matches || !finePointer.matches) return;
-      cancelAnimationFrame(pointerFrame);
-      const rect = hero.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width * 2 - 1;
-      const y = (event.clientY - rect.top) / rect.height * 2 - 1;
-      pointerFrame = requestAnimationFrame(() => {
-        hero.style.setProperty('--hero-x', `${(x * 12).toFixed(2)}px`);
-        hero.style.setProperty('--hero-y', `${(y * 10).toFixed(2)}px`);
-        hero.style.setProperty('--hero-x-neg', `${(x * -12).toFixed(2)}px`);
-        hero.style.setProperty('--hero-y-neg', `${(y * -10).toFixed(2)}px`);
-        hero.style.setProperty('--hero-rotate', `${(x * -1.2).toFixed(2)}deg`);
-        document.body.style.setProperty('--pointer-x', `${event.clientX}px`);
-        document.body.style.setProperty('--pointer-y', `${event.clientY + scrollY}px`);
-      });
-    });
-    hero.addEventListener('pointerleave', resetHeroDepth);
-    motion.addEventListener('change', resetHeroDepth);
-  }
   $$('.tilt').forEach(card => {
     let frame = 0;
     card.addEventListener('pointermove', event => {
