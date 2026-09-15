@@ -1,4 +1,5 @@
 /* Reference-led editorial layout; preserves the portfolio's content and interactions. */
+html { scroll-padding-top:0; }
 :root {
   --bg: #080f17;
   --panel: #0d1723;
