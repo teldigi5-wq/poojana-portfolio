@@ -38,10 +38,12 @@
   const heroTitle = $('#heroTitle');
   wrapWords(heroTitle, 'hero-kinetic');
   const studentTyping = $('.student-typing');
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    heroTitle?.classList.add('kinetic-visible');
-    studentTyping?.classList.add('is-typing');
-  }));
+  const startHero = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+      heroTitle?.classList.add('kinetic-visible');
+      studentTyping?.classList.add('is-typing');
+    }));
+  if (motion.matches) startHero();
+  else setTimeout(startHero, 230);
   const portraitImage = $('.studio-portrait .portrait-image');
   const portraitFigure = portraitImage?.closest('.studio-portrait');
   const portraitHero = portraitImage?.closest('.studio-hero');
@@ -105,43 +107,10 @@
   if (location.hash && document.getElementById(location.hash.slice(1))?.matches('details')) {
     requestAnimationFrame(() => document.getElementById(location.hash.slice(1)).scrollIntoView());
   }
-  if (!motion.matches && !CSS.supports('interpolate-size: allow-keywords')) {
-    $$('.case').forEach(details => {
-      const summary = $('summary', details);
-      let expanded = details.open;
-      let animation;
-      summary.addEventListener('click', event => {
-        if (motion.matches) {
-          expanded = !details.open;
-          return;
-        }
-        event.preventDefault();
-        expanded = !expanded;
-        if (animation) {
-          animation.oncancel = null;
-          animation.cancel();
-        }
-        const startHeight = details.offsetHeight;
-        if (expanded) details.open = true;
-        const endHeight = expanded ? details.scrollHeight : summary.offsetHeight;
-        details.style.height = `${startHeight}px`;
-        details.classList.add('is-animating');
-        animation = details.animate(
-          { height: [`${startHeight}px`, `${endHeight}px`] },
-          { duration: 360, easing: 'cubic-bezier(.2,.75,.2,1)' }
-        );
-        animation.onfinish = () => {
-          details.open = expanded;
-          details.style.removeProperty('height');
-          details.classList.remove('is-animating');
-          animation = undefined;
-        };
-        animation.oncancel = () => details.style.removeProperty('height');
-      });
-    });
-  }
   const progress = $('#progress');
   const header = $('.header');
+  const backToTop = $('#backToTop');
+  const hero = $('.studio-hero');
   let scrollPending = false;
   function updateScroll() {
     const viewportHeight = window.visualViewport?.height || innerHeight;
@@ -149,6 +118,7 @@
     const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
     progress.style.transform = `scaleX(${ratio})`;
     header?.classList.toggle('is-scrolled', scrollY > 12);
+    backToTop?.classList.toggle('is-visible', scrollY > (hero?.offsetHeight || viewportHeight) * .72);
     scrollPending = false;
   }
   function scheduleScrollUpdate() {
@@ -193,7 +163,7 @@
     });
   }
   if (finePointer.matches) {
-  $$('.tilt').forEach(card => {
+  $$('.tilt, .case').forEach(card => {
     let frame = 0;
     card.addEventListener('pointerenter', event => {
       if (event.pointerType === 'mouse' && !motion.matches) card.classList.add('is-tilting');
@@ -224,6 +194,32 @@
     card.addEventListener('pointerleave', reset);
     motion.addEventListener('change', reset);
   });
+  const ambientLight = $('#ambientLight');
+  if (ambientLight) {
+    let currentX = -700;
+    let currentY = -700;
+    let targetX = currentX;
+    let targetY = currentY;
+    let ambientFrame = 0;
+    const animateAmbient = () => {
+      currentX += (targetX - currentX) * .11;
+      currentY += (targetY - currentY) * .11;
+      ambientLight.style.transform = `translate3d(${currentX}px,${currentY}px,0)`;
+      if (Math.abs(targetX - currentX) > .35 || Math.abs(targetY - currentY) > .35) ambientFrame = requestAnimationFrame(animateAmbient);
+      else ambientFrame = 0;
+    };
+    addEventListener('pointermove', event => {
+      if (event.pointerType !== 'mouse' || motion.matches) return;
+      targetX = event.clientX - 280;
+      targetY = event.clientY - 280;
+      ambientLight.classList.toggle('is-visible', !event.target.closest('.studio-hero,.header,.command'));
+      if (!ambientFrame) ambientFrame = requestAnimationFrame(animateAmbient);
+    }, { passive: true });
+    addEventListener('pointerleave', () => ambientLight.classList.remove('is-visible'));
+    motion.addEventListener('change', event => {
+      if (event.matches) ambientLight.classList.remove('is-visible');
+    });
+  }
   $$('.btn.primary, .contact-card .btn').forEach(button => {
     let frame = 0;
     button.addEventListener('pointermove', event => {
@@ -241,6 +237,19 @@
       button.style.removeProperty('--button-glow-y');
     });
   });
+  }
+  if ('IntersectionObserver' in window && !motion.matches) {
+    const effectsObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.target === hero) entry.target.classList.toggle('effects-paused', !entry.isIntersecting);
+        else entry.target.classList.toggle('is-onscreen', entry.isIntersecting);
+      });
+    }, { rootMargin: '12% 0px 12% 0px', threshold: .01 });
+    if (hero) effectsObserver.observe(hero);
+    $$('.project').forEach(project => effectsObserver.observe(project));
+    document.addEventListener('visibilitychange', () => {
+      hero?.classList.toggle('effects-paused', document.hidden);
+    });
   }
   if ('IntersectionObserver' in window && !motion.matches) {
     $$('.section-heading h2, .about-title h2, .contact-card h2').forEach(heading => wrapWords(heading, 'kinetic-heading'));
