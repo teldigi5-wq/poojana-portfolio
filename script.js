@@ -11,18 +11,24 @@
   const portraitHero = portraitImage?.closest('.studio-hero');
   if (portraitImage && portraitFigure && portraitHero) {
     const portraitContainers = [portraitFigure, portraitHero];
+    let portraitRevealed = false;
+    let portraitFallback;
     portraitContainers.forEach(container => {
       container.classList.add('portrait-loading');
       container.classList.remove('portrait-loaded');
     });
     const revealPortrait = () => {
+      if (portraitRevealed) return;
+      portraitRevealed = true;
+      clearTimeout(portraitFallback);
       portraitContainers.forEach(container => {
         container.classList.remove('portrait-loading');
         container.classList.add('portrait-loaded');
       });
       portraitFigure.removeAttribute('aria-busy');
     };
-    const settlePortraitError = () => portraitFigure.removeAttribute('aria-busy');
+    const settlePortraitError = () => revealPortrait();
+    portraitFallback = setTimeout(revealPortrait, 4500);
     if (portraitImage.complete) {
       if (portraitImage.naturalWidth > 0) revealPortrait();
       else settlePortraitError();
