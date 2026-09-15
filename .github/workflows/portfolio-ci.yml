@@ -65,6 +65,8 @@ jobs:
           parser.feed(html_path.read_text(encoding='utf-8'))
 
           missing = []
+          platform_routes = ('/_vercel/',)
+
           for ref in parser.refs:
               if ref.startswith(('#', 'mailto:', 'tel:', 'javascript:')):
                   continue
@@ -73,6 +75,8 @@ jobs:
                   continue
               path_text = unquote(parsed.path)
               if not path_text or path_text == '/':
+                  continue
+              if path_text.startswith(platform_routes):
                   continue
               local = root / path_text.lstrip('/')
               if path_text.endswith('/'):
