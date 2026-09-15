@@ -6,6 +6,38 @@
   root.classList.add('js');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  function wrapWords(element, className) {
+    if (!element || element.dataset.kineticReady) return;
+    element.dataset.kineticReady = 'true';
+    element.classList.add(className);
+    element.setAttribute('aria-label', element.textContent.replace(/\s+/g, ' ').trim());
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      if (walker.currentNode.nodeValue.trim()) textNodes.push(walker.currentNode);
+    }
+    let wordIndex = 0;
+    textNodes.forEach(node => {
+      const fragment = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          fragment.append(document.createTextNode(part));
+          return;
+        }
+        const word = document.createElement('span');
+        word.className = 'kinetic-word';
+        word.setAttribute('aria-hidden', 'true');
+        word.style.setProperty('--word-delay', `${wordIndex++ * 60}ms`);
+        word.textContent = part;
+        fragment.append(word);
+      });
+      node.replaceWith(fragment);
+    });
+  }
+  const heroTitle = $('#heroTitle');
+  wrapWords(heroTitle, 'hero-kinetic');
+  requestAnimationFrame(() => requestAnimationFrame(() => heroTitle?.classList.add('kinetic-visible')));
   const portraitImage = $('.studio-portrait .portrait-image');
   const portraitFigure = portraitImage?.closest('.studio-portrait');
   const portraitHero = portraitImage?.closest('.studio-hero');
@@ -105,11 +137,13 @@
     });
   }
   const progress = $('#progress');
+  const header = $('.header');
   let scrollPending = false;
   function updateScroll() {
     const max = root.scrollHeight - innerHeight;
     const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
     progress.style.transform = `scaleX(${ratio})`;
+    header?.classList.toggle('is-scrolled', scrollY > 12);
     scrollPending = false;
   }
   addEventListener('scroll', () => {
@@ -199,6 +233,7 @@
     });
   });
   if ('IntersectionObserver' in window && !motion.matches) {
+    $$('.section-heading h2, .about-title h2, .contact-card h2').forEach(heading => wrapWords(heading, 'kinetic-heading'));
     const revealGroups = [
       $$('.section-heading'),
       $$('.project-grid .project'),
