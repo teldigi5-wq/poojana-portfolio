@@ -37,7 +37,11 @@
   }
   const heroTitle = $('#heroTitle');
   wrapWords(heroTitle, 'hero-kinetic');
-  requestAnimationFrame(() => requestAnimationFrame(() => heroTitle?.classList.add('kinetic-visible')));
+  const studentTyping = $('.student-typing');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    heroTitle?.classList.add('kinetic-visible');
+    studentTyping?.classList.add('is-typing');
+  }));
   const portraitImage = $('.studio-portrait .portrait-image');
   const portraitFigure = portraitImage?.closest('.studio-portrait');
   const portraitHero = portraitImage?.closest('.studio-hero');
@@ -140,15 +144,19 @@
   const header = $('.header');
   let scrollPending = false;
   function updateScroll() {
-    const max = root.scrollHeight - innerHeight;
+    const viewportHeight = window.visualViewport?.height || innerHeight;
+    const max = root.scrollHeight - viewportHeight;
     const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
     progress.style.transform = `scaleX(${ratio})`;
     header?.classList.toggle('is-scrolled', scrollY > 12);
     scrollPending = false;
   }
-  addEventListener('scroll', () => {
+  function scheduleScrollUpdate() {
     if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateScroll); }
-  }, { passive: true });
+  }
+  addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+  addEventListener('resize', scheduleScrollUpdate, { passive: true });
+  window.visualViewport?.addEventListener('resize', scheduleScrollUpdate, { passive: true });
   updateScroll();
   const navLinks = $$('.desktop-nav a');
   const navIndicator = $('.nav-indicator');
@@ -184,13 +192,14 @@
       if (section) navObserver.observe(section);
     });
   }
+  if (finePointer.matches) {
   $$('.tilt').forEach(card => {
     let frame = 0;
-    card.addEventListener('pointerenter', () => {
-      if (!motion.matches && finePointer.matches) card.classList.add('is-tilting');
+    card.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'mouse' && !motion.matches) card.classList.add('is-tilting');
     });
     card.addEventListener('pointermove', event => {
-      if (motion.matches || !finePointer.matches) return;
+      if (event.pointerType !== 'mouse' || motion.matches) return;
       cancelAnimationFrame(frame);
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - .5;
@@ -218,7 +227,7 @@
   $$('.btn.primary, .contact-card .btn').forEach(button => {
     let frame = 0;
     button.addEventListener('pointermove', event => {
-      if (motion.matches || !finePointer.matches) return;
+      if (event.pointerType !== 'mouse' || motion.matches) return;
       cancelAnimationFrame(frame);
       const rect = button.getBoundingClientRect();
       frame = requestAnimationFrame(() => {
@@ -232,6 +241,7 @@
       button.style.removeProperty('--button-glow-y');
     });
   });
+  }
   if ('IntersectionObserver' in window && !motion.matches) {
     $$('.section-heading h2, .about-title h2, .contact-card h2').forEach(heading => wrapWords(heading, 'kinetic-heading'));
     const revealGroups = [
