@@ -6,7 +6,7 @@
   root.classList.add('js');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const portraitImage = $('.studio-portrait img');
+  const portraitImage = $('.studio-portrait .portrait-image');
   const portraitFigure = portraitImage?.closest('.studio-portrait');
   const portraitHero = portraitImage?.closest('.studio-hero');
   if (portraitImage && portraitFigure && portraitHero) {
@@ -17,23 +17,25 @@
       container.classList.add('portrait-loading');
       container.classList.remove('portrait-loaded');
     });
-    const revealPortrait = () => {
-      if (portraitRevealed) return;
+    const revealPortrait = (useFallback = false) => {
+      const showingFallback = portraitFigure.classList.contains('portrait-fallback');
+      if ((portraitRevealed && useFallback) || (portraitRevealed && !showingFallback)) return;
       portraitRevealed = true;
       clearTimeout(portraitFallback);
       portraitContainers.forEach(container => {
         container.classList.remove('portrait-loading');
         container.classList.add('portrait-loaded');
+        container.classList.toggle('portrait-fallback', useFallback);
       });
       portraitFigure.removeAttribute('aria-busy');
     };
-    const settlePortraitError = () => revealPortrait();
-    portraitFallback = setTimeout(revealPortrait, 4500);
+    const settlePortraitError = () => revealPortrait(true);
+    portraitFallback = setTimeout(settlePortraitError, 2500);
     if (portraitImage.complete) {
-      if (portraitImage.naturalWidth > 0) revealPortrait();
+      if (portraitImage.naturalWidth > 0) revealPortrait(false);
       else settlePortraitError();
     } else {
-      portraitImage.addEventListener('load', revealPortrait, { once: true });
+      portraitImage.addEventListener('load', () => revealPortrait(false), { once: true });
       portraitImage.addEventListener('error', settlePortraitError, { once: true });
     }
   }
