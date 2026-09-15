@@ -69,33 +69,92 @@
   if (location.hash && document.getElementById(location.hash.slice(1))?.matches('details')) {
     requestAnimationFrame(() => document.getElementById(location.hash.slice(1)).scrollIntoView());
   }
+  if (!motion.matches && !CSS.supports('interpolate-size: allow-keywords')) {
+    $$('.case').forEach(details => {
+      const summary = $('summary', details);
+      let expanded = details.open;
+      let animation;
+      summary.addEventListener('click', event => {
+        if (motion.matches) {
+          expanded = !details.open;
+          return;
+        }
+        event.preventDefault();
+        expanded = !expanded;
+        if (animation) {
+          animation.oncancel = null;
+          animation.cancel();
+        }
+        const startHeight = details.offsetHeight;
+        if (expanded) details.open = true;
+        const endHeight = expanded ? details.scrollHeight : summary.offsetHeight;
+        details.style.height = `${startHeight}px`;
+        details.classList.add('is-animating');
+        animation = details.animate(
+          { height: [`${startHeight}px`, `${endHeight}px`] },
+          { duration: 360, easing: 'cubic-bezier(.2,.75,.2,1)' }
+        );
+        animation.onfinish = () => {
+          details.open = expanded;
+          details.style.removeProperty('height');
+          details.classList.remove('is-animating');
+          animation = undefined;
+        };
+        animation.oncancel = () => details.style.removeProperty('height');
+      });
+    });
+  }
   const progress = $('#progress');
   let scrollPending = false;
   function updateScroll() {
     const max = root.scrollHeight - innerHeight;
-    progress.style.width = `${max > 0 ? Math.min(100, scrollY / max * 100) : 0}%`;
+    const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
+    progress.style.transform = `scaleX(${ratio})`;
     scrollPending = false;
   }
   addEventListener('scroll', () => {
     if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateScroll); }
   }, { passive: true });
   updateScroll();
+  const navLinks = $$('.desktop-nav a');
+  const navIndicator = $('.nav-indicator');
+  function moveNavIndicator(link, instant = false) {
+    if (!link || !navIndicator) return;
+    navIndicator.style.transitionDuration = instant ? '0s' : '';
+    navIndicator.style.width = `${link.offsetWidth}px`;
+    navIndicator.style.transform = `translate3d(${link.offsetLeft}px,0,0)`;
+    if (instant) requestAnimationFrame(() => { navIndicator.style.transitionDuration = ''; });
+  }
+  function setActiveNav(link) {
+    if (!link) return;
+    navLinks.forEach(item => {
+      const active = item === link;
+      item.classList.toggle('active', active);
+      if (active) item.setAttribute('aria-current', 'location');
+      else item.removeAttribute('aria-current');
+    });
+    moveNavIndicator(link);
+  }
+  requestAnimationFrame(() => moveNavIndicator($('.desktop-nav a.active'), true));
+  navLinks.forEach(link => link.addEventListener('click', () => setActiveNav(link)));
+  addEventListener('resize', () => moveNavIndicator($('.desktop-nav a.active'), true), { passive: true });
   if ('IntersectionObserver' in window) {
-    const navLinks = $$('.desktop-nav a');
+    const visibleSections = new Set();
     const navObserver = new IntersectionObserver(entries => {
-      const current = entries.find(entry => entry.isIntersecting);
-      if (!current) return;
-      navLinks.forEach(link => {
-        const active = link.hash === `#${current.target.id}`;
-        link.classList.toggle('active', active);
-        if (active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
-      });
+      entries.forEach(entry => entry.isIntersecting ? visibleSections.add(entry.target) : visibleSections.delete(entry.target));
+      const current = [...visibleSections].sort((a, b) => Math.abs(a.getBoundingClientRect().top - 120) - Math.abs(b.getBoundingClientRect().top - 120))[0];
+      if (current) setActiveNav(navLinks.find(link => link.hash === `#${current.id}`));
     }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
-    ['home', 'projects', 'about', 'skills', 'journey', 'contact'].forEach(id => navObserver.observe(document.getElementById(id)));
+    navLinks.forEach(link => {
+      const section = document.getElementById(link.hash.slice(1));
+      if (section) navObserver.observe(section);
+    });
   }
   $$('.tilt').forEach(card => {
     let frame = 0;
+    card.addEventListener('pointerenter', () => {
+      if (!motion.matches && finePointer.matches) card.classList.add('is-tilting');
+    });
     card.addEventListener('pointermove', event => {
       if (motion.matches || !finePointer.matches) return;
       cancelAnimationFrame(frame);
@@ -117,16 +176,49 @@
       card.style.removeProperty('--shine-x');
       card.style.removeProperty('--shine-y');
       card.style.removeProperty('--lift');
+      card.classList.remove('is-tilting');
     }
     card.addEventListener('pointerleave', reset);
     motion.addEventListener('change', reset);
   });
-  if ('IntersectionObserver' in window && !motion.matches) {
-    const revealTargets = $$('.section-heading, .project, .case, .about-title, .journey, .principles article, .skill-grid article, .writing-card, .closing > *');
-    revealTargets.forEach((element, index) => {
-      element.classList.add('reveal');
-      element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+  $$('.btn.primary, .contact-card .btn').forEach(button => {
+    let frame = 0;
+    button.addEventListener('pointermove', event => {
+      if (motion.matches || !finePointer.matches) return;
+      cancelAnimationFrame(frame);
+      const rect = button.getBoundingClientRect();
+      frame = requestAnimationFrame(() => {
+        button.style.setProperty('--button-glow-x', `${event.clientX - rect.left}px`);
+        button.style.setProperty('--button-glow-y', `${event.clientY - rect.top}px`);
+      });
     });
+    button.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame);
+      button.style.removeProperty('--button-glow-x');
+      button.style.removeProperty('--button-glow-y');
+    });
+  });
+  if ('IntersectionObserver' in window && !motion.matches) {
+    const revealGroups = [
+      $$('.section-heading'),
+      $$('.project-grid .project'),
+      $$('.case-studies .case'),
+      $$('.about-section > *'),
+      $$('.journey li'),
+      $$('.principles article'),
+      $$('.skill-grid article'),
+      $$('.writing-card'),
+      $$('.closing > *')
+    ];
+    const revealTargets = [];
+    const registered = new Set();
+    revealGroups.forEach(group => group.forEach((element, index) => {
+      if (registered.has(element)) return;
+      registered.add(element);
+      revealTargets.push(element);
+      element.classList.add('reveal');
+      element.style.setProperty('--reveal-delay', `${Math.min(index, 4) * 70}ms`);
+    }));
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -135,6 +227,12 @@
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
     revealTargets.forEach(element => revealObserver.observe(element));
+    motion.addEventListener('change', event => {
+      if (event.matches) revealTargets.forEach(element => {
+        element.classList.add('in-view');
+        revealObserver.unobserve(element);
+      });
+    }, { once: true });
   }
   const command = $('#command');
   const input = $('#commandInput');
