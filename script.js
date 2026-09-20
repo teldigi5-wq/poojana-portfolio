@@ -191,17 +191,24 @@
     });
   }
   if (finePointer.matches) {
+  const pointerResets = new Set();
   const magneticTargets = $$('.hero .actions .btn, .contact-card .btn.primary, .desktop-nav a');
   let magneticFrame = 0;
   let magneticEvent;
-  const resetMagnetic = () => magneticTargets.forEach(target => {
-    target.classList.remove('is-magnetic');
-    target.style.removeProperty('--magnetic-x');
-    target.style.removeProperty('--magnetic-y');
-  });
+  const resetMagnetic = () => {
+    cancelAnimationFrame(magneticFrame);
+    magneticFrame = 0;
+    magneticEvent = undefined;
+    magneticTargets.forEach(target => {
+      target.classList.remove('is-magnetic');
+      target.style.removeProperty('--magnetic-x');
+      target.style.removeProperty('--magnetic-y');
+    });
+  };
+  pointerResets.add(resetMagnetic);
   const updateMagnetic = () => {
     magneticFrame = 0;
-    if (!magneticEvent || motion.matches) return resetMagnetic();
+    if (!magneticEvent || motion.matches || !finePointer.matches) return resetMagnetic();
     magneticTargets.forEach(target => {
       const rect = target.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
@@ -223,19 +230,17 @@
     });
   };
   addEventListener('pointermove', event => {
-    if (event.pointerType !== 'mouse') return;
+    if (event.pointerType !== 'mouse' || !finePointer.matches) return;
     magneticEvent = event;
     if (!magneticFrame) magneticFrame = requestAnimationFrame(updateMagnetic);
   }, { passive: true });
-  addEventListener('pointerleave', resetMagnetic);
-  motion.addEventListener('change', resetMagnetic);
   $$('.tilt, .case').forEach(card => {
     let frame = 0;
     card.addEventListener('pointerenter', event => {
-      if (event.pointerType === 'mouse' && !motion.matches) card.classList.add('is-tilting');
+      if (event.pointerType === 'mouse' && finePointer.matches && !motion.matches) card.classList.add('is-tilting');
     });
     card.addEventListener('pointermove', event => {
-      if (event.pointerType !== 'mouse' || motion.matches) return;
+      if (event.pointerType !== 'mouse' || motion.matches || !finePointer.matches) return;
       cancelAnimationFrame(frame);
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - .5;
@@ -258,7 +263,7 @@
       card.classList.remove('is-tilting');
     }
     card.addEventListener('pointerleave', reset);
-    motion.addEventListener('change', reset);
+    pointerResets.add(reset);
   });
   const ambientLight = $('#ambientLight');
   if (ambientLight) {
@@ -267,6 +272,12 @@
     let targetX = currentX;
     let targetY = currentY;
     let ambientFrame = 0;
+    const resetAmbient = () => {
+      cancelAnimationFrame(ambientFrame);
+      ambientFrame = 0;
+      ambientLight.classList.remove('is-visible');
+    };
+    pointerResets.add(resetAmbient);
     const animateAmbient = () => {
       currentX += (targetX - currentX) * .11;
       currentY += (targetY - currentY) * .11;
@@ -275,21 +286,24 @@
       else ambientFrame = 0;
     };
     addEventListener('pointermove', event => {
-      if (event.pointerType !== 'mouse' || motion.matches) return;
+      if (event.pointerType !== 'mouse' || motion.matches || !finePointer.matches) return;
       targetX = event.clientX - 280;
       targetY = event.clientY - 280;
-      ambientLight.classList.toggle('is-visible', !event.target.closest('.studio-hero,.header,.command'));
+      const overExcludedArea = event.target instanceof Element && event.target.closest('.studio-hero,.header,.command');
+      ambientLight.classList.toggle('is-visible', !overExcludedArea);
       if (!ambientFrame) ambientFrame = requestAnimationFrame(animateAmbient);
     }, { passive: true });
-    addEventListener('pointerleave', () => ambientLight.classList.remove('is-visible'));
-    motion.addEventListener('change', event => {
-      if (event.matches) ambientLight.classList.remove('is-visible');
-    });
   }
   $$('.btn.primary, .contact-card .btn').forEach(button => {
     let frame = 0;
+    const resetButtonGlow = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      button.style.removeProperty('--button-glow-x');
+      button.style.removeProperty('--button-glow-y');
+    };
     button.addEventListener('pointermove', event => {
-      if (event.pointerType !== 'mouse' || motion.matches) return;
+      if (event.pointerType !== 'mouse' || motion.matches || !finePointer.matches) return;
       cancelAnimationFrame(frame);
       const rect = button.getBoundingClientRect();
       frame = requestAnimationFrame(() => {
@@ -297,12 +311,15 @@
         button.style.setProperty('--button-glow-y', `${event.clientY - rect.top}px`);
       });
     });
-    button.addEventListener('pointerleave', () => {
-      cancelAnimationFrame(frame);
-      button.style.removeProperty('--button-glow-x');
-      button.style.removeProperty('--button-glow-y');
-    });
+    button.addEventListener('pointerleave', resetButtonGlow);
+    pointerResets.add(resetButtonGlow);
   });
+  const resetPointerEffects = () => pointerResets.forEach(reset => reset());
+  addEventListener('pointerleave', resetPointerEffects);
+  addEventListener('blur', resetPointerEffects);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetPointerEffects(); });
+  motion.addEventListener('change', event => { if (event.matches) resetPointerEffects(); });
+  finePointer.addEventListener('change', event => { if (!event.matches) resetPointerEffects(); });
   }
   if ('IntersectionObserver' in window && !motion.matches) {
     const effectsObserver = new IntersectionObserver(entries => {
@@ -361,18 +378,9 @@
     if (!hash || hash === '#') return;
     const target = document.getElementById(hash.slice(1));
     if (!target) return;
-    const move = () => {
-      openCase(hash);
-      if (location.hash !== hash) history.pushState(null, '', hash);
-      target.scrollIntoView({ behavior: 'instant', block: 'start' });
-    };
-    if (!motion.matches && typeof document.startViewTransition === 'function') {
-      document.startViewTransition(move);
-    } else {
-      openCase(hash);
-      if (location.hash !== hash) history.pushState(null, '', hash);
-      target.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth', block: 'start' });
-    }
+    openCase(hash);
+    if (location.hash !== hash) history.pushState(null, '', hash);
+    target.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth', block: 'start' });
   }
   $$('a[href^="#"]').forEach(link => link.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
