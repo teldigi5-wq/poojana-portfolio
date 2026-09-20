@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          required=(index.html styles.css studio.css script.js README.md vercel.json)
+          required=(index.html studio.css script.js README.md vercel.json)
           for file in "${required[@]}"; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done

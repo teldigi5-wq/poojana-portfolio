@@ -94,7 +94,7 @@
     document.body.classList.toggle('menu-open', opening);
   });
   $$('a', menu).forEach(link => link.addEventListener('click', () => closeMenu()));
-  matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  matchMedia('(min-width: 1021px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
   // Case studies work without JavaScript; deep links open them when enhanced.
   function openCase(hash) {
     if (!hash || !hash.startsWith('#')) return;
@@ -289,6 +289,17 @@
     }, { once: true });
   }
   const command = $('#command');
+  // Printing expands evidence temporarily, then restores the reader's state.
+  let printCaseState;
+  addEventListener('beforeprint', () => {
+    if (printCaseState) return;
+    printCaseState = $$('details.case').map(element => [element, element.open]);
+    printCaseState.forEach(([element]) => { element.open = true; });
+  });
+  addEventListener('afterprint', () => {
+    printCaseState?.forEach(([element, open]) => { element.open = open; });
+    printCaseState = undefined;
+  });
   const input = $('#commandInput');
   const commandButtons = $$('#commandList button');
   const empty = $('#commandEmpty');
@@ -323,7 +334,10 @@
   }));
   input.addEventListener('input', () => {
     const query = input.value.trim().toLowerCase();
-    commandButtons.forEach(button => button.hidden = !button.textContent.toLowerCase().includes(query));
+    commandButtons.forEach(button => {
+      const terms = `${button.textContent} ${button.dataset.target}`.toLowerCase();
+      button.hidden = !terms.includes(query);
+    });
     selected = 0;
     empty.hidden = visible().length > 0;
     select();
