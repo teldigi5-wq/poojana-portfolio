@@ -111,6 +111,7 @@
   const header = $('.header');
   const backToTop = $('#backToTop');
   const hero = $('.studio-hero');
+  const journeyTimeline = $('.journey');
   let scrollPending = false;
   function updateScroll() {
     const viewportHeight = window.visualViewport?.height || innerHeight;
@@ -119,6 +120,13 @@
     progress.style.transform = `scaleX(${ratio})`;
     header?.classList.toggle('is-scrolled', scrollY > 12);
     backToTop?.classList.toggle('is-visible', scrollY > (hero?.offsetHeight || viewportHeight) * .72);
+    if (journeyTimeline && !motion.matches) {
+      const rect = journeyTimeline.getBoundingClientRect();
+      const start = viewportHeight * .76;
+      const end = viewportHeight * .3;
+      const timelineProgress = Math.max(0, Math.min(1, (start - rect.top) / Math.max(1, rect.height + start - end)));
+      journeyTimeline.style.setProperty('--timeline-progress', timelineProgress.toFixed(3));
+    }
     scrollPending = false;
   }
   function scheduleScrollUpdate() {
@@ -162,7 +170,65 @@
       if (section) navObserver.observe(section);
     });
   }
+  if ('IntersectionObserver' in window && !motion.matches) {
+    const toneSections = $$('#home,#projects,#about,#engineering,#skills,#writing,#contact');
+    const visibleToneSections = new Set();
+    const toneObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.isIntersecting ? visibleToneSections.add(entry.target) : visibleToneSections.delete(entry.target));
+      const focusLine = (window.visualViewport?.height || innerHeight) * .42;
+      const current = [...visibleToneSections]
+        .sort((a, b) => Math.abs(a.getBoundingClientRect().top - focusLine) - Math.abs(b.getBoundingClientRect().top - focusLine))[0];
+      if (current) document.body.dataset.sectionTone = current.id;
+    }, { rootMargin: '-32% 0px -48% 0px', threshold: [0, .2, .5] });
+    toneSections.forEach(section => toneObserver.observe(section));
+    motion.addEventListener('change', event => {
+      if (event.matches) {
+        delete document.body.dataset.sectionTone;
+        journeyTimeline?.style.removeProperty('--timeline-progress');
+      } else {
+        scheduleScrollUpdate();
+      }
+    });
+  }
   if (finePointer.matches) {
+  const magneticTargets = $$('.hero .actions .btn, .contact-card .btn.primary, .desktop-nav a');
+  let magneticFrame = 0;
+  let magneticEvent;
+  const resetMagnetic = () => magneticTargets.forEach(target => {
+    target.classList.remove('is-magnetic');
+    target.style.removeProperty('--magnetic-x');
+    target.style.removeProperty('--magnetic-y');
+  });
+  const updateMagnetic = () => {
+    magneticFrame = 0;
+    if (!magneticEvent || motion.matches) return resetMagnetic();
+    magneticTargets.forEach(target => {
+      const rect = target.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const nearestX = Math.max(rect.left, Math.min(magneticEvent.clientX, rect.right));
+      const nearestY = Math.max(rect.top, Math.min(magneticEvent.clientY, rect.bottom));
+      const distance = Math.hypot(magneticEvent.clientX - nearestX, magneticEvent.clientY - nearestY);
+      if (distance > 40) {
+        target.classList.remove('is-magnetic');
+        target.style.removeProperty('--magnetic-x');
+        target.style.removeProperty('--magnetic-y');
+        return;
+      }
+      const strength = 1 - distance / 40;
+      const offsetX = Math.max(-5, Math.min(5, (magneticEvent.clientX - (rect.left + rect.width / 2)) * .08 * strength));
+      const offsetY = Math.max(-5, Math.min(5, (magneticEvent.clientY - (rect.top + rect.height / 2)) * .08 * strength));
+      target.classList.add('is-magnetic');
+      target.style.setProperty('--magnetic-x', `${offsetX.toFixed(2)}px`);
+      target.style.setProperty('--magnetic-y', `${offsetY.toFixed(2)}px`);
+    });
+  };
+  addEventListener('pointermove', event => {
+    if (event.pointerType !== 'mouse') return;
+    magneticEvent = event;
+    if (!magneticFrame) magneticFrame = requestAnimationFrame(updateMagnetic);
+  }, { passive: true });
+  addEventListener('pointerleave', resetMagnetic);
+  motion.addEventListener('change', resetMagnetic);
   $$('.tilt, .case').forEach(card => {
     let frame = 0;
     card.addEventListener('pointerenter', event => {
@@ -264,6 +330,9 @@
       $$('.writing-card'),
       $$('.closing > *')
     ];
+    $$('.skill-grid article').forEach(article => {
+      $$('.chips span', article).forEach((chip, index) => chip.style.setProperty('--chip-delay', `${index * 55}ms`));
+    });
     const revealTargets = [];
     const registered = new Set();
     revealGroups.forEach(group => group.forEach((element, index) => {
@@ -288,6 +357,35 @@
       });
     }, { once: true });
   }
+  function navigateToHash(hash) {
+    if (!hash || hash === '#') return;
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return;
+    const move = () => {
+      openCase(hash);
+      if (location.hash !== hash) history.pushState(null, '', hash);
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
+    };
+    if (!motion.matches && typeof document.startViewTransition === 'function') {
+      document.startViewTransition(move);
+    } else {
+      openCase(hash);
+      if (location.hash !== hash) history.pushState(null, '', hash);
+      target.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+  $$('a[href^="#"]').forEach(link => link.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!document.getElementById(link.hash.slice(1))) return;
+    event.preventDefault();
+    closeMenu();
+    navigateToHash(link.hash);
+  }));
+  addEventListener('popstate', () => {
+    if (!location.hash) return;
+    openCase(location.hash);
+    document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth', block: 'start' });
+  });
   const command = $('#command');
   // Printing expands evidence temporarily, then restores the reader's state.
   let printCaseState;
@@ -329,8 +427,7 @@
   });
   commandButtons.forEach(button => button.addEventListener('click', () => {
     closeCommand();
-    location.hash = button.dataset.target;
-    document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: motion.matches ? 'auto' : 'smooth' });
+    navigateToHash(`#${button.dataset.target}`);
   }));
   input.addEventListener('input', () => {
     const query = input.value.trim().toLowerCase();
