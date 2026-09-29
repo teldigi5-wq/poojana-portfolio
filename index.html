@@ -3,153 +3,163 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#05070a">
-  <meta name="description" content="Poojana Kaveesh — IT undergraduate building AI-focused software, backend platforms and connected systems.">
+  <meta name="theme-color" content="#050709">
+  <meta name="description" content="Poojana Kaveesh is an IT undergraduate at SLIIT building backend platforms, evidence-led AI products and connected systems.">
   <meta name="author" content="Poojana Kaveesh Sellahewa">
-  <meta property="og:title" content="Poojana Kaveesh — Cinematic Engineering Portfolio">
-  <meta property="og:description" content="AI systems, backend engineering and connected products — presented through real project work.">
+  <meta property="og:title" content="Poojana Kaveesh — Engineering systems with intent">
+  <meta property="og:description" content="Backend engineering, AI systems and connected products, presented through verified project work.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://poojana-portfolio.vercel.app/">
   <meta property="og:image" content="https://poojana-portfolio.vercel.app/assets/images/poojana-og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://poojana-portfolio.vercel.app/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preload" as="image" href="assets/images/poojana-studio-960.webp" fetchpriority="high">
-  <link rel="stylesheet" href="cinematic.css?v=1">
-  <title>Poojana Kaveesh | AI & Software Portfolio</title>
+  <link rel="stylesheet" href="cinematic.css?v=2">
+  <title>Poojana Kaveesh | Backend · AI Systems · Product Engineering</title>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://poojana-portfolio.vercel.app/","image":"https://poojana-portfolio.vercel.app/assets/images/poojana-og.jpg","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Backend Engineering","Java","Spring Boot","AI Systems","Cloud Systems","Product Engineering","IoT"]}</script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <canvas id="scene" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page-noise" aria-hidden="true"></div>
+  <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
   <header class="site-header" id="siteHeader">
-    <a class="monogram" href="#home" aria-label="Poojana Kaveesh home">PK<span>.</span></a>
+    <a class="wordmark" href="#home" aria-label="Poojana Kaveesh, home"><span>PK</span><i>.</i></a>
     <nav class="desktop-nav" aria-label="Primary navigation">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+      <a href="#work">Selected work</a><a href="#approach">Approach</a><a href="#about">About</a>
     </nav>
     <div class="header-actions">
-      <a href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">CV</a>
-      <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+      <a class="header-contact" href="mailto:teldigi5@gmail.com">Contact</a>
+      <a class="header-cv" href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">CV <span>↗</span></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav"><span>Menu</span><i></i></button>
     </div>
   </header>
-  <nav id="mobileMenu" class="mobile-menu" aria-label="Mobile navigation" hidden>
-    <a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" hidden>
+    <a href="#work"><span>01</span>Selected work</a><a href="#approach"><span>02</span>Approach</a><a href="#about"><span>03</span>About</a><a href="#contact"><span>04</span>Contact</a>
+    <div><a href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">CV ↗</a></div>
   </nav>
-
   <main id="main">
-    <section class="hero chapter" id="home" data-scene="0">
-      <div class="hero-kicker reveal">Portfolio / 2026</div>
-      <div class="hero-copy">
-        <p class="hero-role reveal">IT Undergraduate · AI-focused software builder</p>
-        <h1 class="reveal"><span>I build systems</span><br><em>that think, connect</em><br><span>and solve.</span></h1>
-        <p class="hero-lead reveal">Backend engineering, intelligent software and connected products — shaped through real projects, not just mockups.</p>
-        <div class="hero-actions reveal">
-          <a class="pill primary" href="#work">Enter selected work <span>↓</span></a>
-          <a class="pill" href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-atmosphere" aria-hidden="true">
+        <span class="beam beam-a"></span><span class="beam beam-b"></span><span class="architecture arch-a"></span><span class="architecture arch-b"></span>
+        <canvas id="signalCanvas"></canvas>
+      </div>
+      <div class="hero-portrait" aria-hidden="true">
+        <picture><source media="(max-width: 720px)" srcset="assets/images/poojana-studio-640.webp"><img src="assets/images/poojana-studio-960.webp" width="960" height="1200" alt="" fetchpriority="high"></picture>
+      </div>
+      <div class="hero-content shell">
+        <div class="hero-meta reveal"><span>POOJANA KAVEESH</span><span>PORTFOLIO / 2026</span></div>
+        <div class="hero-copy">
+          <p class="overline reveal">IT Undergraduate @ SLIIT</p>
+          <h1 id="hero-title" class="reveal"><span>I build systems</span><span>that think, connect</span><span>and solve.</span></h1>
+          <p class="hero-intro reveal">Backend engineering · AI systems · product engineering</p>
+          <div class="hero-cta reveal"><a class="action action-light" href="#work">Explore selected work <span>↓</span></a><a class="text-action" href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">View GitHub <span>↗</span></a></div>
+        </div>
+        <div class="hero-foot reveal"><span><i></i> Open to internships</span><span class="scroll-label">Scroll to enter the work</span></div>
+      </div>
+    </section>
+    <section class="identity-section shell" aria-labelledby="identity-title">
+      <div class="section-code">00 / POSITION</div>
+      <div class="identity-grid">
+        <h2 id="identity-title" class="reveal">Engineering beneath<br>the interface.</h2>
+        <div class="identity-copy reveal"><p>I’m interested in the layer where service boundaries, intelligent software and real-world signals become one dependable product.</p><p>I learn by building the complete path—then testing, documenting and tightening the boundaries.</p></div>
+      </div>
+      <div class="proof-strip reveal" aria-label="Engineering focus"><span><b>01</b> Backend platforms</span><span><b>02</b> Evidence-led AI</span><span><b>03</b> Cloud & reliability</span><span><b>04</b> Connected systems</span></div>
+    </section>
+    <section class="work-heading shell" id="work" aria-labelledby="work-title">
+      <div class="section-code">01 / SELECTED WORK</div>
+      <div><p class="overline reveal">Four systems. Four engineering perspectives.</p><h2 id="work-title" class="reveal">Selected work,<br><em>shown as evidence.</em></h2></div>
+      <p class="work-note reveal">Each chapter pairs the problem with real architecture, boundaries and reviewable source.</p>
+    </section>
+    <article class="case case-aetheris" id="aetheris" data-case="aetheris" aria-labelledby="aetheris-title">
+      <div class="case-stage shell">
+        <div class="case-copy">
+          <div class="case-index reveal"><span>01</span><span>PLATFORM ENGINEERING</span></div>
+          <h2 id="aetheris-title" class="reveal">Aetheris</h2>
+          <p class="case-lead reveal">A cloud-native platform with a separately certified AI runtime boundary—built to make security, messaging, observability and deployment decisions inspectable.</p>
+          <dl class="case-evidence reveal"><div><dt>Platform</dt><dd>Gateway · Identity · Users · Audit</dd></div><div><dt>State</dt><dd>PostgreSQL · Redis · RabbitMQ</dd></div><div><dt>Operations</dt><dd>OTel · Prometheus · Grafana · Kubernetes</dd></div></dl>
+          <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Platform source ↗</a><a href="https://github.com/teldigi5-wq/aetheris-ai-runtime" target="_blank" rel="noopener noreferrer">Runtime source ↗</a></div>
+        </div>
+        <div class="case-visual aetheris-map" aria-label="Aetheris architecture: dashboard through gateway to platform services, state, telemetry and a separate AI runtime">
+          <div class="map-grid" aria-hidden="true"></div>
+          <svg viewBox="0 0 760 620" role="img" aria-hidden="true"><path class="route route-main" d="M90 310H230M330 310H455M555 310H675"/><path class="route" d="M280 260V130M280 360V490M505 260V145M505 360V480"/><path class="route faint" d="M110 535C210 560 320 560 430 525C535 490 605 500 690 545"/></svg>
+          <div class="node n-client"><small>EXPERIENCE</small><b>Dashboard</b></div><div class="node n-gateway key"><small>TRUSTED INGRESS</small><b>Gateway</b></div><div class="node n-services"><small>PLATFORM</small><b>Identity · User · Audit</b></div><div class="node n-runtime"><small>EXTERNAL BOUNDARY</small><b>AI Runtime</b></div><div class="node n-state"><small>DURABLE + DISTRIBUTED</small><b>Postgres · Redis · MQ</b></div><div class="node n-observe"><small>OBSERVE</small><b>Metrics · Logs · Traces</b></div>
+          <div class="signal-pulse p-a"></div><div class="signal-pulse p-b"></div><p class="visual-caption">Models propose. Deterministic policy remains authoritative.</p>
         </div>
       </div>
-      <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="hero-status reveal"><i></i><span>Open to internships & technical collaboration</span></div>
-      <div class="scroll-cue" aria-hidden="true">Scroll to enter <span>↓</span></div>
-    </section>
-
-    <section class="statement chapter" data-scene="1" id="about">
-      <div class="chapter-index">01</div>
-      <div class="statement-inner">
-        <p class="eyebrow reveal">Engineering with intent</p>
-        <h2 class="reveal">I’m interested in the point where <em>software architecture</em>, <em>AI</em> and the <em>physical world</em> meet.</h2>
-        <p class="statement-note reveal">I study BSc (Hons) Information Technology at SLIIT and learn by turning concepts into working systems, then hardening them until the decisions become clear.</p>
-      </div>
-    </section>
-
-    <section class="work-intro chapter" id="work" data-scene="2">
-      <div class="chapter-index">02</div>
-      <p class="eyebrow reveal">Selected work</p>
-      <h2 class="reveal">Four projects.<br><em>Four different systems.</em></h2>
-      <p class="reveal">Scroll through each chapter. The environment shifts with the project.</p>
-    </section>
-
-    <section class="project-scene chapter" data-scene="3" data-accent="blue">
-      <div class="project-number">01 / 04</div>
-      <div class="project-copy">
-        <p class="eyebrow reveal">Platform engineering · AI runtime</p>
-        <h2 class="reveal">Aetheris</h2>
-        <p class="project-tagline reveal">A staged software platform exploring secure services, orchestration, observability and local AI capability.</p>
-        <ul class="project-facts reveal"><li>Java / Spring Boot</li><li>Docker / Kubernetes</li><li>AI runtime orchestration</li></ul>
-        <div class="project-links reveal">
-          <a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Platform repository ↗</a>
-          <a href="https://github.com/teldigi5-wq/aetheris-ai-runtime" target="_blank" rel="noopener noreferrer">AI runtime ↗</a>
+    </article>
+    <article class="case case-averis" id="averis" data-case="averis" aria-labelledby="averis-title">
+      <div class="case-stage shell reverse">
+        <div class="case-copy">
+          <div class="case-index reveal"><span>02</span><span>ACADEMIC INTEGRITY</span></div>
+          <h2 id="averis-title" class="reveal">Averis</h2>
+          <p class="case-lead reveal">An evidence-first pre-submission workspace that separates deterministic similarity evidence from claims of academic misconduct.</p>
+          <dl class="case-evidence reveal"><div><dt>Ingestion</dt><dd>TXT · PDF · DOCX</dd></div><div><dt>Evidence</dt><dd>Shingles · Jaccard · sentence matching</dd></div><div><dt>Boundary</dt><dd>Supabase Auth/RLS · private scan history</dd></div></dl>
+          <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/averis-ai" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
+        </div>
+        <div class="case-visual evidence-stack" aria-label="Averis evidence visualization showing an uploaded document, similarity engine and source evidence">
+          <div class="paper paper-back" aria-hidden="true"></div><div class="paper paper-mid" aria-hidden="true"></div>
+          <div class="paper paper-front"><span class="paper-label">DOCUMENT / REVIEW</span><i class="line l1"></i><i class="line l2 marked"></i><i class="line l3"></i><i class="line l4 marked"></i><i class="line l5"></i><span class="scan-beam" aria-hidden="true"></span></div>
+          <div class="source source-a"><small>SOURCE 01</small><b>Passage match</b><span>review evidence</span></div><div class="source source-b"><small>METHOD</small><b>Deterministic first</b><span>AI stays advisory</span></div>
+          <svg viewBox="0 0 760 620" aria-hidden="true"><path d="M450 265C560 250 580 180 650 170M430 370C540 390 565 455 650 465"/></svg>
         </div>
       </div>
-      <div class="project-visual visual-aetheris" aria-hidden="true"><div class="core-ring r1"></div><div class="core-ring r2"></div><div class="core-ring r3"></div><div class="core-node"></div><span>identity</span><span>runtime</span><span>events</span><span>agents</span></div>
-    </section>
-
-    <section class="project-scene chapter" data-scene="4" data-accent="violet">
-      <div class="project-number">02 / 04</div>
-      <div class="project-copy">
-        <p class="eyebrow reveal">Academic integrity · evidence platform</p>
-        <h2 class="reveal">Averis</h2>
-        <p class="project-tagline reveal">A pre-submission academic-integrity platform focused on evidence, similarity insight, source verification and privacy-aware workflows.</p>
-        <ul class="project-facts reveal"><li>Evidence-first UX</li><li>Private browser AI</li><li>Dual AI runtimes</li></ul>
-        <div class="project-links reveal"><a href="https://github.com/teldigi5-wq/averis-ai" target="_blank" rel="noopener noreferrer">Explore repository ↗</a></div>
+    </article>
+    <article class="case case-finalforge" id="finalforge" data-case="finalforge" aria-labelledby="finalforge-title">
+      <div class="case-stage shell">
+        <div class="case-copy">
+          <div class="case-index reveal"><span>03</span><span>PRODUCT ENGINEERING</span></div>
+          <h2 id="finalforge-title" class="reveal">FinalForge</h2>
+          <p class="case-lead reveal">A responsive study platform that combines verified student access with recoverable mock exams, revision workflows and progress signals.</p>
+          <dl class="case-evidence reveal"><div><dt>Access</dt><dd>Student-ID allowlist · verified SLIIT mailbox</dd></div><div><dt>Learning</dt><dd>Mock exams · quizzes · marking guides</dd></div><div><dt>Continuity</dt><dd>Autosave · resume · cloud progress snapshot</dd></div></dl>
+          <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/finalforge" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
+        </div>
+        <div class="case-visual forge-interface" aria-label="FinalForge product flow from verified student access to study modules, mock exams and progress">
+          <div class="forge-shell"><header><span>FINALFORGE</span><i></i><i></i></header><aside aria-hidden="true"><b></b><b></b><b></b><b></b></aside><section><div class="forge-greeting"><small>STUDY PATH</small><strong>Continue where you stopped.</strong></div><div class="forge-modules"><span>DCN</span><span>IP</span><span>MFC</span><span>FOC</span></div><div class="forge-progress"><i></i><span>AUTOSAVED</span></div></section></div>
+          <div class="access-flow"><span>ALLOWLIST</span><i>→</i><span>VERIFY</span><i>→</i><span>LEARN</span></div>
+        </div>
       </div>
-      <div class="project-visual visual-averis" aria-hidden="true"><div class="document d1"></div><div class="document d2"></div><div class="document d3"></div><div class="scanline"></div><span class="evidence e1"></span><span class="evidence e2"></span><span class="evidence e3"></span></div>
-    </section>
-
-    <section class="project-scene chapter" data-scene="5" data-accent="cyan">
-      <div class="project-number">03 / 04</div>
-      <div class="project-copy">
-        <p class="eyebrow reveal">Student platform · product engineering</p>
-        <h2 class="reveal">FinalForge</h2>
-        <p class="project-tagline reveal">A secure academic learning platform for notes, revision, mock exams, quizzes, progress and student-specific access.</p>
-        <ul class="project-facts reveal"><li>Firebase Auth / Firestore</li><li>Vercel serverless</li><li>Responsive study UX</li></ul>
-        <div class="project-links reveal"><a href="https://github.com/teldigi5-wq/finalforge" target="_blank" rel="noopener noreferrer">Explore repository ↗</a></div>
+    </article>
+    <article class="case case-flood" id="floodguard" data-case="flood" aria-labelledby="flood-title">
+      <div class="case-stage shell reverse">
+        <div class="case-copy">
+          <div class="case-index reveal"><span>04</span><span>CONNECTED SYSTEMS</span></div>
+          <h2 id="flood-title" class="reveal">FloodGuard</h2>
+          <p class="case-lead reveal">A prototype that carries a physical water-level signal through embedded control, realtime cloud state and user-facing WhatsApp alerts.</p>
+          <dl class="case-evidence reveal"><div><dt>Sense</dt><dd>HC-SR04 · Arduino Uno</dd></div><div><dt>Connect</dt><dd>ESP8266 · Firebase RTDB</dd></div><div><dt>Notify</dt><dd>Node.js · AWS EC2 · WhatsApp</dd></div></dl>
+          <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
+        </div>
+        <div class="case-visual flood-system" aria-label="FloodGuard data flow from ultrasonic sensor through Arduino and ESP8266 to Firebase and WhatsApp alerts">
+          <div class="reservoir" aria-hidden="true"><span></span><span></span><span></span></div><div class="sensor"><i></i><b>HC-SR04</b><span class="sonar s1"></span><span class="sonar s2"></span></div>
+          <div class="telemetry"><span><small>01</small><b>Arduino</b></span><i>→</i><span><small>02</small><b>ESP8266</b></span><i>→</i><span><small>03</small><b>Firebase</b></span><i>→</i><span><small>04</small><b>WhatsApp</b></span></div>
+          <div class="state-legend"><span class="safe">SAFE</span><span class="warn">WARNING</span><span class="danger">DANGER</span><small>transition-based alerts · stale-data protection</small></div>
+        </div>
       </div>
-      <div class="project-visual visual-finalforge" aria-hidden="true"><div class="forge-card c1">MOCK</div><div class="forge-card c2">QUIZ</div><div class="forge-card c3">NOTES</div><div class="forge-card c4">PROGRESS</div><div class="forge-pulse"></div></div>
-    </section>
-
-    <section class="project-scene chapter" data-scene="6" data-accent="teal">
-      <div class="project-number">04 / 04</div>
-      <div class="project-copy">
-        <p class="eyebrow reveal">IoT · cloud · alerts</p>
-        <h2 class="reveal">FloodGuard</h2>
-        <p class="project-tagline reveal">A connected monitoring prototype turning water-level sensing into cloud state, visual feedback and actionable alerts.</p>
-        <ul class="project-facts reveal"><li>Arduino / ESP8266</li><li>Firebase</li><li>Node.js notifications</li></ul>
-        <div class="project-links reveal"><a href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noopener noreferrer">Explore repository ↗</a></div>
-      </div>
-      <div class="project-visual visual-flood" aria-hidden="true"><div class="water"><i></i><i></i><i></i></div><div class="sensor-beam"></div><div class="sensor-head">SENSOR</div><div class="level level-safe">SAFE</div><div class="level level-warn">WARN</div><div class="level level-danger">DANGER</div></div>
-    </section>
-
-    <section class="capabilities chapter" data-scene="7">
-      <div class="chapter-index">03</div>
-      <p class="eyebrow reveal">Toolkit</p>
-      <h2 class="reveal">The stack changes.<br><em>The engineering habits stay.</em></h2>
-      <div class="cap-grid">
-        <article class="reveal"><span>01</span><h3>Backend</h3><p>Java, Spring Boot, Node.js, REST, PostgreSQL, Redis.</p></article>
-        <article class="reveal"><span>02</span><h3>AI systems</h3><p>Local model integration, orchestration, runtime boundaries and product UX.</p></article>
-        <article class="reveal"><span>03</span><h3>Cloud & DevOps</h3><p>Docker, GitHub Actions, Vercel, AWS, Kubernetes and deployment hardening.</p></article>
-        <article class="reveal"><span>04</span><h3>Connected systems</h3><p>Arduino, ESP8266, Firebase and real-world sensor workflows.</p></article>
+    </article>
+    <section class="other-work shell" aria-labelledby="other-title">
+      <div class="section-code">02 / DIFFERENT MEDIUM</div>
+      <div class="other-grid">
+        <div><p class="overline reveal">Desktop engineering</p><h2 id="other-title" class="reveal">AnyDL<br>Pro Ultra</h2></div>
+        <div class="other-copy reveal"><p>A Windows desktop media tool connecting a React interface to real <code>yt-dlp</code> and FFmpeg processes through a typed Electron bridge.</p><ul><li>Child-process lifecycle and live progress parsing</li><li>Native filesystem and persistent settings</li><li>Windows installer packaging in CI</li></ul><a href="https://github.com/teldigi5-wq/anydl-pro-ultra" target="_blank" rel="noopener noreferrer">Open source ↗</a></div>
+        <div class="process-line reveal" aria-label="AnyDL architecture"><span>React UI</span><i></i><span>Typed IPC</span><i></i><span>Electron</span><i></i><span>yt-dlp / FFmpeg</span></div>
       </div>
     </section>
-
-    <section class="contact chapter" id="contact" data-scene="8">
-      <p class="eyebrow reveal">Next chapter</p>
-      <h2 class="reveal">Let’s build something<br><em>worth remembering.</em></h2>
-      <p class="contact-copy reveal">I’m looking for internships, software engineering opportunities and ambitious technical collaborations.</p>
-      <div class="contact-actions reveal">
-        <a class="pill primary" href="mailto:teldigi5@gmail.com">Email me ↗</a>
-        <a class="pill" href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        <a class="pill" href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-      </div>
-      <footer><span>© 2026 Poojana Kaveesh</span><a href="#home">Back to beginning ↑</a></footer>
+    <section class="approach shell" id="approach" aria-labelledby="approach-title">
+      <div class="section-code">03 / HOW I BUILD</div>
+      <div class="approach-head"><h2 id="approach-title" class="reveal">Architecture first.<br><em>Evidence always.</em></h2><p class="reveal">The stack changes by problem. The habits should not.</p></div>
+      <ol class="principles"><li class="reveal"><span>01</span><h3>Define the boundary</h3><p>Clarify responsibilities, trust and data flow before implementation detail.</p></li><li class="reveal"><span>02</span><h3>Build the real path</h3><p>Connect interfaces to actual services, processes or devices—not simulated success.</p></li><li class="reveal"><span>03</span><h3>Fail explicitly</h3><p>Keep invalid input, stale state and unavailable dependencies visible and bounded.</p></li><li class="reveal"><span>04</span><h3>Leave evidence</h3><p>Tests, CI, architecture notes and honest maturity labels make work reviewable.</p></li></ol>
+    </section>
+    <section class="about shell" id="about" aria-labelledby="about-title">
+      <div class="about-image reveal"><img src="assets/images/poojana-kaveesh-headshot.jpg" width="900" height="1125" loading="lazy" alt="Poojana Kaveesh"><span>COLOMBO / SRI LANKA</span></div>
+      <div class="about-copy"><div class="section-code">04 / ABOUT</div><p class="overline reveal">Curious about complete systems</p><h2 id="about-title" class="reveal">I’m Poojana.<br>I learn by <em>building.</em></h2><p class="reveal">I’m studying BSc (Hons) Information Technology at SLIIT, building across backend services, AI integration, product interfaces and connected devices.</p><p class="reveal">I’m looking for an internship where I can contribute, learn from experienced engineers and keep moving deeper than surface-level implementation.</p><div class="about-actions reveal"><a href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">View CV ↗</a><a href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></div>
+    </section>
+    <section class="contact shell" id="contact" aria-labelledby="contact-title">
+      <p class="overline reveal">Have a role, project or difficult problem?</p><h2 id="contact-title" class="reveal">Let’s build something<br><em>worth examining closely.</em></h2>
+      <div class="contact-row reveal"><a class="action action-light" href="mailto:teldigi5@gmail.com">Start a conversation <span>↗</span></a><div><a href="https://www.linkedin.com/in/poojana-kaveesh-3048b8387" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/teldigi5-wq" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">CV ↗</a></div></div>
+      <footer><a class="wordmark" href="#home" aria-label="Back to top"><span>PK</span><i>.</i></a><p>© <span id="year">2026</span> Poojana Kaveesh</p><a href="#home">Back to top ↑</a></footer>
     </section>
   </main>
-
-  <script src="cinematic.js?v=1" defer></script>
+  <script src="cinematic.js?v=2" defer></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

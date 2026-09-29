@@ -1,1 +1,143 @@
-(()=>{const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const canvas=document.getElementById('scene');const ctx=canvas.getContext('2d',{alpha:true});const header=document.getElementById('siteHeader');const progress=document.getElementById('scrollProgress');const glow=document.getElementById('cursorGlow');const menuButton=document.getElementById('menuButton');const mobileMenu=document.getElementById('mobileMenu');const chapters=[...document.querySelectorAll('.chapter')];const reveals=[...document.querySelectorAll('.reveal')];let w=innerWidth,h=innerHeight,dpr=Math.min(devicePixelRatio||1,1.8),mx=.5,my=.5,targetX=.5,targetY=.5,sceneIndex=0,t=0;const palettes=[['#4a8dff','#8a64ff'],['#5ba6ff','#49d8ff'],['#74a8ff','#9d70ff'],['#57a6ff','#6d7cff'],['#ad7dff','#7557ff'],['#56dfff','#4da9ff'],['#4ef0c1','#267d78'],['#78aaff','#a17aff'],['#5f7dff','#8d64ff']];const particles=Array.from({length:innerWidth<700?48:92},()=>({x:Math.random(),y:Math.random(),z:Math.random(),r:.35+Math.random()*1.2,s:.12+Math.random()*.55}));function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,1.8);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize,{passive:true});resize();function hexA(hex,a){const n=parseInt(hex.slice(1),16);return`rgba(${n>>16},${n>>8&255},${n&255},${a})`}function draw(){if(reduced){ctx.clearRect(0,0,w,h);return}t+=.003;mx+=(targetX-mx)*.035;my+=(targetY-my)*.035;ctx.clearRect(0,0,w,h);const [c1,c2]=palettes[Math.min(sceneIndex,palettes.length-1)];const cx=w*(.62+(mx-.5)*.06),cy=h*(.46+(my-.5)*.05);const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.58);g.addColorStop(0,hexA(c1,.095));g.addColorStop(.28,hexA(c2,.045));g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);for(const p of particles){p.y-=p.s*.00012;if(p.y<-.04)p.y=1.04;const px=(p.x+(mx-.5)*(.02+p.z*.03))*w;const py=(p.y+(my-.5)*(.01+p.z*.02))*h;ctx.beginPath();ctx.arc(px,py,p.r*(.55+p.z),0,Math.PI*2);ctx.fillStyle=hexA(p.z>.55?c1:c2,.08+p.z*.34);ctx.fill()}const radius=Math.min(w,h)*(sceneIndex===0?.17:.11);ctx.save();ctx.translate(cx,cy);ctx.rotate(t);for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(0,0,radius*(1+i*.58),radius*(.38+i*.12),i*.72,0,Math.PI*2);ctx.strokeStyle=hexA(i===1?c2:c1,.08+i*.025);ctx.lineWidth=1;ctx.stroke()}ctx.restore();requestAnimationFrame(draw)}requestAnimationFrame(draw);addEventListener('pointermove',e=>{targetX=e.clientX/w;targetY=e.clientY/h;if(glow){glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'}},{passive:true});const revealObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.14,rootMargin:'0px 0px -6% 0px'});reveals.forEach((el,i)=>{el.style.transitionDelay=((i%4)*65)+'ms';revealObserver.observe(el)});const chapterObserver=new IntersectionObserver(entries=>{const active=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(active){sceneIndex=Number(active.target.dataset.scene||0);document.documentElement.style.setProperty('--active-scene',sceneIndex)}},{threshold:[.28,.45,.62]});chapters.forEach(c=>chapterObserver.observe(c));function onScroll(){const max=document.documentElement.scrollHeight-innerHeight;const ratio=max>0?scrollY/max:0;progress.style.width=(ratio*100)+'%';header.classList.toggle('scrolled',scrollY>24);chapters.forEach(ch=>{const r=ch.getBoundingClientRect();const center=(r.top+r.height*.5)-innerHeight*.5;const norm=Math.max(-1,Math.min(1,center/innerHeight));ch.style.setProperty('--chapter-shift',`${norm*18}px`)})}addEventListener('scroll',onScroll,{passive:true});onScroll();if(menuButton&&mobileMenu){menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));mobileMenu.hidden=open});mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobileMenu.hidden=true;menuButton.setAttribute('aria-expanded','false')}))}document.querySelectorAll('.project-scene').forEach(scene=>{const visual=scene.querySelector('.project-visual');if(!visual||reduced)return;scene.addEventListener('pointermove',e=>{const r=scene.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;visual.style.transform=`perspective(1000px) rotateY(${x*7}deg) rotateX(${-y*6}deg) translate3d(${x*8}px,${y*8}px,0)`});scene.addEventListener('pointerleave',()=>visual.style.transform='')});document.addEventListener('visibilitychange',()=>{if(document.hidden&&glow)glow.style.opacity='0';else if(glow)glow.style.opacity='1'})})();
+(() => {
+  "use strict";
+
+  const root = document.documentElement;
+  const header = document.getElementById("siteHeader");
+  const progress = document.getElementById("readingProgress");
+  const menuToggle = document.getElementById("menuToggle");
+  const mobileNav = document.getElementById("mobileNav");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = matchMedia("(pointer: fine)");
+
+  document.getElementById("year").textContent = String(new Date().getFullYear());
+
+  const closeMenu = () => {
+    menuToggle.setAttribute("aria-expanded", "false");
+    mobileNav.hidden = true;
+    document.body.classList.remove("menu-open");
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const open = menuToggle.getAttribute("aria-expanded") === "true";
+    menuToggle.setAttribute("aria-expanded", String(!open));
+    mobileNav.hidden = open;
+    document.body.classList.toggle("menu-open", !open);
+  });
+
+  mobileNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+  addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !mobileNav.hidden) {
+      closeMenu();
+      menuToggle.focus();
+    }
+  });
+
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add("in-view");
+      observer.unobserve(entry.target);
+    }
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+
+  document.querySelectorAll(".reveal").forEach((element, index) => {
+    if (element.closest(".hero")) element.style.transitionDelay = `${Math.min(index * 65, 260)}ms`;
+    revealObserver.observe(element);
+  });
+
+  let ticking = false;
+  const updateScrollState = () => {
+    const y = scrollY;
+    const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    header.classList.toggle("scrolled", y > 24);
+    progress.style.width = `${Math.min(100, (y / max) * 100)}%`;
+
+    if (!reducedMotion.matches && innerWidth > 820) {
+      document.querySelectorAll(".case").forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const span = Math.max(1, rect.height - innerHeight);
+        const amount = Math.max(0, Math.min(1, -rect.top / span));
+        section.style.setProperty("--case-progress", amount.toFixed(3));
+      });
+    }
+    ticking = false;
+  };
+
+  addEventListener("scroll", () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateScrollState);
+    }
+  }, { passive: true });
+  addEventListener("resize", updateScrollState, { passive: true });
+  updateScrollState();
+
+  const canvas = document.getElementById("signalCanvas");
+  const context = canvas?.getContext("2d", { alpha: true });
+  let frame = 0;
+  let particles = [];
+  let canvasActive = true;
+
+  const buildParticles = () => {
+    if (!canvas || !context) return;
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.round(rect.width * dpr));
+    canvas.height = Math.max(1, Math.round(rect.height * dpr));
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const count = innerWidth < 700 ? 12 : 26;
+    particles = Array.from({ length: count }, (_, index) => ({
+      x: rect.width * (.48 + Math.random() * .5),
+      y: Math.random() * rect.height,
+      r: index % 7 === 0 ? 1.5 : .7,
+      speed: .05 + Math.random() * .11,
+      phase: Math.random() * Math.PI * 2
+    }));
+  };
+
+  const drawSignals = (time = 0) => {
+    if (!context || reducedMotion.matches || !canvasActive || document.hidden) return;
+    const rect = canvas.getBoundingClientRect();
+    context.clearRect(0, 0, rect.width, rect.height);
+    for (const point of particles) {
+      point.y -= point.speed;
+      if (point.y < -4) point.y = rect.height + 4;
+      const alpha = .18 + Math.sin(time * .00035 + point.phase) * .12;
+      context.beginPath();
+      context.fillStyle = `rgba(137, 185, 220, ${Math.max(.04, alpha)})`;
+      context.arc(point.x, point.y, point.r, 0, Math.PI * 2);
+      context.fill();
+    }
+    frame = requestAnimationFrame(drawSignals);
+  };
+
+  if (canvas && context && !reducedMotion.matches) {
+    buildParticles();
+    drawSignals();
+    addEventListener("resize", buildParticles, { passive: true });
+    const heroObserver = new IntersectionObserver(([entry]) => {
+      canvasActive = entry.isIntersecting;
+      if (canvasActive && !document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(drawSignals);
+      }
+    });
+    heroObserver.observe(document.querySelector(".hero"));
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) cancelAnimationFrame(frame);
+    else if (canvasActive && !reducedMotion.matches) frame = requestAnimationFrame(drawSignals);
+  });
+
+  if (finePointer.matches && !reducedMotion.matches) {
+    const hero = document.querySelector(".hero");
+    hero.addEventListener("pointermove", (event) => {
+      const x = (event.clientX / innerWidth - .5) * 10;
+      const y = (event.clientY / innerHeight - .5) * 7;
+      root.style.setProperty("--pointer-x", `${x}px`);
+      root.style.setProperty("--pointer-y", `${y}px`);
+      hero.querySelector(".hero-portrait").style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
+    }, { passive: true });
+  }
+})();
