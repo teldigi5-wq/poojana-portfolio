@@ -318,20 +318,34 @@
   const initialiseCustomCursor = () => {
     if (!motionCursor || !motionCursorLabel || reduceMotion.matches || !wideWork.matches || !finePointer.matches || performanceLite) return;
 
-    root.classList.add("has-custom-cursor");
     window.gsap.set(motionCursor, { xPercent: -50, yPercent: -50 });
     const moveX = window.gsap.quickTo(motionCursor, "x", { duration: .22, ease: "power3.out" });
     const moveY = window.gsap.quickTo(motionCursor, "y", { duration: .22, ease: "power3.out" });
+    let cursorActivated = false;
+
+    const deactivateCursor = () => {
+      cursorActivated = false;
+      root.classList.remove("has-custom-cursor");
+      window.gsap.to(motionCursor, { autoAlpha: 0, duration: .12, overwrite: true });
+    };
 
     addEventListener("pointermove", (event) => {
+      // Keep the system cursor available until the replacement cursor is
+      // positioned and visible. This prevents an invisible pointer on load.
+      if (!cursorActivated) {
+        window.gsap.set(motionCursor, { x: event.clientX, y: event.clientY, autoAlpha: 1 });
+        root.classList.add("has-custom-cursor");
+        cursorActivated = true;
+        return;
+      }
+
       moveX(event.clientX);
       moveY(event.clientY);
       window.gsap.to(motionCursor, { autoAlpha: 1, duration: .2, overwrite: true });
     }, { passive: true });
 
-    document.documentElement.addEventListener("mouseleave", () => {
-      window.gsap.to(motionCursor, { autoAlpha: 0, duration: .2 });
-    });
+    document.documentElement.addEventListener("mouseleave", deactivateCursor);
+    addEventListener("blur", deactivateCursor);
 
     const targets = [...document.querySelectorAll("a, button")];
     const magnetic = new Set(document.querySelectorAll(".action, .text-action, .header-contact, .header-cv, .case-links a, .about-actions a, .contact-row a"));
