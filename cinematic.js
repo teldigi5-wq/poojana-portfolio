@@ -17,11 +17,14 @@
     document.body.classList.remove("menu-open");
   };
 
+  const menuFocusables = () => [...mobileNav.querySelectorAll("a[href], button:not([disabled])")];
+
   menuToggle.addEventListener("click", () => {
     const open = menuToggle.getAttribute("aria-expanded") === "true";
     menuToggle.setAttribute("aria-expanded", String(!open));
     mobileNav.hidden = open;
     document.body.classList.toggle("menu-open", !open);
+    if (!open) requestAnimationFrame(() => menuFocusables()[0]?.focus());
   });
 
   mobileNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
@@ -29,6 +32,19 @@
     if (event.key === "Escape" && !mobileNav.hidden) {
       closeMenu();
       menuToggle.focus();
+    }
+    if (event.key === "Tab" && !mobileNav.hidden) {
+      const focusables = menuFocusables();
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
 

@@ -4,23 +4,38 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050709">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="description" content="Poojana Kaveesh is an IT undergraduate at SLIIT building backend platforms, evidence-led AI products and connected systems.">
   <meta name="author" content="Poojana Kaveesh Sellahewa">
   <meta property="og:title" content="Poojana Kaveesh — Engineering systems with intent">
   <meta property="og:description" content="Backend engineering, AI systems and connected products, presented through verified project work.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://poojana-portfolio.vercel.app/">
-  <meta property="og:image" content="https://poojana-portfolio.vercel.app/assets/images/poojana-og.jpg">
+  <meta property="og:url" content="https://lively-grass-0934e5200.1.azurestaticapps.net/">
+  <meta property="og:image" content="https://lively-grass-0934e5200.1.azurestaticapps.net/assets/images/poojana-og.jpg">
+  <meta property="og:image:alt" content="Poojana Kaveesh — backend, AI systems and product engineering portfolio">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://poojana-portfolio.vercel.app/">
+  <link rel="canonical" href="https://lively-grass-0934e5200.1.azurestaticapps.net/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
   <link rel="preload" as="image" href="assets/images/poojana-hero-cutout-v2.png" fetchpriority="high">
   <link rel="stylesheet" href="cinematic.css?v=4">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css">
+  <link rel="stylesheet" href="styles.css?v=4">
   <title>Poojana Kaveesh | Backend · AI Systems · Product Engineering</title>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://poojana-portfolio.vercel.app/","image":"https://poojana-portfolio.vercel.app/assets/images/poojana-og.jpg","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Backend Engineering","Java","Spring Boot","AI Systems","Cloud Systems","Product Engineering","IoT"]}</script>
+  <script>document.documentElement.classList.add("motion-ready");</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://lively-grass-0934e5200.1.azurestaticapps.net/","image":"https://lively-grass-0934e5200.1.azurestaticapps.net/assets/images/poojana-og.jpg","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Backend Engineering","Java","Spring Boot","AI Systems","Cloud Systems","Product Engineering","IoT"]}</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="motion-preloader" id="motionPreloader" role="status" aria-live="polite" aria-label="Loading portfolio">
+    <div class="motion-preloader__mark" aria-hidden="true"><span>PK</span><i>.</i></div>
+    <div class="motion-preloader__track" aria-hidden="true"><i id="preloaderTrack"></i></div>
+    <p aria-hidden="true"><span>INITIALISING SYSTEM</span><strong id="preloaderCount">0</strong><span>%</span></p>
+    <div class="motion-preloader__wipe" aria-hidden="true"></div>
+  </div>
+  <div class="motion-cursor" id="motionCursor" aria-hidden="true"><span id="motionCursorLabel"></span></div>
   <div class="page-noise" aria-hidden="true"></div>
   <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
   <header class="site-header" id="siteHeader">
@@ -40,6 +55,13 @@
   </nav>
   <main id="main">
     <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-film" id="heroFilm" aria-hidden="true">
+        <video id="hero-video" muted playsinline preload="none" poster="assets/images/poojana-studio-preview.webp">
+          <source data-src="assets/video/hero.webm" type="video/webm">
+          <source data-src="assets/video/hero.mp4" type="video/mp4">
+        </video>
+        <div class="hero-film__veil"></div>
+      </div>
       <div class="hero-atmosphere" aria-hidden="true">
         <span class="beam beam-a"></span><span class="beam beam-b"></span><span class="architecture arch-a"></span><span class="architecture arch-b"></span>
         <canvas id="signalCanvas"></canvas>
@@ -63,7 +85,7 @@
         <div class="system-chip chip-b"><small>PROOF / 04</small><b>Reviewable project systems</b></div>
       </div>
       <div class="hero-portrait" aria-hidden="true">
-        <img src="assets/images/poojana-hero-cutout-v2.png" width="1254" height="1254" alt="" fetchpriority="high">
+        <img src="assets/images/poojana-hero-cutout-v2.png" width="1254" height="1254" alt="" fetchpriority="high" decoding="async">
       </div>
       <div class="hero-content shell">
         <div class="hero-meta reveal"><span>POOJANA KAVEESH</span><span>PORTFOLIO / 2026</span></div>
@@ -89,7 +111,10 @@
       <div><p class="overline reveal">Four systems. Four engineering perspectives.</p><h2 id="work-title" class="reveal">Selected work,<br><em>shown as evidence.</em></h2></div>
       <p class="work-note reveal">Each chapter pairs the problem with real architecture, boundaries and reviewable source.</p>
     </section>
-    <article class="case case-aetheris" id="aetheris" data-case="aetheris" aria-labelledby="aetheris-title">
+    <div class="work-journey" id="workJourney" role="region" aria-label="Selected work chapters">
+      <div class="work-journey__status" aria-hidden="true"><span id="workChapterNumber">01</span><i><b id="workChapterProgress"></b></i><span>05</span></div>
+      <div class="work-journey__track" id="workTrack" role="list">
+    <article class="case case-aetheris" id="aetheris" data-case="aetheris" data-project-index="01" role="listitem" aria-labelledby="aetheris-title">
       <div class="case-stage shell">
         <div class="case-copy">
           <div class="case-index reveal"><span>01</span><span>PLATFORM ENGINEERING</span></div>
@@ -98,15 +123,16 @@
           <dl class="case-evidence reveal"><div><dt>Platform</dt><dd>Gateway · Identity · Users · Audit</dd></div><div><dt>State</dt><dd>PostgreSQL · Redis · RabbitMQ</dd></div><div><dt>Operations</dt><dd>OTel · Prometheus · Grafana · Kubernetes</dd></div></dl>
           <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Platform source ↗</a><a href="https://github.com/teldigi5-wq/aetheris-ai-runtime" target="_blank" rel="noopener noreferrer">Runtime source ↗</a></div>
         </div>
-        <div class="case-visual aetheris-map" aria-label="Aetheris architecture: dashboard through gateway to platform services, state, telemetry and a separate AI runtime">
+        <div class="case-visual aetheris-map" role="img" aria-label="Aetheris architecture: dashboard through gateway to platform services, state, telemetry and a separate AI runtime">
+          <video class="chapter-video" muted playsinline loop preload="none" aria-hidden="true"><source data-src="assets/video/loop-system.webm" type="video/webm"><source data-src="assets/video/loop-system.mp4" type="video/mp4"></video>
           <div class="map-grid" aria-hidden="true"></div>
-          <svg viewBox="0 0 760 620" role="img" aria-hidden="true"><path class="route route-main" d="M90 310H230M330 310H455M555 310H675"/><path class="route" d="M280 260V130M280 360V490M505 260V145M505 360V480"/><path class="route faint" d="M110 535C210 560 320 560 430 525C535 490 605 500 690 545"/></svg>
+          <svg viewBox="0 0 760 620" role="img" aria-hidden="true"><path id="aetherisMotionPath" class="route route-main chapter-route" d="M90 310H675"/><path class="route chapter-route" d="M280 260V130"/><path class="route chapter-route" d="M280 360V490"/><path class="route chapter-route" d="M505 260V145"/><path class="route chapter-route" d="M505 360V480"/><path class="route faint chapter-route" d="M110 535C210 560 320 560 430 525C535 490 605 500 690 545"/><circle class="route-traveller" r="5" cx="90" cy="310"/></svg>
           <div class="node n-client"><small>EXPERIENCE</small><b>Dashboard</b></div><div class="node n-gateway key"><small>TRUSTED INGRESS</small><b>Gateway</b></div><div class="node n-services"><small>PLATFORM</small><b>Identity · User · Audit</b></div><div class="node n-runtime"><small>EXTERNAL BOUNDARY</small><b>AI Runtime</b></div><div class="node n-state"><small>DURABLE + DISTRIBUTED</small><b>Postgres · Redis · MQ</b></div><div class="node n-observe"><small>OBSERVE</small><b>Metrics · Logs · Traces</b></div>
           <div class="signal-pulse p-a"></div><div class="signal-pulse p-b"></div><p class="visual-caption">Models propose. Deterministic policy remains authoritative.</p>
         </div>
       </div>
     </article>
-    <article class="case case-averis" id="averis" data-case="averis" aria-labelledby="averis-title">
+    <article class="case case-averis" id="averis" data-case="averis" data-project-index="02" role="listitem" aria-labelledby="averis-title">
       <div class="case-stage shell reverse">
         <div class="case-copy">
           <div class="case-index reveal"><span>02</span><span>ACADEMIC INTEGRITY</span></div>
@@ -115,15 +141,15 @@
           <dl class="case-evidence reveal"><div><dt>Ingestion</dt><dd>TXT · PDF · DOCX</dd></div><div><dt>Evidence</dt><dd>Shingles · Jaccard · sentence matching</dd></div><div><dt>Boundary</dt><dd>Supabase Auth/RLS · private scan history</dd></div></dl>
           <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/averis-ai" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
         </div>
-        <div class="case-visual evidence-stack" aria-label="Averis evidence visualization showing an uploaded document, similarity engine and source evidence">
+        <div class="case-visual evidence-stack" role="img" aria-label="Averis evidence visualization showing an uploaded document, similarity engine and source evidence">
           <div class="paper paper-back" aria-hidden="true"></div><div class="paper paper-mid" aria-hidden="true"></div>
           <div class="paper paper-front"><span class="paper-label">DOCUMENT / REVIEW</span><i class="line l1"></i><i class="line l2 marked"></i><i class="line l3"></i><i class="line l4 marked"></i><i class="line l5"></i><span class="scan-beam" aria-hidden="true"></span></div>
           <div class="source source-a"><small>SOURCE 01</small><b>Passage match</b><span>review evidence</span></div><div class="source source-b"><small>METHOD</small><b>Deterministic first</b><span>AI stays advisory</span></div>
-          <svg viewBox="0 0 760 620" aria-hidden="true"><path d="M450 265C560 250 580 180 650 170M430 370C540 390 565 455 650 465"/></svg>
+          <svg viewBox="0 0 760 620" aria-hidden="true"><path class="chapter-route" d="M450 265C560 250 580 180 650 170"/><path class="chapter-route" d="M430 370C540 390 565 455 650 465"/></svg>
         </div>
       </div>
     </article>
-    <article class="case case-finalforge" id="finalforge" data-case="finalforge" aria-labelledby="finalforge-title">
+    <article class="case case-finalforge" id="finalforge" data-case="finalforge" data-project-index="03" role="listitem" aria-labelledby="finalforge-title">
       <div class="case-stage shell">
         <div class="case-copy">
           <div class="case-index reveal"><span>03</span><span>PRODUCT ENGINEERING</span></div>
@@ -132,13 +158,13 @@
           <dl class="case-evidence reveal"><div><dt>Access</dt><dd>Student-ID allowlist · verified SLIIT mailbox</dd></div><div><dt>Learning</dt><dd>Mock exams · quizzes · marking guides</dd></div><div><dt>Continuity</dt><dd>Autosave · resume · cloud progress snapshot</dd></div></dl>
           <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/finalforge" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
         </div>
-        <div class="case-visual forge-interface" aria-label="FinalForge product flow from verified student access to study modules, mock exams and progress">
+        <div class="case-visual forge-interface" role="img" aria-label="FinalForge product flow from verified student access to study modules, mock exams and progress">
           <div class="forge-shell"><header><span>FINALFORGE</span><i></i><i></i></header><aside aria-hidden="true"><b></b><b></b><b></b><b></b></aside><section><div class="forge-greeting"><small>STUDY PATH</small><strong>Continue where you stopped.</strong></div><div class="forge-modules"><span>DCN</span><span>IP</span><span>MFC</span><span>FOC</span></div><div class="forge-progress"><i></i><span>AUTOSAVED</span></div></section></div>
           <div class="access-flow"><span>ALLOWLIST</span><i>→</i><span>VERIFY</span><i>→</i><span>LEARN</span></div>
         </div>
       </div>
     </article>
-    <article class="case case-flood" id="floodguard" data-case="flood" aria-labelledby="flood-title">
+    <article class="case case-flood" id="floodguard" data-case="flood" data-project-index="04" role="listitem" aria-labelledby="flood-title">
       <div class="case-stage shell reverse">
         <div class="case-copy">
           <div class="case-index reveal"><span>04</span><span>CONNECTED SYSTEMS</span></div>
@@ -147,14 +173,16 @@
           <dl class="case-evidence reveal"><div><dt>Sense</dt><dd>HC-SR04 · Arduino Uno</dd></div><div><dt>Connect</dt><dd>ESP8266 · Firebase RTDB</dd></div><div><dt>Notify</dt><dd>Node.js · AWS EC2 · WhatsApp</dd></div></dl>
           <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/floodguard-whatsapp-bot" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
         </div>
-        <div class="case-visual flood-system" aria-label="FloodGuard data flow from ultrasonic sensor through Arduino and ESP8266 to Firebase and WhatsApp alerts">
+        <div class="case-visual flood-system" role="img" aria-label="FloodGuard data flow from ultrasonic sensor through Arduino and ESP8266 to Firebase and WhatsApp alerts">
+          <video class="chapter-video" muted playsinline loop preload="none" aria-hidden="true"><source data-src="assets/video/floodguard.webm" type="video/webm"><source data-src="assets/video/floodguard.mp4" type="video/mp4"></video>
+          <svg class="flood-route" viewBox="0 0 760 620" aria-hidden="true"><path id="floodMotionPath" class="chapter-route" d="M118 355H680"/><circle class="route-traveller flood-traveller" r="5" cx="118" cy="355"/></svg>
           <div class="reservoir" aria-hidden="true"><span></span><span></span><span></span></div><div class="sensor"><i></i><b>HC-SR04</b><span class="sonar s1"></span><span class="sonar s2"></span></div>
           <div class="telemetry"><span><small>01</small><b>Arduino</b></span><i>→</i><span><small>02</small><b>ESP8266</b></span><i>→</i><span><small>03</small><b>Firebase</b></span><i>→</i><span><small>04</small><b>WhatsApp</b></span></div>
           <div class="state-legend"><span class="safe">SAFE</span><span class="warn">WARNING</span><span class="danger">DANGER</span><small>transition-based alerts · stale-data protection</small></div>
         </div>
       </div>
     </article>
-    <section class="other-work shell" aria-labelledby="other-title">
+    <section class="other-work shell" data-project-index="05" role="listitem" aria-labelledby="other-title">
       <div class="section-code">02 / DIFFERENT MEDIUM</div>
       <div class="other-grid">
         <div><p class="overline reveal">Desktop engineering</p><h2 id="other-title" class="reveal">AnyDL<br>Pro Ultra</h2></div>
@@ -162,6 +190,8 @@
         <div class="process-line reveal" aria-label="AnyDL architecture"><span>React UI</span><i></i><span>Typed IPC</span><i></i><span>Electron</span><i></i><span>yt-dlp / FFmpeg</span></div>
       </div>
     </section>
+      </div>
+    </div>
     <section class="approach shell" id="approach" aria-labelledby="approach-title">
       <div class="section-code">03 / HOW I BUILD</div>
       <div class="approach-head"><h2 id="approach-title" class="reveal">Architecture first.<br><em>Evidence always.</em></h2><p class="reveal">The stack changes by problem. The habits should not.</p></div>
@@ -182,6 +212,15 @@
       <footer><a class="wordmark" href="#home" aria-label="Back to top"><span>PK</span><i>.</i></a><p>© <span id="year">2026</span> Poojana Kaveesh</p><a href="#home">Back to top ↑</a></footer>
     </section>
   </main>
-  <script src="cinematic.js?v=4" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Observer.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" defer></script>
+  <script src="cinematic.js?v=5" defer></script>
+  <script src="main.js?v=4" defer></script>
 </body>
 </html>
