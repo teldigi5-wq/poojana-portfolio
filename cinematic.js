@@ -139,6 +139,8 @@
       root.style.setProperty("--pointer-y", `${y}px`);
       const system = hero.querySelector(".hero-system");
       if (system) system.style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
+      const portrait = hero.querySelector(".hero-portrait");
+      if (portrait) portrait.style.transform = `translate3d(${x * .16}px, ${y * .12}px, 0)`;
     }, { passive: true });
   }
 })();
