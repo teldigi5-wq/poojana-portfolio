@@ -1,0 +1,274 @@
+@import url("./cinematic-base.css?v=1");
+
+/* Mobile hardening layer.
+   Keeps the cinematic desktop design intact while forcing a readable,
+   single-column touch layout when Android browsers expose a desktop-like
+   ~980-1100px layout viewport (Desktop site / page zoom / device emulation). */
+
+@media (hover: none) and (pointer: coarse) and (max-width: 1100px) {
+  :root {
+    --shell: min(calc(100% - 40px), 760px);
+    --header-h: 68px;
+  }
+
+  body { overflow-x: hidden; }
+  main { overflow: clip; }
+
+  .site-header {
+    padding-inline: 20px;
+    background: rgba(5, 7, 9, .78);
+    border-bottom-color: var(--line);
+    backdrop-filter: blur(18px);
+  }
+
+  .desktop-nav,
+  .header-contact,
+  .header-cv { display: none !important; }
+
+  .menu-toggle {
+    display: flex !important;
+    font-size: 18px;
+  }
+
+  .mobile-nav { font-size: 18px; }
+
+  .hero,
+  .hero-content {
+    min-height: max(820px, 100svh);
+  }
+
+  .hero-content {
+    padding: calc(var(--header-h) + 28px) 0 28px;
+  }
+
+  .hero-meta { display: none; }
+
+  .hero-copy {
+    width: min(100%, 720px);
+    margin-top: clamp(100px, 14vh, 155px);
+    margin-bottom: auto;
+  }
+
+  .hero h1 {
+    max-width: 8.6ch;
+    font-size: clamp(72px, 12vw, 118px);
+    line-height: .88;
+  }
+
+  .overline {
+    max-width: 620px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .hero-intro {
+    max-width: 560px;
+    font-size: clamp(19px, 2.25vw, 25px);
+    line-height: 1.55;
+  }
+
+  .hero-cta {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .action,
+  .text-action { font-size: 17px; }
+
+  .action {
+    min-width: 270px;
+    padding: 18px 20px;
+  }
+
+  .hero-system {
+    width: 92vw;
+    right: -34vw;
+    top: 29%;
+    opacity: .38;
+  }
+
+  .system-chip { display: none; }
+
+  .hero-portrait {
+    width: min(74vw, 640px);
+    right: -12vw;
+    bottom: -1%;
+  }
+
+  .hero-portrait img {
+    opacity: .68;
+    filter: saturate(.78) contrast(1.02) brightness(.7);
+  }
+
+  .hero::after {
+    background:
+      linear-gradient(90deg, #050709 0%, rgba(5,7,9,.94) 50%, rgba(5,7,9,.42) 78%, rgba(5,7,9,.18) 100%),
+      linear-gradient(0deg, rgba(5,7,9,.96) 0%, transparent 48%);
+  }
+
+  .hero-foot { font-size: 13px; }
+  .scroll-label { display: none; }
+
+  .identity-grid,
+  .other-grid,
+  .approach-head,
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .work-heading {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    align-content: center;
+    padding-block: 110px;
+  }
+
+  .work-heading .section-code { margin-bottom: 55px; }
+  .work-note { grid-column: auto; }
+
+  .case { min-height: auto; }
+
+  .case-stage,
+  .case-stage.reverse {
+    position: relative;
+    top: auto;
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 70px;
+    padding-block: 100px;
+    overflow: visible;
+  }
+
+  .case-stage.reverse .case-copy { order: 1; }
+  .case-stage.reverse .case-visual { order: 2; }
+  .case-copy { max-width: 720px; }
+  .case-visual { min-height: 520px; }
+
+  .process-line { grid-column: auto; }
+
+  .principles li {
+    grid-template-columns: 55px 1fr;
+  }
+
+  .principles p { grid-column: 2; }
+
+  .about {
+    min-height: auto;
+    gap: 80px;
+  }
+
+  .about-copy .section-code { margin-bottom: 50px; }
+}
+
+/* True phone viewport refinements. */
+@media (max-width: 620px) {
+  :root {
+    --shell: calc(100% - 32px);
+    --header-h: 66px;
+  }
+
+  .site-header { padding-inline: 16px; }
+
+  .desktop-nav,
+  .header-contact,
+  .header-cv { display: none !important; }
+
+  .menu-toggle {
+    display: flex !important;
+    font-size: 13px;
+  }
+
+  .hero,
+  .hero-content {
+    min-height: max(780px, 100svh);
+  }
+
+  .hero-content {
+    padding-top: calc(var(--header-h) + 18px);
+    padding-bottom: 22px;
+  }
+
+  .hero-meta { display: none; }
+
+  .hero-copy {
+    width: 100%;
+    margin-top: 78px;
+    margin-bottom: auto;
+  }
+
+  .overline {
+    max-width: 310px;
+    margin-bottom: 18px;
+    font-size: 9px;
+    line-height: 1.55;
+  }
+
+  .hero h1 {
+    max-width: 8.6ch;
+    font-size: clamp(50px, 14.6vw, 70px);
+    line-height: .9;
+  }
+
+  .hero-intro {
+    max-width: 305px;
+    margin-top: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .hero-cta {
+    margin-top: 26px;
+    gap: 16px;
+  }
+
+  .action,
+  .text-action { font-size: 12px; }
+
+  .action {
+    min-width: 205px;
+    padding: 14px 16px;
+  }
+
+  .hero-system {
+    width: 122vw;
+    right: -64vw;
+    top: 34%;
+    opacity: .28;
+  }
+
+  .system-chip { display: none; }
+
+  .hero-portrait {
+    width: min(88vw, 420px);
+    right: -18vw;
+    bottom: -1%;
+  }
+
+  .hero-portrait img {
+    opacity: .62;
+    filter: saturate(.76) contrast(1.03) brightness(.69);
+  }
+
+  .hero::after {
+    background:
+      linear-gradient(90deg, #050709 0%, rgba(5,7,9,.94) 61%, rgba(5,7,9,.28) 100%),
+      linear-gradient(0deg, #050709 0%, rgba(5,7,9,.62) 18%, transparent 53%);
+  }
+
+  .hero-foot { font-size: 9px; }
+  .scroll-label { display: none; }
+
+  .case-visual {
+    min-height: 390px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .about-system { min-height: 520px; }
+
+  .contact-row,
+  .about-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

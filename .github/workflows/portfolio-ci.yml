@@ -2,7 +2,7 @@ name: Portfolio CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/cinematic-portfolio-v1]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -28,13 +28,17 @@ jobs:
           node-version: 20
 
       - name: Check JavaScript syntax
-        run: node --check script.js
+        run: |
+          node --check script.js
+          node --check cinematic.js
+          node --check main.js
+          node scripts/quality-gate.mjs
 
       - name: Verify required portfolio files
         shell: bash
         run: |
           set -euo pipefail
-          required=(index.html studio.css script.js README.md vercel.json)
+          required=(index.html cinematic.css cinematic.js styles.css main.js studio.css script.js README.md vercel.json staticwebapp.config.json scripts/quality-gate.mjs)
           for file in "${required[@]}"; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
@@ -99,3 +103,11 @@ jobs:
           from pathlib import Path
           json.loads(Path('vercel.json').read_text(encoding='utf-8'))
           print('vercel.json is valid JSON')
+
+      - name: Verify Azure Static Web Apps configuration is valid JSON
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          json.loads(Path('staticwebapp.config.json').read_text(encoding='utf-8'))
+          print('staticwebapp.config.json is valid JSON')
