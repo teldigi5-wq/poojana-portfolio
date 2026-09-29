@@ -137,7 +137,8 @@
       const y = (event.clientY / innerHeight - .5) * 7;
       root.style.setProperty("--pointer-x", `${x}px`);
       root.style.setProperty("--pointer-y", `${y}px`);
-      hero.querySelector(".hero-portrait").style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
+      const system = hero.querySelector(".hero-system");
+      if (system) system.style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
     }, { passive: true });
   }
 })();
