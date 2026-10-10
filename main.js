@@ -92,6 +92,10 @@
   const revealHero = () => {
     if (!hasGSAP || reduceMotion.matches) return;
 
+    // CSS reveals and GSAP must share a visible final state.
+    hero.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+    window.gsap.set('.hero .reveal', { opacity: 1, y: 0 });
+
     const title = document.getElementById("hero-title");
     let lines = title ? Array.from(title.children) : [];
 
@@ -105,7 +109,7 @@
       lines = split.lines;
     }
 
-    window.gsap.timeline({ delay: skipIntro ? .04 : .55, defaults: { ease: "power4.out" } })
+    window.gsap.timeline({ delay: skipIntro ? .04 : .55, defaults: { ease: "power4.out" }, onComplete: () => window.gsap.set('.hero .reveal', { clearProps: 'opacity,transform' }) })
       .from(lines, { yPercent: 115, opacity: 0, duration: 1.05, stagger: .11 })
       .from(".hero .overline, .hero-intro", { y: 22, opacity: 0, duration: .72, stagger: .08 }, "<+.18")
       .from(".hero-cta, .hero-foot", { y: 16, opacity: 0, duration: .62, stagger: .08 }, "<+.12");
@@ -322,6 +326,7 @@
     const moveX = window.gsap.quickTo(motionCursor, "x", { duration: .22, ease: "power3.out" });
     const moveY = window.gsap.quickTo(motionCursor, "y", { duration: .22, ease: "power3.out" });
     let cursorActivated = false;
+    const cursorAllowed = () => !reduceMotion.matches && wideWork.matches && finePointer.matches && !performanceLite && !matchMedia('(forced-colors: active)').matches && !document.hidden;
 
     const deactivateCursor = () => {
       cursorActivated = false;
@@ -330,6 +335,10 @@
     };
 
     addEventListener("pointermove", (event) => {
+      if (!cursorAllowed() || event.pointerType !== 'mouse') {
+        deactivateCursor();
+        return;
+      }
       // Keep the system cursor available until the replacement cursor is
       // positioned and visible. This prevents an invisible pointer on load.
       if (!cursorActivated) {
@@ -346,6 +355,8 @@
 
     document.documentElement.addEventListener("mouseleave", deactivateCursor);
     addEventListener("blur", deactivateCursor);
+    [reduceMotion, wideWork, finePointer, matchMedia('(forced-colors: active)')].forEach(media => media.addEventListener('change', deactivateCursor));
+    document.addEventListener('visibilitychange', deactivateCursor);
 
     const targets = [...document.querySelectorAll("a, button")];
     const magnetic = new Set(document.querySelectorAll(".action, .text-action, .header-contact, .header-cv, .case-links a, .about-actions a, .contact-row a"));
@@ -363,6 +374,7 @@
       if (!magnetic.has(target)) return;
       target.classList.add("magnetic-target");
       target.addEventListener("pointermove", (event) => {
+        if (!cursorAllowed() || event.pointerType !== 'mouse') return;
         const rect = target.getBoundingClientRect();
         window.gsap.to(target, {
           x: (event.clientX - rect.left - rect.width / 2) * .16,
