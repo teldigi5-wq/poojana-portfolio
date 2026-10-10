@@ -48,7 +48,7 @@ a,button,summary { touch-action: manipulation; }
  .hero h1 { font-size: clamp(52px,7.1vw,80px); }
  .hero-copy { width: 56%; }
 }
-@media (max-width:899px) {
+@media (max-width:899.98px) {
  .hero { display: grid; min-height: auto; }
  .hero-content { grid-area: 1/1; min-height: auto; padding-top: calc(var(--header-h) + 40px); padding-bottom: 32px; }
  .hero-copy { width: 100%; margin: 48px 0 0; }
@@ -127,8 +127,8 @@ a,button,summary { touch-action: manipulation; }
  .telemetry > span { padding: 12px 5px; }
  .source { padding: 12px; }
 }
-@media (max-width:899px) { .cursor-halo { display: none !important; } }
+@media (max-width:899.98px) { .cursor-halo { display: none !important; } }
 .no-script-nav { position: relative; z-index: 101; margin-top: var(--header-h); display: flex; flex-wrap: wrap; gap: 20px; padding: 18px 24px; background: #0b1118; }
 .no-script-nav a { text-decoration: underline; }
 .section-code,.case-index,.hero-meta,.hero-foot { color: #99a5af; }
-@media (max-width:899px), (pointer:coarse) { #signalCanvas { display: none; } }
+@media (max-width:899.98px), (pointer:coarse) { #signalCanvas { display: none; } }

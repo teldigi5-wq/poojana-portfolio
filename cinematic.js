@@ -79,7 +79,7 @@
     const y = scrollY;
     const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
     header.classList.toggle("scrolled", y > 24);
-    progress.style.width = `${Math.min(100, (y / max) * 100)}%`;
+    progress.style.transform = `scaleX(${Math.min(1, y / max)})`;
 
     ticking = false;
   };
@@ -93,85 +93,4 @@
   addEventListener("resize", updateScrollState, { passive: true });
   updateScrollState();
 
-  const canvas = document.getElementById("signalCanvas");
-  const context = canvas?.getContext("2d", { alpha: true });
-  let frame = 0;
-  let particles = [];
-  let canvasActive = true;
-  const canvasAllowed = () => !reducedMotion.matches && innerWidth >= 900 && !navigator.connection?.saveData && !(navigator.deviceMemory <= 2);
-
-  const buildParticles = () => {
-    if (!canvas || !context) return;
-    const dpr = Math.min(devicePixelRatio || 1, 1.5);
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = Math.max(1, Math.round(rect.width * dpr));
-    canvas.height = Math.max(1, Math.round(rect.height * dpr));
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = innerWidth < 700 ? 12 : 26;
-    particles = Array.from({ length: count }, (_, index) => ({
-      x: rect.width * (.48 + Math.random() * .5),
-      y: Math.random() * rect.height,
-      r: index % 7 === 0 ? 1.5 : .7,
-      speed: .05 + Math.random() * .11,
-      phase: Math.random() * Math.PI * 2
-    }));
-  };
-
-  const drawSignals = (time = 0) => {
-    if (!context || !canvasAllowed() || !canvasActive || document.hidden) return;
-    const rect = canvas.getBoundingClientRect();
-    context.clearRect(0, 0, rect.width, rect.height);
-    for (const point of particles) {
-      point.y -= point.speed;
-      if (point.y < -4) point.y = rect.height + 4;
-      const alpha = .18 + Math.sin(time * .00035 + point.phase) * .12;
-      context.beginPath();
-      context.fillStyle = `rgba(137, 185, 220, ${Math.max(.04, alpha)})`;
-      context.arc(point.x, point.y, point.r, 0, Math.PI * 2);
-      context.fill();
-    }
-    frame = requestAnimationFrame(drawSignals);
-  };
-
-  if (canvas && context && canvasAllowed()) {
-    buildParticles();
-    drawSignals();
-    addEventListener("resize", buildParticles, { passive: true });
-    const heroObserver = new IntersectionObserver(([entry]) => {
-      canvasActive = entry.isIntersecting;
-      if (canvasActive && !document.hidden) {
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(drawSignals);
-      }
-    });
-    heroObserver.observe(document.querySelector(".hero"));
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) cancelAnimationFrame(frame);
-    else if (canvasActive && !reducedMotion.matches) frame = requestAnimationFrame(drawSignals);
-  });
-
-  reducedMotion.addEventListener('change', () => {
-    root.style.removeProperty('--pointer-x');
-    root.style.removeProperty('--pointer-y');
-    const system = document.querySelector('.hero-system');
-    if (system) system.style.removeProperty('transform');
-    cancelAnimationFrame(frame);
-    context?.clearRect(0, 0, canvas.width, canvas.height);
-    if (canvasAllowed() && canvasActive) { buildParticles(); frame = requestAnimationFrame(drawSignals); }
-  });
-
-  if (finePointer.matches && !reducedMotion.matches) {
-    const hero = document.querySelector(".hero");
-    hero.addEventListener("pointermove", (event) => {
-      if (reducedMotion.matches || innerWidth < 900 || navigator.connection?.saveData) return;
-      const x = (event.clientX / innerWidth - .5) * 10;
-      const y = (event.clientY / innerHeight - .5) * 7;
-      root.style.setProperty("--pointer-x", `${x}px`);
-      root.style.setProperty("--pointer-y", `${y}px`);
-      const system = hero.querySelector(".hero-system");
-      if (system) system.style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
-    }, { passive: true });
-  }
 })();

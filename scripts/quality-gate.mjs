@@ -13,6 +13,9 @@ const required = [
   "styles.css",
   "main.js",
   "stage3.css",
+  "stage4.css",
+  "assets/vendor/gsap.min.js",
+  "assets/vendor/ScrollTrigger.min.js",
   "cursor-halo.js",
   "staticwebapp.config.json"
 ];
@@ -50,7 +53,8 @@ const budget = {
   "styles.css": 64 * 1024,
   "main.js": 64 * 1024,
   "cinematic.css": 32 * 1024,
-  "cinematic.js": 32 * 1024
+  "cinematic.js": 32 * 1024,
+  "stage4.css": 8 * 1024
 };
 Object.entries(budget).forEach(([file, bytes]) => {
   const size = statSync(file).size;

@@ -15,6 +15,15 @@ Static HTML/CSS/JavaScript portfolio preserving the dark cinematic branding.
 - Recruiter summary, visible email, clipboard feedback and explicit PDF view/download actions. Existing CV content is preserved.
 - Mobile navigation focus trap, Escape dismissal, background inertness, visible focus and touch targets.
 
+## Stage 4 motion direction
+
+- Choreographed masked hero lines, portrait and supporting copy use a shared power3 easing and a finite entrance. Tab completes the entrance immediately for keyboard users.
+- Vertical case studies retain their content and layout. Fine-pointer desktop diagrams progressively reveal architecture routes, source evidence, study continuity and telemetry through GSAP ScrollTrigger. No pinning or scroll interception.
+- Touch and narrow layouts use short one-time entrances. Reduced motion, forced colors, save-data, low-memory and unavailable libraries keep static content and ordinary chapter navigation.
+- Sticky project links indicate the current chapter through `aria-current`, and page progress uses a compositor transform. Only decorative arrows respond to pointer proximity; clickable targets and native cursor stay fixed.
+- Perpetual particle, orbit, scanning and sonar loops are removed. GSAP 3.13.0 and ScrollTrigger are served locally in `assets/vendor`, with their original license notices, removing external CDN requests.
+- The tablet media query includes fractional widths below 900px to avoid a narrow breakpoint gap. Case-study facts, SEO and CV remain unchanged.
+
 ## Verification
 
 Run from the repository root:
@@ -25,6 +34,7 @@ node --check main.js
 node --check cursor-halo.js
 node --check script.js
 node scripts/quality-gate.mjs
+node scripts/motion-policy.test.mjs
 ```
 
 GitHub CI additionally parses HTML references and validates both hosting configuration files. There is no application build step or runtime server; Vercel serves the static repository.

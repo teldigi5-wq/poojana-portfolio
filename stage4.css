@@ -1,0 +1,38 @@
+/* Shared timing language; layout and factual content remain Stage 3. */
+:root { --motion-ease: cubic-bezier(.22,1,.36,1); }
+.hero h1 > span { display: block; overflow: clip; padding-bottom: .14em; margin-bottom: -.14em; }
+.hero h1 .hero-line { display: block; }
+.hero-portrait,.reveal { transition: none; }
+.reading-progress { width: 100%; transform: scaleX(0); transform-origin: left; }
+/* Replace perpetual decoration with finite scroll-owned storytelling. */
+.system-ring,.system-signal,.signal-pulse,.scan-beam,.reservoir span,.sonar,.profile-orbit { animation: none !important; }
+#signalCanvas,.signal-pulse,.route-traveller,.sonar { display: none; }
+.case-visual { transform: none; }
+.chapter-nav { position: sticky; top: var(--header-h); z-index: 20; display: flex; justify-content: center; gap: clamp(8px,2vw,28px); padding: 12px 20px; border-block: 1px solid var(--line); background: rgba(5,7,9,.96); }
+.chapter-nav a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: 8px; color: #aeb6bd; font-size: 12px; position: relative; transition: color .25s var(--motion-ease); }
+.chapter-nav a::after { content: ''; position: absolute; bottom: 0; left: 8px; right: 8px; height: 2px; background: #9ed7ff; transform: scaleX(0); transform-origin: left; transition: transform .4s var(--motion-ease); }
+.chapter-nav a[aria-current],.chapter-nav a:hover { color: #edf6ff; }
+.chapter-nav a[aria-current]::after { transform: scaleX(1); }
+.chapter-nav small { font-size: 10px; color: #99a5af; }
+.action > span,.text-action > span,.header-cv > span { display: inline-block; }
+.action,.copy-email,.header-cv { transition: background-color .25s var(--motion-ease),border-color .25s var(--motion-ease),color .25s var(--motion-ease); }
+.action:hover,.action:focus-visible { transform: none; }
+.case-links a,.about-actions a,.contact-row > div a { text-decoration-color: transparent; text-underline-offset: 6px; transition: color .25s,text-decoration-color .25s; }
+.case-links a:hover,.case-links a:focus-visible,.about-actions a:hover,.about-actions a:focus-visible,.contact-row > div a:hover,.contact-row > div a:focus-visible { color: #d4ebff; text-decoration: underline; }
+.copy-email:hover { background: #182532; border-color: #9ed7ff; }
+.action:active,.copy-email:active { filter: brightness(.88); }
+@media (min-width:900px) {
+ .case-visual { top: calc(var(--header-h) + 96px); }
+ html { scroll-padding-top: calc(var(--header-h) + 100px); }
+}
+@media (max-width:620px) {
+ .chapter-nav { gap: 4px; padding: 5px 8px; justify-content: space-between; }
+ .chapter-nav a { font-size: 11px; gap: 4px; padding-inline: 4px; }
+ .chapter-nav small { display: none; }
+ html { scroll-padding-top: calc(var(--header-h) + 76px); }
+}
+@media (prefers-reduced-motion:reduce), (forced-colors:active) {
+ .hero-line,.hero-portrait,.reveal { transform: none !important; opacity: 1 !important; }
+ .chapter-nav a::after { transition: none; }
+}
+@media print { .chapter-nav { display: none; } }
