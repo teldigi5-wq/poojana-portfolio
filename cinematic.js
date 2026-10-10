@@ -153,6 +153,10 @@
   });
 
   reducedMotion.addEventListener('change', () => {
+    root.style.removeProperty('--pointer-x');
+    root.style.removeProperty('--pointer-y');
+    const system = document.querySelector('.hero-system');
+    if (system) system.style.removeProperty('transform');
     cancelAnimationFrame(frame);
     context?.clearRect(0, 0, canvas.width, canvas.height);
     if (canvasAllowed() && canvasActive) { buildParticles(); frame = requestAnimationFrame(drawSignals); }
@@ -161,6 +165,7 @@
   if (finePointer.matches && !reducedMotion.matches) {
     const hero = document.querySelector(".hero");
     hero.addEventListener("pointermove", (event) => {
+      if (reducedMotion.matches || innerWidth < 900 || navigator.connection?.saveData) return;
       const x = (event.clientX / innerWidth - .5) * 10;
       const y = (event.clientY / innerHeight - .5) * 7;
       root.style.setProperty("--pointer-x", `${x}px`);

@@ -22,6 +22,8 @@ required.forEach((file) => {
 });
 
 const html = readFileSync("index.html", "utf8");
+const scriptSources = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map(match => match[1].split('?')[0]);
+if (new Set(scriptSources).size !== scriptSources.length) fail('duplicate script imports');
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
 const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
 if (duplicates.length) fail(`duplicate IDs: ${[...new Set(duplicates)].join(", ")}`);
