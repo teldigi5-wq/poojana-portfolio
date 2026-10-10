@@ -1,0 +1,21 @@
+/* Stage 5 portrait interaction: restrained movement, photo always available. */
+.hero-portrait { --portrait-move-x:0px; --portrait-move-y:0px; }
+@media (min-width:900px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .hero-portrait { translate:var(--portrait-move-x) var(--portrait-move-y); }
+}
+.hero-head-turn {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center bottom;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+.hero-portrait.has-head-turn .hero-head-turn { opacity:1; }
+@media (max-width:899px), (prefers-reduced-motion:reduce), (hover:none), (pointer:coarse) {
+  .hero-portrait { translate:none !important; }
+  .hero-head-turn { display:none !important; }
+}
