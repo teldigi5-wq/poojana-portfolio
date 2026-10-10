@@ -554,3 +554,11 @@ body {
   html.has-custom-cursor a, html.has-custom-cursor button { cursor: pointer; }
   .motion-cursor { display: none !important; }
 }
+
+/* Cursor reliability hotfix (2026-10-10): use the operating-system cursor.
+   The animated GSAP follower is intentionally disabled until its motion
+   can be verified across browsers; never conceal the native pointer. */
+html, body, body * { cursor: auto !important; }
+a, button, [role="button"], summary, label[for], input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"], select { cursor: pointer !important; }
+input[type="text"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"], input[type="password"], textarea, [contenteditable="true"] { cursor: text !important; }
+#motionCursor, .motion-cursor { display: none !important; visibility: hidden !important; }
