@@ -585,3 +585,26 @@ input[type="text"], input[type="email"], input[type="search"], input[type="url"]
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce), (forced-colors: active) {
   .cursor-halo { display: none !important; }
 }
+
+/* Stage 2 cursor refinement: understated precision accent. */
+.cursor-halo {
+  width: 6px;
+  height: 6px;
+  border: 0;
+  background: #9ed7ff;
+  box-shadow: 0 0 5px rgba(130, 197, 246, .28);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity .14s ease, width .2s ease, height .2s ease, background-color .2s ease;
+}
+.cursor-halo--visible { opacity: .78; }
+.cursor-halo--hover {
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(145, 209, 255, .68);
+  background: rgba(104, 180, 232, .07);
+  box-shadow: none;
+}
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .cursor-halo { display: none !important; }
+}
