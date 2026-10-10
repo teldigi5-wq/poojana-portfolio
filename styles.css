@@ -562,3 +562,26 @@ html, body, body * { cursor: auto !important; }
 a, button, [role="button"], summary, label[for], input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"], select { cursor: pointer !important; }
 input[type="text"], input[type="email"], input[type="search"], input[type="url"], input[type="tel"], input[type="password"], textarea, [contenteditable="true"] { cursor: text !important; }
 #motionCursor, .motion-cursor { display: none !important; visibility: hidden !important; }
+
+/* Accessible animated halo: this decorates, never replaces, the native pointer. */
+.cursor-halo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 34px; height: 34px;
+  z-index: 2147483000;
+  border: 1px solid rgba(155, 213, 255, .88);
+  background: rgba(110, 181, 237, .045);
+  box-shadow: 0 0 18px rgba(89, 164, 226, .16), inset 0 0 12px rgba(89, 164, 226, .10);
+  border-radius: 50%;
+  pointer-events: none !important;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-100px,-100px,0) translate(-50%,-50%);
+  transition: opacity .18s ease, width .22s ease, height .22s ease, border-color .22s ease, background-color .22s ease;
+  will-change: transform;
+}
+.cursor-halo--visible { opacity: 1; visibility: visible; }
+.cursor-halo--hover { width: 48px; height: 48px; border-color: rgba(211,239,255,.95); background: rgba(83, 166, 230, .11); }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .cursor-halo { display: none !important; }
+}
