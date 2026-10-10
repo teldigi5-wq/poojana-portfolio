@@ -3,7 +3,8 @@
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const forced = matchMedia('(forced-colors: active)');
-  if (!fine.matches || reduced.matches || forced.matches) return;
+  const wide = matchMedia('(min-width: 900px)');
+  if (!fine.matches || reduced.matches || forced.matches || navigator.connection?.saveData || navigator.deviceMemory <= 2) return;
   const halo = document.createElement('div');
   halo.className = 'cursor-halo';
   halo.setAttribute('aria-hidden', 'true');
@@ -12,6 +13,7 @@
   const show = (visible) => {
     active = visible;
     halo.classList.toggle('cursor-halo--visible', visible);
+    if (!visible) { cancelAnimationFrame(frame); frame = 0; halo.classList.remove('cursor-halo--pressed'); }
     if (visible && !frame) frame = requestAnimationFrame(tick);
   };
   function tick() {
@@ -25,19 +27,22 @@
     }
   }
   window.addEventListener('pointermove', (event) => {
-    if (event.pointerType !== 'mouse' || !fine.matches || reduced.matches || forced.matches) { show(false); return; }
+    if (event.pointerType !== 'mouse' || !wide.matches || !fine.matches || reduced.matches || forced.matches) { show(false); return; }
     targetX = event.clientX; targetY = event.clientY;
     if (!active) {
       x = targetX; y = targetY;
       halo.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-50%)';
     }
     show(true);
-    halo.classList.toggle('cursor-halo--hover', !!event.target.closest('a, button, [role="button"], summary, select'));
+    halo.classList.toggle('cursor-halo--hover', !!event.target.closest?.('a, button, [role="button"], summary, select'));
     if (!frame) frame = requestAnimationFrame(tick);
   }, { passive: true });
   document.addEventListener('pointerout', (e) => { if (!e.relatedTarget) show(false); });
   window.addEventListener('blur', () => show(false));
+  window.addEventListener('pointerdown', () => halo.classList.add('cursor-halo--pressed'), { passive: true });
+  window.addEventListener('pointerup', () => halo.classList.remove('cursor-halo--pressed'), { passive: true });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Tab') show(false); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) show(false); });
   const disable = () => show(false);
-  for (const query of [fine, reduced, forced]) query.addEventListener?.('change', disable);
+  for (const query of [fine, reduced, forced, wide]) query.addEventListener?.('change', disable);
 })();

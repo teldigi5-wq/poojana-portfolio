@@ -12,6 +12,8 @@ const required = [
   "cinematic.js",
   "styles.css",
   "main.js",
+  "stage3.css",
+  "cursor-halo.js",
   "staticwebapp.config.json"
 ];
 
@@ -30,7 +32,6 @@ const requiredMarkup = [
   'rel="canonical"',
   'property="og:url"',
   'id="main"',
-  'id="hero-video"',
   'prefers-reduced-motion'
 ];
 requiredMarkup.forEach((token) => {
@@ -64,4 +65,17 @@ if (existsSync(videoDir)) {
 }
 
 JSON.parse(readFileSync("staticwebapp.config.json", "utf8"));
+JSON.parse(readFileSync('vercel.json', 'utf8'));
+if (!html.includes('https://poojana-portfolio.vercel.app/')) fail('missing production canonical');
+if (/azurestaticapps|data-src=/.test(html)) fail('stale canonical or absent video request');
+for (const id of ['aetheris', 'averis', 'finalforge', 'floodguard']) {
+  const article = html.match(new RegExp(`<article[^>]*id="${id}"[\\s\\S]*?</article>`))?.[0];
+  if (!article?.includes('case-study')) fail(`missing detailed case study: ${id}`);
+}
+for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
+  const ref = match[1];
+  if (/^(https?:|mailto:|tel:|\/\/)/.test(ref)) continue;
+  const path = ref.split('?')[0];
+  if (!existsSync(path)) fail(`missing local asset: ${path}`);
+}
 if (!process.exitCode) console.log("Portfolio quality gate passed.");

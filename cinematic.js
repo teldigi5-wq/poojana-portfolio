@@ -15,6 +15,7 @@
     menuToggle.setAttribute("aria-expanded", "false");
     mobileNav.hidden = true;
     document.body.classList.remove("menu-open");
+    document.getElementById('main').inert = false;
   };
 
   const menuFocusables = () => [...mobileNav.querySelectorAll("a[href], button:not([disabled])")];
@@ -24,10 +25,22 @@
     menuToggle.setAttribute("aria-expanded", String(!open));
     mobileNav.hidden = open;
     document.body.classList.toggle("menu-open", !open);
+    document.getElementById('main').inert = !open;
     if (!open) requestAnimationFrame(() => menuFocusables()[0]?.focus());
   });
 
-  mobileNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+  mobileNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+    closeMenu();
+    const destination = link.hash && document.querySelector(link.hash);
+    if (destination) { destination.setAttribute('tabindex', '-1'); destination.focus({ preventScroll: true }); }
+    else menuToggle.focus();
+  }));
+  matchMedia('(min-width: 1101px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+  document.getElementById('copyEmail')?.addEventListener('click', async () => {
+    const status = document.getElementById('copyStatus');
+    try { await navigator.clipboard.writeText('teldigi5@gmail.com'); status.textContent = 'Email copied.'; }
+    catch { status.textContent = 'Copy unavailable. Select the email address above or open it to email me.'; }
+  });
   addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !mobileNav.hidden) {
       closeMenu();
@@ -68,14 +81,6 @@
     header.classList.toggle("scrolled", y > 24);
     progress.style.width = `${Math.min(100, (y / max) * 100)}%`;
 
-    if (!reducedMotion.matches && innerWidth > 820) {
-      document.querySelectorAll(".case").forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const span = Math.max(1, rect.height - innerHeight);
-        const amount = Math.max(0, Math.min(1, -rect.top / span));
-        section.style.setProperty("--case-progress", amount.toFixed(3));
-      });
-    }
     ticking = false;
   };
 
@@ -93,6 +98,7 @@
   let frame = 0;
   let particles = [];
   let canvasActive = true;
+  const canvasAllowed = () => !reducedMotion.matches && innerWidth >= 900 && !navigator.connection?.saveData && !(navigator.deviceMemory <= 2);
 
   const buildParticles = () => {
     if (!canvas || !context) return;
@@ -112,7 +118,7 @@
   };
 
   const drawSignals = (time = 0) => {
-    if (!context || reducedMotion.matches || !canvasActive || document.hidden) return;
+    if (!context || !canvasAllowed() || !canvasActive || document.hidden) return;
     const rect = canvas.getBoundingClientRect();
     context.clearRect(0, 0, rect.width, rect.height);
     for (const point of particles) {
@@ -127,7 +133,7 @@
     frame = requestAnimationFrame(drawSignals);
   };
 
-  if (canvas && context && !reducedMotion.matches) {
+  if (canvas && context && canvasAllowed()) {
     buildParticles();
     drawSignals();
     addEventListener("resize", buildParticles, { passive: true });
@@ -146,6 +152,12 @@
     else if (canvasActive && !reducedMotion.matches) frame = requestAnimationFrame(drawSignals);
   });
 
+  reducedMotion.addEventListener('change', () => {
+    cancelAnimationFrame(frame);
+    context?.clearRect(0, 0, canvas.width, canvas.height);
+    if (canvasAllowed() && canvasActive) { buildParticles(); frame = requestAnimationFrame(drawSignals); }
+  });
+
   if (finePointer.matches && !reducedMotion.matches) {
     const hero = document.querySelector(".hero");
     hero.addEventListener("pointermove", (event) => {
@@ -155,8 +167,6 @@
       root.style.setProperty("--pointer-y", `${y}px`);
       const system = hero.querySelector(".hero-system");
       if (system) system.style.transform = `translate3d(${x * .28}px, ${y * .2}px, 0)`;
-      const portrait = hero.querySelector(".hero-portrait");
-      if (portrait) portrait.style.transform = `translate3d(${x * .16}px, ${y * .12}px, 0)`;
     }, { passive: true });
   }
 })();

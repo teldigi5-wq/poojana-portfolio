@@ -32,13 +32,14 @@ jobs:
           node --check script.js
           node --check cinematic.js
           node --check main.js
+          node --check cursor-halo.js
           node scripts/quality-gate.mjs
 
       - name: Verify required portfolio files
         shell: bash
         run: |
           set -euo pipefail
-          required=(index.html cinematic.css cinematic.js styles.css main.js studio.css script.js README.md vercel.json staticwebapp.config.json scripts/quality-gate.mjs)
+          required=(index.html cinematic.css cinematic.js styles.css stage3.css main.js cursor-halo.js studio.css script.js README.md vercel.json staticwebapp.config.json scripts/quality-gate.mjs)
           for file in "${required[@]}"; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
