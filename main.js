@@ -32,11 +32,13 @@
     const distance = desktop ? 28 : 12;
     // One entrance; no preloader or dependency on portrait loading.
     if (scrollY < innerHeight * .5) {
-      const hero = gsap.timeline({ defaults: { ease: 'power3.out', duration: .8 } });
-      hero.from('.hero-meta, .hero-copy > .overline', { y: 12, opacity: 0, stagger: .06 })
-        .from('.hero-line', { yPercent: 105, stagger: .1, duration: 1.05 }, .1)
-        .from('.hero-portrait', { y: distance, opacity: 0, duration: 1.15 }, .18)
-        .from('.hero-intro, .hero-cta, .hero-foot', { y: 14, opacity: 0, stagger: .09 }, .42);
+      const hero = gsap.timeline({ defaults: { ease: 'power4.out', duration: .85 } });
+      hero.from('.hero-meta, .hero-copy > .overline', { y: 14, opacity: 0, stagger: .07 })
+        .from('.hero-line', { yPercent: 112, rotate: 1.5, stagger: .11, duration: 1.15 }, .08)
+        .from('.hero-system', { x: 24, opacity: 0, duration: 1.2 }, .14)
+        .from('.hero-portrait', { y: distance + 10, scale: .985, opacity: 0, duration: 1.3 }, .2)
+        .from('.portrait-reflection', { xPercent: -40, opacity: 0, duration: .9 }, .48)
+        .from('.hero-intro, .hero-cta, .hero-foot', { y: 16, opacity: 0, stagger: .1 }, .44);
       hero.eventCallback('onComplete', () => gsap.set('.hero-meta, .hero-copy > .overline, .hero-line, .hero-portrait, .hero-intro, .hero-cta, .hero-foot', { clearProps: 'transform,opacity' }));
       const finishForKeyboard = event => { if (event.key === 'Tab') hero.progress(1); };
       document.addEventListener('keydown', finishForKeyboard);
@@ -50,10 +52,13 @@
       const visual = chapter.querySelector('.case-visual');
       const pieces = visual.querySelectorAll('.node, .paper, .source, .forge-shell, .access-flow, .sensor, .telemetry > span, .state-legend');
       // Sticky desktop diagrams follow the evidence. Touch uses a finite entrance.
-      const timeline = gsap.timeline({ defaults: { ease: desktop ? 'none' : 'power3.out' }, scrollTrigger: desktop
-        ? { trigger: chapter, start: 'top 72%', end: 'bottom 85%', scrub: .45 }
+      const copy = chapter.querySelector('.case-copy');
+      const timeline = gsap.timeline({ defaults: { ease: desktop ? 'none' : 'power4.out' }, scrollTrigger: desktop
+        ? { trigger: chapter, start: 'top 78%', end: 'bottom 82%', scrub: .6 }
         : { trigger: visual, start: 'top 94%', once: true } });
-      timeline.from(pieces, { y: desktop ? 16 : 8, opacity: .45, stagger: .1, duration: .65 });
+      timeline.from(visual, { y: desktop ? 34 : 12, opacity: .7, duration: .7 })
+        .from(pieces, { y: desktop ? 18 : 8, opacity: .32, stagger: .09, duration: .68 }, .06);
+      if (desktop && copy) timeline.from(copy, { y: 18, opacity: .72, duration: .55 }, 0);
       if (desktop) {
         visual.querySelectorAll('.chapter-route').forEach(path => {
           const length = path.getTotalLength();
@@ -87,3 +92,4 @@
     return () => cleanup.forEach(dispose => dispose());
   });
 })();
+

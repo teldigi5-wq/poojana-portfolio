@@ -14,6 +14,8 @@ const required = [
   "main.js",
   "stage3.css",
   "stage4.css",
+  "stage6.css",
+  "stage6.js",
   "assets/vendor/gsap.min.js",
   "assets/vendor/ScrollTrigger.min.js",
   "cursor-halo.js",
@@ -54,7 +56,9 @@ const budget = {
   "main.js": 64 * 1024,
   "cinematic.css": 32 * 1024,
   "cinematic.js": 32 * 1024,
-  "stage4.css": 8 * 1024
+  "stage4.css": 8 * 1024,
+  "stage6.css": 24 * 1024,
+  "stage6.js": 8 * 1024
 };
 Object.entries(budget).forEach(([file, bytes]) => {
   const size = statSync(file).size;
@@ -85,3 +89,4 @@ for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
   if (!existsSync(path)) fail(`missing local asset: ${path}`);
 }
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
+

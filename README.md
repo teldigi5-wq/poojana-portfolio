@@ -35,8 +35,18 @@ node --check cursor-halo.js
 node --check script.js
 node scripts/quality-gate.mjs
 node scripts/motion-policy.test.mjs
+node scripts/stage6-policy.test.mjs
 ```
+
+## Stage 6 art direction
+
+- Frosted architecture frames, restrained electric-blue reflections and editorial project typography add depth without WebGL or perpetual effects.
+- The existing portrait stays intact in a stable `data-head-turn-slot` media container, ready for a supplied head-turn asset without layout shift.
+- GSAP choreography now layers the hero system, portrait and type, then follows each project architecture as the factual case study enters view.
+- Fine-pointer project diagrams use a subtle, requestAnimationFrame-driven depth response. Touch, reduced-motion, forced-colors, save-data and low-memory modes keep a static presentation.
+- Case studies retain their source-backed content and gain denser evidence panels, clearer maturity boundaries and responsive one/two-column reading layouts.
 
 GitHub CI additionally parses HTML references and validates both hosting configuration files. There is no application build step or runtime server; Vercel serves the static repository.
 
 Motion preferences and low-bandwidth/low-memory modes disable nonessential effects. Animation failure cannot hide content. Case study facts are sourced from each linked project repository and do not imply that those systems were independently re-tested during this portfolio update.
+
