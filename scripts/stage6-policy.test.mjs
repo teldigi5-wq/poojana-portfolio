@@ -65,4 +65,3 @@ desktop.globalEvents.get('pagehide')();
 assert.equal(desktop.visualEvents.has('pointermove'), false, 'page teardown removes pointer listeners');
 
 console.log('Stage 6 interaction policy passed: desktop depth, fallbacks, reset and teardown.');
-

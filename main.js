@@ -92,4 +92,3 @@
     return () => cleanup.forEach(dispose => dispose());
   });
 })();
-

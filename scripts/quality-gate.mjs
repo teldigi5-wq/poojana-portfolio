@@ -89,4 +89,3 @@ for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
   if (!existsSync(path)) fail(`missing local asset: ${path}`);
 }
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
-
