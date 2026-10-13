@@ -421,3 +421,73 @@ body {
 .performance-lite .case::before { display: none; }
 
 @media print { .portrait-reflection { display: none; } }
+
+
+/* FloodGuard telemetry proof: finite chapter-owned motion, existing visual language. */
+.flood-motion-graphic {
+  position: absolute;
+  z-index: 4;
+  top: 64px;
+  right: 28px;
+  width: min(43%, 286px);
+  padding: 12px 13px 10px;
+  border: 1px solid rgba(100, 190, 255, .2);
+  background: linear-gradient(145deg, rgba(9, 22, 31, .88), rgba(7, 14, 21, .7));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045), 0 16px 42px rgba(0, 0, 0, .2);
+  pointer-events: none;
+}
+.flood-motion-head,
+.flood-motion-readout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.flood-motion-head {
+  color: rgba(218, 240, 255, .74);
+  font-size: 7px;
+  letter-spacing: .16em;
+}
+.flood-motion-head small { color: rgba(170, 198, 216, .48); font-size: 7px; letter-spacing: .08em; }
+.flood-motion-graphic svg { display: block; width: 100%; height: 70px; margin: 7px 0 4px; overflow: visible; }
+.flood-motion-graphic .flood-grid { fill: none; stroke: rgba(151, 210, 247, .09); stroke-width: 1; }
+.flood-motion-graphic .flood-trace {
+  fill: none;
+  stroke: rgba(115, 200, 255, .78);
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 5px rgba(115, 200, 255, .28));
+}
+.flood-motion-readout { align-items: flex-start; }
+.flood-motion-readout span {
+  max-width: 31%;
+  color: rgba(188, 214, 230, .58);
+  font-size: 6px;
+  line-height: 1.35;
+  letter-spacing: .08em;
+}
+.flood-motion-readout span:first-child { color: rgba(204, 242, 233, .72); }
+.flood-motion-readout i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #78d8be;
+  box-shadow: 0 0 7px rgba(120, 216, 190, .5);
+}
+
+@media (max-width: 899.98px) {
+  .flood-motion-graphic { top: 54px; right: 18px; width: min(45%, 250px); }
+}
+@media (max-width: 620px) {
+  .flood-motion-graphic { top: 42px; right: 12px; width: 48%; padding: 9px; }
+  .flood-motion-head small,
+  .flood-motion-readout span:nth-child(2) { display: none; }
+  .flood-motion-graphic svg { height: 52px; }
+  .flood-motion-readout span { max-width: 48%; font-size: 5px; }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .flood-motion-graphic .flood-trace { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; filter: none; }
+}
+.performance-lite .flood-motion-graphic { box-shadow: none; }
+@media print { .flood-motion-graphic { position: relative; inset: auto; width: 100%; margin-block: 12px; box-shadow: none; } }

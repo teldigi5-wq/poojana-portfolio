@@ -50,7 +50,7 @@
     });
     chapters.forEach(chapter => {
       const visual = chapter.querySelector('.case-visual');
-      const pieces = visual.querySelectorAll('.node, .paper, .source, .forge-shell, .access-flow, .sensor, .telemetry > span, .state-legend');
+      const pieces = visual.querySelectorAll('.node, .paper, .source, .forge-shell, .access-flow, .sensor, .telemetry > span, .flood-motion-graphic, .flood-spark, .state-legend');
       // Sticky desktop diagrams follow the evidence. Touch uses a finite entrance.
       const copy = chapter.querySelector('.case-copy');
       const timeline = gsap.timeline({ defaults: { ease: desktop ? 'none' : 'power4.out' }, scrollTrigger: desktop

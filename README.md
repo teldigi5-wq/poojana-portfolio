@@ -24,6 +24,14 @@ Static HTML/CSS/JavaScript portfolio preserving the dark cinematic branding.
 - Perpetual particle, orbit, scanning and sonar loops are removed. GSAP 3.13.0 and ScrollTrigger are served locally in `assets/vendor`, with their original license notices, removing external CDN requests.
 - The tablet media query includes fractional widths below 900px to avoid a narrow breakpoint gap. Case-study facts, SEO and CV remain unchanged.
 
+## FloodGuard release evidence motion
+
+- Preserves the existing FloodGuard chapter layout, glass treatment, typography and color system.
+- Adds a compact telemetry trace to the existing system diagram. The trace is drawn by the current chapter-owned GSAP timeline and never loops.
+- Shows the reviewed boundary directly in the graphic: safe child reads, denied private parent reads and an approval-gated rollout.
+- Reduced-motion, forced-colors, save-data and missing-library modes keep the complete trace and labels static and visible.
+- Links the mobile QA, bot security and Firebase privacy review PRs without claiming EC2 deployment, rules publication or physical verification.
+
 ## Verification
 
 Run from the repository root:
