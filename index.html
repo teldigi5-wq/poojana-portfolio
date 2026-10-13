@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="stage4.css?v=1">
   <link rel="stylesheet" href="stage5.css?v=1">
   <link rel="stylesheet" href="stage6.css?v=1">
-  <link rel="stylesheet" href="editorial.css?v=1">
   <title>Poojana Kaveesh | Backend · AI Systems · Product Engineering</title>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Poojana Kaveesh Sellahewa","url":"https://poojana-portfolio.vercel.app/","image":"https://poojana-portfolio.vercel.app/assets/images/poojana-og.jpg","sameAs":["https://github.com/teldigi5-wq","https://www.linkedin.com/in/poojana-kaveesh-3048b8387"],"affiliation":{"@type":"CollegeOrUniversity","name":"Sri Lanka Institute of Information Technology"},"knowsAbout":["Backend Engineering","Java","Spring Boot","AI Systems","Cloud Systems","Product Engineering","IoT"]}</script>
 </head>
@@ -101,19 +100,19 @@
     </section>
     <section class="work-heading shell" id="work" aria-labelledby="work-title">
       <div class="section-code">01 / SELECTED WORK</div>
-      <div><p class="overline reveal">Four systems. Four engineering perspectives.</p><h2 id="work-title" class="reveal">Selected work,<br><em>shown as evidence.</em></h2></div>
+      <div><p class="overline reveal">Five systems. Five engineering perspectives.</p><h2 id="work-title" class="reveal">Selected work,<br><em>shown as evidence.</em></h2></div>
       <p class="work-note reveal">Each chapter pairs the problem with real architecture, boundaries and reviewable source.</p>
     </section>
     <div class="work-journey" id="workJourney" role="region" aria-label="Selected work chapters">
-      <nav class="chapter-nav" aria-label="Project chapters"><a href="#aetheris"><small>01</small>Aetheris</a><a href="#averis"><small>02</small>Averis</a><a href="#finalforge"><small>03</small>FinalForge</a><a href="#floodguard"><small>04</small>FloodGuard</a></nav>
-      <div class="work-journey__status" aria-hidden="true"><span id="workChapterNumber">01</span><i><b id="workChapterProgress"></b></i><span>05</span></div>
+      <nav class="chapter-nav" aria-label="Project chapters"><a href="#aetheris"><small>01</small>Aetheris</a><a href="#averis"><small>02</small>Averis</a><a href="#finalforge"><small>03</small>FinalForge</a><a href="#floodguard"><small>04</small>FloodGuard</a><a href="#wayfarer"><small>05</small>Wayfarer</a></nav>
+      <div class="work-journey__status" aria-hidden="true"><span id="workChapterNumber">01</span><i><b id="workChapterProgress"></b></i><span>06</span></div>
       <div class="work-journey__track" id="workTrack" role="list">
     <article class="case case-aetheris" id="aetheris" data-case="aetheris" data-project-index="01" role="listitem" aria-labelledby="aetheris-title">
       <div class="case-stage shell">
         <div class="case-copy">
           <div class="case-index reveal"><span>01</span><span>PLATFORM ENGINEERING</span></div>
           <h2 id="aetheris-title" class="reveal">Aetheris</h2>
-          <p class="case-lead reveal">A cloud-native platform with a separately governed AI runtime boundary—built to make security, messaging, observability and deployment decisions inspectable.</p>
+          <p class="case-lead reveal">A cloud-native platform with a separately certified AI runtime boundary—built to make security, messaging, observability and deployment decisions inspectable.</p>
           <dl class="case-evidence reveal"><div><dt>Platform</dt><dd>Gateway · Identity · Users · Audit</dd></div><div><dt>State</dt><dd>PostgreSQL · Redis · RabbitMQ</dd></div><div><dt>Operations</dt><dd>OTel · Prometheus · Grafana · Kubernetes</dd></div></dl>
           <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Platform source ↗</a><a href="https://github.com/teldigi5-wq/aetheris-ai-runtime" target="_blank" rel="noopener noreferrer">Runtime source ↗</a></div>
           <div class="case-study" aria-label="aetheris case study">
@@ -198,7 +197,31 @@
         </div>
       </div>
     </article>
-    <section class="other-work shell" data-project-index="05" role="listitem" aria-labelledby="other-title">
+    <article class="case case-wayfarer" id="wayfarer" data-case="wayfarer" data-project-index="05" role="listitem" aria-labelledby="wayfarer-title">
+      <div class="case-stage shell">
+        <div class="case-copy">
+          <div class="case-index reveal"><span>05</span><span>DETERMINISTIC PRODUCT SYSTEM</span></div>
+          <h2 id="wayfarer-title" class="reveal">Wayfarer</h2>
+          <p class="case-lead reveal">A worldwide travel-planning workspace that coordinates six deterministic assistants entirely in the browser, with a strict zero-cost runtime and honest handoffs to live providers.</p>
+          <dl class="case-evidence reveal"><div><dt>Coverage</dt><dd>250 countries · 1,000-airport sample</dd></div><div><dt>Planning</dt><dd>Itinerary · budget · safety checklist</dd></div><div><dt>Boundary</dt><dd>Local data · no booking or live-fare claims</dd></div></dl>
+          <div class="case-links reveal"><a href="https://github.com/teldigi5-wq/wayfarer-world-travel" target="_blank" rel="noopener noreferrer">Review the repository ↗</a></div>
+          <div class="case-study" aria-label="wayfarer case study">
+            <h3>Problem & scope</h3><p>Travel planning often mixes inspiration, logistics and live commercial data. Wayfarer keeps the planning layer useful on a zero-dollar budget while sending flights, hotels, maps and official requirements to their real providers.</p>
+            <h3>Architecture & decisions</h3><p>Six rule-based assistants coordinate destination context, airport handoff, nearby hotel discovery, day planning, budget allocation and safety research. Bundled country, city, landmark and airport data keeps the core experience private, predictable and available without API keys.</p>
+            <h3>Privacy & trade-offs</h3><p>Saved trips stay in local browser storage and no account or analytics service is required. Unknown cities receive research slots instead of invented detail. Straight-line proximity, bundled airport coverage and external searches are clearly labelled limits.</p>
+            <h3>Evidence & maturity</h3><p class="maturity">Automated checks cover dates, limits, budget math, URL encoding, proximity calculations, orchestration and dataset integrity. Live fares, visas, weather, booking inventory and route optimization remain external and are not presented as integrated features.</p>
+          </div>
+        </div>
+        <div class="case-visual wayfarer-orbit" data-visual-label="PLANNING ORBIT / SIX LOCAL ASSISTANTS" role="img" aria-label="Wayfarer planning system connecting a trip brief to six deterministic planning assistants and external live providers">
+          <svg class="wayfarer-routes" viewBox="0 0 760 620" aria-hidden="true"><circle class="wayfarer-ring" cx="380" cy="310" r="185"/><path class="chapter-route" d="M380 310L380 125M380 310L540 218M380 310L540 402M380 310L380 495M380 310L220 402M380 310L220 218"/><path class="wayfarer-handoff chapter-route" d="M565 310H704"/></svg>
+          <div class="wayfarer-core node"><small>TRIP BRIEF</small><b>Coordinate</b><span>dates · party · budget</span></div>
+          <div class="wayfarer-agent agent-a node"><small>01</small><b>Destination</b></div><div class="wayfarer-agent agent-b node"><small>02</small><b>Flights</b></div><div class="wayfarer-agent agent-c node"><small>03</small><b>Hotels</b></div><div class="wayfarer-agent agent-d node"><small>04</small><b>Itinerary</b></div><div class="wayfarer-agent agent-e node"><small>05</small><b>Budget</b></div><div class="wayfarer-agent agent-f node"><small>06</small><b>Safety</b></div>
+          <div class="wayfarer-live"><small>LIVE HANDOFF</small><b>Maps · providers · official advice</b></div>
+          <p class="visual-caption">Plan locally. Verify live details at the source.</p>
+        </div>
+      </div>
+    </article>
+    <section class="other-work shell" data-project-index="06" role="listitem" aria-labelledby="other-title">
       <div class="section-code">02 / DIFFERENT MEDIUM</div>
       <div class="other-grid">
         <div><p class="overline reveal">Desktop engineering</p><h2 id="other-title" class="reveal">AnyDL<br>Pro Ultra</h2></div>
@@ -227,7 +250,7 @@
       <div class="recruiter-card">
         <h3>For recruiters & engineering teams</h3>
         <p>IT undergraduate at SLIIT · Colombo, Sri Lanka · Open to internships</p>
-        <p>Interested in backend engineering, AI systems, product engineering and connected systems. Review the four case studies above for architecture, implementation choices and honest maturity boundaries.</p>
+        <p>Interested in backend engineering, AI systems, product engineering and connected systems. Review the five case studies above for architecture, implementation choices and honest maturity boundaries.</p>
         <p><a href="mailto:teldigi5@gmail.com">teldigi5@gmail.com</a></p>
         <div class="recruiter-actions"><a class="action action-light" href="assets/Poojana_Kaveesh_CV.pdf?v=2" target="_blank" rel="noopener">View CV (PDF) ↗</a><a href="assets/Poojana_Kaveesh_CV.pdf?v=2" download="Poojana_Kaveesh_CV.pdf">Download CV ↓</a><button class="copy-email" id="copyEmail" type="button">Copy email</button></div>
         <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
@@ -245,4 +268,3 @@
   <script src="stage6.js?v=1" defer></script>
 </body>
 </html>
-

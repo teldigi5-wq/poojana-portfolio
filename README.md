@@ -8,7 +8,7 @@ Static HTML/CSS/JavaScript portfolio preserving the dark cinematic branding.
 
 - Native pointer plus a single understated, dependency-free follower on wide fine-pointer screens; keyboard, touch, forced-colors and reduced-motion fallbacks.
 - Separate portrait and copy layout on phone/tablet; responsive WebP selection and correct portrait layering on desktop.
-- Detailed Aetheris, Averis, FinalForge and FloodGuard case studies based on their public README documentation. Architecture, trade-offs and maturity boundaries remain distinct from measured outcomes.
+- Detailed Aetheris, Averis, FinalForge, FloodGuard and Wayfarer case studies based on their public README documentation. Architecture, trade-offs and maturity boundaries remain distinct from measured outcomes.
 - Vertical project reading flow with sticky desktop architecture diagrams. Short GSAP entrance motion progressively enhances the layout. Removed horizontal pinning, artificial loading delay, magnetic link movement and requests for missing videos.
 - Two GSAP scripts replace eight external motion scripts plus the Lenis stylesheet. Content is visible even if JavaScript or the CDN fails.
 - Vercel canonical, social metadata, structured data and sitemap; affiliation describes current study rather than claiming graduation.

@@ -1,5 +1,9 @@
-# Future portrait motion
+# Motion assets
 
-No hero video is currently supplied. The static portrait remains the default.
+Drop the exported Higgsfield files in this folder using these exact names:
 
-Use the existing data-head-turn-slot wrapper for a future genuine head-turn video. Preserve the image fallback and aspect ratio. Only load motion after user intent on fine-pointer desktop devices; keep mobile, reduced-motion and save-data modes static. Export muted WebM/MP4 assets under 3 MB. Do not add missing-asset requests or autoplay loops.
+- `hero.webm` and `hero.mp4` — 5-second hero, 16:9, muted, under 3 MB each.
+- `loop-system.webm` and `loop-system.mp4` — 4-second seamless system loop.
+- `floodguard.webm` and `floodguard.mp4` — 5-second FloodGuard chapter clip.
+
+The hero uses the hero sources. Stage 2 lazy-loads the system loop in Aetheris and the FloodGuard clip only when their desktop chapters approach the viewport. Mobile and reduced-motion layouts do not load chapter videos.
