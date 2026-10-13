@@ -78,6 +78,15 @@ JSON.parse(readFileSync("staticwebapp.config.json", "utf8"));
 JSON.parse(readFileSync('vercel.json', 'utf8'));
 if (!html.includes('https://poojana-portfolio.vercel.app/')) fail('missing production canonical');
 if (/azurestaticapps|data-src=/.test(html)) fail('stale canonical or absent video request');
+const stage6 = readFileSync('stage6.css', 'utf8');
+const mainMotion = readFileSync('main.js', 'utf8');
+for (const token of ['flood-motion-graphic', 'flood-trace', 'PRIVATE PARENT DENIED', 'ROLLOUT GATED']) {
+  if (!html.includes(token) && !stage6.includes(token) && !mainMotion.includes(token)) fail(`missing FloodGuard motion evidence: ${token}`);
+}
+if (!html.match(/class="chapter-route flood-trace"/)) fail('FloodGuard trace must use the finite chapter motion path');
+if (!stage6.includes('@media (prefers-reduced-motion: reduce)')) fail('FloodGuard motion requires reduced-motion fallback');
+if (!mainMotion.includes('.flood-motion-graphic, .flood-spark')) fail('FloodGuard motion must remain owned by the existing chapter timeline');
+
 for (const id of ['aetheris', 'averis', 'finalforge', 'floodguard']) {
   const article = html.match(new RegExp(`<article[^>]*id="${id}"[\\s\\S]*?</article>`))?.[0];
   if (!article?.includes('case-study')) fail(`missing detailed case study: ${id}`);
