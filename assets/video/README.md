@@ -7,4 +7,3 @@ Drop the exported Higgsfield files in this folder using these exact names:
 - `floodguard.webm` and `floodguard.mp4` — 5-second FloodGuard chapter clip.
 
 The hero uses the hero sources. Stage 2 lazy-loads the system loop in Aetheris and the FloodGuard clip only when their desktop chapters approach the viewport. Mobile and reduced-motion layouts do not load chapter videos.
-
