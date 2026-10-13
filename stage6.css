@@ -388,13 +388,19 @@ body {
   .case-visual { min-height: 345px; padding: 10px; }
   .case-visual::before { top: 10px; left: 12px; font-size: 7px; }
   .wayfarer-orbit { min-height: 410px; }
-  .wayfarer-core { width: 112px; padding: 16px 10px; }
-  .wayfarer-core b { font-size: 15px; }
-  .wayfarer-agent { width: 82px; padding: 9px 5px; }
-  .wayfarer-agent b { font-size: 10px; }
-  .agent-b, .agent-c { right: 4%; }
-  .agent-e, .agent-f { left: 4%; }
+  .wayfarer-core { width: 96px; padding: 12px 7px; }
+  .wayfarer-core b { font-size: 14px; }
+  .wayfarer-core span { font-size: 8px; }
+  .wayfarer-agent { width: 72px; padding: 7px 4px; }
+  .wayfarer-agent b { font-size: 9px; }
+  .agent-a { top: 5%; }
+  .agent-b, .agent-f { top: 23%; }
+  .agent-b, .agent-c { right: 3%; }
+  .agent-c, .agent-e { bottom: 22%; }
+  .agent-e, .agent-f { left: 3%; }
+  .agent-d { bottom: 3%; }
   .wayfarer-live { display: none; }
+  .wayfarer-orbit .visual-caption { display: none; }
   .work-heading h2, .approach h2, .about-copy h2, .contact h2 { font-size: clamp(3rem, 14vw, 4.6rem); }
 }
 
