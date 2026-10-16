@@ -35,6 +35,8 @@ jobs:
           node --check cursor-halo.js
           node scripts/quality-gate.mjs
           node scripts/motion-policy.test.mjs
+          node --check lounge-case-motion.js
+          node scripts/lounge-motion-policy.test.mjs
 
       - name: Verify required portfolio files
         shell: bash

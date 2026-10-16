@@ -421,32 +421,3 @@ body {
 .performance-lite .case::before { display: none; }
 
 @media print { .portrait-reflection { display: none; } }
-
-/* Standalone restaurant portfolio study: typographic artwork only, no third-party imagery. */
-.venue-showcase{padding-block:clamp(90px,10vw,155px);border-top:1px solid var(--line)}
-.venue-showcase__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.86fr);gap:clamp(35px,6vw,100px);align-items:center;margin-top:40px}
-.venue-showcase__copy h2{margin:22px 0 28px;font-size:clamp(56px,7.8vw,112px);letter-spacing:-.07em;line-height:.92;font-weight:480}
-.venue-showcase__copy h2 em{color:#d0b08a;font-style:normal}
-.venue-showcase__lead{max-width:630px;color:#b2b8bd;font-size:clamp(17px,1.5vw,21px);line-height:1.6}
-.venue-showcase__facts{margin:36px 0 25px;border-top:1px solid var(--line)}
-.venue-showcase__facts div{display:grid;grid-template-columns:105px 1fr;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
-.venue-showcase__facts dt{color:#d0b08a;text-transform:uppercase;font-size:10px;letter-spacing:.13em}
-.venue-showcase__facts dd{margin:0;color:#b3bdc5;font-size:13px;line-height:1.6}
-.venue-showcase__link{display:inline-flex;align-items:center;gap:14px;min-height:44px;padding:7px 0;color:#f3ece1;border-bottom:1px solid #d0b08a;font-size:14px}
-.venue-showcase__link:hover,.venue-showcase__link:focus-visible{color:#d0b08a}
-.venue-showcase__disclosure{max-width:650px;color:#909ba4;font-size:12px;line-height:1.6;margin-top:22px}
-.venue-showcase__composition{min-width:0;padding:clamp(24px,4vw,50px);border:1px solid rgba(208,176,138,.25);background:linear-gradient(145deg,#2a211b,#171615 77%);color:#f3ece1;box-shadow:0 28px 70px rgba(0,0,0,.2)}
-.venue-showcase__mast{display:flex;justify-content:space-between;gap:14px;color:#c8ac8c;font-size:9px;letter-spacing:.1em}
-.venue-showcase__wordmark{text-align:center;display:flex;flex-direction:column;align-items:center;padding-block:clamp(65px,9vw,140px)}
-.venue-showcase__wordmark span{font-family:Georgia,serif;font-size:clamp(96px,14vw,220px);line-height:.8;letter-spacing:-.11em;font-weight:400}
-.venue-showcase__wordmark strong{font-size:clamp(24px,4vw,51px);letter-spacing:.36em;font-weight:400;margin:14px 0 24px;padding-left:.36em}
-.venue-showcase__wordmark small{color:#c8ac8c;font-size:9px;letter-spacing:.16em}
-.venue-showcase__steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-block:1px solid rgba(208,176,138,.22);padding:16px 0;margin:0}
-.venue-showcase__steps li{display:grid;gap:7px}
-.venue-showcase__steps span{color:#c8ac8c;font-size:10px}
-.venue-showcase__steps b{font-size:14px;font-weight:500}
-.venue-showcase__steps small{font-size:11px;color:#aeb0b1}
-.venue-showcase__foot{margin-top:20px;color:#bfa78c;font-size:9px;letter-spacing:.1em}
-@media(max-width:920px){.venue-showcase__grid{grid-template-columns:1fr}.venue-showcase__composition{max-width:700px;width:100%}}
-@media(max-width:480px){.venue-showcase{padding-block:78px}.venue-showcase__facts div{grid-template-columns:1fr;gap:4px}.venue-showcase__mast{flex-direction:column}.venue-showcase__wordmark{padding-block:70px}.venue-showcase__steps b{font-size:12px}.venue-showcase__steps small{font-size:9px}}
-@media print{.venue-showcase__composition{background:#fff;color:#111;border-color:#999;box-shadow:none}.venue-showcase__copy h2 em,.venue-showcase__link{color:#111}}

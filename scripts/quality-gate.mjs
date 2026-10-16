@@ -93,8 +93,16 @@ const venueEnd=html.indexOf('</section>',venueStart);
 const venue=venueStart>=0&&venueEnd>venueStart?html.slice(venueStart,venueEnd):'';
 if(!venue.includes('Independent, non-official design prototype')||
    !venue.includes('https://999-lounge-wellawaya.vercel.app/')||
-   !venue.includes('event enquiries create an email draft')||
+   !venue.toLowerCase().includes('email draft only')||
    /<img\b|github\.com\/teldigi5-wq\/999-lounge-wellawaya/i.test(venue)) {
   fail('Restaurant portfolio entry must be accurately labeled, media-free and link to the live concept instead of the private repository');
+}
+const caseCSS = readFileSync('lounge-case.css','utf8');
+const caseMotion = readFileSync('lounge-case-motion.js','utf8');
+if (!html.includes('lounge-case.css?v=2') || !html.includes('lounge-case-motion.js?v=2') ||
+    !caseCSS.includes('var(--s6-blue)') || /#d0b08a|#c8ac8c/i.test(caseCSS) ||
+    !caseMotion.includes('ScrollTrigger') || !caseMotion.includes('prefers-reduced-motion') ||
+    !caseMotion.includes('saveData') || !caseMotion.includes('once:true')) {
+  fail('Restaurant case must use matching blue tokens, local GSAP, finite and accessible motion');
 }
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
