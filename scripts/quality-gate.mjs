@@ -88,4 +88,13 @@ for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
   const path = ref.split('?')[0];
   if (!existsSync(path)) fail(`missing local asset: ${path}`);
 }
+const venueStart=html.indexOf('<section class="venue-showcase shell" id="lounge-concept"');
+const venueEnd=html.indexOf('</section>',venueStart);
+const venue=venueStart>=0&&venueEnd>venueStart?html.slice(venueStart,venueEnd):'';
+if(!venue.includes('Independent, non-official design prototype')||
+   !venue.includes('https://999-lounge-wellawaya.vercel.app/')||
+   !venue.includes('event enquiries create an email draft')||
+   /<img\b|github\.com\/teldigi5-wq\/999-lounge-wellawaya/i.test(venue)) {
+  fail('Restaurant portfolio entry must be accurately labeled, media-free and link to the live concept instead of the private repository');
+}
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
