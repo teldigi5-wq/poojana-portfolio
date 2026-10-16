@@ -49,3 +49,7 @@ node scripts/stage6-policy.test.mjs
 GitHub CI additionally parses HTML references and validates both hosting configuration files. There is no application build step or runtime server; Vercel serves the static repository.
 
 Motion preferences and low-bandwidth/low-memory modes disable nonessential effects. Animation failure cannot hide content. Case study facts are sourced from each linked project repository and do not imply that those systems were independently re-tested during this portfolio update.
+
+## Independent restaurant UI case study — 999 Lounge Wellawaya
+
+A typography-only project entry links to the [working review concept](https://999-lounge-wellawaya.vercel.app/). It describes the real menu browsing and search, accessible UI, reduced motion, and draft-only email enquiries. It does not imply that the design has been commissioned, approved as the venue's official site, or cleared for commercial photographic use. The project source remains private pending third-party asset rights and release approval; there are no venue photographs embedded in this public portfolio.
