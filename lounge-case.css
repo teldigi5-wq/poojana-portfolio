@@ -42,3 +42,9 @@
 @media(max-width:480px){.venue-showcase__heading{font-size:clamp(3.2rem,12vw,4.5rem)}.venue-showcase__facts div{grid-template-columns:1fr;gap:4px}.venue-showcase__mast,.venue-showcase__foot{font-size:8px}.venue-showcase__display strong{font-size:clamp(2.8rem,12vw,4rem)}.venue-showcase__node small{font-size:7px}.venue-showcase__node strong{font-size:10px}.venue-showcase__node span{font-size:9px}.venue-showcase__boundary{grid-template-columns:1fr;gap:6px}.venue-showcase__composition{padding:19px}.venue-showcase__flow{grid-template-columns:minmax(0,1fr) 9px minmax(0,1fr) 9px minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce),(forced-colors:active){.venue-showcase *{animation:none!important;transition:none!important}.venue-showcase__composition{backdrop-filter:none;box-shadow:none}}
 @media print{.venue-showcase,.venue-showcase__composition{break-inside:avoid;color:#111;background:#fff;box-shadow:none}.venue-showcase__heading em{color:#111}.venue-showcase__node{background:#fff;color:#111}}
+
+/* Public evidence: demonstrate the portfolio implementation without opening private venue source. */
+.venue-showcase__proof{display:flex;align-items:center;flex-wrap:wrap;gap:9px 18px;margin-top:21px;padding-top:18px;border-top:1px solid var(--s6-line)}
+.venue-showcase__proof>span{color:#86a1b1;font-size:9px;letter-spacing:.13em;width:100%}
+.venue-showcase__proof a{font-size:11px;min-height:38px;display:inline-flex;align-items:center;color:#afcfe3;border-bottom:1px solid rgba(115,200,255,.18);transition:color .25s var(--s6-ease),border-color .25s var(--s6-ease)}
+.venue-showcase__proof a:hover,.venue-showcase__proof a:focus-visible{color:var(--s6-blue);border-color:var(--s6-blue)}

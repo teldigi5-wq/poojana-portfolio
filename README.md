@@ -57,3 +57,5 @@ A typography-only project entry links to the [working review concept](https://99
 ## October 16 — 999 Lounge case-study art-direction correction
 
 The independent restaurant study now uses the portfolio's established deep-blue/icy-blue design language, technical journey visualization, restrained GSAP ScrollTrigger entrance and explicit system boundaries rather than a standalone warm-brass restaurant advertisement. The motion is finite, no-scrub and disabled for reduced motion, forced colors, save-data and low-memory preferences. No venue photos, private repo links, fake bookings or endorsement claims are embedded. The live restaurant review URL may lag the latest draft PR; the two deployments remain distinct.
+
+The project entry now links to its **public portfolio-only GSAP implementation, accessible motion-policy tests and GitHub Actions CI**. These demonstrate independently reviewable front-end engineering; they are not presented as the private restaurant's source or proof of venue endorsement.

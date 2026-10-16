@@ -105,4 +105,10 @@ if (!html.includes('lounge-case.css?v=2') || !html.includes('lounge-case-motion.
     !caseMotion.includes('saveData') || !caseMotion.includes('once:true')) {
   fail('Restaurant case must use matching blue tokens, local GSAP, finite and accessible motion');
 }
+if (!venue.includes('OPEN PORTFOLIO EVIDENCE') ||
+    !venue.includes('poojana-portfolio/blob/main/lounge-case-motion.js') ||
+    !venue.includes('poojana-portfolio/blob/main/scripts/lounge-motion-policy.test.mjs') ||
+    !venue.includes('poojana-portfolio/actions/workflows/portfolio-ci.yml')) {
+  fail('Public portfolio implementation must link to reviewable source, motion tests and CI');
+}
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
