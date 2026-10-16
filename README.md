@@ -53,3 +53,7 @@ Motion preferences and low-bandwidth/low-memory modes disable nonessential effec
 ## Independent restaurant UI case study — 999 Lounge Wellawaya
 
 A typography-only project entry links to the [working review concept](https://999-lounge-wellawaya.vercel.app/). It describes the real menu browsing and search, accessible UI, reduced motion, and draft-only email enquiries. It does not imply that the design has been commissioned, approved as the venue's official site, or cleared for commercial photographic use. The project source remains private pending third-party asset rights and release approval; there are no venue photographs embedded in this public portfolio.
+
+## October 16 — 999 Lounge case-study art-direction correction
+
+The independent restaurant study now uses the portfolio's established deep-blue/icy-blue design language, technical journey visualization, restrained GSAP ScrollTrigger entrance and explicit system boundaries rather than a standalone warm-brass restaurant advertisement. The motion is finite, no-scrub and disabled for reduced motion, forced colors, save-data and low-memory preferences. No venue photos, private repo links, fake bookings or endorsement claims are embedded. The live restaurant review URL may lag the latest draft PR; the two deployments remain distinct.

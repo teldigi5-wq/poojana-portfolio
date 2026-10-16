@@ -1,0 +1,44 @@
+/* 999 Lounge portfolio case — same visual tokens and accessible motion policy as the portfolio.
+   Original CSS-only technical illustration. No venue/client photography or screenshots. */
+.venue-showcase{position:relative;padding-block:clamp(90px,11vw,158px);border-top:1px solid var(--s6-line);isolation:isolate}
+.venue-showcase::before{content:"02B";position:absolute;top:5%;right:2%;font-size:clamp(6rem,17vw,15rem);font-weight:650;letter-spacing:-.09em;line-height:1;color:rgba(142,204,244,.035);pointer-events:none;z-index:-1}
+.venue-showcase__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.91fr);gap:clamp(42px,6.5vw,108px);align-items:center;margin-top:clamp(35px,5vw,70px)}
+.venue-showcase__copy{min-width:0}
+.venue-showcase__eyebrow{display:flex;align-items:center;gap:13px;color:#a4becd;font-size:10px;letter-spacing:.14em}
+.venue-showcase__signal{display:block;width:24px;height:1px;background:var(--s6-blue)}
+.venue-showcase__heading{margin:22px 0 28px;font-size:clamp(3.65rem,7.1vw,7.1rem);font-weight:480;letter-spacing:-.07em;line-height:.87;text-wrap:balance}
+.venue-showcase__heading em{color:var(--s6-blue-soft);font-style:normal}
+.venue-showcase__lead{max-width:610px;color:#b4c0c9;font-size:clamp(16px,1.5vw,20px);line-height:1.62;text-wrap:pretty}
+.venue-showcase__facts{display:grid;gap:0;margin:32px 0 27px;border-top:1px solid var(--s6-line)}
+.venue-showcase__facts div{display:grid;grid-template-columns:102px minmax(0,1fr);gap:16px;border-bottom:1px solid var(--s6-line);padding:13px 0}
+.venue-showcase__facts dt{color:var(--s6-blue);font-size:10px;letter-spacing:.13em;text-transform:uppercase}
+.venue-showcase__facts dd{color:#b6c4ce;font-size:13px;line-height:1.55;margin:0}
+.venue-showcase__actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px 30px}
+.venue-showcase__link{position:relative;display:inline-flex;align-items:center;gap:20px;min-height:48px;color:#e1f3ff;font-size:13px;border-bottom:1px solid rgba(115,200,255,.45);text-decoration:none;transition:color .26s var(--s6-ease),border-color .26s var(--s6-ease)}
+.venue-showcase__link span{transition:transform .28s var(--s6-ease)}
+.venue-showcase__link:hover,.venue-showcase__link:focus-visible{color:var(--s6-blue);border-color:var(--s6-blue)}
+.venue-showcase__link:hover span,.venue-showcase__link:focus-visible span{transform:translate(2px,-2px)}
+.venue-showcase__review{font-size:9px;letter-spacing:.12em;color:#8197a7}
+.venue-showcase__disclosure{max-width:600px;color:#91a4b0;font-size:12px;line-height:1.65;margin-top:26px}
+.venue-showcase__composition{position:relative;overflow:hidden;min-width:0;padding:clamp(24px,3.3vw,44px);border:1px solid rgba(115,200,255,.21);border-radius:2px;color:#dff4ff;background:radial-gradient(circle at 72% 19%,rgba(62,145,206,.11),transparent 55%),linear-gradient(150deg,#101c29,#071019 65%,#05090d);box-shadow:inset 0 1px rgba(236,248,255,.055),0 28px 75px rgba(0,0,0,.27)}
+.venue-showcase__composition::before{content:"";position:absolute;inset:0;opacity:.37;pointer-events:none;background-image:linear-gradient(rgba(121,183,227,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(121,183,227,.055) 1px,transparent 1px);background-size:35px 35px;mask-image:linear-gradient(to bottom,#000,transparent 95%)}
+.venue-showcase__composition>*{position:relative}
+.venue-showcase__mast,.venue-showcase__foot{display:flex;justify-content:space-between;gap:14px;font-size:9px;letter-spacing:.13em;color:#91b7d1}
+.venue-showcase__display{display:grid;gap:18px;padding:clamp(58px,8vw,115px) 0 clamp(36px,5vw,72px)}
+.venue-showcase__display>span{font-size:10px;letter-spacing:.23em;color:var(--s6-blue)}
+.venue-showcase__display strong{font-weight:460;font-size:clamp(3.2rem,6.2vw,6.4rem);letter-spacing:-.07em;line-height:.91;color:#e3f3fb}
+.venue-showcase__flow{display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr);gap:8px;align-items:center}
+.venue-showcase__node{display:grid;gap:7px;min-width:0;padding:17px 10px;border:1px solid rgba(137,195,238,.23);background:rgba(5,12,20,.6);box-shadow:inset 0 1px rgba(197,233,255,.035)}
+.venue-showcase__node small{color:#8ab6d3;font-size:8px;letter-spacing:.04em}
+.venue-showcase__node strong{font-size:clamp(11px,1.2vw,14px);font-weight:560;letter-spacing:.05em;color:#e2f2fc}
+.venue-showcase__node span{font-size:10px;color:#9cb4c4}
+.venue-showcase__connector{height:1px;background:rgba(115,200,255,.54);position:relative}
+.venue-showcase__connector span{position:absolute;right:0;top:-2px;border:solid var(--s6-blue);border-width:0 1px 1px 0;padding:2px;transform:rotate(-45deg)}
+.venue-showcase__boundary{display:grid;grid-template-columns:118px 1fr;gap:14px;margin:24px 0;padding:14px 0;border-block:1px solid rgba(115,200,255,.18)}
+.venue-showcase__boundary>span{font-size:9px;letter-spacing:.11em;color:var(--s6-blue)}
+.venue-showcase__boundary p{margin:0;color:#a6bbc8;font-size:11px;line-height:1.6}
+@media(max-width:1100px){.venue-showcase__grid{gap:35px}.venue-showcase__flow{gap:5px}.venue-showcase__node{padding:12px 7px}}
+@media(max-width:900px){.venue-showcase__grid{grid-template-columns:1fr}.venue-showcase__composition{width:100%;max-width:720px}.venue-showcase__display{padding-block:65px 50px}}
+@media(max-width:480px){.venue-showcase__heading{font-size:clamp(3.2rem,12vw,4.5rem)}.venue-showcase__facts div{grid-template-columns:1fr;gap:4px}.venue-showcase__mast,.venue-showcase__foot{font-size:8px}.venue-showcase__display strong{font-size:clamp(2.8rem,12vw,4rem)}.venue-showcase__node small{font-size:7px}.venue-showcase__node strong{font-size:10px}.venue-showcase__node span{font-size:9px}.venue-showcase__boundary{grid-template-columns:1fr;gap:6px}.venue-showcase__composition{padding:19px}.venue-showcase__flow{grid-template-columns:minmax(0,1fr) 9px minmax(0,1fr) 9px minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce),(forced-colors:active){.venue-showcase *{animation:none!important;transition:none!important}.venue-showcase__composition{backdrop-filter:none;box-shadow:none}}
+@media print{.venue-showcase,.venue-showcase__composition{break-inside:avoid;color:#111;background:#fff;box-shadow:none}.venue-showcase__heading em{color:#111}.venue-showcase__node{background:#fff;color:#111}}
