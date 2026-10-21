@@ -111,4 +111,20 @@ if (!venue.includes('OPEN PORTFOLIO EVIDENCE') ||
     !venue.includes('poojana-portfolio/actions/workflows/portfolio-ci.yml')) {
   fail('Public portfolio implementation must link to reviewable source, motion tests and CI');
 }
+// Prevent the deployed Vercel site from silently losing the header protections
+// already required by the Azure Static Web Apps fallback configuration.
+const vercelHeaders = JSON.parse(readFileSync('vercel.json', 'utf8')).headers
+  .find(rule => rule.source === '/(.*)')?.headers ?? [];
+const azureHeaders = JSON.parse(readFileSync('staticwebapp.config.json', 'utf8')).globalHeaders;
+const vercelValue = key => vercelHeaders.find(h => h.key === key)?.value;
+if (vercelValue('Content-Security-Policy') !== azureHeaders['Content-Security-Policy']) {
+  fail('Vercel Content-Security-Policy missing or inconsistent with static site fallback');
+}
+if (vercelValue('Cross-Origin-Opener-Policy') !== 'same-origin') {
+  fail('Vercel browser opener isolation policy missing');
+}
+for (const header of ['X-Content-Type-Options', 'Referrer-Policy', 'X-Frame-Options']) {
+  if (!vercelValue(header)) fail(`Vercel response missing ${header}`);
+}
+
 if (!process.exitCode) console.log("Portfolio quality gate passed.");
