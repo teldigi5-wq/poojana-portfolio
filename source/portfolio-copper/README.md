@@ -32,6 +32,8 @@ The component follows live OS reduced-motion and forced-color preferences; `?mot
 
 The supplied footer keeps its React/Canvas 2D/SVG implementation: ordered dithering, bitmap blackletter, staged raster resolution, drawn flourish, pointer reticle and click scan. It uses existing self-hosted artwork, actual portfolio links and copper colors. It respects reduced motion, has a readable canvas fallback, fits narrow screens and stops its RAF loop when idle, hidden or off-screen.
 
+`components/ui/cinematic-contact.tsx` enhances the static `#contact` markup with an unpinned GSAP card turn, paper spread, light sweep and masked heading entrance. `styles/cinematic-contact.css` supplies the charcoal studio, copper card faces/edges, shadows and responsive layout. Fine-pointer tilt uses a separate transform wrapper and one demand-driven RAF. Contact triggers refresh after the earlier gallery pin; phones measure the artwork's viewport entry. Every owned event and animation is cleaned up. The existing email, copy fallback and social destinations remain; the card is decorative and hidden from assistive technology. The shared motion preference disables the enhancement. See root `CONTACT-RELEASE.md` for validation and limits.
+
 ## Liquid-glass navigation
 
 `components/ui/liquid-glass-navbar.tsx` integrates the user-supplied Nimbus UI “Waterline” component. Its WebGL shader, spring-driven liquid selection, droplets, ripples, pointer lens and SVG refraction are retained, with a champagne/copper palette. Lucide supplies the icons. A CSS lens works when WebGL is unavailable or its context is lost. Static links remain if JavaScript does not load.
