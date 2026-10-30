@@ -10,6 +10,7 @@ import * as React from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
+import {PortfolioTextRoll} from "@/components/ui/text-roll"
 import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
 const TOOLS = [
@@ -48,19 +49,16 @@ function ToolkitRibbons({motion}:{motion:boolean}) {
       animation.pause()
       return animation
     })
-    let visible=false,hovered=false
+    let visible=false
     const update=()=>{
-      const playing=visible&&!document.hidden&&!hovered
+      const playing=visible&&!document.hidden
       root.dataset.animation=playing?"playing":"paused"
       animations.forEach(animation=>playing?animation.play():animation.pause())
     }
     const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{rootMargin:"50px"})
     io.observe(root)
-    const enter=()=>{hovered=true;update()}
-    const leave=()=>{hovered=false;update()}
-    root.addEventListener("pointerenter",enter);root.addEventListener("pointerleave",leave)
     document.addEventListener("visibilitychange",update)
-    return ()=>{io.disconnect();root.removeEventListener("pointerenter",enter);root.removeEventListener("pointerleave",leave);document.removeEventListener("visibilitychange",update);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
+    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
   },[motion])
   return <section ref={ref} className="toolkit-section" aria-labelledby="toolkit-title">
     <div className="toolkit-copy shell">
@@ -251,23 +249,6 @@ function useCinematicScenes(enabled:boolean) {
     }
     document.addEventListener("click",anchors)
 
-    // Text rolls use WAAPI, independent of GSAP's scroll scene transforms.
-    scope.querySelectorAll<HTMLElement>("[data-roll-text]").forEach(element=>{
-      const original=element.textContent??""
-      const roller=document.createElement("span")
-      roller.className="roll-track"
-      const first=document.createElement("span");first.textContent=original
-      const second=first.cloneNode(true) as HTMLElement;second.setAttribute("aria-hidden","true")
-      roller.append(first,second);element.replaceChildren(roller);element.classList.add("roll-clip")
-      const animation=roller.animate([{transform:"translateY(0)"},{transform:"translateY(-50%)"}],{duration:430,easing:"cubic-bezier(.22,.75,.22,1)",fill:"both"})
-      animation.pause();animation.currentTime=0
-      const enter=()=>{animation.playbackRate=1;animation.play()}
-      const leave=()=>animation.reverse()
-      const parent=element.closest("a")??element
-      parent.addEventListener("pointerenter",enter);parent.addEventListener("pointerleave",leave)
-      parent.addEventListener("focus",enter);parent.addEventListener("blur",leave)
-      remove.push(()=>{animation.cancel();parent.removeEventListener("pointerenter",enter);parent.removeEventListener("pointerleave",leave);parent.removeEventListener("focus",enter);parent.removeEventListener("blur",leave);element.textContent=original;element.classList.remove("roll-clip")})
-    })
     const refresh=()=>ScrollTrigger.refresh()
     document.fonts?.ready.then(refresh)
     addEventListener("load",refresh,{once:true})
@@ -313,7 +294,7 @@ export function CinematicExperience(){
     })
     return ()=>cleanup.forEach(fn=>fn())
   },[enabled])
-  return <ToolkitRibbons motion={enabled}/>
+  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */

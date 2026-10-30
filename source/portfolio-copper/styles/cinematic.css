@@ -20,8 +20,15 @@ body{background:var(--bg)}
 .code-caption{display:block;margin-top:7px;font-size:7px;letter-spacing:.11em;color:#b9a58e}
 .hero-wordmark{color:#a88a69;opacity:.26}
 .hero-afterword{display:none}
-.roll-clip{display:inline-block;vertical-align:bottom;line-height:1.25;height:1.25em;overflow:hidden}
-.roll-track{display:block}.roll-track>span{display:block;white-space:nowrap;line-height:1.25}
+[data-text-roll-ready="true"]>.text-roll-source{display:none}
+.hero-statement [data-text-roll]{pointer-events:auto}
+.text-roll,.text-roll-visual{display:inline-block}
+.text-roll-visual{white-space:nowrap}
+.text-roll-letter{position:relative;display:inline-block;perspective:10000px;transform-style:preserve-3d}
+.text-roll-face{position:absolute;left:0;top:0;display:inline-block;backface-visibility:hidden;line-height:inherit}
+.text-roll-out{transform-origin:50% 25%}
+.text-roll-in{transform:rotateX(90deg);opacity:0;transform-origin:50% 100%}
+.text-roll-measure{visibility:hidden}
 .intro .statement em{color:var(--paper)}
 /* No animated noise, moving gradients or idle 3D rendering. */
 .dimension-stage:before{background:radial-gradient(ellipse at 80% 50%,#77502b24,transparent 65%)}

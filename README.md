@@ -32,7 +32,7 @@ pnpm run build
 
 The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
 
-See [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for the latest changes and verification; [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) records the preceding edition. No additional framework, account system or paid service is required.
+See [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for the current text/ribbon refinement, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for the navigation/footer edition and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the preceding welcome edition. No additional framework, account system or paid service is required.
 
 ## Security and release controls
 
@@ -48,3 +48,4 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 - Lenis is MIT-licensed; its license is retained in `assets/LENIS-LICENSE.txt`.
 - The supplied Osmo React/GSAP/Lenis example informed the cinematic component's technology. Its demo images and logo are not used.
 - The user-supplied Wild Hunt Footer source provides the canvas raster/dither and SVG flourish implementation. The portfolio passes its own wordmark, existing architectural artwork, palette and working links.
+- Character text roll adapts Motion Primitives by ibelick (MIT), using the existing WAAPI runtime for paired, staggered 3D letter faces. Source and license are retained in `components/ui/text-roll.tsx` and the generated bundle notice. Toolkit ribbons continue on hover.
