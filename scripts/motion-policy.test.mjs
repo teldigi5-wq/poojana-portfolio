@@ -3,7 +3,7 @@ import { runInNewContext } from 'node:vm';
 import assert from 'node:assert/strict';
 
 const source = readFileSync('main.js', 'utf8');
-function run({ reduced = false, touch = false, lite = false, forced = false, missing = false, editorial = false } = {}) {
+function run({ reduced = false, touch = false, lite = false, forced = false, missing = false } = {}) {
   const animations = [];
   const events = new Map();
   const visual = { querySelectorAll: () => [], querySelector: () => null };
@@ -23,7 +23,6 @@ function run({ reduced = false, touch = false, lite = false, forced = false, mis
   };
   const document = {
     documentElement: { classList: { toggle() {} } },
-    querySelector: selector => selector === '.editorial-hero' && editorial ? {} : null,
     querySelectorAll: selector => selector === '.case' ? [chapter] : selector === '.chapter-nav a' ? [link] : [],
     addEventListener: (name, callback) => events.set(name, callback),
     removeEventListener: name => events.delete(name)
@@ -50,7 +49,3 @@ assert.equal(desktop.gsap.finished, true, 'keyboard focus finishes hero entrance
 desktop.gsap.dispose();
 assert.equal(desktop.events.has('keydown'), false, 'media teardown removes keyboard listener');
 console.log('Motion policy passed: reduced motion, touch, save-data, forced colors, missing libraries, keyboard and teardown.');
-
-const editorial = run({ editorial: true });
-assert.equal(editorial.events.has('keydown'), false, 'editorial hero has no GSAP entrance');
-assert.ok(editorial.animations.some(item => item?.scrollTrigger?.scrub), 'existing project story remains available');

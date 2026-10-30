@@ -31,7 +31,7 @@
     const cleanup = [];
     const distance = desktop ? 28 : 12;
     // One entrance; no preloader or dependency on portrait loading.
-    if (scrollY < innerHeight * .5 && !document.querySelector('.editorial-hero')) {
+    if (scrollY < innerHeight * .5) {
       const hero = gsap.timeline({ defaults: { ease: 'power4.out', duration: .85 } });
       hero.from('.hero-meta, .hero-copy > .overline', { y: 14, opacity: 0, stagger: .07 })
         .from('.hero-line', { yPercent: 112, rotate: 1.5, stagger: .11, duration: 1.15 }, .08)
