@@ -13,7 +13,8 @@ const required = [
   "source/portfolio-copper/components/ui/liquid-glass-navbar.tsx",
   "source/portfolio-copper/components/ui/liquid-glass-shaders.ts",
   "source/portfolio-copper/components/ui/parallax-scrolling.tsx",
-  "source/portfolio-copper/components/ui/wild-hunt-footer.tsx"
+  "source/portfolio-copper/components/ui/wild-hunt-footer.tsx",
+  "source/portfolio-copper/components/ui/text-roll.tsx"
 ];
 required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
