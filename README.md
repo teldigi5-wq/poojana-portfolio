@@ -59,36 +59,3 @@ A typography-only project entry links to the [working review concept](https://99
 The independent restaurant study now uses the portfolio's established deep-blue/icy-blue design language, technical journey visualization, restrained GSAP ScrollTrigger entrance and explicit system boundaries rather than a standalone warm-brass restaurant advertisement. The motion is finite, no-scrub and disabled for reduced motion, forced colors, save-data and low-memory preferences. No venue photos, private repo links, fake bookings or endorsement claims are embedded. The live restaurant review URL may lag the latest draft PR; the two deployments remain distinct.
 
 The project entry now links to its **public portfolio-only GSAP implementation, accessible motion-policy tests and GitHub Actions CI**. These demonstrate independently reviewable front-end engineering; they are not presented as the private restaurant's source or proof of venue endorsement.
-
-## October 29 — editorial portrait hero
-
-The hero uses a 100vh slate canvas, self-hosted Archivo, lowercase editorial copy,
-and the existing Poojana studio portrait. A 10% gold-toned duplicate sits above the
-clean photograph; a single feathered 110 × 140px oval reveals the full gold tone.
-The image geometry and facial features are unchanged. This is a personal-portrait
-adaptation: it does **not** use the reference model, an invented gold mask, or a
-new generated portrait.
-
-The only hero animation is the on-demand pointer reveal: first movement snaps,
-subsequent movement interpolates by 0.22, and the frame loop stops below 0.3px.
-Touch, reduced motion, forced colors, unsupported CSS masking and failed images
-retain a static hero. Blur, scrolling, resizing, tab hiding and keyboard navigation
-clear the reveal. Both standard and WebKit mask properties are supplied.
-
-Navigation starts below the hero and becomes fixed on reaching it. Existing
-project chapters, motion below the hero, contact controls, CV, SEO and security
-headers are retained. The former hero entrance, halo, portrait parallax, canvas,
-architecture frame and glass decorations are absent from the new hero.
-
-Additional verification:
-
-```sh
-node --check editorial-hero.js
-node scripts/editorial-hero.test.mjs
-```
-
-Archivo is served locally under the SIL Open Font License in
-`assets/fonts/Archivo-OFL.txt`. The Latin subset is derived from the official
-[Google Fonts Archivo source](https://github.com/google/fonts/tree/main/ofl/archivo),
-with the width axis fixed at 100 and weights 400–500 retained. No remote font,
-image, or script origin is added to the content security policy.

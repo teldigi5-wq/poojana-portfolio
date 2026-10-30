@@ -33,8 +33,6 @@ jobs:
           node --check cinematic.js
           node --check main.js
           node --check cursor-halo.js
-          node --check editorial-hero.js
-          node scripts/editorial-hero.test.mjs
           node scripts/quality-gate.mjs
           node scripts/motion-policy.test.mjs
           node --check lounge-case-motion.js
