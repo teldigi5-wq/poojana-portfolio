@@ -8,6 +8,8 @@ The linked 21st.dev page was unavailable through retrieval; the corresponding or
 
 Toolkit ribbon pointer-enter/leave pause listeners are removed. Ribbons keep running under the cursor; off-screen, hidden-tab and reduced-motion behavior remains. This supersedes the hover-pause behavior recorded in `NAVIGATION-FOOTER-RELEASE.md`.
 
+The updated script and stylesheet URLs include a release version query. Production assets have immutable year-long caching; changing their URLs ensures returning browsers fetch this edition. Existing image/font cache and security policies are preserved.
+
 Verification uses strict TypeScript, reproducible builds, the existing asset/header quality gate and targeted Chromium checks for text entry/replay, keyboard focus, continuous ribbon motion during hover, responsive text layout and the static view. No dependency pins or security headers change. Physical-device and field performance measurements are outside this refinement.
 
 Local checks passed: six enhanced targets and 104 character cells render; the welcome replay count advances from 1 to 2 on hover and the CTA plays on keyboard focus. The accessible headline remains intact. With the cursor inside the toolkit, its state stays `playing` and the track transform continues changing. Frames at 390×844, 320×740, 768×1024 and 844×390 have zero horizontal document overflow. The no-JavaScript frame keeps its original copy, and `?motion=off` keeps all six roll counts at zero. TypeScript, generated bundle comparison, syntax and the static quality gate pass; no app-origin console warnings/errors were observed in the checked preview.
