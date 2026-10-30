@@ -79,8 +79,6 @@ lucide-react/dist/esm/icons/git-branch.mjs:
 lucide-react/dist/esm/icons/globe.mjs:
 lucide-react/dist/esm/icons/house.mjs:
 lucide-react/dist/esm/icons/layers.mjs:
-lucide-react/dist/esm/icons/pause.mjs:
-lucide-react/dist/esm/icons/play.mjs:
 lucide-react/dist/esm/icons/send.mjs:
 lucide-react/dist/esm/icons/terminal.mjs:
 lucide-react/dist/esm/icons/user-round.mjs:

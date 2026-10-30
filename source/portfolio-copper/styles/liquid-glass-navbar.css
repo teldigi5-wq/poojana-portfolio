@@ -41,14 +41,31 @@
 @media(prefers-reduced-motion:reduce){.nv-ico svg,.nv-ico:before,.nv-ico:after,.nv-door{animation:none!important;transition:none!important}}
 @supports not (backdrop-filter:blur(1px)){.nimbus-nav[data-tone=dark] .nimbus-glass{background:#211b15}.nimbus-glass{background:#eee0c9}}
 @media(forced-colors:active){.nimbus-water,.nimbus-drop{display:none!important}.nimbus-nav{border:1px solid ButtonText}.nimbus-item[aria-current]{outline:1px solid Highlight}.nimbus-glass{background:Canvas;box-shadow:none}}
-/* Integration with the existing editorial header. */
-.portfolio-nav-island{flex:0 1 auto;min-width:0;height:56px}
-.portfolio-liquid-nav{max-width:100%}
-.header{height:104px;border-bottom-color:#a17c4430;gap:20px}
-.header.is-scrolled{height:84px;background:#0c0b0ad9}
-.has-liquid-nav .menu-toggle{display:none}
+/* A centered desktop pill and a focused mobile navigation dialog. */
+:root{scroll-padding-top:110px}
+.portfolio-nav-island{flex-shrink:0}
+.header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);height:100px;border-bottom-color:#a17c4430;gap:20px}
+.header.is-scrolled{height:82px;background:#100e0de8}
+.header-right{justify-self:end}
+.header .brand{justify-self:start}
+.header .menu-toggle{display:none}
 .header .contact-link{border-radius:999px;padding:14px 19px;border-color:#a17c4459}
 .header .brand-name{font-size:8px}
-@media(max-width:1100px) and (min-width:761px){.header{gap:12px;padding-inline:28px}.header .brand-name{display:none}.nimbus-item{font-size:11px;padding-inline:12px;gap:6px}.header .contact-link{padding:13px 16px;gap:14px}.header .brand-mark{font-size:34px}}
-@media(max-width:760px){.header,.header.is-scrolled{height:142px;align-items:flex-start;padding-top:17px;gap:12px}.header .brand{height:38px}.header .brand-name{display:block;font-size:7px}.header .brand-mark{font-size:32px}.header .contact-link{min-height:38px;padding:10px 16px;font-size:11px;gap:20px}.header-right{gap:14px}.portfolio-nav-island{position:absolute;left:22px;right:22px;top:70px;display:flex;justify-content:center}.portfolio-liquid-nav{width:100%;max-width:420px}.portfolio-liquid-nav .nimbus-item{flex:1;min-width:0;padding:0 6px;height:44px;flex-direction:column;gap:5px;font-size:10px}.portfolio-liquid-nav .nv-ico svg{width:16px;height:16px}.portfolio-liquid-nav .nimbus-label{position:static;width:auto;height:auto;clip-path:none;overflow:visible}.hero-luxe .hero-top{top:163px}.hero-luxe .hero-copy{top:25%}.hero-luxe .hero-statement{margin-top:20px}.hero-luxe .hero-description{margin-top:20px}.hero-luxe .hero-explore{margin-top:23px}.mobile-menu{top:142px}:root{scroll-padding-top:160px}}
-@media(max-width:380px){.header .brand-name{display:none}.header-right{gap:10px}.portfolio-nav-island{left:16px;right:16px}.hero-luxe .hero-top{top:158px}.hero-luxe .hero-copy{top:27%}.hero-luxe .hero-description{font-size:11px}.hero-luxe .hero-statement{font-size:44px}.hero-luxe .hero-explore{margin-top:18px}.portfolio-liquid-nav .nimbus-item{font-size:9px}}
+@media(max-width:1100px) and (min-width:901px){
+ .header{gap:14px;padding-inline:28px}.header .brand-name{display:none}
+ .portfolio-liquid-nav .nimbus-item{font-size:11px;padding-inline:12px;gap:6px}
+ .header .contact-link{padding:13px 16px;gap:14px}.header .brand-mark{font-size:34px}
+}
+@media(max-width:900px){
+ :root{scroll-padding-top:94px}
+ .header,.header.is-scrolled{display:flex;justify-content:space-between;align-items:center;height:76px;padding:0 22px;gap:15px}
+ .portfolio-nav-island{display:none}
+ .header .menu-toggle,.has-liquid-nav .menu-toggle{display:inline-flex;align-items:center;gap:11px;min-height:44px;border:1px solid #ad8b675c;border-radius:999px;padding:0 16px;font-size:11px}
+ .header .brand-name{display:block;font-size:7px}
+ .header .brand-mark{font-size:32px}
+ .header-right{gap:9px}
+ .header .contact-link{font-size:11px;min-height:44px;gap:14px;padding:11px 16px}
+ .hero-luxe .hero-top{top:108px}
+ .hero-luxe .hero-copy{top:23%}
+}
+@media(max-width:380px){.header{padding-inline:16px}.header .brand-name{display:none}.header .contact-link{padding-inline:13px}.header .menu-toggle{padding-inline:13px}}

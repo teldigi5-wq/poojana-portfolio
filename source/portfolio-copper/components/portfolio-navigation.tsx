@@ -6,8 +6,8 @@ import { LiquidNavbar, type LiquidNavItem } from "@/components/ui/liquid-glass-n
 
 export const PORTFOLIO_ITEMS: LiquidNavItem[] = [
   {label:"Home",href:"#home",icon:<House aria-hidden="true"/>,fx:"glow"},
-  {label:"Work",href:"#work",icon:<BriefcaseBusiness aria-hidden="true"/>,fx:"pop"},
   {label:"Depth",href:"#dimension",icon:<Layers3 aria-hidden="true"/>,fx:"pop"},
+  {label:"Work",href:"#work",icon:<BriefcaseBusiness aria-hidden="true"/>,fx:"pop"},
   {label:"About",href:"#about",icon:<UserRound aria-hidden="true"/>,fx:"wave"},
   {label:"Contact",href:"#contact",icon:<ArrowUpRight aria-hidden="true"/>,fx:"pop"},
 ]
@@ -36,9 +36,8 @@ export function PortfolioNavigation(){
     const observer=new MutationObserver(()=>setMotion(!document.documentElement.classList.contains("motion-off")))
     observer.observe(document.documentElement,{attributes:true,attributeFilter:["class"]})
     let frame=0
-    // Actual document order differs from the visual order of Work / Depth.
-    const sections=["#home","#dimension","#work","#about","#contact"]
-      .map(href=>({element:document.querySelector<HTMLElement>(href),index:PORTFOLIO_ITEMS.findIndex(item=>item.href===href)}))
+    // One order across the desktop pill, mobile index and document sections.
+    const sections=PORTFOLIO_ITEMS.map((item,index)=>({element:document.querySelector<HTMLElement>(item.href!),index}))
     const update=()=>{
       frame=0
       const header=document.querySelector(".header")?.getBoundingClientRect().height??84
@@ -54,6 +53,10 @@ export function PortfolioNavigation(){
       }
       if(scrollY+innerHeight>=document.documentElement.scrollHeight-4)next=PORTFOLIO_ITEMS.length-1
       setActive(next)
+      document.querySelectorAll<HTMLAnchorElement>(".menu-links a").forEach(link=>{
+        if(link.hash===PORTFOLIO_ITEMS[next].href)link.setAttribute("aria-current","location")
+        else link.removeAttribute("aria-current")
+      })
     }
     const queue=()=>{if(!frame)frame=requestAnimationFrame(update)}
     const interrupt=()=>{pending.current=null;queue()}

@@ -12,7 +12,8 @@ const required = [
   "staticwebapp.config.json",
   "source/portfolio-copper/components/ui/liquid-glass-navbar.tsx",
   "source/portfolio-copper/components/ui/liquid-glass-shaders.ts",
-  "source/portfolio-copper/components/ui/parallax-scrolling.tsx"
+  "source/portfolio-copper/components/ui/parallax-scrolling.tsx",
+  "source/portfolio-copper/components/ui/wild-hunt-footer.tsx"
 ];
 required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
@@ -54,7 +55,8 @@ const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
-  "assets/portfolio-v2.js": 300 * 1024, "assets/portfolio-v2.css": 24 * 1024,
+  // Includes the supplied canvas footer (~11 KiB additional gzip) and one React runtime.
+  "assets/portfolio-v2.js": 340 * 1024, "assets/portfolio-v2.css": 24 * 1024,
   "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024
 };
 for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);

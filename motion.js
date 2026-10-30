@@ -4,11 +4,10 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const toggle = $('.motion-toggle');
+  const forced = matchMedia('(forced-colors: active)');
   const rig = $('#system-rig');
-  let preference = 'on';
-  try { preference = localStorage.getItem('pk-motion') || 'on'; } catch (_) { /* Storage is optional. */ }
-  let motionOff = preference === 'off' || reduce.matches;
+  const staticView = new URLSearchParams(location.search).get('motion') === 'off';
+  let motionOff = staticView || reduce.matches || forced.matches;
   let scenes;
   let entrance;
   let rotation = 0;
@@ -107,31 +106,22 @@
     scenes?.revert();
     scenes = undefined;
     document.documentElement.classList.toggle('motion-off', motionOff);
-    toggle.disabled = reduce.matches;
-    toggle.setAttribute('aria-pressed', String(motionOff));
-    $('span', toggle).textContent = motionOff ? 'OFF' : 'ON';
-    toggle.title = reduce.matches ? 'Animation follows your system reduced-motion setting' : motionOff ? 'Turn on animation' : 'Turn off animation';
-    toggle.setAttribute('aria-label', `${motionOff ? 'Enable' : 'Disable'} scroll animation`);
     buildMotion();
     window.ScrollTrigger?.refresh();
     updateHeader();
   }
-  toggle.addEventListener('click', () => {
-    // Keep the nearest content in place as pin spacing changes.
+  const updateSystemMotion = () => {
+    // Preserve the reader's place if the operating-system preference changes.
     const anchors = $$('.hero-luxe, .intro, .dimension, #work, .project, .compact-project, #about, #approach, #contact');
     const anchor = anchors.filter(item => item.getBoundingClientRect().top <= innerHeight * .45).at(-1) || $('.hero-luxe');
     const before = anchor.getBoundingClientRect().top;
-    motionOff = !motionOff;
-    preference = motionOff ? 'off' : 'on';
-    try { localStorage.setItem('pk-motion', preference); } catch (_) { /* Private browsing may disable storage. */ }
+    motionOff = staticView || reduce.matches || forced.matches;
     applyMotion();
     const shift = anchor.getBoundingClientRect().top - before;
     if (Math.abs(shift) > 1 && anchor.id !== 'home') scrollTo({top: scrollY + shift, behavior: 'instant'});
-  });
-  reduce.addEventListener('change', () => {
-    motionOff = reduce.matches || preference === 'off';
-    applyMotion();
-  });
+  };
+  reduce.addEventListener('change', updateSystemMotion);
+  forced.addEventListener('change', updateSystemMotion);
   applyMotion();
   document.fonts?.ready.then(() => window.ScrollTrigger?.refresh());
   addEventListener('load', () => window.ScrollTrigger?.refresh(), {once: true});

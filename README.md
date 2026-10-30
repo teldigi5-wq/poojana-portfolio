@@ -4,7 +4,7 @@ Production portfolio: https://poojana-portfolio.vercel.app/
 
 This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL navigation adapted to a warm copper palette.
 
-The welcome edition adds a finite shutter and masked-text entrance, one-pass code typing, rolling link text, two crossed toolkit ribbons with a pause control, three inline engineering timelines and a horizontal project gallery. Spacious desktop screens use a bounded pinned gallery and Lenis; narrow, short and reduced-motion layouts use native horizontal scrolling. Hero and landscape-image parallax have been removed. The supplied portrait remains the visual anchor.
+The welcome edition includes a finite shutter and masked-text entrance, looping code typing and erasing, rolling link text, crossed toolkit ribbons, three inline engineering timelines and a horizontal project gallery. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer adapts the supplied Wild Hunt component with canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
 ## Runtime
 
@@ -14,7 +14,7 @@ The page remains usable without React, WebGL or animation:
 
 - Native anchor links are present before React mounts.
 - The navbar falls back to a CSS lens if WebGL is unavailable or its context is lost.
-- Reduced-motion preferences and the page Motion control disable nonessential movement.
+- OS reduced-motion preferences or `?motion=off` disable nonessential movement. The visible Motion and ribbon-pause buttons were removed at the user's request.
 - Content remains visible if GSAP, ScrollTrigger or JavaScript does not run.
 
 ## Source
@@ -32,7 +32,7 @@ pnpm run build
 
 The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
 
-See [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for component paths, motion ownership, research and the verified browser scope. No additional framework, account system or paid service is required.
+See [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for the latest changes and verification; [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) records the preceding edition. No additional framework, account system or paid service is required.
 
 ## Security and release controls
 
@@ -47,3 +47,4 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 - Nimbus Sans font license is retained in `assets/FONT-LICENSE.txt`.
 - Lenis is MIT-licensed; its license is retained in `assets/LENIS-LICENSE.txt`.
 - The supplied Osmo React/GSAP/Lenis example informed the cinematic component's technology. Its demo images and logo are not used.
+- The user-supplied Wild Hunt Footer source provides the canvas raster/dither and SVG flourish implementation. The portfolio passes its own wordmark, existing architectural artwork, palette and working links.

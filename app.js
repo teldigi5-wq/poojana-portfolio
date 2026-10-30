@@ -2,7 +2,7 @@
   'use strict';
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
-  const narrowScreen = window.matchMedia('(max-width: 760px)');
+  const narrowScreen = window.matchMedia('(max-width: 900px)');
   const clock = $('#local-time');
   const timeFormat = new Intl.DateTimeFormat('en-GB', {hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Colombo'});
   const updateClock = () => { clock.textContent = `${timeFormat.format(new Date())} / LOCAL TIME`; };
@@ -24,26 +24,44 @@
 
   const menuButton = $('.menu-toggle');
   const menu = $('#menu');
+  const menuClose = $('.menu-close', menu);
+  let menuAnimations = [];
   function closeMenu(restoreFocus = false) {
-    menu.hidden = true;
-    menuButton.setAttribute('aria-expanded', 'false');
-    $('span', menuButton).textContent = 'Menu';
-    document.body.classList.remove('menu-open');
-    $('#main').inert = false;
+    if (!menu.open) return;
+    menu.close();
     if (restoreFocus) menuButton.focus();
   }
-  menuButton.addEventListener('click', () => {
-    if (!menu.hidden) return closeMenu(true);
-    menu.hidden = false;
-    menuButton.setAttribute('aria-expanded', 'true');
-    $('span', menuButton).textContent = 'Close';
-    document.body.classList.add('menu-open');
-    $('#main').inert = true;
-    $('a', menu).focus();
+  menu.addEventListener('close', () => {
+    menuButton.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
+    menuAnimations.forEach(animation => animation.cancel());
+    menuAnimations = [];
   });
-  $$('a', menu).forEach(a => a.addEventListener('click', () => closeMenu(false)));
+  menuButton.addEventListener('click', () => {
+    if (menu.open) return closeMenu(true);
+    menu.showModal();
+    menuButton.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('menu-open');
+    menuClose.focus();
+    if (!document.documentElement.classList.contains('motion-off') && !matchMedia('(prefers-reduced-motion: reduce), (forced-colors: active)').matches) {
+      menuAnimations = $$('.menu-links a, .menu-bottom', menu).map((item, index) => item.animate(
+        [{opacity:0, transform:'translateY(18px)'}, {opacity:1, transform:'translateY(0)'}],
+        {duration:450, delay:index*45, easing:'cubic-bezier(.2,.7,.2,1)', fill:'both'}
+      ));
+    }
+  });
+  menuClose.addEventListener('click', () => closeMenu(true));
+  $$('a', menu).forEach(a => a.addEventListener('click', () => {
+    closeMenu(false);
+    if (a.hash) requestAnimationFrame(() => {
+      const section = document.getElementById(a.hash.slice(1));
+      if (!section) return;
+      section.setAttribute('tabindex', '-1');
+      section.focus({preventScroll:true});
+      section.addEventListener('blur', () => section.removeAttribute('tabindex'), {once:true});
+    });
+  }));
   $$('.header a').forEach(a => a.addEventListener('click', () => closeMenu(false)));
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !menu.hidden) closeMenu(true); });
   narrowScreen.addEventListener('change', () => closeMenu(false));
 
   const identities = {
