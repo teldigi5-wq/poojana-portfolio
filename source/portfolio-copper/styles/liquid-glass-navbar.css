@@ -1,0 +1,54 @@
+/* Adapted from the user-supplied Nimbus UI Waterline component. */
+.nimbus-nav{--n-tint:rgba(247,236,214,.18);--n-fg:#281d12;--n-fg-soft:#574430;--n-rim:rgba(255,245,226,.68);position:relative;display:inline-flex;align-items:center;gap:2px;padding:6px;border-radius:999px;isolation:isolate;font-family:inherit;-webkit-font-smoothing:antialiased;user-select:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.nimbus-nav[data-tone=dark]{--n-tint:rgba(28,23,18,.72);--n-fg:#fff3df;--n-fg-soft:#d2c6b5;--n-rim:rgba(255,232,197,.38)}
+.nimbus-glass{position:absolute;inset:0;border-radius:inherit;z-index:-2;overflow:hidden;background:var(--n-tint);-webkit-backdrop-filter:blur(14px) saturate(1.15) brightness(1.06);backdrop-filter:blur(14px) saturate(1.15) brightness(1.06);box-shadow:inset 0 1px 1px var(--n-rim),inset 0 0 0 1px #e7bd832b,0 12px 32px -14px #0009,0 2px 6px #0002}
+.nimbus-nav[data-refract=on] .nimbus-glass{-webkit-backdrop-filter:var(--n-refraction) blur(3px) saturate(1.15) brightness(1.06);backdrop-filter:var(--n-refraction) blur(3px) saturate(1.15) brightness(1.06)}
+.nimbus-water{position:absolute;left:-14px;top:-14px;z-index:-1;pointer-events:none}
+.nimbus-nav[data-gl=off] .nimbus-water{display:none}
+.nimbus-drop{display:none;position:absolute;top:6px;bottom:6px;left:0;border-radius:999px;z-index:-1;pointer-events:none;background:radial-gradient(120% 140% at 30% 0%,#ffeacd38,transparent 55%),#d3a76b24;box-shadow:inset 0 1px 1px #ffeccc70,inset 0 -2px 6px #d8974f24,inset 0 0 0 1px #e3c19240,0 6px 16px -6px #1e100c77}
+.nimbus-nav[data-gl=off] .nimbus-drop{display:block}
+.nimbus-item{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;min-width:44px;padding:0 15px;border:0;border-radius:999px;background:none;color:var(--n-fg-soft);font:400 12px/1 Studio,Arial,sans-serif;letter-spacing:0;text-decoration:none;cursor:pointer;transition:color .25s}
+.nimbus-item:hover,.nimbus-item[aria-current]{color:var(--n-fg)}
+.nimbus-item:focus-visible{outline:2px solid #e6ba83;outline-offset:2px}
+.nimbus-nav:not([data-ready=true]) .nimbus-item[aria-current]{background:#cfa46b26}
+.nv-ico{position:relative;display:inline-flex;flex:none}
+.nv-ico svg{width:16px;height:16px;stroke-width:1.5;transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.nimbus-item[aria-current] .nv-ico svg{transform:translateY(-1px) scale(1.04)}
+.nv-door{fill:transparent}
+.nv-ico[data-fx=pop] svg{animation:nvPop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes nvPop{0%{transform:scale(.84)}60%{transform:scale(1.12)}100%{transform:translateY(-1px) scale(1.04)}}
+.nv-ico[data-fx=plane] svg{animation:nvPlane 1.15s cubic-bezier(.55,0,.3,1) both}
+@keyframes nvPlane{0%{transform:none}12%{transform:translate(-3px,2px) rotate(7deg)}42%{transform:translate(44px,-20px) rotate(-24deg) scale(.9);opacity:0}43%{transform:translate(-40px,16px) rotate(-12deg) scale(.9);opacity:0}58%{opacity:1}80%{transform:translate(3px,-1px) rotate(2deg)}100%{transform:translateY(-1px) scale(1.04)}}
+.nv-ico[data-fx=plane]:after{content:"";position:absolute;left:55%;top:48%;height:2px;width:36px;border-radius:2px;transform-origin:0 50%;background:linear-gradient(90deg,transparent,#fff0d6bb);animation:nvTrail 1.15s ease-out both;pointer-events:none}
+@keyframes nvTrail{0%,8%{opacity:0;transform:rotate(-22deg) scaleX(0)}30%{opacity:.6;transform:rotate(-22deg) scaleX(1)}55%,100%{opacity:0;transform:rotate(-22deg) translateX(30px) scaleX(.2)}}
+.nv-ico[data-fx=drop] svg{animation:nvDrop .95s cubic-bezier(.4,0,.3,1) both;transform-origin:50% 100%}
+@keyframes nvDrop{0%{transform:translateY(-1px)}26%{transform:translateY(-8px) scale(.9,1.1)}46%{transform:translateY(2px) scale(1.15,.85)}62%{transform:translateY(-2px) scale(.95,1.05)}80%{transform:translateY(0)}100%{transform:translateY(-1px) scale(1.04)}}
+.nv-ico[data-fx=drop]:before,.nv-ico[data-fx=drop]:after{content:"";position:absolute;bottom:0;left:50%;width:3px;height:3px;margin-left:-2px;border-radius:50%;background:currentColor;opacity:0;pointer-events:none}
+.nv-ico[data-fx=drop]:before{animation:nvSplashL .95s ease-out both}.nv-ico[data-fx=drop]:after{animation:nvSplashR .95s ease-out both}
+@keyframes nvSplashL{0%,44%{opacity:0;transform:none}50%{opacity:.7;transform:translate(-5px,-6px)}75%,100%{opacity:0;transform:translate(-11px,1px) scale(.4)}}
+@keyframes nvSplashR{0%,44%{opacity:0;transform:none}50%{opacity:.7;transform:translate(5px,-7px)}75%,100%{opacity:0;transform:translate(12px,1px) scale(.4)}}
+.nv-ico[data-fx=spin] svg{animation:nvSpin 1s cubic-bezier(.2,.75,.25,1) both}
+@keyframes nvSpin{0%{transform:perspective(80px) rotateY(0)}100%{transform:perspective(80px) rotateY(360deg) translateY(-1px) scale(1.04)}}
+.nv-ico[data-fx=glow] svg{animation:nvHop .8s cubic-bezier(.3,1.4,.5,1) both;transform-origin:50% 100%}
+@keyframes nvHop{0%{transform:none}30%{transform:translateY(-3px) scale(1.02,.98)}55%{transform:translateY(0) scale(1.06,.94)}75%{transform:translateY(-1px)}100%{transform:translateY(-1px) scale(1.04)}}
+.nv-ico[data-fx=glow] .nv-door{animation:nvDoor 1.3s ease both}
+@keyframes nvDoor{0%{fill:transparent}30%{fill:#ffe5b5}100%{fill:#d8a87080}}
+.nv-ico[data-fx=wave] svg{animation:nvWave .9s ease-in-out both;transform-origin:50% 92%}
+@keyframes nvWave{0%{transform:none}20%{transform:rotate(-10deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(3deg)}100%{transform:translateY(-1px) scale(1.04)}}
+.nimbus-nav[data-compact=true] .nimbus-item{padding:0 13px}
+.nimbus-nav[data-compact=true] .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.nimbus-nav[data-reduced=true] .nv-ico svg,.nimbus-nav[data-reduced=true] .nv-ico:before,.nimbus-nav[data-reduced=true] .nv-ico:after,.nimbus-nav[data-reduced=true] .nv-door{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.nv-ico svg,.nv-ico:before,.nv-ico:after,.nv-door{animation:none!important;transition:none!important}}
+@supports not (backdrop-filter:blur(1px)){.nimbus-nav[data-tone=dark] .nimbus-glass{background:#211b15}.nimbus-glass{background:#eee0c9}}
+@media(forced-colors:active){.nimbus-water,.nimbus-drop{display:none!important}.nimbus-nav{border:1px solid ButtonText}.nimbus-item[aria-current]{outline:1px solid Highlight}.nimbus-glass{background:Canvas;box-shadow:none}}
+/* Integration with the existing editorial header. */
+.portfolio-nav-island{flex:0 1 auto;min-width:0;height:56px}
+.portfolio-liquid-nav{max-width:100%}
+.header{height:104px;border-bottom-color:#a17c4430;gap:20px}
+.header.is-scrolled{height:84px;background:#0c0b0ad9}
+.has-liquid-nav .menu-toggle{display:none}
+.header .contact-link{border-radius:999px;padding:14px 19px;border-color:#a17c4459}
+.header .brand-name{font-size:8px}
+@media(max-width:1100px) and (min-width:761px){.header{gap:12px;padding-inline:28px}.header .brand-name{display:none}.nimbus-item{font-size:11px;padding-inline:12px;gap:6px}.header .contact-link{padding:13px 16px;gap:14px}.header .brand-mark{font-size:34px}}
+@media(max-width:760px){.header,.header.is-scrolled{height:142px;align-items:flex-start;padding-top:17px;gap:12px}.header .brand{height:38px}.header .brand-name{display:block;font-size:7px}.header .brand-mark{font-size:32px}.header .contact-link{min-height:38px;padding:10px 16px;font-size:11px;gap:20px}.header-right{gap:14px}.portfolio-nav-island{position:absolute;left:22px;right:22px;top:70px;display:flex;justify-content:center}.portfolio-liquid-nav{width:100%;max-width:420px}.portfolio-liquid-nav .nimbus-item{flex:1;min-width:0;padding:0 6px;height:44px;flex-direction:column;gap:5px;font-size:10px}.portfolio-liquid-nav .nv-ico svg{width:16px;height:16px}.portfolio-liquid-nav .nimbus-label{position:static;width:auto;height:auto;clip-path:none;overflow:visible}.hero-luxe .hero-top{top:163px}.hero-luxe .hero-copy{top:25%}.hero-luxe .hero-statement{margin-top:20px}.hero-luxe .hero-description{margin-top:20px}.hero-luxe .hero-explore{margin-top:23px}.mobile-menu{top:142px}:root{scroll-padding-top:160px}}
+@media(max-width:380px){.header .brand-name{display:none}.header-right{gap:10px}.portfolio-nav-island{left:16px;right:16px}.hero-luxe .hero-top{top:158px}.hero-luxe .hero-copy{top:27%}.hero-luxe .hero-description{font-size:11px}.hero-luxe .hero-statement{font-size:44px}.hero-luxe .hero-explore{margin-top:18px}.portfolio-liquid-nav .nimbus-item{font-size:9px}}

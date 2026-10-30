@@ -1,61 +1,43 @@
-# Poojana Kaveesh — Engineering Portfolio
+# Poojana Kaveesh — Engineering with intent
 
-Live: https://poojana-portfolio.vercel.app/
+Production portfolio: https://poojana-portfolio.vercel.app/
 
-Static HTML/CSS/JavaScript portfolio preserving the dark cinematic branding.
+This release is a static, portrait-led engineering portfolio with a small React navigation island. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL liquid navigation adapted to a warm copper palette.
 
-## Stage 3
+## Runtime
 
-- Native pointer plus a single understated, dependency-free follower on wide fine-pointer screens; keyboard, touch, forced-colors and reduced-motion fallbacks.
-- Separate portrait and copy layout on phone/tablet; responsive WebP selection and correct portrait layering on desktop.
-- Detailed Aetheris, Averis, FinalForge, FloodGuard and Wayfarer case studies based on their public README documentation. Architecture, trade-offs and maturity boundaries remain distinct from measured outcomes.
-- Vertical project reading flow with sticky desktop architecture diagrams. Short GSAP entrance motion progressively enhances the layout. Removed horizontal pinning, artificial loading delay, magnetic link movement and requests for missing videos.
-- Two GSAP scripts replace eight external motion scripts plus the Lenis stylesheet. Content is visible even if JavaScript or the CDN fails.
-- Vercel canonical, social metadata, structured data and sitemap; affiliation describes current study rather than claiming graduation.
-- Recruiter summary, visible email, clipboard feedback and explicit PDF view/download actions. Existing CV content is preserved.
-- Mobile navigation focus trap, Escape dismissal, background inertness, visible focus and touch targets.
+Vercel serves the committed root files directly. All production images, fonts, scripts and styles are self-hosted. There is no contact backend, analytics, account system, paid API or live security scanner.
 
-## Stage 4 motion direction
+The page remains usable without React, WebGL or animation:
 
-- Choreographed masked hero lines, portrait and supporting copy use a shared power3 easing and a finite entrance. Tab completes the entrance immediately for keyboard users.
-- Vertical case studies retain their content and layout. Fine-pointer desktop diagrams progressively reveal architecture routes, source evidence, study continuity and telemetry through GSAP ScrollTrigger. No pinning or scroll interception.
-- Touch and narrow layouts use short one-time entrances. Reduced motion, forced colors, save-data, low-memory and unavailable libraries keep static content and ordinary chapter navigation.
-- Sticky project links indicate the current chapter through `aria-current`, and page progress uses a compositor transform. Only decorative arrows respond to pointer proximity; clickable targets and native cursor stay fixed.
-- Perpetual particle, orbit, scanning and sonar loops are removed. GSAP 3.13.0 and ScrollTrigger are served locally in `assets/vendor`, with their original license notices, removing external CDN requests.
-- The tablet media query includes fractional widths below 900px to avoid a narrow breakpoint gap. Case-study facts, SEO and CV remain unchanged.
+- Native anchor links are present before React mounts.
+- The navbar falls back to a CSS lens if WebGL is unavailable or its context is lost.
+- Reduced-motion preferences and the page Motion control disable nonessential movement.
+- Content remains visible if GSAP, ScrollTrigger or JavaScript does not run.
 
-## Verification
+## Source
 
-Run from the repository root:
+The reusable React/TypeScript/Tailwind source is in `source/portfolio-copper/`. Its shadcn-compatible structure uses `components/ui`, `components.json` and `@/` aliases. Production consumes the committed bundles in `assets/liquid-navbar.js` and `assets/liquid-navbar.css`.
+
+To rebuild the navbar locally:
 
 ```sh
-node --check cinematic.js
-node --check main.js
-node --check cursor-halo.js
-node --check script.js
-node scripts/quality-gate.mjs
-node scripts/motion-policy.test.mjs
-node scripts/stage6-policy.test.mjs
+cd source/portfolio-copper
+pnpm install --frozen-lockfile
+pnpm run check
+pnpm run build
 ```
 
-## Stage 6 art direction
+The source build writes to `source/portfolio-copper/dist`. Copy the two generated liquid-navbar assets to the repository root only after their hashes and browser behavior have been reviewed. `node scripts/quality-gate.mjs` validates the deployed root.
 
-- Frosted architecture frames, restrained electric-blue reflections and editorial project typography add depth without WebGL or perpetual effects.
-- The existing portrait stays intact in a stable `data-head-turn-slot` media container, ready for a supplied head-turn asset without layout shift.
-- GSAP choreography now layers the hero system, portrait and type, then follows each project architecture as the factual case study enters view.
-- Fine-pointer project diagrams use a subtle, requestAnimationFrame-driven depth response. Touch, reduced-motion, forced-colors, save-data and low-memory modes keep a static presentation.
-- Case studies retain their source-backed content and gain denser evidence panels, clearer maturity boundaries and responsive one/two-column reading layouts.
+## Security and release controls
 
-GitHub CI additionally parses HTML references and validates both hosting configuration files. There is no application build step or runtime server; Vercel serves the static repository.
+`vercel.json` and `staticwebapp.config.json` preserve matching CSP and baseline browser security headers. GitHub Actions validates syntax, local references, accessibility markers, budgets, security-header parity and source/output markers before merge.
 
-Motion preferences and low-bandwidth/low-memory modes disable nonessential effects. Animation failure cannot hide content. Case study facts are sourced from each linked project repository and do not imply that those systems were independently re-tested during this portfolio update.
+The source and factual limits are documented in `source/portfolio-copper/VERIFICATION.md`. Browser checks are layout and interaction checks, not a claim of physical-device certification, Core Web Vitals compliance or exhaustive accessibility conformance.
 
-## Independent restaurant UI case study — 999 Lounge Wellawaya
+## Attribution
 
-A typography-only project entry links to the [working review concept](https://999-lounge-wellawaya.vercel.app/). It describes the real menu browsing and search, accessible UI, reduced motion, and draft-only email enquiries. It does not imply that the design has been commissioned, approved as the venue's official site, or cleared for commercial photographic use. The project source remains private pending third-party asset rights and release approval; there are no venue photographs embedded in this public portfolio.
-
-## October 16 — 999 Lounge case-study art-direction correction
-
-The independent restaurant study now uses the portfolio's established deep-blue/icy-blue design language, technical journey visualization, restrained GSAP ScrollTrigger entrance and explicit system boundaries rather than a standalone warm-brass restaurant advertisement. The motion is finite, no-scrub and disabled for reduced motion, forced colors, save-data and low-memory preferences. No venue photos, private repo links, fake bookings or endorsement claims are embedded. The live restaurant review URL may lag the latest draft PR; the two deployments remain distinct.
-
-The project entry now links to its **public portfolio-only GSAP implementation, accessible motion-policy tests and GitHub Actions CI**. These demonstrate independently reviewable front-end engineering; they are not presented as the private restaurant's source or proof of venue endorsement.
+- Liquid navigation adapted from the user-supplied Nimbus UI “Waterline” component by https://guglielmogiannattasio.it; attribution is retained in source.
+- GSAP and ScrollTrigger license banners are preserved. License: https://gsap.com/standard-license/.
+- Nimbus Sans font license is retained in `assets/FONT-LICENSE.txt`.

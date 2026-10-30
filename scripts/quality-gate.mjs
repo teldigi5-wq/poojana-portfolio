@@ -1,130 +1,76 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { extname, join } from "node:path";
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { extname } from "node:path";
 
-const fail = (message) => {
-  console.error(`QUALITY GATE FAILED: ${message}`);
-  process.exitCode = 1;
-};
-
+const failures = [];
+const fail = message => failures.push(message);
 const required = [
-  "index.html",
-  "cinematic.css",
-  "cinematic.js",
-  "styles.css",
-  "main.js",
-  "stage3.css",
-  "stage4.css",
-  "stage6.css",
-  "stage6.js",
-  "assets/vendor/gsap.min.js",
-  "assets/vendor/ScrollTrigger.min.js",
-  "cursor-halo.js",
-  "staticwebapp.config.json"
+  "index.html", "styles.css", "luxe.css", "app.js", "motion.js",
+  "assets/liquid-navbar.js", "assets/liquid-navbar.css",
+  "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
+  "assets/Poojana_Kaveesh_ATS_2026.pdf", "README.md", "vercel.json",
+  "staticwebapp.config.json",
+  "source/portfolio-copper/components/ui/liquid-glass-navbar.tsx",
+  "source/portfolio-copper/components/ui/liquid-glass-shaders.ts"
 ];
-
-required.forEach((file) => {
-  if (!existsSync(file)) fail(`missing ${file}`);
-});
+required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
 const html = readFileSync("index.html", "utf8");
-const scriptSources = [...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map(match => match[1].split('?')[0]);
-if (new Set(scriptSources).size !== scriptSources.length) fail('duplicate script imports');
-const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
-const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
-if (duplicates.length) fail(`duplicate IDs: ${[...new Set(duplicates)].join(", ")}`);
+const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("assets/liquid-navbar.css", "utf8")}`;
+const app = readFileSync("app.js", "utf8");
+const motion = readFileSync("motion.js", "utf8");
+const navbar = readFileSync("source/portfolio-copper/components/ui/liquid-glass-navbar.tsx", "utf8");
+const shader = readFileSync("source/portfolio-copper/components/ui/liquid-glass-shaders.ts", "utf8");
+const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
+const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
+if (duplicateIds.length) fail(`duplicate IDs: ${duplicateIds.join(", ")}`);
 
-const requiredMarkup = [
-  'class="skip-link"',
-  'name="viewport"',
-  'rel="canonical"',
-  'property="og:url"',
-  'id="main"',
-  'prefers-reduced-motion'
-];
-requiredMarkup.forEach((token) => {
-  const source = token === "prefers-reduced-motion" ? `${readFileSync("styles.css", "utf8")} ${readFileSync("main.js", "utf8")}` : html;
-  if (!source.includes(token)) fail(`missing accessibility/performance marker: ${token}`);
-});
+for (const marker of [
+  'class="skip-link"', 'name="viewport"', 'rel="canonical"', 'property="og:url"',
+  'name="robots" content="index,follow', 'type="application/ld+json"', 'id="main"',
+  'id="liquid-nav-root"', 'id="dimension"', 'id="work"', 'id="about"', 'id="contact"'
+]) if (!html.includes(marker)) fail(`missing production/accessibility marker: ${marker}`);
+if (/noindex|nofollow/i.test(html)) fail("production HTML must remain indexable");
+if (!html.includes("https://poojana-portfolio.vercel.app/")) fail("missing production canonical URL");
+if (!styles.includes("prefers-reduced-motion") || !navbar.includes("prefers-reduced-motion")) fail("missing reduced-motion fallback");
+if (!navbar.includes("webglcontextlost") || !navbar.includes("IntersectionObserver") || !shader.includes("gl_FragColor")) fail("liquid navigation fallback or shader source missing");
+if (!app.includes("showModal") || !motion.includes("ScrollTrigger")) fail("project dialogs or scroll storytelling missing");
 
 for (const tag of html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)) {
   if (!/rel="[^"]*noopener/.test(tag[0])) fail(`external link missing noopener: ${tag[0]}`);
 }
-
-const budget = {
-  "index.html": 64 * 1024,
-  "styles.css": 64 * 1024,
-  "main.js": 64 * 1024,
-  "cinematic.css": 32 * 1024,
-  "cinematic.js": 32 * 1024,
-  "stage4.css": 8 * 1024,
-  "stage6.css": 24 * 1024,
-  "stage6.js": 8 * 1024
-};
-Object.entries(budget).forEach(([file, bytes]) => {
-  const size = statSync(file).size;
-  if (size > bytes) fail(`${file} is ${size} bytes; budget is ${bytes}`);
-});
-
-const videoDir = "assets/video";
-if (existsSync(videoDir)) {
-  readdirSync(videoDir).forEach((name) => {
-    if (![".mp4", ".webm"].includes(extname(name).toLowerCase())) return;
-    const size = statSync(join(videoDir, name)).size;
-    if (size > 3 * 1024 * 1024) fail(`${name} exceeds the 3 MB video budget`);
-  });
-}
-
-JSON.parse(readFileSync("staticwebapp.config.json", "utf8"));
-JSON.parse(readFileSync('vercel.json', 'utf8'));
-if (!html.includes('https://poojana-portfolio.vercel.app/')) fail('missing production canonical');
-if (/azurestaticapps|data-src=/.test(html)) fail('stale canonical or absent video request');
-for (const id of ['aetheris', 'averis', 'finalforge', 'floodguard']) {
-  const article = html.match(new RegExp(`<article[^>]*id="${id}"[\\s\\S]*?</article>`))?.[0];
-  if (!article?.includes('case-study')) fail(`missing detailed case study: ${id}`);
-}
-for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
-  const ref = match[1];
+const refs = [...html.matchAll(/(?:src|href)="([^"#]+)"/g)].map(match => match[1]);
+for (const ref of refs) {
   if (/^(https?:|mailto:|tel:|\/\/)/.test(ref)) continue;
-  const path = ref.split('?')[0];
-  if (!existsSync(path)) fail(`missing local asset: ${path}`);
+  const path = ref.split("?")[0];
+  if (path && path !== "/" && !existsSync(path)) fail(`missing local asset: ${path}`);
 }
-const venueStart=html.indexOf('<section class="venue-showcase shell" id="lounge-concept"');
-const venueEnd=html.indexOf('</section>',venueStart);
-const venue=venueStart>=0&&venueEnd>venueStart?html.slice(venueStart,venueEnd):'';
-if(!venue.includes('Independent, non-official design prototype')||
-   !venue.includes('https://999-lounge-wellawaya.vercel.app/')||
-   !venue.toLowerCase().includes('email draft only')||
-   /<img\b|github\.com\/teldigi5-wq\/999-lounge-wellawaya/i.test(venue)) {
-  fail('Restaurant portfolio entry must be accurately labeled, media-free and link to the live concept instead of the private repository');
-}
-const caseCSS = readFileSync('lounge-case.css','utf8');
-const caseMotion = readFileSync('lounge-case-motion.js','utf8');
-if (!html.includes('lounge-case.css?v=2') || !html.includes('lounge-case-motion.js?v=2') ||
-    !caseCSS.includes('var(--s6-blue)') || /#d0b08a|#c8ac8c/i.test(caseCSS) ||
-    !caseMotion.includes('ScrollTrigger') || !caseMotion.includes('prefers-reduced-motion') ||
-    !caseMotion.includes('saveData') || !caseMotion.includes('once:true')) {
-  fail('Restaurant case must use matching blue tokens, local GSAP, finite and accessible motion');
-}
-if (!venue.includes('OPEN PORTFOLIO EVIDENCE') ||
-    !venue.includes('poojana-portfolio/blob/main/lounge-case-motion.js') ||
-    !venue.includes('poojana-portfolio/blob/main/scripts/lounge-motion-policy.test.mjs') ||
-    !venue.includes('poojana-portfolio/actions/workflows/portfolio-ci.yml')) {
-  fail('Public portfolio implementation must link to reviewable source, motion tests and CI');
-}
-// Prevent the deployed Vercel site from silently losing the header protections
-// already required by the Azure Static Web Apps fallback configuration.
-const vercelHeaders = JSON.parse(readFileSync('vercel.json', 'utf8')).headers
-  .find(rule => rule.source === '/(.*)')?.headers ?? [];
-const azureHeaders = JSON.parse(readFileSync('staticwebapp.config.json', 'utf8')).globalHeaders;
-const vercelValue = key => vercelHeaders.find(h => h.key === key)?.value;
-if (vercelValue('Content-Security-Policy') !== azureHeaders['Content-Security-Policy']) {
-  fail('Vercel Content-Security-Policy missing or inconsistent with static site fallback');
-}
-if (vercelValue('Cross-Origin-Opener-Policy') !== 'same-origin') {
-  fail('Vercel browser opener isolation policy missing');
-}
-for (const header of ['X-Content-Type-Options', 'Referrer-Policy', 'X-Frame-Options']) {
-  if (!vercelValue(header)) fail(`Vercel response missing ${header}`);
+for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1])) {
+  if (!ids.includes(ref)) fail(`missing fragment target: #${ref}`);
 }
 
-if (!process.exitCode) console.log("Portfolio quality gate passed.");
+const budgets = {
+  "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
+  "app.js": 32 * 1024, "motion.js": 24 * 1024,
+  "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
+  "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024
+};
+for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);
+for (const file of required.filter(path => [".js", ".css", ".html", ".json", ".tsx", ".ts"].includes(extname(path)))) {
+  if (existsSync(file) && statSync(file).size === 0) fail(`${file} is empty`);
+}
+
+const vercel = JSON.parse(readFileSync("vercel.json", "utf8"));
+const azure = JSON.parse(readFileSync("staticwebapp.config.json", "utf8"));
+const headers = vercel.headers.find(rule => rule.source === "/(.*)")?.headers ?? [];
+const value = key => headers.find(header => header.key === key)?.value;
+if (value("Content-Security-Policy") !== azure.globalHeaders["Content-Security-Policy"]) fail("CSP differs between hosts");
+for (const name of ["Cross-Origin-Opener-Policy", "Permissions-Policy", "Referrer-Policy", "X-Content-Type-Options", "X-Frame-Options"]) {
+  if (!value(name) || value(name) !== azure.globalHeaders[name]) fail(`${name} missing or inconsistent`);
+}
+if (/https:\/\/cdn\.|unsafe-eval/i.test(value("Content-Security-Policy") ?? "")) fail("CSP permits an unnecessary CDN or eval");
+
+if (failures.length) {
+  failures.forEach(message => console.error(`QUALITY GATE FAILED: ${message}`));
+  process.exit(1);
+}
+console.log(`Portfolio quality gate passed: ${ids.length} IDs, ${refs.length} asset/link references, ${Object.keys(budgets).length} budgets.`);
