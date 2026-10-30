@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import { CinematicExperience } from "@/components/ui/parallax-scrolling"
 import "lenis/dist/lenis.css"
 import "../styles/cinematic.css"
+import "../styles/cinematic-contact.css"
 
 class ExperienceBoundary extends React.Component<{children:React.ReactNode},{failed:boolean}>{
   state={failed:false}

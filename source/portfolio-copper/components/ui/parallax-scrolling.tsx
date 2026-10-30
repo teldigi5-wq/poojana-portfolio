@@ -11,6 +11,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
 import {PortfolioTextRoll} from "@/components/ui/text-roll"
+import {CinematicContact} from "@/components/ui/cinematic-contact"
 import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
 const TOOLS = [
@@ -294,7 +295,7 @@ export function CinematicExperience(){
     })
     return ()=>cleanup.forEach(fn=>fn())
   },[enabled])
-  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/></>
+  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */

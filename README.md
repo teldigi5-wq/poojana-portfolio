@@ -6,6 +6,8 @@ This release is a static, portrait-led engineering portfolio with React navigati
 
 The welcome edition includes a finite shutter and masked-text entrance, looping code typing and erasing, rolling link text, crossed toolkit ribbons, three inline engineering timelines and a horizontal project gallery. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer adapts the supplied Wild Hunt component with canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
+The contact section is a dark correspondence studio with ivory/copper typography and a physical calling card made from CSS 3D faces. GSAP turns the card, spreads its paper backing and moves a light sweep with scroll; fine pointer movement adds a small independent tilt. It stacks on phones and stays readable in the static view without adding a pin or another rendering library.
+
 ## Runtime
 
 Vercel serves the committed root files directly. All production images, fonts, scripts and styles are self-hosted. There is no contact backend, analytics, account system, paid API or live security scanner.
@@ -32,7 +34,7 @@ pnpm run build
 
 The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
 
-See [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for the current text/ribbon refinement, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for the navigation/footer edition and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the preceding welcome edition. No additional framework, account system or paid service is required.
+See [CONTACT-RELEASE.md](CONTACT-RELEASE.md) for the cinematic contact refinement, [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for character roll and continuous ribbons, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for the navigation/footer edition and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the welcome edition. No additional framework, account system or paid service is required.
 
 ## Security and release controls
 
