@@ -1,0 +1,5 @@
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+minimumReleaseAgeExclude:
+  - lucide-react@1.64.0

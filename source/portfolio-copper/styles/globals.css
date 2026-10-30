@@ -1,0 +1,22 @@
+/* Tailwind v4 utilities without Preflight: the existing portfolio owns its reset. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import "./liquid-glass-navbar.css";
+@source "../components";
+@source "../src";
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+.portfolio-nav-island,.nimbus-demo {
+  --background:#17130f;--foreground:#f0e8d9;--primary:#d69d67;
+  --primary-foreground:#17130f;--muted:#30271e;--muted-foreground:#c9bba7;
+  --border:#8e725554;--ring:#e6ba83;--radius:999px;
+}
