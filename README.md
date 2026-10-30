@@ -2,7 +2,9 @@
 
 Production portfolio: https://poojana-portfolio.vercel.app/
 
-This release is a static, portrait-led engineering portfolio with a small React navigation island. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL liquid navigation adapted to a warm copper palette.
+This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL navigation adapted to a warm copper palette.
+
+The welcome edition adds a finite shutter and masked-text entrance, one-pass code typing, rolling link text, two crossed toolkit ribbons with a pause control, three inline engineering timelines and a horizontal project gallery. Spacious desktop screens use a bounded pinned gallery and Lenis; narrow, short and reduced-motion layouts use native horizontal scrolling. Hero and landscape-image parallax have been removed. The supplied portrait remains the visual anchor.
 
 ## Runtime
 
@@ -17,7 +19,7 @@ The page remains usable without React, WebGL or animation:
 
 ## Source
 
-The reusable React/TypeScript/Tailwind source is in `source/portfolio-copper/`. Its shadcn-compatible structure uses `components/ui`, `components.json` and `@/` aliases. Production consumes the committed bundles in `assets/liquid-navbar.js` and `assets/liquid-navbar.css`.
+The reusable React/TypeScript/Tailwind source is in `source/portfolio-copper/`. Its shadcn-compatible structure uses `components/ui`, `components.json` and `@/` aliases. Production consumes `assets/portfolio-v2.js`, `assets/portfolio-v2.css` and `assets/liquid-navbar.css`. The combined entry avoids shipping a second copy of React or GSAP. The standalone navbar bundle is retained for independent reuse.
 
 To rebuild the navbar locally:
 
@@ -28,7 +30,9 @@ pnpm run check
 pnpm run build
 ```
 
-The source build writes to `source/portfolio-copper/dist`. Copy the two generated liquid-navbar assets to the repository root only after their hashes and browser behavior have been reviewed. `node scripts/quality-gate.mjs` validates the deployed root.
+The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
+
+See [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for component paths, motion ownership, research and the verified browser scope. No additional framework, account system or paid service is required.
 
 ## Security and release controls
 
@@ -41,3 +45,5 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 - Liquid navigation adapted from the user-supplied Nimbus UI “Waterline” component by https://guglielmogiannattasio.it; attribution is retained in source.
 - GSAP and ScrollTrigger license banners are preserved. License: https://gsap.com/standard-license/.
 - Nimbus Sans font license is retained in `assets/FONT-LICENSE.txt`.
+- Lenis is MIT-licensed; its license is retained in `assets/LENIS-LICENSE.txt`.
+- The supplied Osmo React/GSAP/Lenis example informed the cinematic component's technology. Its demo images and logo are not used.

@@ -70,20 +70,11 @@
     gsap.registerPlugin(ScrollTrigger);
     scenes = gsap.matchMedia();
     scenes.add({
-      spacious: '(min-width: 761px) and (min-height: 650px)',
-      compact: '(max-width: 760px), (max-height: 649px)'
+      spacious: '(min-width: 1100px) and (min-height: 700px)',
+      compact: '(max-width: 1099px), (max-height: 699px)'
     }, context => {
       const spacious = context.conditions.spacious;
       if (spacious) {
-        const hero = gsap.timeline({
-          defaults: {ease: 'none'},
-          scrollTrigger: {trigger: '.hero-luxe', start: 'top top', end: () => `+=${innerHeight * .75}`, pin: true, scrub: .65, anticipatePin: 1, invalidateOnRefresh: true}
-        });
-        hero.to('.hero-figure', {scale: 1.065, yPercent: -2.5, duration: 1}, 0)
-          .to('.hero-wordmark', {xPercent: -4, opacity: .4, duration: 1}, 0)
-          .to('.hero-copy', {y: -35, autoAlpha: 0, duration: .35}, .35)
-          .to('.hero-nameplate', {autoAlpha: 0, duration: .2}, .45)
-          .fromTo('.hero-afterword', {y: 20, autoAlpha: 0}, {y: 0, autoAlpha: 1, duration: .3}, .7);
         const system = gsap.timeline({
           defaults: {ease: 'none'},
           scrollTrigger: {trigger: '.dimension', start: 'top top', end: () => `+=${innerHeight * .8}`, pin: '.dimension-stage', scrub: .75, anticipatePin: 1, invalidateOnRefresh: true}
@@ -106,7 +97,6 @@
         $$('.featured-stack .project-stage').forEach(element => {
           gsap.from(element, {y: 35, duration: .9, ease: 'power2.out', scrollTrigger: {trigger: element, start: 'top 90%', once: true}});
         });
-        gsap.fromTo('.wayfarer-image', {scale: 1.08, yPercent: -2}, {scale: 1.02, yPercent: 2, ease: 'none', scrollTrigger: {trigger: '.wayfarer-stage', start: 'top bottom', end: 'bottom top', scrub: .8}});
         gsap.fromTo('.architecture', {rotationY: -12}, {rotationY: -4, ease: 'none', scrollTrigger: {trigger: '.aetheris-stage', start: 'top 90%', end: 'bottom 20%', scrub: .8}});
       }
     });
@@ -143,11 +133,6 @@
     applyMotion();
   });
   applyMotion();
-  if (!motionOff && window.gsap && scrollY < 50 && !location.hash) {
-    entrance = gsap.context(() => {
-      gsap.from('.hero-statement .line-mask > span', {yPercent: 105, duration: .95, stagger: .12, ease: 'power3.out', clearProps: 'transform'});
-    });
-  }
   document.fonts?.ready.then(() => window.ScrollTrigger?.refresh());
   addEventListener('load', () => window.ScrollTrigger?.refresh(), {once: true});
 })();

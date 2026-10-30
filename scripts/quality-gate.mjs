@@ -6,16 +6,18 @@ const fail = message => failures.push(message);
 const required = [
   "index.html", "styles.css", "luxe.css", "app.js", "motion.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
+  "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
   "assets/Poojana_Kaveesh_ATS_2026.pdf", "README.md", "vercel.json",
   "staticwebapp.config.json",
   "source/portfolio-copper/components/ui/liquid-glass-navbar.tsx",
-  "source/portfolio-copper/components/ui/liquid-glass-shaders.ts"
+  "source/portfolio-copper/components/ui/liquid-glass-shaders.ts",
+  "source/portfolio-copper/components/ui/parallax-scrolling.tsx"
 ];
 required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
 const html = readFileSync("index.html", "utf8");
-const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("assets/liquid-navbar.css", "utf8")}`;
+const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("assets/liquid-navbar.css", "utf8")}\n${readFileSync("assets/portfolio-v2.css", "utf8")}`;
 const app = readFileSync("app.js", "utf8");
 const motion = readFileSync("motion.js", "utf8");
 const navbar = readFileSync("source/portfolio-copper/components/ui/liquid-glass-navbar.tsx", "utf8");
@@ -52,6 +54,7 @@ const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
+  "assets/portfolio-v2.js": 300 * 1024, "assets/portfolio-v2.css": 24 * 1024,
   "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024
 };
 for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);

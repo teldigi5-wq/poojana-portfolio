@@ -14,7 +14,19 @@ pnpm run check
 pnpm run build
 ```
 
-Serve `dist/` with a static HTTP server. The committed `dist` can also be served directly without installing packages. Rebuild it whenever the React or navbar styles change.
+This package builds browser assets into `dist/assets/`. The complete static page and its images live at the repository root. Rebuild the assets whenever React components or their styles change; the production copies are committed in root `assets/`.
+
+## Welcome and cinematic experience
+
+`components/ui/parallax-scrolling.tsx` adapts the supplied React/GSAP/Lenis example into `CinematicExperience`; the registry alias `ParallaxComponent` remains available. The rendered portfolio uses welcome text, shutter masks, one-pass code typing, rolling links, crossed toolkit ribbons, inline project timelines and a horizontal gallery, with no parallax image layers. `parallax-scrolling-demo.tsx` is the integration example. No context provider is required.
+
+Default reusable component path: `components/ui/` (inside this source package). Default Tailwind styles: `styles/globals.css`; cinematic styles: `styles/cinematic.css`. The `@/` alias resolves from the package root. The folder is already configured in `components.json`, so there is no need to run shadcn initialization again; it keeps registry imports and future shadcn additions consistent.
+
+The implementation uses the maintained `lenis` package (`1.3.27`) rather than the old `@studio-freight/lenis` package name. GSAP and ScrollTrigger share the existing page instance through the production build adapter in `scripts/build-cinematic.mjs`. Ordinary React projects can use the same package imports without that adapter. Do not load another Lenis instance alongside it.
+
+`src/portfolio.tsx` mounts both islands in one production bundle. `src/navbar.tsx` is still independently buildable. `src/cinematic.tsx` mounts at `#cinematic-ribbon-root`, preserves an error fallback and imports the Lenis and cinematic CSS. The static root HTML provides all hero, project and timeline content before React mounts.
+
+The component reads the existing Motion control and live OS reduced-motion preference. Ribbons use the Web Animations API and pause off-screen, when hidden or through their own control. Lenis runs only on spacious fine-pointer screens; its ticker callback stops after scrolling settles and is removed on cleanup. The gallery is native on phones/tablets and in reduced-motion mode; arrow buttons and keyboard arrows remain useful. GSAP cleanup is scoped with context/matchMedia and never kills other components' ScrollTriggers.
 
 ## Liquid-glass navigation
 
