@@ -31,6 +31,7 @@ jobs:
           node --check app.js
           node --check motion.js
           node --check assets/liquid-navbar.js
+          node --check assets/portfolio-v2.js
           node scripts/quality-gate.mjs
 
       - name: Validate production HTML references
@@ -63,3 +64,17 @@ jobs:
           if missing:
               raise SystemExit('Missing local references:\n' + '\n'.join(sorted(set(missing))))
           print(f'Validated {len(parser.refs)} HTML references.')
+
+      - name: Install pinned source toolchain
+        run: npm install --global pnpm@11.25.0 --ignore-scripts
+
+      - name: Reproduce React production bundles
+        working-directory: source/portfolio-copper
+        run: |
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm run check
+          pnpm run build
+          cmp dist/assets/liquid-navbar.js ../../assets/liquid-navbar.js
+          cmp dist/assets/liquid-navbar.css ../../assets/liquid-navbar.css
+          cmp dist/assets/portfolio-v2.js ../../assets/portfolio-v2.js
+          cmp dist/assets/portfolio-v2.css ../../assets/portfolio-v2.css

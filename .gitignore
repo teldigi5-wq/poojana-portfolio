@@ -1,0 +1,6 @@
+node_modules/
+dist/
+source/portfolio-copper/dist/
+source/portfolio-copper/build-report.json
+.openai/
+__qa/
