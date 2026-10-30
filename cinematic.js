@@ -78,6 +78,8 @@
   const updateScrollState = () => {
     const y = scrollY;
     const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    const editorialHero = document.querySelector(".editorial-hero");
+    header.classList.toggle("editorial-sticky", Boolean(editorialHero) && y >= editorialHero.offsetHeight);
     header.classList.toggle("scrolled", y > 24);
     progress.style.transform = `scaleX(${Math.min(1, y / max)})`;
 
