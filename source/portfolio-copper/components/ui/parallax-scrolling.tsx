@@ -2,14 +2,15 @@
 
 /**
  * Portfolio adaptation of the supplied Osmo parallax example.
- * React + GSAP/ScrollTrigger + Lenis; typography replaces the parallax layers.
+ * React + GSAP/ScrollTrigger + Lenis; the supplied layered scroll choreography
+ * is applied to the portrait, architecture, wordmark and welcome typography.
  * Each scene owns its cleanup. No page-wide killAll or global ticker changes.
  */
 import * as React from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
-import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap, Pause, Play } from "lucide-react"
+import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
 const TOOLS = [
   {name:"React", icon:Code2}, {name:"Next.js", icon:Layers3},
@@ -36,10 +37,9 @@ function useMotionAllowed() {
 
 function ToolkitRibbons({motion}:{motion:boolean}) {
   const ref=React.useRef<HTMLElement>(null)
-  const [paused,setPaused]=React.useState(false)
   React.useEffect(()=>{
     const root=ref.current
-    if(!root||!motion||paused)return
+    if(!root||!motion)return
     const animations=[...root.querySelectorAll<HTMLElement>(".ribbon-track")].map((track,i)=>{
       const animation=track.animate(
         [{transform:"translateX(0)"},{transform:"translateX(-50%)"}],
@@ -48,20 +48,24 @@ function ToolkitRibbons({motion}:{motion:boolean}) {
       animation.pause()
       return animation
     })
-    let visible=false
+    let visible=false,hovered=false
     const update=()=>{
-      root.dataset.animation=visible&&!document.hidden?"playing":"paused"
-      animations.forEach(animation=>visible&&!document.hidden?animation.play():animation.pause())
+      const playing=visible&&!document.hidden&&!hovered
+      root.dataset.animation=playing?"playing":"paused"
+      animations.forEach(animation=>playing?animation.play():animation.pause())
     }
     const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{rootMargin:"50px"})
     io.observe(root)
+    const enter=()=>{hovered=true;update()}
+    const leave=()=>{hovered=false;update()}
+    root.addEventListener("pointerenter",enter);root.addEventListener("pointerleave",leave)
     document.addEventListener("visibilitychange",update)
-    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
-  },[motion,paused])
+    return ()=>{io.disconnect();root.removeEventListener("pointerenter",enter);root.removeEventListener("pointerleave",leave);document.removeEventListener("visibilitychange",update);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
+  },[motion])
   return <section ref={ref} className="toolkit-section" aria-labelledby="toolkit-title">
     <div className="toolkit-copy shell">
       <div><p className="eyebrow">THE TOOLKIT / ALWAYS LEARNING</p><h2 id="toolkit-title">Different tools.<br/><em>One considered approach.</em></h2></div>
-      <div className="toolkit-aside"><p>Chosen for the problem.<br/>Used across my websites<br/>and engineering projects.</p><button type="button" className="ribbon-pause" aria-pressed={paused} disabled={!motion} onClick={()=>setPaused(!paused)} aria-label={paused?"Resume toolkit animation":"Pause toolkit animation"}>{paused?<Play size={13} aria-hidden="true"/>:<Pause size={13} aria-hidden="true"/>}<span>{!motion?"MOTION OFF":paused?"RESUME RIBBONS":"PAUSE RIBBONS"}</span></button></div>
+      <div className="toolkit-aside"><p>Chosen for the problem.<br/>Used across my websites<br/>and engineering projects.</p></div>
     </div>
     <p className="visually-hidden">Selected toolkit: {TOOLS.map(t=>t.name).join(", ")}. These tools are used across different projects, not all on this page.</p>
     <div className="ribbon-stage" aria-hidden="true">
@@ -71,6 +75,35 @@ function ToolkitRibbons({motion}:{motion:boolean}) {
     </div>
     <div className="toolkit-foot shell"><span>TOOLS CHANGE. THE ATTENTION TO DETAIL STAYS.</span><span>FORM × FUNCTION × INTENT</span></div>
   </section>
+}
+
+function useCodeTypewriter(enabled:boolean) {
+  React.useEffect(()=>{
+    const root=document.querySelector<HTMLElement>(".hero-code")
+    if(!root||!enabled||!gsap)return
+    const lines=[...root.querySelectorAll<HTMLElement>(".code-line")]
+    if(!lines.length)return
+    const ctx=gsap.context(()=>{},root)
+    let timeline:gsap.core.Timeline
+    ctx.add(()=>{
+      timeline=gsap.timeline({paused:true,repeat:-1,repeatDelay:.8})
+      timeline.set(lines,{clipPath:"inset(0 100% 0 0)"})
+      lines.forEach(line=>{
+        const characters=line.textContent?.length??28
+        timeline.to(line,{clipPath:"inset(0 0% 0 0)",duration:characters*.04,ease:`steps(${characters})`})
+      })
+      timeline.to([...lines].reverse(),{clipPath:"inset(0 100% 0 0)",duration:.25,stagger:.12,ease:"steps(12)"},"+=2.8")
+    })
+    let visible=false
+    const update=()=>{
+      const active=visible&&!document.hidden
+      root.dataset.typing=active?"playing":"paused"
+      if(active)timeline.play();else timeline.pause()
+    }
+    const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{threshold:.1})
+    io.observe(root);document.addEventListener("visibilitychange",update)
+    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);ctx.revert();delete root.dataset.typing}
+  },[enabled])
 }
 
 function useCinematicScenes(enabled:boolean) {
@@ -94,7 +127,6 @@ function useCinematicScenes(enabled:boolean) {
           .fromTo(".hero-shutters i",{scaleX:1},{scaleX:0,duration:.85,stagger:.065,transformOrigin:"right",onComplete:()=>{gsap.set(".hero-shutters",{display:"none"})}},0)
           .from(".hero-statement .line-mask > span",{yPercent:110,rotationX:-12,duration:1,stagger:.13,clearProps:"transform"},.1)
           .from(".hero-intro-line, .hero-description, .hero-explore",{y:14,opacity:0,duration:.7,stagger:.09,clearProps:"transform,opacity"},.35)
-          .fromTo(".code-line",{clipPath:"inset(0 100% 0 0)"},{clipPath:"inset(0 0% 0 0)",duration:.7,stagger:.55,ease:"steps(28)",clearProps:"clipPath"},.7)
         const finish=()=>entrance.progress(1)
         const onKey=(event:KeyboardEvent)=>{if(event.key==="Tab")finish()}
         addEventListener("keydown",onKey,{once:true});remove.push(()=>removeEventListener("keydown",onKey))
@@ -114,6 +146,15 @@ function useCinematicScenes(enabled:boolean) {
       gsap.from(".arch-node",{opacity:.25,y:12,duration:.6,stagger:.12,scrollTrigger:{trigger:".aetheris-stage",start:"top 65%",once:true}})
 
       const mm=gsap.matchMedia()
+      mm.add({desktop:"(min-width:901px)",mobile:"(max-width:900px)"},context=>{
+        const hero=scope.querySelector<HTMLElement>("[data-parallax-layers]")
+        if(!hero)return
+        const depth=context.conditions?.desktop?[70,55,40,10]:[18,15,7,4]
+        const scene=gsap.timeline({scrollTrigger:{trigger:hero,start:"top top",end:"bottom top",scrub:true,invalidateOnRefresh:true}})
+        depth.forEach((yPercent,index)=>scene.to(hero.querySelector(`[data-parallax-layer="${index+1}"]`),{yPercent,ease:"none"},0))
+        hero.dataset.scene="layered"
+        return ()=>{delete hero.dataset.scene}
+      })
       mm.add(wide.media,()=>{
         const viewport=scope.querySelector<HTMLElement>(".gallery-viewport")
         const track=scope.querySelector<HTMLElement>(".gallery-track")
@@ -166,17 +207,23 @@ function useCinematicScenes(enabled:boolean) {
       button.addEventListener("click",click);remove.push(()=>button.removeEventListener("click",click))
     })
 
-    // Lenis only on spacious fine-pointer screens; native touch remains intact.
-    // Wake the shared ticker for a scroll, then remove our callback once settled.
-    let ticking=false,smoothTime=0,previousTick=0
+    // Share GSAP's clock. Prime it at wake so the first Lenis frame can advance;
+    // a short idle grace period covers wheel batches before their scroll begins.
+    let ticking=false,smoothTime=0,previousTick=0,lastInput=0
     const tick=(time:number)=>{
       // An idle pause must not become a huge first-frame delta on the next scroll.
       smoothTime+=previousTick?Math.min(Math.max(0,time-previousTick),1/30):1/60
       previousTick=time
       lenis?.raf(smoothTime*1000)
-      if(!lenis?.isScrolling){gsap.ticker.remove(tick);ticking=false;scope.dataset.scrollActive="false"}
+      if(!lenis?.isScrolling&&performance.now()-lastInput>150){gsap.ticker.remove(tick);ticking=false;scope.dataset.scrollActive="false"}
     }
-    const wake=()=>{if(lenis&&!ticking&&!document.hidden){ticking=true;previousTick=0;scope.dataset.scrollActive="true";gsap.ticker.add(tick)}}
+    const wake=()=>{
+      lastInput=performance.now()
+      if(lenis&&!ticking&&!document.hidden){
+        lenis.raf(smoothTime*1000)
+        ticking=true;previousTick=0;scope.dataset.scrollActive="true";gsap.ticker.add(tick)
+      }
+    }
     const stopTicker=()=>{gsap.ticker.remove(tick);ticking=false;scope.dataset.scrollActive="false"}
     const connectLenis=()=>{
       stopTicker();lenis?.destroy();lenis=undefined
@@ -244,6 +291,7 @@ function useCinematicScenes(enabled:boolean) {
 export function CinematicExperience(){
   const enabled=useMotionAllowed()
   useCinematicScenes(enabled)
+  useCodeTypewriter(enabled)
   React.useEffect(()=>{
     const viewport=document.querySelector<HTMLElement>(".gallery-viewport")
     const keys=(event:KeyboardEvent)=>{

@@ -18,15 +18,17 @@ This package builds browser assets into `dist/assets/`. The complete static page
 
 ## Welcome and cinematic experience
 
-`components/ui/parallax-scrolling.tsx` adapts the supplied React/GSAP/Lenis example into `CinematicExperience`; the registry alias `ParallaxComponent` remains available. The rendered portfolio uses welcome text, shutter masks, one-pass code typing, rolling links, crossed toolkit ribbons, inline project timelines and a horizontal gallery, with no parallax image layers. `parallax-scrolling-demo.tsx` is the integration example. No context provider is required.
+`components/ui/parallax-scrolling.tsx` adapts the supplied React/GSAP/Lenis example into `CinematicExperience`; the registry alias `ParallaxComponent` remains available. The rendered portfolio uses welcome text, shutter masks, looping typing/erasing, rolling links, crossed toolkit ribbons, inline project timelines and a horizontal gallery. Four hero layers scrub together at 70/55/40/10 percent on desktop and smaller distances on mobile. `parallax-scrolling-demo.tsx` is the integration example. No context provider is required.
 
 Default reusable component path: `components/ui/` (inside this source package). Default Tailwind styles: `styles/globals.css`; cinematic styles: `styles/cinematic.css`. The `@/` alias resolves from the package root. The folder is already configured in `components.json`, so there is no need to run shadcn initialization again; it keeps registry imports and future shadcn additions consistent.
 
 The implementation uses the maintained `lenis` package (`1.3.27`) rather than the old `@studio-freight/lenis` package name. GSAP and ScrollTrigger share the existing page instance through the production build adapter in `scripts/build-cinematic.mjs`. Ordinary React projects can use the same package imports without that adapter. Do not load another Lenis instance alongside it.
 
-`src/portfolio.tsx` mounts both islands in one production bundle. `src/navbar.tsx` is still independently buildable. `src/cinematic.tsx` mounts at `#cinematic-ribbon-root`, preserves an error fallback and imports the Lenis and cinematic CSS. The static root HTML provides all hero, project and timeline content before React mounts.
+`src/portfolio.tsx` mounts the navigation, cinematic and footer islands in one production bundle. `src/navbar.tsx` is still independently buildable. `src/cinematic.tsx` mounts at `#cinematic-ribbon-root`; `src/footer.tsx` configures `components/ui/wild-hunt-footer.tsx` at `#portfolio-footer-root`. Each island preserves an error fallback. The static root HTML provides hero, project, timeline and fallback footer content before React mounts.
 
-The component reads the existing Motion control and live OS reduced-motion preference. Ribbons use the Web Animations API and pause off-screen, when hidden or through their own control. Lenis runs only on spacious fine-pointer screens; its ticker callback stops after scrolling settles and is removed on cleanup. The gallery is native on phones/tablets and in reduced-motion mode; arrow buttons and keyboard arrows remain useful. GSAP cleanup is scoped with context/matchMedia and never kills other components' ScrollTriggers.
+The component follows live OS reduced-motion and forced-color preferences; `?motion=off` provides a static view without an on-page control. Ribbons use WAAPI and pause off-screen, when hidden or hovered. Hero code playback pauses off-screen and when hidden. Lenis runs only on spacious fine-pointer screens; its ticker is primed when waking, covers the start of wheel batches and stops after scrolling settles. The gallery is native on phones/tablets and in reduced-motion mode. GSAP cleanup is scoped with context/matchMedia.
+
+The supplied footer keeps its React/Canvas 2D/SVG implementation: ordered dithering, bitmap blackletter, staged raster resolution, drawn flourish, pointer reticle and click scan. It uses existing self-hosted artwork, actual portfolio links and copper colors. It respects reduced motion, has a readable canvas fallback, fits narrow screens and stops its RAF loop when idle, hidden or off-screen.
 
 ## Liquid-glass navigation
 
@@ -35,14 +37,14 @@ The component reads the existing Motion control and live OS reduced-motion prefe
 The previous source had no React, TypeScript or Tailwind build. Those are now configured, together with a shadcn-compatible `components.json`; no context providers are required. Setup is already complete, so there is no need to run `shadcn init` over this project.
 
 - `components/ui/`: reusable components and the supplied `demo.tsx`. This is the configured shadcn UI directory; keeping it here makes `@/components/ui/...` imports and future CLI additions consistent.
-- `components/portfolio-navigation.tsx`: Home, Work, Depth, About and Contact props, section tracking and integration with the existing motion preference.
+- `components/portfolio-navigation.tsx`: Home, Depth, Work, About and Contact props, matching section tracking and integration with the system motion preference. A native dialog supplies mobile focus containment, Escape, close and section navigation.
 - `src/navbar.tsx`: React entry point mounted at `#liquid-nav-root`.
 - `styles/globals.css`: Tailwind v4 theme and utilities; Preflight is intentionally omitted to preserve the existing page reset.
 - `styles/liquid-glass-navbar.css`: component appearance, icon animation and responsive header styles.
 - `components/ui/liquid-glass-shaders.ts`: the small GPU water shader.
 - `lib/utils.ts`, `tsconfig.json`, `components.json`: shadcn class utility and `@/` aliases rooted at the repository.
 
-The portfolio passes `tone="dark"`, `compact={false}`, `sound={false}` and controlled `active`/`onChange` props. The navbar also accepts `motion` and `webgl` overrides for accessibility and fallback testing. It follows live OS reduced-motion settings and the page's Motion control. Arrow keys move link focus; Enter follows the actual section link. The render loop stops when interaction settles and pauses off-screen or in a hidden document. GPU resources and observers are cleaned up on unmount. No stock images are needed for this component; the supplied portrait and existing work remain in place.
+The portfolio passes `tone="dark"`, `compact={false}`, `sound={false}` and controlled `active`/`onChange` props. The navbar also accepts `motion` and `webgl` overrides for accessibility and fallback testing. It follows live OS reduced-motion settings and the static-view query. Arrow keys move link focus; Enter follows the actual section link. The render loop stops when interaction settles and pauses off-screen or in a hidden document. GPU resources and observers are cleaned up on unmount.
 
 For local manual browser checks, run `node scripts/build-navbar-qa.mjs` and open `/__qa/` or `/__qa/responsive.html`. The fixture provides shader diagnostics, context-loss controls, a forced CSS fallback and fixed-width frames. Every production build removes these fixtures from `dist`.
 
@@ -51,7 +53,7 @@ For local manual browser checks, run `node scripts/build-navbar-qa.mjs` and open
 - Responsive hero centered on the supplied transparent portrait, with warm black, champagne and copper colors. The earlier architectural artwork remains a subtle backdrop.
 - Short GSAP ScrollTrigger portrait and system-layer sequences on desktop; unpinned layouts on mobile and short landscape screens.
 - A CSS 3D system model with scroll-driven, assembled, exploded and rotate controls; subtle pointer tilt on project cards. WebGL is scoped to the navigation capsule, with no continuous idle particle rendering.
-- Reduced-motion support and a persistent animation-off control.
+- Reduced-motion support and a static-view query, without visible motion buttons.
 - Seven project stories with native dialogs and external project links: BoundaryLab, Aetheris, Wayfarer, FinalForge, Averis, Sentinel and FloodGuard.
 - A deterministic, browser-local ownership-rule example for BoundaryLab, explicitly labeled illustrative.
 - Existing portrait, CV, email, social links and project descriptions sourced from the user's current portfolio and GitHub profile README.
