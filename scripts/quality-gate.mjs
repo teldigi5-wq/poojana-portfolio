@@ -4,7 +4,7 @@ import { extname } from "node:path";
 const failures = [];
 const fail = message => failures.push(message);
 const required = [
-  "index.html", "styles.css", "luxe.css", "app.js", "motion.js",
+  "index.html", "styles.css", "luxe.css", "app.js", "motion.js", "preloader-boot.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
@@ -15,7 +15,10 @@ const required = [
   "source/portfolio-copper/components/ui/parallax-scrolling.tsx",
   "source/portfolio-copper/components/ui/wild-hunt-footer.tsx",
   "source/portfolio-copper/components/ui/text-roll.tsx",
-  "source/portfolio-copper/components/ui/cinematic-contact.tsx"
+  "source/portfolio-copper/components/ui/cinematic-contact.tsx",
+  "source/portfolio-copper/components/ui/old-masters-preloader.tsx",
+  "source/portfolio-copper/components/portfolio-preloader.tsx",
+  "assets/intro-apollo.webp", "assets/intro-hercules.webp", "assets/intro-flowers.webp", "assets/intro-david.webp"
 ];
 required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
@@ -57,11 +60,13 @@ const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
-  // Includes the supplied canvas footer (~11 KiB additional gzip) and one React runtime.
-  "assets/portfolio-v2.js": 340 * 1024,
+  // Includes the supplied React/SVG/Canvas loader; shared React/GSAP. See PRELOADER-RELEASE.md.
+  "assets/portfolio-v2.js": 400 * 1024, "preloader-boot.js": 4 * 1024,
   // CSS 3D contact materials and responsive/static fallbacks; see CONTACT-RELEASE.md.
   "assets/portfolio-v2.css": 32 * 1024,
-  "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024
+  "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024,
+  "assets/intro-apollo.webp": 40 * 1024, "assets/intro-hercules.webp": 24 * 1024,
+  "assets/intro-flowers.webp": 20 * 1024, "assets/intro-david.webp": 30 * 1024
 };
 for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);
 for (const file of required.filter(path => [".js", ".css", ".html", ".json", ".tsx", ".ts"].includes(extname(path)))) {

@@ -8,8 +8,6 @@ body{background:var(--bg)}
 .hero-luxe .hero-statement em{font-size:1.03em;color:#f3ead9;letter-spacing:-.06em}
 .hero-luxe .hero-description{margin-top:22px;color:#c8bbab;font-size:13px}
 .hero-luxe .hero-explore{margin-top:23px}
-.hero-shutters{position:absolute;inset:0;z-index:5;display:none;pointer-events:none;overflow:hidden}
-.hero-shutters i{flex:1;height:100%;background:linear-gradient(90deg,#1a1510,#2c2119 98%,#b48a5c);transform-origin:right}
 .hero-code{width:min(348px,100%);margin-top:23px;pointer-events:auto;color:#d4c8b8;border-left:1px solid #b58e634d;padding:0 0 0 15px;font-size:11px}
 .code-file{display:flex;align-items:center;gap:7px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;color:#c6b5a0;letter-spacing:.02em;margin-bottom:10px}
 .code-file>i{width:5px;height:5px;background:var(--sage)}
@@ -133,8 +131,8 @@ html.lenis.lenis-smooth{scroll-behavior:auto!important}
 }
 @media(max-width:380px){.hero-luxe{min-height:970px}.hero-luxe .hero-copy{padding-top:220px}.hero-luxe .hero-statement{font-size:43px}.hero-luxe .hero-description{font-size:11px}.hero-code code{font-size:9px}.hero-figure{width:212%;left:-60%;bottom:40px}.hero-luxe .hero-bottom{font-size:7px}.toolkit-copy h2{font-size:34px}.ribbon-pause{font-size:6px}.gallery-heading h2{font-size:40px}.gallery-heading .eyebrow{font-size:6px}.gallery-track .compact-visual{height:310px}.case-notes-intro h4{font-size:37px}}
 @media(max-height:650px) and (min-width:761px){.hero-luxe{min-height:800px}.hero-luxe .hero-copy{top:23%}.hero-luxe .hero-statement{font-size:64px}.hero-figure{left:8%;width:110%}}
-@media(prefers-reduced-motion:reduce){.hero-shutters{display:none!important}.case-timeline{--case-progress:1!important}.gallery-track{transform:none!important}.ribbon-track{transform:none!important}}
-@media(forced-colors:active){.hero-code,.tool-ribbon,.case-timeline,.gallery-buttons button{border:1px solid CanvasText}.ribbon-track{transform:none!important}.hero-shutters{display:none!important}}
+@media(prefers-reduced-motion:reduce){.case-timeline{--case-progress:1!important}.gallery-track{transform:none!important}.ribbon-track{transform:none!important}}
+@media(forced-colors:active){.hero-code,.tool-ribbon,.case-timeline,.gallery-buttons button{border:1px solid CanvasText}.ribbon-track{transform:none!important}}
 
 /* Navigation has its own top layer, focus containment and native Escape. */
 dialog.mobile-menu{inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0 26px 28px;border:0;border-radius:0;background:radial-gradient(ellipse at 95% 30%,#5b3d2424,transparent 60%),#14110e;color:#f3eddf;overflow-y:auto;overscroll-behavior:contain}

@@ -2,3 +2,4 @@
 import "./navbar"
 import "./cinematic"
 import "./footer"
+import "./preloader"

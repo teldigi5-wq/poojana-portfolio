@@ -1,0 +1,14 @@
+/* The native dialog keeps the live page inert only while the introduction runs. */
+:root{scrollbar-gutter:stable}
+.intro-active{overflow:hidden}
+dialog#portfolio-preloader{position:fixed;inset:0;margin:0;padding:0;width:100%;max-width:none;height:100dvh;max-height:none;border:0;outline:none;overflow:hidden;background:#0c0b0a;color:#f0e6d4;overscroll-behavior:contain}
+#portfolio-preloader::backdrop{background:#0c0b0a}
+#preloader-root{height:100%;width:100%}
+.preloader-fallback{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;margin:0;font:400 clamp(62px,13vw,220px)/1 Georgia,serif;letter-spacing:-.04em}
+.preloader-fallback small{font:400 10px/1.5 Studio,Arial,sans-serif;letter-spacing:.22em;color:#b7a58e}
+.portfolio-intro.om-root{min-height:100%;border-radius:0}
+.portfolio-intro .om-num{font-size:clamp(56px,9vh,110px)}
+.portfolio-intro .om-skip{display:none}
+@media(max-width:639px){.portfolio-intro .om-eyebrow{font-size:8px;letter-spacing:.15em}.portfolio-intro .om-pill{font-size:8px;padding:7px 9px;letter-spacing:.1em}.portfolio-intro .om-tagline{font-size:clamp(18px,5.8vw,25px)}.portfolio-intro .om-copy{top:23%}.portfolio-intro .om-counter{bottom:24px;right:22px}.portfolio-intro .om-brand{font-size:24px}.portfolio-intro .om-foot{left:22px;right:22px}}
+@media(max-height:500px){.portfolio-intro .om-pill{display:none}.portfolio-intro .om-copy{top:22%}.portfolio-intro .om-tagline{font-size:22px}.portfolio-intro .om-counter{bottom:20px}.portfolio-intro .om-num{font-size:50px}}
+@media(prefers-reduced-motion:reduce){dialog#portfolio-preloader[open]{display:none}}

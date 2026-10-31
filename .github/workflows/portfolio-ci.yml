@@ -30,6 +30,8 @@ jobs:
         run: |
           node --check app.js
           node --check motion.js
+          node --check preloader-boot.js
+          node --test tests/preloader-boot.test.mjs
           node --check assets/liquid-navbar.js
           node --check assets/portfolio-v2.js
           node scripts/quality-gate.mjs
