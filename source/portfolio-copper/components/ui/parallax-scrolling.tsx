@@ -28,7 +28,7 @@ function useMotionAllowed() {
   React.useEffect(()=>{
     const reduce=matchMedia("(prefers-reduced-motion: reduce)")
     const forced=matchMedia("(forced-colors: active)")
-    const update=()=>setAllowed(!reduce.matches&&!forced.matches&&!document.documentElement.classList.contains("motion-off"))
+    const update=()=>setAllowed(!reduce.matches&&!forced.matches&&!document.documentElement.classList.contains("motion-off")&&!document.documentElement.classList.contains("intro-active"))
     const observer=new MutationObserver(update)
     observer.observe(document.documentElement,{attributes:true,attributeFilter:["class"]})
     reduce.addEventListener("change",update);forced.addEventListener("change",update);update()
@@ -122,10 +122,8 @@ function useCinematicScenes(enabled:boolean) {
       if(!played.current&&scrollY<40&&!location.hash){
         played.current=true
         const entrance=gsap.timeline({defaults:{ease:"power3.out"}})
-        entrance.set(".hero-shutters",{display:"flex"})
-          .fromTo(".hero-shutters i",{scaleX:1},{scaleX:0,duration:.85,stagger:.065,transformOrigin:"right",onComplete:()=>{gsap.set(".hero-shutters",{display:"none"})}},0)
-          .from(".hero-statement .line-mask > span",{yPercent:110,rotationX:-12,duration:1,stagger:.13,clearProps:"transform"},.1)
-          .from(".hero-intro-line, .hero-description, .hero-explore",{y:14,opacity:0,duration:.7,stagger:.09,clearProps:"transform,opacity"},.35)
+        // The supplied loader now owns the opening; text roll runs after it closes.
+        entrance.from(".hero-intro-line, .hero-description, .hero-explore",{y:14,opacity:0,duration:.7,stagger:.09,clearProps:"transform,opacity"})
         const finish=()=>entrance.progress(1)
         const onKey=(event:KeyboardEvent)=>{if(event.key==="Tab")finish()}
         addEventListener("keydown",onKey,{once:true});remove.push(()=>removeEventListener("keydown",onKey))

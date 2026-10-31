@@ -4,6 +4,8 @@
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 @import "./liquid-glass-navbar.css";
 @source "../components";
+/* The supplied loader owns its CSS; its shader/style prose is not utility markup. */
+@source not "../components/ui/old-masters-preloader.tsx";
 @source "../src";
 @theme inline {
   --color-background: var(--background);
