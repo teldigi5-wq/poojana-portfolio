@@ -27,17 +27,6 @@ body::before {
   87.5% { transform: translate3d(-47px, 39px, 0); }
 }
 
-/* Native anchor scrolling on touch and on static fallbacks.
-   Existing Lenis + GSAP ScrollTrigger owns scrolling on desktop;
-   never add a second engine or double-smooth Lenis scroll. */
-html:not(.lenis-smooth):not(.motion-off) {
-  scroll-behavior: smooth;
-}
-html.lenis.lenis-smooth,
-html.motion-off {
-  scroll-behavior: auto !important;
-}
-
 /* Motion-off retains a still photograph-like texture, never an animation. */
 html.motion-off body::before {
   animation: none !important;
@@ -47,7 +36,6 @@ html.motion-off body::before {
   body::before { opacity: .07; animation-duration: 1.2s; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto !important; }
   body::before { animation: none !important; transform: none !important; }
 }
 @media (forced-colors: active), (prefers-reduced-data: reduce), print {
