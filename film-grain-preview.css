@@ -7,9 +7,10 @@ body::before {
   z-index: 54;
   pointer-events: none;
   background: url("./assets/film-grain.svg") 0 0 / 256px 256px repeat;
-  opacity: 0.105;
-  mix-blend-mode: difference;
-  animation: film-grain-jitter 0.88s steps(1, end) infinite;
+  /* Alpha compositing avoids expensive full-viewport difference blending
+     over WebGL/pinned scroll scenes. The tile itself stays animated. */
+  opacity: 0.065;
+  animation: film-grain-jitter 1.36s steps(1, end) infinite;
 }
 
 /* Discrete frame jitter, not directional drifting particles. */
@@ -31,8 +32,8 @@ html.motion-off body::before {
 
 @media (max-width: 760px), (pointer: coarse) {
   body::before {
-    opacity: 0.07;
-    animation-duration: 1.2s;
+    opacity: 0.045;
+    animation-duration: 2s;
   }
 }
 
