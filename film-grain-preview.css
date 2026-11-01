@@ -1,19 +1,35 @@
-/* Editorial film-grain preview — a single tiled texture, no particle simulation,
-   JavaScript, canvas loop or additional scroll engine. */
+/* Preview-only animated film grain.
+   A single self-hosted 256px tile jumps between offsets like analog film frames.
+   Only a fixed compositor transform changes: no canvas redraw, particle physics,
+   JS requestAnimationFrame loop, extra scrolling engine, or remote assets. */
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
-  z-index: 54; /* below the reading-progress line and skip link; dialogs use the top layer */
+  inset: -64px;
+  z-index: 54; /* below reading progress and skip link; native dialogs are top-layer */
   pointer-events: none;
   background: url("./assets/film-grain.svg") 0 0 / 256px 256px repeat;
-  opacity: .115;
+  opacity: .105;
   mix-blend-mode: difference;
+  animation: film-grain-jitter .88s steps(1, end) infinite;
+}
+
+/* Stepped, non-directional repositioning avoids the look of drifting particles.
+   64px bleed prevents gaps at viewport edges throughout the animation. */
+@keyframes film-grain-jitter {
+  0%, 100% { transform: translate3d(-31px, 18px, 0); }
+  12.5% { transform: translate3d(39px, -42px, 0); }
+  25% { transform: translate3d(-44px, -17px, 0); }
+  37.5% { transform: translate3d(13px, 46px, 0); }
+  50% { transform: translate3d(49px, 9px, 0); }
+  62.5% { transform: translate3d(-12px, -48px, 0); }
+  75% { transform: translate3d(21px, -28px, 0); }
+  87.5% { transform: translate3d(-47px, 39px, 0); }
 }
 
 /* Native anchor scrolling on touch and on static fallbacks.
-   The existing Lenis + GSAP integration owns scrolling when active on desktop;
-   never stack CSS smoothing on top of Lenis. */
+   Existing Lenis + GSAP ScrollTrigger owns scrolling on desktop;
+   never add a second engine or double-smooth Lenis scroll. */
 html:not(.lenis-smooth):not(.motion-off) {
   scroll-behavior: smooth;
 }
@@ -22,13 +38,18 @@ html.motion-off {
   scroll-behavior: auto !important;
 }
 
-/* The screenshot's speckled finish should remain microscopic on phone screens. */
+/* Motion-off retains a still photograph-like texture, never an animation. */
+html.motion-off body::before {
+  animation: none !important;
+  transform: none !important;
+}
 @media (max-width: 760px), (pointer: coarse) {
-  body::before { opacity: .072; }
+  body::before { opacity: .07; animation-duration: 1.2s; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto !important; }
+  body::before { animation: none !important; transform: none !important; }
 }
 @media (forced-colors: active), (prefers-reduced-data: reduce), print {
-  body::before { display: none; }
+  body::before { display: none !important; }
 }
