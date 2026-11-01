@@ -1,0 +1,34 @@
+/* Editorial film-grain preview — a single tiled texture, no particle simulation,
+   JavaScript, canvas loop or additional scroll engine. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 54; /* below the reading-progress line and skip link; dialogs use the top layer */
+  pointer-events: none;
+  background: url("./assets/film-grain.svg") 0 0 / 256px 256px repeat;
+  opacity: .115;
+  mix-blend-mode: difference;
+}
+
+/* Native anchor scrolling on touch and on static fallbacks.
+   The existing Lenis + GSAP integration owns scrolling when active on desktop;
+   never stack CSS smoothing on top of Lenis. */
+html:not(.lenis-smooth):not(.motion-off) {
+  scroll-behavior: smooth;
+}
+html.lenis.lenis-smooth,
+html.motion-off {
+  scroll-behavior: auto !important;
+}
+
+/* The screenshot's speckled finish should remain microscopic on phone screens. */
+@media (max-width: 760px), (pointer: coarse) {
+  body::before { opacity: .072; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+}
+@media (forced-colors: active), (prefers-reduced-data: reduce), print {
+  body::before { display: none; }
+}
