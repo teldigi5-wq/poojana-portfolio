@@ -2,7 +2,9 @@
 
 Production portfolio: https://poojana-portfolio.vercel.app/
 
-This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL navigation adapted to a warm copper palette.
+The editorial preview pairs slate, limestone and copper with a self-hosted film grain tile and a photographic introduction to the systems chapter. The contact and footer refinement is documented in `CONTACT-FOOTER-REVIEW.md`.
+
+The static portfolio shares a React runtime across the navigation and cinematic sections. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, GSAP/ScrollTrigger storytelling and a collapsible Framer Motion desktop menu.
 
 The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and a horizontal project gallery. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
@@ -15,16 +17,16 @@ Vercel serves the committed root files directly. All production images, fonts, s
 The page remains usable without React, WebGL or animation:
 
 - Native anchor links are present before React mounts.
-- The navbar falls back to a CSS lens if WebGL is unavailable or its context is lost.
+- The navigation keeps regular anchor links available when the React bundle is unavailable.
 - OS reduced-motion preferences or `?motion=off` disable nonessential movement. The visible Motion and ribbon-pause buttons were removed at the user's request.
 - Content remains visible if GSAP, ScrollTrigger or JavaScript does not run.
 - The native intro dialog is closed by default without JavaScript. A separate 8-second watchdog releases it if the React bundle or an asset fails. Deep links, history restoration and reduced-motion/static views bypass the introduction.
 
 ## Source
 
-The reusable React/TypeScript/Tailwind source is in `source/portfolio-copper/`. Its shadcn-compatible structure uses `components/ui`, `components.json` and `@/` aliases. Production consumes `assets/portfolio-v2.js`, `assets/portfolio-v2.css` and `assets/liquid-navbar.css`. The combined entry avoids shipping a second copy of React or GSAP. The standalone navbar bundle is retained for independent reuse.
+The React/TypeScript source is in `source/portfolio-copper/`. The shadcn UI path is `components/ui`, with Tailwind configured in `styles/globals.css` and imports using `@/`. The page loads `assets/portfolio-v2.js`, `assets/portfolio-v2.css` and `editorial.css`. The combined entry shares React and GSAP.
 
-To rebuild the navbar locally:
+To rebuild the portfolio locally:
 
 ```sh
 cd source/portfolio-copper
@@ -33,7 +35,7 @@ pnpm run check
 pnpm run build
 ```
 
-The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
+The build writes to `source/portfolio-copper/dist/assets`. Copy the generated portfolio assets, including legal notices, into root `assets/` after review. CI compares the generated portfolio JS and CSS byte-for-byte with the committed copies. Run `node scripts/quality-gate.mjs` from the root to validate the page.
 
 See [PRELOADER-RELEASE.md](PRELOADER-RELEASE.md) for the current opening and removed shutters, [CONTACT-RELEASE.md](CONTACT-RELEASE.md) for cinematic contact, [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for character roll and continuous ribbons, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for navigation/footer and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the welcome edition. No additional framework, account system or paid service is required.
 
@@ -45,6 +47,7 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 
 ## Attribution
 
+- Framer Motion animates the collapsible navigation. The MIT notice is in `assets/FRAMER-MOTION-LICENSE.txt`.
 - Liquid navigation adapted from the user-supplied Nimbus UI “Waterline” component by https://guglielmogiannattasio.it; attribution is retained in source.
 - GSAP and ScrollTrigger license banners are preserved. License: https://gsap.com/standard-license/.
 - Nimbus Sans font license is retained in `assets/FONT-LICENSE.txt`.

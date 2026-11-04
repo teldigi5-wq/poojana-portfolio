@@ -44,6 +44,8 @@ export interface WildHuntImage {
 export interface FooterLink {
   label: string
   href?: string
+  /** Download a same-origin file, optionally with a suggested filename. */
+  download?: boolean | string
 }
 
 export interface FooterColumn {
@@ -991,7 +993,7 @@ export default function WildHuntFooter({
             <ul>
               {col.links.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href || "#"}>{l.label}</a>
+                  <a href={l.href || "#"} download={l.download}>{l.label}</a>
                 </li>
               ))}
             </ul>
@@ -1008,13 +1010,15 @@ export default function WildHuntFooter({
           <div className="whf-sig">
             {sigils ? (
               <>
-                <svg viewBox="-8 -8 16 16" aria-hidden="true">
+                <svg viewBox="-8 -8 16 16" aria-hidden="true" focusable="false">
+                  <title>Decorative sun engraving</title>
                   {Array.from({ length: 12 }, (_, i) => {
                     const a = (i / 12) * Math.PI * 2
                     return <line key={i} x1={(Math.cos(a) * 2.2).toFixed(2)} y1={(Math.sin(a) * 2.2).toFixed(2)} x2={(Math.cos(a) * 7).toFixed(2)} y2={(Math.sin(a) * 7).toFixed(2)} />
                   })}
                 </svg>
-                <svg viewBox="-8 -8 16 16" aria-hidden="true">
+                <svg viewBox="-8 -8 16 16" aria-hidden="true" focusable="false">
+                  <title>Decorative spiral engraving</title>
                   <circle r="6.8" strokeDasharray="1 2.2" />
                   <path d="M 0 -4.6 A 4.6 4.6 0 1 1 -4.6 0 A 2.6 2.6 0 1 0 0 -2.6 A 1.2 1.2 0 1 1 -1.2 0" />
                 </svg>
@@ -1022,7 +1026,7 @@ export default function WildHuntFooter({
             ) : null}
             <span>{legal}</span>
           </div>
-          <p>{colophon}</p>
+          {colophon ? <p>{colophon}</p> : null}
         </div>
       </div>
     </footer>

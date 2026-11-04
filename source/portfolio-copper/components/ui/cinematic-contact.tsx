@@ -39,11 +39,10 @@ export function CinematicContact({enabled}:{enabled:boolean}){
           onUpdate:self=>{root.dataset.contactProgress=self.progress.toFixed(3)},
         }})
         scene.fromTo(".contact-card-rig",{
-          rotationX:wide?54:30,rotationY:wide?-42:-25,rotationZ:wide?9:5,y:wide?70:30,
-        },{rotationX:16,rotationY:-20,rotationZ:-8,y:-12,ease:"none"},0)
+          rotationX:wide?38:25,rotationY:wide?-30:-20,rotationZ:wide?7:4,y:wide?70:30,
+        },{rotationX:10,rotationY:-12,rotationZ:-5,y:-12,ease:"none"},0)
           .fromTo(".contact-paper",{rotationZ:0,x:0,y:0},{rotationZ:11,x:14,y:24,ease:"none"},0)
           .fromTo(".contact-card-sheen",{xPercent:-130},{xPercent:130,ease:"none"},0)
-          .fromTo(root,{"--contact-progress":0},{"--contact-progress":1,ease:"none"},0)
           .fromTo(".contact-card-shadow",{scaleX:.72,scaleY:.4,opacity:.3},{scaleX:1,scaleY:.55,opacity:.65,ease:"none"},0)
         return ()=>{delete root.dataset.contactMotion;delete root.dataset.contactProgress}
       })
@@ -51,7 +50,7 @@ export function CinematicContact({enabled}:{enabled:boolean}){
         yPercent:110,duration:.9,stagger:.1,ease:"power3.out",clearProps:"transform",
         scrollTrigger:{trigger:root,refreshPriority:-10,start:"top 84%",once:true},
       })
-      gsap.from(".contact-overline, .contact-description, .contact-cta, .contact-email-group",{
+      gsap.from(".contact-description, .contact-cta, .contact-email-group, .contact-status",{
         y:16,opacity:0,duration:.7,stagger:.08,ease:"power2.out",clearProps:"transform,opacity",
         scrollTrigger:{trigger:root,refreshPriority:-10,start:"top 82%",once:true},
       })

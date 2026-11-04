@@ -32,7 +32,6 @@ jobs:
           node --check motion.js
           node --check preloader-boot.js
           node --test tests/preloader-boot.test.mjs
-          node --check assets/liquid-navbar.js
           node --check assets/portfolio-v2.js
           node scripts/quality-gate.mjs
 
@@ -76,7 +75,5 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts
           pnpm run check
           pnpm run build
-          cmp dist/assets/liquid-navbar.js ../../assets/liquid-navbar.js
-          cmp dist/assets/liquid-navbar.css ../../assets/liquid-navbar.css
           cmp dist/assets/portfolio-v2.js ../../assets/portfolio-v2.js
           cmp dist/assets/portfolio-v2.css ../../assets/portfolio-v2.css

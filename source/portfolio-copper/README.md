@@ -2,6 +2,8 @@
 
 A copper cinematic portfolio inspired by the two supplied videos and refined around the portrait supplied on 29 October 2026. This source package is retained inside the production portfolio repository; the deployable static files live at the repository root.
 
+The current local review keeps the CSS 3D contact card and Wild Hunt KAVEESH footer, removes duplicate closing copy, and improves CV access and small-text readability. It is not merged or deployed. See `../../CONTACT-FOOTER-REVIEW.md` for validation and limits.
+
 ## Run
 
 The page remains a static site with a React navigation island. All image, font, animation and runtime assets are self-hosted. The Sites manifest points to `dist/`.
@@ -38,7 +40,13 @@ The static native dialog and `preloader-boot.js` provide an independent 8-second
 
 `components/ui/cinematic-contact.tsx` enhances the static `#contact` markup with an unpinned GSAP card turn, paper spread, light sweep and masked heading entrance. `styles/cinematic-contact.css` supplies the charcoal studio, copper card faces/edges, shadows and responsive layout. Fine-pointer tilt uses a separate transform wrapper and one demand-driven RAF. Contact triggers refresh after the earlier gallery pin; phones measure the artwork's viewport entry. Every owned event and animation is cleaned up. The existing email, copy fallback and social destinations remain; the card is decorative and hidden from assistive technology. The shared motion preference disables the enhancement. See root `CONTACT-RELEASE.md` for validation and limits.
 
-## Liquid-glass navigation
+## Portfolio navigation
+
+`components/ui/navigation-menu.tsx` adapts the supplied Framer Motion component. `src/editorial-navbar.tsx` mounts it at `#portfolio-nav-root`. Desktop scroll collapses the menu, and scrolling up or pressing the menu button expands it. Escape closes it and restores focus to the menu button. The collapsed links are inert. The native mobile dialog and static anchor fallback cover touch, keyboard and unavailable scripts.
+
+The shadcn directory and Tailwind configuration are already set up. The supplied sheet, input, label and button examples have no callers in this integration. The main entry uses a shared React runtime and the root `editorial.css` supplies the matte navigation and chapter palette.
+
+## Archived liquid-glass component
 
 `components/ui/liquid-glass-navbar.tsx` integrates the user-supplied Nimbus UI “Waterline” component. Its WebGL shader, spring-driven liquid selection, droplets, ripples, pointer lens and SVG refraction are retained, with a champagne/copper palette. Lucide supplies the icons. A CSS lens works when WebGL is unavailable or its context is lost. Static links remain if JavaScript does not load.
 
@@ -58,9 +66,9 @@ For local manual browser checks, run `node scripts/build-navbar-qa.mjs` and open
 
 ## Experience
 
-- Responsive hero centered on the supplied transparent portrait, with warm black, champagne and copper colors. The earlier architectural artwork remains a subtle backdrop.
+- Responsive hero centered on the supplied transparent portrait, with a slate and copper palette. The limestone introduction leads into a photographic preview of the systems chapter.
 - Short GSAP ScrollTrigger portrait and system-layer sequences on desktop; unpinned layouts on mobile and short landscape screens.
-- A CSS 3D system model with scroll-driven, assembled, exploded and rotate controls; subtle pointer tilt on project cards. WebGL is scoped to the navigation capsule, with no continuous idle particle rendering.
+- A CSS 3D system model with scroll-driven, assembled, exploded and rotate controls, plus subtle pointer tilt on project cards.
 - Reduced-motion support and a static-view query, without visible motion buttons.
 - Seven project stories with native dialogs and external project links: BoundaryLab, Aetheris, Wayfarer, FinalForge, Averis, Sentinel and FloodGuard.
 - A deterministic, browser-local ownership-rule example for BoundaryLab, explicitly labeled illustrative.

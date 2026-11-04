@@ -1,5 +1,5 @@
 // One React runtime for both navigation and cinematic content.
-import "./navbar"
+import "./editorial-navbar"
 import "./cinematic"
 import "./footer"
 import "./preloader"

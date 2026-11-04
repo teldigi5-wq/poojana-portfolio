@@ -63,6 +63,7 @@
   }));
   $$('.header a').forEach(a => a.addEventListener('click', () => closeMenu(false)));
   narrowScreen.addEventListener('change', () => closeMenu(false));
+  document.documentElement.classList.add('has-mobile-menu');
 
   const identities = {
     owner: {id: 'alice', authenticated: true},
