@@ -2,7 +2,7 @@
 
 Production portfolio: https://poojana-portfolio.vercel.app/
 
-The editorial preview pairs slate, limestone and copper with a self-hosted film grain tile and a photographic introduction to the systems chapter. The contact and footer refinement is documented in `CONTACT-FOOTER-REVIEW.md`.
+The editorial preview uses the portfolio’s original warm palette with a self-hosted film grain tile and a photographic introduction to the systems chapter. The contact and footer refinement is documented in `CONTACT-FOOTER-REVIEW.md`.
 
 The static portfolio shares a React runtime across the navigation and cinematic sections. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, GSAP/ScrollTrigger storytelling and a collapsible Framer Motion desktop menu.
 

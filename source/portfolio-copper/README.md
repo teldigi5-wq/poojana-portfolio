@@ -66,7 +66,7 @@ For local manual browser checks, run `node scripts/build-navbar-qa.mjs` and open
 
 ## Experience
 
-- Responsive hero centered on the supplied transparent portrait, with a slate and copper palette. The limestone introduction leads into a photographic preview of the systems chapter.
+- Responsive hero centered on the supplied transparent portrait, with the original warm black, ivory and copper palette. The introduction leads into a photographic preview of the systems chapter.
 - Short GSAP ScrollTrigger portrait and system-layer sequences on desktop; unpinned layouts on mobile and short landscape screens.
 - A CSS 3D system model with scroll-driven, assembled, exploded and rotate controls, plus subtle pointer tilt on project cards.
 - Reduced-motion support and a static-view query, without visible motion buttons.
