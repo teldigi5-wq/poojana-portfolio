@@ -11,6 +11,7 @@ body{background:var(--bg)}
 .hero-luxe .hero-visual{z-index:0;background:#0c0b0a}
 .hero-luxe .vault{opacity:.13;filter:saturate(.6);object-position:center;transform-origin:70% 45%}
 .hero-luxe .hero-shade{background:linear-gradient(90deg,#0b0a09 0%,#0b0a09e0 25%,transparent 67%,#0b0a0980)}
+.hero-grain{position:absolute;inset:0;opacity:.1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.45' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");pointer-events:none}
 .portrait-halo{position:absolute;top:10%;right:0;width:60%;height:90%;background:radial-gradient(ellipse at 68% 50%,#8f421b29,transparent 65%);pointer-events:none}
 .hero-luxe .hero-top{position:absolute;inset:125px 0 auto;z-index:6;padding-top:0;align-items:start}
 .hero-luxe .hero-top .eyebrow{font-size:9px;letter-spacing:.11em}.hero-luxe .hero-coordinates{font-size:9px;color:#cbbba7}

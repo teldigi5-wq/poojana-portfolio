@@ -4,12 +4,14 @@ import { extname } from "node:path";
 const failures = [];
 const fail = message => failures.push(message);
 const required = [
-  "index.html", "styles.css", "luxe.css", "editorial.css", "app.js", "motion.js", "preloader-boot.js",
+  "index.html", "styles.css", "luxe.css", "app.js", "motion.js", "preloader-boot.js",
+  "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
   "assets/Poojana_Kaveesh_ATS_2026.pdf", "README.md", "vercel.json",
   "staticwebapp.config.json",
-  "source/portfolio-copper/components/ui/navigation-menu.tsx",
+  "source/portfolio-copper/components/ui/liquid-glass-navbar.tsx",
+  "source/portfolio-copper/components/ui/liquid-glass-shaders.ts",
   "source/portfolio-copper/components/ui/parallax-scrolling.tsx",
   "source/portfolio-copper/components/ui/wild-hunt-footer.tsx",
   "source/portfolio-copper/components/ui/text-roll.tsx",
@@ -21,10 +23,11 @@ const required = [
 required.forEach(file => { if (!existsSync(file)) fail(`missing ${file}`); });
 
 const html = readFileSync("index.html", "utf8");
-const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("editorial.css", "utf8")}\n${readFileSync("assets/portfolio-v2.css", "utf8")}`;
+const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("assets/liquid-navbar.css", "utf8")}\n${readFileSync("assets/portfolio-v2.css", "utf8")}`;
 const app = readFileSync("app.js", "utf8");
 const motion = readFileSync("motion.js", "utf8");
-const navbar = readFileSync("source/portfolio-copper/components/ui/navigation-menu.tsx", "utf8");
+const navbar = readFileSync("source/portfolio-copper/components/ui/liquid-glass-navbar.tsx", "utf8");
+const shader = readFileSync("source/portfolio-copper/components/ui/liquid-glass-shaders.ts", "utf8");
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
 const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
 if (duplicateIds.length) fail(`duplicate IDs: ${duplicateIds.join(", ")}`);
@@ -32,12 +35,12 @@ if (duplicateIds.length) fail(`duplicate IDs: ${duplicateIds.join(", ")}`);
 for (const marker of [
   'class="skip-link"', 'name="viewport"', 'rel="canonical"', 'property="og:url"',
   'name="robots" content="index,follow', 'type="application/ld+json"', 'id="main"',
-  'id="portfolio-nav-root"', 'class="editorial-nav-fallback"', 'id="dimension"', 'id="work"', 'id="about"', 'id="contact"'
+  'id="liquid-nav-root"', 'id="dimension"', 'id="work"', 'id="about"', 'id="contact"'
 ]) if (!html.includes(marker)) fail(`missing production/accessibility marker: ${marker}`);
 if (/noindex|nofollow/i.test(html)) fail("production HTML must remain indexable");
 if (!html.includes("https://poojana-portfolio.vercel.app/")) fail("missing production canonical URL");
 if (!styles.includes("prefers-reduced-motion") || !navbar.includes("prefers-reduced-motion")) fail("missing reduced-motion fallback");
-if (/liquid-navbar\.(css|js)|id="liquid-nav-root"/.test(html)) fail("legacy liquid navigation loaded by the page");
+if (!navbar.includes("webglcontextlost") || !navbar.includes("IntersectionObserver") || !shader.includes("gl_FragColor")) fail("liquid navigation fallback or shader source missing");
 if (!app.includes("showModal") || !motion.includes("ScrollTrigger")) fail("project dialogs or scroll storytelling missing");
 
 for (const tag of html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)) {
@@ -56,7 +59,7 @@ for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1]))
 const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
-  "editorial.css": 13 * 1024,
+  "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
   // Includes the supplied React/SVG/Canvas loader; shared React/GSAP. See PRELOADER-RELEASE.md.
   "assets/portfolio-v2.js": 400 * 1024, "preloader-boot.js": 4 * 1024,
   // CSS 3D contact materials and responsive/static fallbacks; see CONTACT-RELEASE.md.

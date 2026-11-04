@@ -157,23 +157,16 @@ dialog.mobile-menu::backdrop{background:#080706cc;backdrop-filter:blur(12px)}
 .menu-bottom>div{display:flex;gap:28px;font-size:11px}.menu-bottom>div>a{min-height:34px;display:flex;align-items:center}
 .menu-bottom>span{font-size:7px;letter-spacing:.09em;color:#b5a48e}
 .contact{padding-bottom:16px}
-.footer-fallback{padding-block:35px;background:#17120f;color:#e2bb93;border-color:#70523866;font-size:12px;font-weight:400;flex-wrap:wrap}
-.footer-fallback nav{display:flex;gap:12px 22px;flex-wrap:wrap}
-.footer-fallback a{display:inline-flex;align-items:center;min-height:44px;font-size:12px}
+.footer-fallback{padding-block:35px;background:#17120f;color:#e2bb93;border-color:#70523866}
+.footer-fallback nav{display:flex;gap:20px;flex-wrap:wrap}
 .portfolio-footer.whf-root{border-top:1px solid #66503b5c;font-weight:400}
 .portfolio-footer .whf-picture img{filter:saturate(.55) sepia(.16) brightness(.75);opacity:.9}
-.portfolio-footer .whf-legal{padding-top:17px;grid-template-columns:1fr;font-size:12px;letter-spacing:.06em}.portfolio-footer .whf-foot{padding-bottom:28px;column-gap:30px;font-size:12px}
-.portfolio-footer .whf-col h3{color:#d8b993;opacity:1;font-size:12px;letter-spacing:.1em;margin-bottom:12px}
-.portfolio-footer .whf-col a{font-size:12px;letter-spacing:.04em;min-height:44px;opacity:1;color:#e3d6c5}
-.portfolio-footer .whf-up{display:inline-flex;align-items:center;font-size:12px;letter-spacing:.06em;color:#e2bb93;opacity:1}
-.portfolio-footer .whf-sig span{opacity:1;color:#d7c4ad}
-.portfolio-footer .whf-marks{opacity:.45}
-/* Keep the signature flourish, behind the lettering so A and V remain whole. */
-.portfolio-footer .whf-swash{z-index:3;opacity:.65}
-.portfolio-footer .whf-swash .whf-cut{display:none}
-.portfolio-footer .whf-swash .whf-pen{stroke-width:.85}
-@media(max-width:900px){.portfolio-footer.whf-root{height:1080px!important}.portfolio-footer .whf-foot{row-gap:14px}.portfolio-footer .whf-legal{margin-top:4px}}
-@media(max-width:760px){.hero-luxe{min-height:960px}.hero-luxe .hero-copy{padding-top:162px;top:auto}.hero-luxe .hero-top{top:108px}.hero-luxe .hero-statement{margin-top:23px}.hero-figure{bottom:30px}.portfolio-footer .whf-foot{column-gap:18px}}
+.portfolio-footer .whf-legal{padding-top:17px}.portfolio-footer .whf-foot{padding-bottom:28px;column-gap:30px}
+.portfolio-footer .whf-col h3{color:#e2bb93;opacity:1;font-size:9px;margin-bottom:12px}
+.portfolio-footer .whf-col a{font-size:10px;letter-spacing:.06em;min-height:36px;opacity:1;color:#e3d6c5}
+.portfolio-footer .whf-marks{opacity:.45}.portfolio-footer .whf-swash{opacity:.8}
+@media(max-width:900px){.portfolio-footer.whf-root{height:1080px!important}.portfolio-footer .whf-foot{row-gap:14px}.portfolio-footer .whf-col a{min-height:36px}.portfolio-footer .whf-legal{margin-top:4px}}
+@media(max-width:760px){.hero-luxe{min-height:960px}.hero-luxe .hero-copy{padding-top:162px;top:auto}.hero-luxe .hero-top{top:108px}.hero-luxe .hero-statement{margin-top:23px}.hero-figure{bottom:30px}.portfolio-footer .whf-foot{column-gap:18px}.portfolio-footer .whf-col a{font-size:10px}.portfolio-footer .whf-legal p{max-width:300px}}
 @media(max-width:380px){dialog.mobile-menu{padding-inline:20px}.menu-top>span{font-size:7px}.menu-links>a>span{font-size:31px}.menu-links{min-height:330px;padding-block:16px}.menu-links>a{min-height:62px;padding-block:13px}.hero-luxe{min-height:920px}.hero-luxe .hero-copy{padding-top:155px}.hero-luxe .hero-statement{font-size:43px}.portfolio-footer.whf-root{height:1120px!important}}
 @media(max-height:600px){.menu-links{justify-content:start;min-height:300px}.menu-top{min-height:70px}.menu-links>a{min-height:56px;padding-block:12px}.menu-links>a>span{font-size:31px}}
 @media(prefers-reduced-motion:reduce){[data-parallax-layer]{transform:none!important}.code-line{clip-path:none!important}}

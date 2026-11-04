@@ -5,14 +5,13 @@
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "scripts": {
-    "build": "node scripts/build-cinematic.mjs",
+    "build": "node scripts/build-navbar.mjs && node scripts/build-cinematic.mjs",
     "typecheck": "tsc --noEmit",
     "check": "tsc --noEmit"
   },
   "dependencies": {
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
-    "framer-motion": "14.9.0",
     "gsap": "3.13.0",
     "lenis": "1.3.27",
     "lucide-react": "1.64.0",
