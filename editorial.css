@@ -1,11 +1,4 @@
-/* Matte navigation and a grain layer over the original portfolio palette. */
-:root {
-  --film-grain: url("assets/film-grain.png");
-}
-
-body {
-  background-image: var(--film-grain);
-}
+/* Matte navigation and the systems chapter in the original portfolio palette. */
 
 .header {
   display: grid;
@@ -89,10 +82,6 @@ body {
   box-shadow: inset 0 -2px #e3b58f;
 }
 
-.hero-luxe .hero-grain {
-  background: var(--film-grain) repeat;
-  opacity: .9;
-}
 .editorial-intro { padding-block: clamp(44px, 6.3vw, 105px) clamp(25px, 4vw, 60px); }
 .editorial-intro .section-kicker {
   font-size: 11px;
@@ -169,9 +158,6 @@ body {
 .editorial-intro .discipline-strip {
   margin-top: clamp(35px, 6vw, 85px);
 }
-.dimension, .about, .boundary-stage, .contact.contact-cinematic {
-  background-image: var(--film-grain);
-}
 dialog.mobile-menu::backdrop { background: #080706e8; backdrop-filter: none; }
 
 @media (max-width: 1050px) and (min-width: 901px) {
@@ -228,7 +214,7 @@ dialog.mobile-menu::backdrop { background: #080706e8; backdrop-filter: none; }
 }
 .motion-off .chapter-frame img { transition: none; transform: none; }
 @media (forced-colors: active) {
-  .chapter-frame img, .chapter-frame::before, .hero-luxe .hero-grain { display: none; }
+  .chapter-frame img, .chapter-frame::before { display: none; }
   .chapter-frame { border: 1px solid LinkText; }
   .editorial-nav a[aria-current] { text-decoration: underline; }
 }

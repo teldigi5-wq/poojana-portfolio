@@ -5,7 +5,6 @@ const failures = [];
 const fail = message => failures.push(message);
 const required = [
   "index.html", "styles.css", "luxe.css", "editorial.css", "app.js", "motion.js", "preloader-boot.js",
-  "assets/film-grain.png",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
   "assets/Poojana_Kaveesh_ATS_2026.pdf", "README.md", "vercel.json",
@@ -57,7 +56,7 @@ for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1]))
 const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
-  "editorial.css": 13 * 1024, "assets/film-grain.png": 16 * 1024,
+  "editorial.css": 13 * 1024,
   // Includes the supplied React/SVG/Canvas loader; shared React/GSAP. See PRELOADER-RELEASE.md.
   "assets/portfolio-v2.js": 400 * 1024, "preloader-boot.js": 4 * 1024,
   // CSS 3D contact materials and responsive/static fallbacks; see CONTACT-RELEASE.md.
