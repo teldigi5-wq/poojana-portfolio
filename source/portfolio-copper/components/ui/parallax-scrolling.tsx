@@ -117,6 +117,7 @@ function useCinematicScenes(enabled:boolean) {
     let lenis:Lenis|undefined
     let galleryIndex=0
     const wide=matchMedia("(min-width: 1100px) and (min-height: 700px) and (hover: hover) and (pointer: fine)")
+    const finePointer=matchMedia("(hover: hover) and (pointer: fine)")
     const ctx=gsap.context(()=>{
       // A single finite entrance. Text and links exist before any animation runs.
       if(!played.current&&scrollY<40&&!location.hash){
@@ -225,16 +226,23 @@ function useCinematicScenes(enabled:boolean) {
     const connectLenis=()=>{
       stopTicker();lenis?.destroy();lenis=undefined
       scope.dataset.scrollEngine="native"
-      if(!wide.matches)return
-      lenis=new Lenis({lerp:.12,smoothWheel:true,syncTouch:false,autoRaf:false,
+      if(!finePointer.matches)return
+      lenis=new Lenis({lerp:.1,smoothWheel:true,syncTouch:false,autoRaf:false,
         prevent:node=>!!node.closest("dialog, .mobile-menu, .gallery-viewport")||document.body.classList.contains("menu-open")})
       scope.dataset.scrollEngine="lenis"
       lenis.on("scroll",ScrollTrigger.update)
     }
-    connectLenis();wide.addEventListener("change",connectLenis)
+    connectLenis();finePointer.addEventListener("change",connectLenis)
     addEventListener("wheel",wake,{passive:true})
     const visibility=()=>{if(document.hidden){stopTicker();lenis?.stop()}else lenis?.start()}
     document.addEventListener("visibilitychange",visibility)
+    // Let browser history and native hash navigation own their scroll position.
+    const cancelSmoothScroll=()=>{
+      stopTicker()
+      if(lenis&&!lenis.isStopped){lenis.stop();lenis.start()}
+    }
+    addEventListener("popstate",cancelSmoothScroll)
+    addEventListener("hashchange",cancelSmoothScroll)
     const anchors=(event:MouseEvent)=>{
       if(!lenis||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return
       const link=(event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]')
@@ -242,9 +250,17 @@ function useCinematicScenes(enabled:boolean) {
       if(!href||href==="#"||href==="#main")return
       const target=document.getElementById(href.slice(1))
       if(!target)return
-      event.preventDefault();history.pushState(null,"",href)
+      event.preventDefault()
+      if(location.hash!==href)history.pushState(null,"",href)
       // Lenis 1.3 honors the document's CSS scroll-padding-top for elements.
-      lenis.scrollTo(target,{duration:.8});wake()
+      lenis.scrollTo(target,{duration:.8,onComplete:()=>{
+        if(event.detail!==0||document.activeElement!==link)return
+        if(!target.hasAttribute("tabindex")){
+          target.setAttribute("tabindex","-1")
+          target.addEventListener("blur",()=>target.removeAttribute("tabindex"),{once:true})
+        }
+        target.focus({preventScroll:true})
+      }});wake()
     }
     document.addEventListener("click",anchors)
 
@@ -260,8 +276,9 @@ function useCinematicScenes(enabled:boolean) {
         const shift=stage.getBoundingClientRect().top-before.top
         if(Math.abs(shift)>1)scrollTo({top:scrollY+shift,behavior:"instant"})
       }
-      wide.removeEventListener("change",connectLenis);removeEventListener("wheel",wake)
+      finePointer.removeEventListener("change",connectLenis);removeEventListener("wheel",wake)
       document.removeEventListener("visibilitychange",visibility);document.removeEventListener("click",anchors)
+      removeEventListener("popstate",cancelSmoothScroll);removeEventListener("hashchange",cancelSmoothScroll)
       removeEventListener("load",refresh)
       delete scope.dataset.scrollEngine;delete scope.dataset.scrollActive
     }
