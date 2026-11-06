@@ -89,3 +89,9 @@ Additional project READMEs were reviewed for this edition: Wayfarer `7342e9f0670
 Static integrity and JavaScript syntax checks; browser checks recorded separately in `VERIFICATION.md`. No claim of measured production Core Web Vitals, comprehensive WCAG conformance or physical-device testing.
 
 The production root supplies the canonical URL, indexable metadata, structured data and hosting security headers. Recheck project maturity and external destinations whenever the content changes.
+
+## Interactive project preview — November 6
+
+`components/ui/project-explorers.tsx` progressively enables the existing Aetheris architecture and Wayfarer artwork. Architecture nodes expose their responsibilities and an interruptible GSAP walkthrough illustrates a request path; it makes no backend call or live-performance claim. Wayfarer uses keyboard-accessible journey tabs with short WAAPI transitions. Static HTML and case-study copy remain available without React; motion preferences remove animation while retaining the controls. `project-explorers.css` keeps the existing project palettes.
+
+Fresh home visits and reloads (including `#home` and `#main`) show the original Old Masters introduction even if the browser restores a scroll offset. Section deep links, history restoration and motion/accessibility preferences bypass it. Loading progress uses elapsed time independently of decorative pointer smoothing; the existing eight-second emergency release and native Escape behavior remain intact. No on-screen Skip control is added.

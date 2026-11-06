@@ -12,6 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
 import {PortfolioTextRoll} from "@/components/ui/text-roll"
 import {CinematicContact} from "@/components/ui/cinematic-contact"
+import {ProjectExplorers} from "@/components/ui/project-explorers"
 import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
 const TOOLS = [
@@ -210,7 +211,7 @@ function useCinematicScenes(enabled:boolean) {
     let ticking=false,smoothTime=0,previousTick=0,lastInput=0
     const tick=(time:number)=>{
       // An idle pause must not become a huge first-frame delta on the next scroll.
-      smoothTime+=previousTick?Math.min(Math.max(0,time-previousTick),1/30):1/60
+      smoothTime+=previousTick?Math.max(0,time-previousTick):1/60
       previousTick=time
       lenis?.raf(smoothTime*1000)
       if(!lenis?.isScrolling&&performance.now()-lastInput>150){gsap.ticker.remove(tick);ticking=false;scope.dataset.scrollActive="false"}
@@ -310,7 +311,7 @@ export function CinematicExperience(){
     })
     return ()=>cleanup.forEach(fn=>fn())
   },[enabled])
-  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/></>
+  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */
