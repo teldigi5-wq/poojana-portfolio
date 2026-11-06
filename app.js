@@ -97,22 +97,6 @@
         ['The boundary', 'The repository states that production Groq and SerpApi credentials are not configured. The planning assistants are rule-based, not live LLM inference. Live fares, booking inventory, confirmed rooms and checkout are not available.']
       ], links: [['Explore Wayfarer', 'https://wayfarer-world-travel.vercel.app/'], ['Review the source', 'https://github.com/teldigi5-wq/wayfarer-world-travel']]
     },
-    sentinel: {
-      title: 'Sentinel', lead: 'Security events connected to deterministic detections and reviewable evidence.', status: 'Pre-production local security lab',
-      sections: [
-        ['The problem', 'A useful security signal should lead back to an explainable rule and the evidence that triggered it. Sentinel explores that path in a constrained local environment.'],
-        ['The implementation', 'The repository describes HMAC-authenticated event ingestion, nonce and timestamp checks, bounded payloads, deterministic detection rules, evidence links and an HMAC-linked local audit. FastAPI and SQLite support the local core.'],
-        ['The boundary', 'The dashboard source is provided, but its README does not claim a locally verified frontend build. Live endpoint adapters, automatic blocking and AI-powered investigation are roadmap items. Sentinel is not a complete SOC, EDR, antivirus or commercial security replacement.']
-      ], links: [['Source & implementation status', 'https://github.com/teldigi5-wq/sentinel-security-platform'], ['Threat model', 'https://github.com/teldigi5-wq/sentinel-security-platform/blob/main/docs/THREAT_MODEL.md']]
-    },
-    floodguard: {
-      title: 'FloodGuard', lead: 'A student IoT project connecting water-level sensing with understandable notifications.', status: 'Hardware & notification prototype / live delivery unverified',
-      sections: [
-        ['The system', 'The broader student project links an ultrasonic sensor and Arduino Uno through an ESP8266 to Firebase telemetry. The maintained Node.js and WhatsApp component reads telemetry and evaluates status changes.'],
-        ['The engineering', 'The messaging layer includes child-specific Firebase reads, stale-data handling, validated readings, deduplicated transition alerts and protected setup endpoints. Its offline command center demonstrates fictional scenarios without contacting Firebase or WhatsApp.'],
-        ['The boundary', 'Synthetic checks do not establish sensor accuracy, actual message delivery or continuous availability. Hardware, cloud hosting and production Firebase rules require separate validation. This is not an officially certified emergency-warning system. The sculpture on this page is conceptual, not a photograph of the hardware.']
-      ], links: [['Notification source', 'https://github.com/teldigi5-wq/floodguard-whatsapp-bot'], ['Website source', 'https://github.com/teldigi5-wq/floodguard-website']]
-    },
 
     boundary: {
       title: 'BoundaryLab', lead: 'Authorization should be understandable, repeatable and backed by evidence.', status: 'Pre-release engineering prototype',
@@ -130,22 +114,6 @@
         ['Evidence & maturity', 'Architecture decisions and a verification checklist are available in the repository. These provide inspectable implementation context; they are not proof of production activation. Physical-machine validation and hardware-backed runtime integration still require verification.']
       ], links: [['Platform source', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Architecture decisions', 'https://github.com/teldigi5-wq/aetheris-platform/blob/main/docs/architecture-decisions.md'], ['AI runtime', 'https://github.com/teldigi5-wq/aetheris-ai-runtime']]
     },
-    finalforge: {
-      title: 'FinalForge', lead: 'A study platform that connects verified student access, assessment workflows and progress.', status: 'Implemented workflows / production policies need verification',
-      sections: [
-        ['The problem', 'A student study product needs useful revision workflows and clear access controls, with a way to recover progress when an assessment is interrupted.'],
-        ['The implementation', 'The project combines a student-ID allowlist and email verification with mock exams, quizzes, marking guides and progress tracking. Its access model derives student email addresses from IDs and treats verified membership as an explicit requirement.'],
-        ['Evidence & maturity', 'The repository provides the implementation and checks. Selected source checks have passed in the existing project history; production Firebase policies require independent verification. No student numbers, learning outcomes or production security results are asserted here.']
-      ], links: [['Review the source', 'https://github.com/teldigi5-wq/finalforge'], ['Visit FinalForge', 'https://finalforge-weld.vercel.app/']]
-    },
-    averis: {
-      title: 'Averis AI', lead: 'Document comparison built to explain evidence, not automate accusations.', status: 'Beta / runtime verification required',
-      sections: [
-        ['The problem', 'Students need to understand overlapping passages before submission. A similarity score on its own cannot establish plagiarism or prove AI authorship.'],
-        ['The implementation', 'FastAPI ingestion supports TXT, PDF and DOCX. Deterministic comparisons use word shingles, Jaccard similarity and sentence matching, with Supabase-based private scan history. AI features remain optional and advisory.'],
-        ['Evidence & maturity', 'The source includes architecture and upload-security documentation. This is a beta foundation requiring runtime verification. Semantic analysis, citation verification and code similarity should not be read as completed features. The paper artwork on this page is illustrative, not a real student document or scan result.']
-      ], links: [['Review the source', 'https://github.com/teldigi5-wq/averis-ai'], ['Architecture', 'https://github.com/teldigi5-wq/averis-ai/blob/main/docs/ARCHITECTURE.md']]
-    }
   };
   const dialog = $('#project-dialog');
   const dialogContent = $('#dialog-content');

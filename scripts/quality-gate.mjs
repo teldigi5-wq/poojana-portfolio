@@ -4,7 +4,7 @@ import { extname } from "node:path";
 const failures = [];
 const fail = message => failures.push(message);
 const required = [
-  "index.html", "styles.css", "luxe.css", "project-explorers.css", "app.js", "motion.js", "preloader-boot.js",
+  "index.html", "styles.css", "luxe.css", "project-explorers.css", "art-direction.css", "app.js", "motion.js", "preloader-boot.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
@@ -60,7 +60,7 @@ for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1]))
 const budgets = {
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
-  "project-explorers.css": 8 * 1024,
+  "project-explorers.css": 8 * 1024, "art-direction.css": 12 * 1024,
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
   // Includes the supplied React/SVG/Canvas loader; shared React/GSAP. See PRELOADER-RELEASE.md.
   "assets/portfolio-v2.js": 400 * 1024, "preloader-boot.js": 4 * 1024,

@@ -114,10 +114,7 @@ function useCinematicScenes(enabled:boolean) {
     if(!scope)return
     gsap.registerPlugin(ScrollTrigger)
     const remove: (()=>void)[]=[]
-    let galleryTrigger:ScrollTrigger|undefined
     let lenis:Lenis|undefined
-    let galleryIndex=0
-    const wide=matchMedia("(min-width: 1100px) and (min-height: 700px) and (hover: hover) and (pointer: fine)")
     const finePointer=matchMedia("(hover: hover) and (pointer: fine)")
     const ctx=gsap.context(()=>{
       // A single finite entrance. Text and links exist before any animation runs.
@@ -154,57 +151,8 @@ function useCinematicScenes(enabled:boolean) {
         hero.dataset.scene="layered"
         return ()=>{delete hero.dataset.scene}
       })
-      mm.add(wide.media,()=>{
-        const viewport=scope.querySelector<HTMLElement>(".gallery-viewport")
-        const track=scope.querySelector<HTMLElement>(".gallery-track")
-        const gallery=scope.querySelector<HTMLElement>(".project-gallery")
-        const stage=scope.querySelector<HTMLElement>(".gallery-stage")
-        if(!viewport||!track||!gallery||!stage)return
-        const distance=()=>Math.max(0,track.scrollWidth-viewport.clientWidth)
-        if(distance()<20)return
-        gallery.dataset.mode="pinned"
-        viewport.scrollLeft=0
-        const tween=gsap.to(track,{x:()=>-distance(),ease:"none",scrollTrigger:{
-          trigger:stage,start:"top 80px",end:()=>`+=${distance()}`,pin:true,scrub:.45,
-          invalidateOnRefresh:true,anticipatePin:1,
-          onUpdate:self=>{
-            gallery.style.setProperty("--gallery-progress",String(self.progress))
-            galleryIndex=Math.round(self.progress*3)
-          }
-        }})
-        galleryTrigger=tween.scrollTrigger
-        const focus=(event:FocusEvent)=>{
-          const card=(event.target as HTMLElement).closest(".compact-project")
-          if(!card||!galleryTrigger)return
-          const index=[...track.children].indexOf(card)
-          viewport.scrollLeft=0
-          const position=galleryTrigger.start+(galleryTrigger.end-galleryTrigger.start)*index/3
-          if(lenis)lenis.scrollTo(position,{immediate:true});else scrollTo({top:position,behavior:"instant"})
-        }
-        track.addEventListener("focusin",focus)
-        return ()=>{
-          track.removeEventListener("focusin",focus)
-          galleryTrigger=undefined;delete gallery.dataset.mode;gallery.style.removeProperty("--gallery-progress")
-        }
-      })
       remove.push(()=>mm.revert())
     },scope)
-
-    const viewport=scope.querySelector<HTMLElement>(".gallery-viewport")
-    const track=scope.querySelector<HTMLElement>(".gallery-track")
-    scope.querySelectorAll<HTMLButtonElement>("[data-gallery-direction]").forEach(button=>{
-      const click=()=>{
-        if(!viewport||!track)return
-        const step=Number(button.dataset.galleryDirection)
-        if(galleryTrigger){
-          galleryIndex=Math.max(0,Math.min(3,galleryIndex+step))
-          const position=galleryTrigger.start+(galleryTrigger.end-galleryTrigger.start)*galleryIndex/3
-          if(lenis)lenis.scrollTo(position,{duration:.7});else scrollTo({top:position,behavior:"smooth"})
-          wake()
-        }else viewport.scrollBy({left:step*(track.children[0]?.getBoundingClientRect().width??360)+step*24,behavior:"smooth"})
-      }
-      button.addEventListener("click",click);remove.push(()=>button.removeEventListener("click",click))
-    })
 
     // Share GSAP's clock. Prime it at wake so the first Lenis frame can advance;
     // a short idle grace period covers wheel batches before their scroll begins.
@@ -229,7 +177,7 @@ function useCinematicScenes(enabled:boolean) {
       scope.dataset.scrollEngine="native"
       if(!finePointer.matches)return
       lenis=new Lenis({lerp:.1,smoothWheel:true,syncTouch:false,autoRaf:false,
-        prevent:node=>!!node.closest("dialog, .mobile-menu, .gallery-viewport")||document.body.classList.contains("menu-open")})
+        prevent:node=>!!node.closest("dialog, .mobile-menu")||document.body.classList.contains("menu-open")})
       scope.dataset.scrollEngine="lenis"
       lenis.on("scroll",ScrollTrigger.update)
     }
@@ -269,14 +217,7 @@ function useCinematicScenes(enabled:boolean) {
     document.fonts?.ready.then(refresh)
     addEventListener("load",refresh,{once:true})
     return ()=>{
-      const stage=scope.querySelector<HTMLElement>(".gallery-stage")
-      const before=stage?.getBoundingClientRect()
-      const preserve=!!before&&before.top<200&&before.bottom>200&&scope.querySelector('.project-gallery[data-mode="pinned"]')!==null
       remove.forEach(fn=>fn());ctx.revert();stopTicker();lenis?.destroy()
-      if(preserve&&stage&&before){
-        const shift=stage.getBoundingClientRect().top-before.top
-        if(Math.abs(shift)>1)scrollTo({top:scrollY+shift,behavior:"instant"})
-      }
       finePointer.removeEventListener("change",connectLenis);removeEventListener("wheel",wake)
       document.removeEventListener("visibilitychange",visibility);document.removeEventListener("click",anchors)
       removeEventListener("popstate",cancelSmoothScroll);removeEventListener("hashchange",cancelSmoothScroll)
@@ -290,27 +231,6 @@ export function CinematicExperience(){
   const enabled=useMotionAllowed()
   useCinematicScenes(enabled)
   useCodeTypewriter(enabled)
-  React.useEffect(()=>{
-    const viewport=document.querySelector<HTMLElement>(".gallery-viewport")
-    const keys=(event:KeyboardEvent)=>{
-      if(event.target!==viewport||(event.key!=="ArrowRight"&&event.key!=="ArrowLeft"))return
-      event.preventDefault()
-      document.querySelector<HTMLButtonElement>(`[data-gallery-direction="${event.key==="ArrowRight"?1:-1}"]`)?.click()
-    }
-    viewport?.addEventListener("keydown",keys)
-    return ()=>viewport?.removeEventListener("keydown",keys)
-  },[])
-  // Keep native carousel buttons useful when animation is disabled.
-  React.useEffect(()=>{
-    if(enabled)return
-    const viewport=document.querySelector<HTMLElement>(".gallery-viewport")
-    const cleanup:(()=>void)[]=[]
-    document.querySelectorAll<HTMLButtonElement>("[data-gallery-direction]").forEach(button=>{
-      const click=()=>viewport?.scrollBy({left:Number(button.dataset.galleryDirection)*(viewport.clientWidth*.85),behavior:"instant"})
-      button.addEventListener("click",click);cleanup.push(()=>button.removeEventListener("click",click))
-    })
-    return ()=>cleanup.forEach(fn=>fn())
-  },[enabled])
   return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
 }
 

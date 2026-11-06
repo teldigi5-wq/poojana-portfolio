@@ -16,7 +16,7 @@ if(root)createRoot(root).render(<FooterBoundary><WildHuntFooter
   className="portfolio-footer"
   wordmark="KAVEESH"
   preset="ink"
-  palette={{background:"#17120f",ink:"#e2bb93"}}
+  palette={{background:"#17120f",ink:"#d9b18b"}}
   image={{src:"assets/vault.webp",alt:"Copper architectural vault",position:"50% 48%"}}
   imageHeight={.47}
   dissolve={.46}
@@ -28,7 +28,7 @@ if(root)createRoot(root).render(<FooterBoundary><WildHuntFooter
   sideNote="Sri Lanka · Engineering with intent"
   columns={[
     {title:"Explore",links:[{label:"Home",href:"#home"},{label:"Depth",href:"#dimension"},{label:"Work",href:"#work"},{label:"About",href:"#about"},{label:"Contact",href:"#contact"}]},
-    {title:"Selected work",links:[{label:"BoundaryLab",href:"#boundary-card"},{label:"Aetheris",href:"#aetheris-card"},{label:"Wayfarer",href:"#wayfarer-card"},{label:"More projects",href:"#more-projects"}]},
+    {title:"Selected work",links:[{label:"BoundaryLab",href:"#boundary-card"},{label:"Aetheris",href:"#aetheris-card"},{label:"Wayfarer",href:"#wayfarer-card"}]},
     {title:"Elsewhere",links:[{label:"GitHub ↗",href:"https://github.com/teldigi5-wq"},{label:"LinkedIn ↗",href:"https://www.linkedin.com/in/poojana-kaveesh-3048b8387"},{label:"View CV ↗",href:"assets/Poojana_Kaveesh_ATS_2026.pdf"}]},
     {title:"Start a conversation",links:[{label:"teldigi5@gmail.com ↗",href:"mailto:teldigi5@gmail.com"}]},
   ]}
