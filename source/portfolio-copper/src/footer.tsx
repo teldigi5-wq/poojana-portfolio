@@ -24,14 +24,14 @@ if(root)createRoot(root).render(<FooterBoundary><WildHuntFooter
   tracking={0}
   height="clamp(820px, 100svh, 1080px)"
   fontFamily='"Studio Sans", system-ui, sans-serif'
-  tagline="Thoughtful systems · Human experiences"
-  sideNote="Sri Lanka · Engineering with intent"
+  tagline="Identity · Authorization · Persistence"
+  sideNote="Poojana Kaveesh · Sri Lanka"
   columns={[
     {title:"Explore",links:[{label:"Home",href:"#home"},{label:"Depth",href:"#dimension"},{label:"Work",href:"#work"},{label:"About",href:"#about"},{label:"Contact",href:"#contact"}]},
     {title:"Selected work",links:[{label:"BoundaryLab",href:"#boundary-card"},{label:"Aetheris",href:"#aetheris-card"},{label:"Wayfarer",href:"#wayfarer-card"}]},
     {title:"Elsewhere",links:[{label:"GitHub ↗",href:"https://github.com/teldigi5-wq"},{label:"LinkedIn ↗",href:"https://www.linkedin.com/in/poojana-kaveesh-3048b8387"},{label:"View CV ↗",href:"assets/Poojana_Kaveesh_ATS_2026.pdf"}]},
-    {title:"Start a conversation",links:[{label:"teldigi5@gmail.com ↗",href:"mailto:teldigi5@gmail.com"}]},
+    {title:"Currently",links:[{label:"Building BoundaryLab",href:"#boundary-card"},{label:"Open to internships ↗",href:"#contact"}]},
   ]}
-  colophon="An engineer in the making. Thoughtfully built in Sri Lanka. Always evolving."
+  colophon="Backend · Applied AI · Authorization security"
   legal="© 2026 Poojana Kaveesh"
 /></FooterBoundary>)
