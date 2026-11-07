@@ -51,6 +51,7 @@
     }
   });
   menuClose.addEventListener('click', () => closeMenu(true));
+  $('.menu-bottom-close')?.addEventListener('click', () => closeMenu(true));
   $$('a', menu).forEach(a => a.addEventListener('click', () => {
     closeMenu(false);
     if (a.hash) requestAnimationFrame(() => {

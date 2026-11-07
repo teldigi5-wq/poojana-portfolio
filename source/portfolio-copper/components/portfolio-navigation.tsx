@@ -76,7 +76,7 @@ export function PortfolioNavigation(){
     }
   },[])
   return <LiquidNavbar items={PORTFOLIO_ITEMS} active={active} tone="dark" compact={false}
-    motion={motion} sound={false} ariaLabel="Main navigation"
+    motion={motion} sound={false} webgl={false} ariaLabel="Main navigation"
     className="portfolio-liquid-nav select-none"
     onChange={(index,item)=>{
       setActive(index)

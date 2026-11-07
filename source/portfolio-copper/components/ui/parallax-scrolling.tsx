@@ -12,6 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Lenis from "lenis"
 import {PortfolioTextRoll} from "@/components/ui/text-roll"
 import {CinematicContact} from "@/components/ui/cinematic-contact"
+import {CommandPalette} from "@/components/ui/command-palette"
 import {ProjectExplorers} from "@/components/ui/project-explorers"
 import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
@@ -57,10 +58,24 @@ function ToolkitRibbons({motion}:{motion:boolean}) {
       root.dataset.animation=playing?"playing":"paused"
       animations.forEach(animation=>playing?animation.play():animation.pause())
     }
+    // Scroll adds bounded acceleration; hover never stops the ribbons.
+    let reset:ReturnType<typeof setTimeout>|undefined
+    let lastY=scrollY,lastTime=performance.now()
+    const rate={value:1}
+    const setRate=()=>animations.forEach(animation=>animation.updatePlaybackRate(rate.value))
+    const onScroll=()=>{
+      const now=performance.now(),distance=Math.abs(scrollY-lastY),elapsed=Math.max(16,now-lastTime)
+      lastY=scrollY;lastTime=now
+      if(!visible||document.hidden)return
+      if(reset)clearTimeout(reset)
+      gsap.to(rate,{value:1+Math.min(.8,distance/elapsed*.14),duration:.25,overwrite:true,onUpdate:setRate})
+      reset=setTimeout(()=>gsap.to(rate,{value:1,duration:.65,overwrite:true,onUpdate:setRate}),140)
+    }
+    addEventListener("scroll",onScroll,{passive:true})
     const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{rootMargin:"50px"})
     io.observe(root)
     document.addEventListener("visibilitychange",update)
-    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
+    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);removeEventListener("scroll",onScroll);if(reset)clearTimeout(reset);gsap.killTweensOf(rate);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
   },[motion])
   return <section ref={ref} className="toolkit-section" aria-labelledby="toolkit-title">
     <div className="toolkit-copy shell">
@@ -92,7 +107,7 @@ function useCodeTypewriter(enabled:boolean) {
         const characters=line.textContent?.length??28
         timeline.to(line,{clipPath:"inset(0 0% 0 0)",duration:characters*.04,ease:`steps(${characters})`})
       })
-      timeline.to([...lines].reverse(),{clipPath:"inset(0 100% 0 0)",duration:.25,stagger:.12,ease:"steps(12)"},"+=2.8")
+      timeline.to([...lines].reverse(),{clipPath:"inset(0 100% 0 0)",duration:.25,stagger:.12,ease:"steps(12)"},"+=4.5")
     })
     let visible=false
     const update=()=>{
@@ -127,6 +142,8 @@ function useCinematicScenes(enabled:boolean) {
         const onKey=(event:KeyboardEvent)=>{if(event.key==="Tab")finish()}
         addEventListener("keydown",onKey,{once:true});remove.push(()=>removeEventListener("keydown",onKey))
       }
+
+      gsap.fromTo(".intro-word",{color:"#928575"},{color:"#f1e9dc",stagger:.12,ease:"none",scrollTrigger:{trigger:".intro",start:"top 75%",end:"center 52%",scrub:.4}})
 
       scope.querySelectorAll<HTMLElement>(".case-timeline").forEach(list=>{
         gsap.fromTo(list,{"--case-progress":0},{"--case-progress":1,ease:"none",scrollTrigger:{trigger:list,start:"top 78%",end:"bottom 48%",scrub:.35}})
@@ -231,7 +248,7 @@ export function CinematicExperience(){
   const enabled=useMotionAllowed()
   useCinematicScenes(enabled)
   useCodeTypewriter(enabled)
-  return <><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
+  return <><CommandPalette/><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */
