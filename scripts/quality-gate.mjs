@@ -7,6 +7,9 @@ const required = [
   "index.html", "styles.css", "luxe.css", "project-explorers.css", "art-direction.css", "design-tokens.css", "clarity.css", "app.js", "motion.js", "preloader-boot.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
+  "assets/portrait-lanyard.js", "assets/portrait-lanyard.css", "lanyard.css",
+  "source/portfolio-copper/components/ui/team-lanyard-rail.tsx",
+  "source/portfolio-copper/components/portrait-lanyard.tsx",
   "assets/hero-portrait.webp", "assets/hero-portrait-mobile.webp",
   "assets/Poojana_Kaveesh_ATS_2026.pdf", "README.md", "vercel.json",
   "staticwebapp.config.json",
@@ -64,6 +67,8 @@ const budgets = {
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,
   // Includes the supplied React/SVG/Canvas loader; shared React/GSAP. See PRELOADER-RELEASE.md.
   "assets/portfolio-v2.js": 400 * 1024, "preloader-boot.js": 4 * 1024,
+  // Optional CSS 3D badge, sharing React. Existing critical budgets stay unchanged.
+  "assets/portrait-lanyard.js": 36 * 1024, "assets/portrait-lanyard.css": 20 * 1024, "lanyard.css": 12 * 1024,
   // CSS 3D contact materials and responsive/static fallbacks; see CONTACT-RELEASE.md.
   "assets/portfolio-v2.css": 32 * 1024,
   "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024,

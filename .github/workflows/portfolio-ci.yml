@@ -80,3 +80,5 @@ jobs:
           cmp dist/assets/liquid-navbar.css ../../assets/liquid-navbar.css
           cmp dist/assets/portfolio-v2.js ../../assets/portfolio-v2.js
           cmp dist/assets/portfolio-v2.css ../../assets/portfolio-v2.css
+          cmp dist/assets/portrait-lanyard.js ../../assets/portrait-lanyard.js
+          cmp dist/assets/portrait-lanyard.css ../../assets/portrait-lanyard.css

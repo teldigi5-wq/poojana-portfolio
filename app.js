@@ -103,7 +103,7 @@
       title: 'BoundaryLab', lead: 'Authorization should be understandable, repeatable and backed by evidence.', status: 'Pre-release engineering prototype',
       sections: [
         ['The problem', 'SaaS teams need to know whether users and services can access only the data and actions they are authorized to use. Checking that a login works does not establish account ownership or tenant isolation.'],
-        ['The work', 'I’m building BoundaryLab around declared allow/deny expectations, repeatable checks and reviewable evidence. The scope includes anonymous access, account ownership, user-to-user boundaries, tenant isolation and administrator privileges.'],
+        ['The work', 'BoundaryLab is independently maintained and separate from Aetheris Platform. I’m building it around declared allow/deny expectations, repeatable checks and reviewable evidence. The scope includes anonymous access, account ownership, user-to-user boundaries, tenant isolation and administrator privileges.'],
         ['The boundary', 'The public website explains the product direction. This is a pre-release prototype, with no claim of complete vulnerability coverage or production readiness. The interactive example on this page is a local illustration of one ownership rule; it does not run BoundaryLab or test an external system.']
       ], links: [['Explore BoundaryLab', 'https://boundarylab.vercel.app/']]
     },
@@ -112,8 +112,8 @@
       sections: [
         ['The problem', 'Coordinating identity, application services, state and an optional AI runtime requires clear ownership and predictable failure behavior.'],
         ['The implementation', 'Java and Spring foundations connect gateway, identity and user services with PostgreSQL, Redis and RabbitMQ. Observability is represented through OpenTelemetry, Prometheus and Grafana. The Python AI runtime lives in a separate repository behind explicit contracts.'],
-        ['Evidence & maturity', 'Architecture decisions and a verification checklist are available in the repository. These provide inspectable implementation context; they are not proof of production activation. Physical-machine validation and hardware-backed runtime integration still require verification.']
-      ], links: [['Platform source', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Architecture decisions', 'https://github.com/teldigi5-wq/aetheris-platform/blob/main/docs/architecture-decisions.md'], ['AI runtime', 'https://github.com/teldigi5-wq/aetheris-ai-runtime']]
+        ['Evidence & maturity', 'CI run 42329287377 at commit 1624e5a passed its scoped regression and recovery jobs, including eight relay workers racing for 24 rows in disposable PostgreSQL. The run also exercises signed User-to-RabbitMQ-to-Audit delivery. Its production activation status remains NO_GO; physical-machine and hardware-backed runtime validation are separate outstanding work.']
+      ], links: [['Inspect the CI evidence', 'https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377'], ['Platform source', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Architecture decisions', 'https://github.com/teldigi5-wq/aetheris-platform/blob/main/docs/architecture-decisions.md']]
     },
   };
   const dialog = $('#project-dialog');

@@ -6,6 +6,7 @@
 @source "../components";
 /* The supplied loader owns its CSS; its shader/style prose is not utility markup. */
 @source not "../components/ui/old-masters-preloader.tsx";
+@source not "../components/ui/team-lanyard-rail.tsx";
 @source "../src";
 @theme inline {
   --color-background: var(--background);
@@ -16,6 +17,13 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 }
 .portfolio-nav-island,.nimbus-demo {
   --background:#17130f;--foreground:#f0e8d9;--primary:#d69d67;
