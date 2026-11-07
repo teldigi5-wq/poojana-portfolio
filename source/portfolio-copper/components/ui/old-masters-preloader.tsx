@@ -844,7 +844,8 @@ export default function OldMastersPreloader({
     const start = last
     let done = phaseRef.current !== "load"
     const tick = (now: number) => {
-      const dt = Math.min(64, now - last)
+      const elapsedStep = Math.max(0, now - last)
+      const dt = Math.min(64, elapsedStep)
       last = now
       const root = rootRef.current
       // the load
@@ -853,7 +854,9 @@ export default function OldMastersPreloader({
         const external = progressRef.current
         let target = external === undefined ? omSimulated(elapsed / Math.max(400, durationMs)) : Math.min(1, Math.max(0, external / 100))
         if (rushRef.current) target = 1
-        const k = 1 - Math.exp(-dt / (rushRef.current ? 90 : 170))
+        // Loading follows real elapsed time; a slow frame must not delay entry.
+        // Keep the smaller delta only for the decorative pointer physics.
+        const k = 1 - Math.exp(-elapsedStep / (rushRef.current ? 90 : 170))
         let shown = shownRef.current + (target - shownRef.current) * k
         if (target >= 1 && shown > 0.995) shown = 1
         shownRef.current = Math.max(shownRef.current, shown)

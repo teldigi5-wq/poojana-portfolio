@@ -92,7 +92,7 @@ body{background:var(--bg)}
 .approach .principles{counter-reset:principles}
 .contact{background:#e7ddcc;color:#292015}
 .contact-title em{color:#7f5c3d}
-html.lenis.lenis-smooth{scroll-behavior:auto!important}
+html.lenis.lenis-smooth,html.motion-off{scroll-behavior:auto!important}
 .motion-off .case-timeline{--case-progress:1!important}
 .motion-off .gallery-track{transform:none!important}
 @media(min-width:1700px){.hero-luxe .hero-copy{top:25%}.hero-code{margin-top:28px;width:385px}.hero-code code{font-size:12px}.code-file{font-size:10px}.hero-luxe .hero-explore{margin-top:30px}}

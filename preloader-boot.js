@@ -5,9 +5,11 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const forced = matchMedia('(forced-colors: active)');
   const navigation = performance.getEntriesByType('navigation')[0];
-  const bypass = (location.hash && location.hash !== '#home') ||
+  // A fresh home visit/reload owns the opening, even when the browser restores
+  // a previous scroll offset. Real section links and history remain direct.
+  const bypass = (location.hash && location.hash !== '#home' && location.hash !== '#main') ||
     new URLSearchParams(location.search).get('motion') === 'off' ||
-    reduced.matches || forced.matches || navigation?.type === 'back_forward' || scrollY > 40;
+    reduced.matches || forced.matches || navigation?.type === 'back_forward';
   const state = {active: false, startedAt: performance.now(), complete: () => {}};
   window.__portfolioIntro = state;
   if (bypass) {

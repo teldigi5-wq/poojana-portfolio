@@ -1,0 +1,21 @@
+/* Portrait-led colors. Section surfaces stay ivory / charcoal / evergreen.
+   The cool counterpoint is reserved for focus, not a new section palette. */
+:root {
+  --bg: #100e0d;
+  --surface: #1b1814;
+  --surface-raised: #27221d;
+  --paper: #f1e9dc;
+  --muted: #c0b3a2;
+  --line: #44392f;
+  --amber: #d9b18b;
+  --copper: #b88764;
+  --sage: #b4bca9;
+  --metal: #292823;
+  --ivory: #e5d8c2;
+  --ink: #30271f;
+  --focus: #77b9cd;
+  --focus-on-paper: #285f70;
+  --type-label: .75rem;
+  --type-body: 1rem;
+  --ease-ui: cubic-bezier(.22, 1, .36, 1);
+}

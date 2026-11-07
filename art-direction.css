@@ -1,0 +1,113 @@
+/* Portrait-led palette: warm ivory, copper, charcoal; evergreen for Wayfarer.
+   Materials use geometry, broad light and contact shadows — no noise overlays. */
+:root{
+  --bg:#100e0d;--paper:#f1e9dc;--muted:#c0b3a2;--amber:#d9b18b;
+  --copper:#b88764;--sage:#b4bca9;--line:#44392f;
+  --surface:#1b1814;--metal:#292823;--ivory:#e5d8c2;--ink:#30271f;
+}
+.hero-luxe .hero-description,.intro-bottom p,.about-copy>p{color:var(--muted)}
+.section-kicker,.side-note,.case-step,.case-notes-intro>.eyebrow,.toolkit-foot{font-size:11px;line-height:1.6}
+.work .section-heading>p{max-width:280px;font-size:15px;line-height:1.7;color:var(--muted)}
+.work-index{font-size:12px;gap:20px 40px;border-bottom:1px solid var(--line);padding-block:10px}
+.work-index a{display:inline-flex;align-items:center;min-height:44px}
+.work-index a:hover{color:var(--paper)}
+.project-info>p,.case-timeline p{color:var(--muted)}
+.stage-label{font-size:11px}.stage-footer{font-size:10px;line-height:1.6}
+.stage-tag{font-size:10px;line-height:1.4;opacity:1}
+.project-boundary{--project-hue:#d4ba97}.project-aetheris{--project-hue:#d9b18b}.project-wayfarer{--project-hue:#b4bca9}
+.project-stage{border-color:#9a7c5659}
+.ribbon-0{background:#cfa883;color:#251d16;border-color:#e4c29e}
+.ribbon-1{background:#292a23;color:#ede5d5;border-color:#7a7a64}
+.ribbon-tool i{opacity:1;color:inherit}
+
+/* BoundaryLab: warm paper and a precise, quietly raised instrument panel. */
+.boundary-stage{background:var(--ivory);color:var(--ink)}
+.boundary-headline em,.boundary-symbol{color:#795237}
+.boundary-test{background:linear-gradient(135deg,#f5ecdd,#ece0cc);border-color:#bba68b;transform:rotate(-.5deg);box-shadow:0 1px 1px #fff8 inset,0 2px 3px #4a32151a,0 18px 36px -20px #4a321566}
+.demo-top{font-size:10px;letter-spacing:.04em}
+.boundary-test>.demo-note{font-size:11px;color:#685743}
+.example-label{color:#685743}
+.identity-options button{min-height:44px;color:#4d3929;border-color:#a68e70}
+.identity-options button.is-active{background:#5e422f;color:#fff5e6;border-color:#5e422f}
+.identity-options button:focus-visible{outline-color:#5e422f}
+.access-result{background:#d7dfc8;color:#34432b;border-color:#a5b28f}
+.access-result.is-denied{background:#efcdb9;color:#692d1a;border-color:#bd8870}
+
+/* Aetheris: dark anodised metal, with a warm engraved edge. */
+.aetheris-stage{background:linear-gradient(125deg,#27251f,#171612 72%);color:var(--paper)}
+.aetheris-layout .eyebrow{color:#ccb89c;font-size:11px}
+.aetheris-headline em{color:var(--amber)}
+.architecture .arch-node{background:linear-gradient(135deg,#39372e,#25241e 65%,#2e2b23);border:1px solid #8f7a5c;border-radius:3px;box-shadow:0 1px 0 #dfc6a12b inset,0 -1px 1px #0008 inset,0 2px 3px #0004,0 10px 18px -10px #000b}
+.architecture .arch-node:hover,.architecture .arch-node[aria-pressed=true]{background:linear-gradient(135deg,#504636,#302b22 70%);border-color:#d9b18b;box-shadow:0 1px 0 #f3d9b64d inset,0 -1px 1px #0008 inset,0 2px 3px #0004,0 12px 20px -10px #000b}
+.architecture .arch-node small,.architecture .arch-node span,.architecture-hint,.runtime-boundary{color:#d2c0a6}
+.architecture .arch-node small{font-size:10px}
+.architecture-note{color:#c5b69e!important}
+.architecture-inspector{border-color:#8f7a5c80}
+.inspector-number,.journey-number{color:var(--amber)}
+.wayfarer-stage .wayfarer-shade{background:linear-gradient(90deg,#102018ed, #102018a6 45%,#10201820),linear-gradient(0deg,#0c1714ed,transparent 70%)}
+.wayfarer-stage .journey-chapters button[aria-selected=true]{border-bottom-color:#dec09a;color:#fff2dd}
+.wayfarer-stage .journey-number{color:#e5c39b}
+.wayfarer-stage .stage-tag{background:#14251ee6}
+
+/* Complete solid plates: 8px thick, with all four edges and an underside.
+   Keep the original scroll-driven model and native assemble/rotate controls. */
+.system-plate{--edge:8px;--edge-light:#86765c;--edge-dark:#302b23}
+.plate-surface{transform:translateZ(var(--edge));background:linear-gradient(135deg,#36352e,#24241f 55%,#303029);border-color:#99886b;border-radius:3px;box-shadow:inset 0 1px 0 #f6e1bc59,inset 0 -1px 1px #0008,inset 0 0 0 6px #16161033;color:#e8d7bb}
+.plate-surface:before{inset:8px;background:none;border:1px solid #d4bd931c;border-radius:2px}
+.plate-surface:after{background:linear-gradient(115deg,transparent 25%,#f1dfbc14 46%,#fff5dd26 50%,#f1dfbc0a 56%,transparent 75%)}
+.plate-front,.plate-rear{position:absolute;left:1px;right:1px;height:var(--edge);background:linear-gradient(var(--edge-light),var(--edge-dark));box-shadow:0 1px 0 #ecd6b333 inset,0 -1px 0 #100c08aa inset}
+.plate-front{bottom:0;transform-origin:bottom;transform:rotateX(-90deg)}
+.plate-rear{top:0;transform-origin:top;transform:rotateX(90deg)}
+.plate-side,.plate-left{position:absolute;top:1px;bottom:1px;width:var(--edge);background:linear-gradient(90deg,var(--edge-dark),var(--edge-light));box-shadow:0 0 0 1px #100c082b inset}
+.plate-side{right:0;transform-origin:right;transform:rotateY(90deg)}
+.plate-left{left:0;transform-origin:left;transform:rotateY(-90deg)}
+.plate-base{position:absolute;inset:0;background:#25231c;border:1px solid #756449;border-radius:3px;transform:rotateX(180deg);backface-visibility:hidden}
+.plate-experience{--edge-light:#c8a278;--edge-dark:#6a4f34}
+.plate-experience .plate-surface{background:linear-gradient(125deg,#dfc6a1,#bf9a6e 55%,#cdb086);color:#32251a;border-color:#ead6b7;box-shadow:inset 0 1px 0 #fff0d999,inset 0 -1px 1px #61442466,inset 0 0 0 6px #9f75451a}
+.plate-experience .plate-surface:before{filter:none;border-color:#79563933}
+.plate-experience .plate-front,.plate-experience .plate-rear{background:linear-gradient(var(--edge-light),var(--edge-dark))}
+.plate-experience .plate-side,.plate-experience .plate-left{background:linear-gradient(90deg,var(--edge-dark),var(--edge-light))}
+.plate-experience .plate-base{background:#896a49}
+.plate-label{font-size:10px;padding-inline:7px;color:inherit}
+.plate-caption{font-size:9px;color:inherit}
+.trust-emblem{color:#ccba9a;text-shadow:0 1px 0 #fff2,0 -1px 0 #000b}
+.data-chips>span{background:linear-gradient(135deg,#403d31,#24241e);border-color:#948267;box-shadow:0 1px 0 #d4bd9333 inset,0 2px 2px #0005,0 5px 8px #0003;border-radius:2px}
+.plate-fasteners{position:absolute;inset:12px;pointer-events:none}
+.plate-fasteners i{position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#d8cbb0,#827762 55%,#383229 80%);box-shadow:0 1px 1px #0008,0 -1px 0 #fff2}
+.plate-fasteners i:after{content:'';position:absolute;left:1px;right:1px;top:3px;height:1px;background:#342b20;transform:rotate(-32deg)}
+.plate-fasteners i:nth-child(1){left:0;top:0}.plate-fasteners i:nth-child(2){right:0;top:0}.plate-fasteners i:nth-child(3){left:0;bottom:0}.plate-fasteners i:nth-child(4){right:0;bottom:0}
+.system-shadow{background:radial-gradient(ellipse,#0009,transparent 72%);filter:blur(17px);opacity:.75}
+.layer-legend,.layer-legend i{font-size:10px}.exhibit-controls button,.exhibit-controls #rotate-object{font-size:11px;min-height:44px;color:#d6c3aa}
+.exhibit-controls button[aria-pressed=true]{background:#d5af87;color:#2b2117;border-color:#e1bf98}
+.exhibit-caption{font-size:10px;color:#c5b196;line-height:1.6}
+
+/* A real card's proportions: subtle foil, a 2px edge and restrained tilt. */
+.contact-card-rig{transform:rotateX(8deg) rotateY(-12deg) rotateZ(-4deg)}
+.contact-card-front{transform:translateZ(1px);background:linear-gradient(125deg,#33332b,#1d201c 45%,#25251e);border-color:#bba17b;box-shadow:inset 0 1px 0 #f7dbb24d,0 1px 2px #0006,0 14px 26px -14px #000b}
+.contact-card-back{transform:rotateY(180deg) translateZ(1px);background:linear-gradient(120deg,#9b805b,#bea37c,#8f724f)}
+.contact-card-edge{background:linear-gradient(#d5bc92,#88704e);border:0}
+.contact-edge-top,.contact-edge-bottom{height:2px}.contact-edge-top{top:-1px}.contact-edge-bottom{bottom:-1px}
+.contact-edge-left,.contact-edge-right{width:2px}.contact-edge-left{left:-1px}.contact-edge-right{right:-1px}
+.contact-paper{transform:translate3d(10px,16px,-9px) rotateZ(6deg);border-radius:3px;box-shadow:0 2px 2px #0003,0 12px 30px -14px #0009}
+.contact-card-monogram{background:linear-gradient(145deg,#e2c9a1,#b69c74 65%,#d3b68c);background-clip:text;-webkit-background-clip:text;text-shadow:none}
+.contact-card-name{font-size:calc(var(--card-w)*.052);letter-spacing:.045em}
+.contact-art-caption,.contact-art-foot{font-size:10px;color:#c7ae8d}
+.contact-art-caption>span:last-child,.contact-art-foot>span:last-child{font-size:10px;color:#bfa98d}
+.contact-cinematic .contact-kicker,.contact-cinematic .availability,.contact-overline{font-size:11px}
+.contact-closing>span{font-size:10px;color:var(--muted)}
+.contact-cta{background:#d5af87;border-color:#e3c29c}.contact-cta:hover{background:#e4c29c}
+@media(max-width:760px){
+  .section-kicker,.side-note,.case-step,.case-notes-intro>.eyebrow,.toolkit-foot{font-size:10px}
+  .work .section-heading>p{font-size:12px;max-width:175px}
+  .work-index{gap:6px 23px;font-size:11px}
+  .stage-footer{font-size:9px;gap:14px;align-items:flex-start}.stage-tag{font-size:9px;text-align:right;max-width:145px}
+  .demo-top{font-size:9px;gap:12px}.boundary-test>.demo-note{font-size:10px}
+  .aetheris-layout .eyebrow{font-size:10px}
+  .layer-legend,.layer-legend i{font-size:9px}
+  .exhibit-controls button,.exhibit-controls #rotate-object{font-size:10px;padding-inline:9px}
+  .exhibit-caption{font-size:9px;padding-inline:8px}
+  .contact-cinematic .contact-kicker,.contact-cinematic .availability{font-size:9px}
+  .contact-art-caption,.contact-art-foot,.contact-art-caption>span:last-child,.contact-art-foot>span:last-child{font-size:9px}
+}
+@media(max-width:380px){.work .section-heading>p{max-width:none}.stage-footer{font-size:8px}.stage-tag{font-size:8px;max-width:120px}.work-index{gap:6px 15px;font-size:10px}.exhibit-controls{gap:4px}.exhibit-controls button,.exhibit-controls #rotate-object{font-size:9px;padding-inline:7px}.exhibit-caption{font-size:8px}}
+@media(forced-colors:active){.plate-surface,.plate-base,.architecture .arch-node,.boundary-test,.contact-card-front{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}.plate-fasteners,.plate-surface:after{display:none}}

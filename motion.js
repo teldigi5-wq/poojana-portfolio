@@ -32,9 +32,74 @@
     });
   });
   $('#rotate-object').addEventListener('click', () => {
+    stopTurn();
     rotation += 45;
     rig.style.setProperty('--manual-rotation', `${rotation}deg`);
   });
+
+  // A layer explanation works with mouse, keyboard, touch and motion disabled.
+  const layerCopy = {
+    experience: ['The interface people use.', 'Clear states, keyboard access and useful feedback connect a person to the system.'],
+    trust: ['The boundary every request crosses.', 'Identity is only a starting point. Ownership and permissions decide which actions are allowed.'],
+    foundation: ['The state the system depends on.', 'Durable data, explicit contracts and observable failures support the experience above.']
+  };
+  $$('.layer-legend [data-layer]').forEach(button => {
+    button.disabled = false;
+    button.addEventListener('click', () => {
+    const layer = button.dataset.layer;
+    rig.dataset.layer = layer;
+    $$('.layer-legend [data-layer]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    $('#layer-explanation strong').textContent = layerCopy[layer][0];
+    $('#layer-explanation p').textContent = layerCopy[layer][1];
+    });
+  });
+
+  // Drag is an optional mouse enhancement. Touch keeps native vertical scrolling;
+  // the Rotate button offers the same operation without dragging or inertia.
+  const sculpture = $('.system-object');
+  let drag = null, turnFrame = 0;
+  function stopTurn() { cancelAnimationFrame(turnFrame); turnFrame = 0; delete sculpture.dataset.turning; }
+  const releaseDrag = () => {
+    if (drag && sculpture.hasPointerCapture(drag.id)) sculpture.releasePointerCapture(drag.id);
+    drag = null; delete sculpture.dataset.dragging;
+  };
+  sculpture.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    stopTurn();
+    drag = {id:event.pointerId, x:event.clientX, time:event.timeStamp, velocity:0};
+    sculpture.setPointerCapture(event.pointerId);
+    sculpture.dataset.dragging = 'true';
+    sculpture.dataset.turning = 'true';
+  });
+  sculpture.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const change = (event.clientX - drag.x) * .3;
+    const elapsed = Math.max(8, event.timeStamp - drag.time);
+    rotation += change;
+    drag.velocity = Math.max(-.3, Math.min(.3, change / elapsed));
+    drag.x = event.clientX; drag.time = event.timeStamp;
+    rig.style.setProperty('--manual-rotation', `${rotation}deg`);
+  });
+  sculpture.addEventListener('pointerup', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    let velocity = event.timeStamp - drag.time < 80 ? drag.velocity : 0;
+    releaseDrag();
+    if (motionOff || document.hidden || Math.abs(velocity) < .01) {stopTurn(); return;}
+    let last = performance.now(), age = 0;
+    const coast = now => {
+      const dt = Math.min(32, now - last); last = now; age += dt;
+      velocity *= Math.exp(-dt / 110);
+      rotation += velocity * dt;
+      rig.style.setProperty('--manual-rotation', `${rotation}deg`);
+      if (!motionOff && !document.hidden && Math.abs(velocity) > .005 && age < 600) turnFrame = requestAnimationFrame(coast);
+      else stopTurn();
+    };
+    turnFrame = requestAnimationFrame(coast);
+  });
+  sculpture.addEventListener('pointercancel', () => {stopTurn(); releaseDrag();});
+  sculpture.addEventListener('lostpointercapture', releaseDrag);
+  document.addEventListener('visibilitychange', () => {if (document.hidden) {stopTurn(); releaseDrag();}});
+  addEventListener('pagehide', () => {stopTurn(); releaseDrag();});
 
   // Small pointer responses suggest the weight of a physical object.
   const tiltTargets = [$('.system-object'), ...$$('.compact-project')];

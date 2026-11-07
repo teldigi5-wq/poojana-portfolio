@@ -18,7 +18,7 @@ This package builds browser assets into `dist/assets/`. The complete static page
 
 ## Welcome and cinematic experience
 
-`components/ui/parallax-scrolling.tsx` adapts the supplied React/GSAP/Lenis example into `CinematicExperience`; the registry alias `ParallaxComponent` remains available. The rendered portfolio uses welcome text, looping typing/erasing, rolling links, crossed toolkit ribbons, inline project timelines and a horizontal gallery. The previous vertical shutter layer is removed. Four hero layers scrub together at 70/55/40/10 percent on desktop and smaller distances on mobile. `parallax-scrolling-demo.tsx` is the integration example. No context provider is required.
+`components/ui/parallax-scrolling.tsx` adapts the supplied React/GSAP/Lenis example into `CinematicExperience`; the registry alias `ParallaxComponent` remains available. The rendered portfolio uses welcome text, looping typing/erasing, rolling links, crossed toolkit ribbons, inline project timelines and interactive architecture/journey explorers. The previous vertical shutter layer is removed. Four hero layers scrub together at 70/55/40/10 percent on desktop and smaller distances on mobile. `parallax-scrolling-demo.tsx` is the integration example. No context provider is required.
 
 Default reusable component path: `components/ui/` (inside this source package). Default Tailwind styles: `styles/globals.css`; cinematic styles: `styles/cinematic.css`. The `@/` alias resolves from the package root. The folder is already configured in `components.json`, so there is no need to run shadcn initialization again; it keeps registry imports and future shadcn additions consistent.
 
@@ -26,7 +26,7 @@ The implementation uses the maintained `lenis` package (`1.3.27`) rather than th
 
 `src/portfolio.tsx` mounts the navigation, cinematic and footer islands in one production bundle. `src/navbar.tsx` is still independently buildable. `src/cinematic.tsx` mounts at `#cinematic-ribbon-root`; `src/footer.tsx` configures `components/ui/wild-hunt-footer.tsx` at `#portfolio-footer-root`. Each island preserves an error fallback. The static root HTML provides hero, project, timeline and fallback footer content before React mounts.
 
-The component follows live OS reduced-motion and forced-color preferences; `?motion=off` provides a static view without an on-page control. Ribbons use WAAPI and keep moving under the pointer; they pause off-screen or when hidden. Hero code playback pauses off-screen and when hidden. Lenis runs only on spacious fine-pointer screens; its ticker is primed when waking, covers the start of wheel batches and stops after scrolling settles. The gallery is native on phones/tablets and in reduced-motion mode. GSAP cleanup is scoped with context/matchMedia.
+The component follows live OS reduced-motion and forced-color preferences; `?motion=off` provides a static view without an on-page control. Ribbons use WAAPI and keep moving under the pointer; they pause off-screen or when hidden. Hero code playback pauses off-screen and when hidden. Lenis smooths wheel input on fine-pointer devices at every viewport size and keeps touch scrolling native. Its ticker is primed when waking, covers the start of wheel batches and stops after scrolling settles. Keyboard section links move focus to their destination; browser history cancels in-flight transitions. The static-view query disables CSS smooth scrolling. GSAP cleanup is scoped with context/matchMedia.
 
 `components/ui/text-roll.tsx` adapts Motion Primitives' paired 3D letter faces to WAAPI. Welcome lines play once when visible and replay on hover; the hero CTA and three project links roll on hover or keyboard focus. Static HTML copy remains available before React mounts, and only one accessible text label is exposed. OS reduced-motion and `?motion=off` keep letters static. The MIT attribution is retained in the component and generated legal notice; no additional animation runtime is installed.
 
@@ -36,7 +36,7 @@ The supplied footer keeps its React/Canvas 2D/SVG implementation: ordered dither
 
 The static native dialog and `preloader-boot.js` provide an independent 8-second release deadline. The loader closes automatically, restores normal document scrolling, and unmounts its loops. Deep links, restored history, hidden tabs and reduced-motion/static views do not wait for it. `styles/preloader.css` handles the dialog and responsive overrides. Hero text/typing and React scroll scenes start after the intro releases, avoiding simultaneous opening animations. The original Google Fonts default is retained for reusable component consumers; production explicitly disables it and uses Georgia plus the existing local Studio face.
 
-`components/ui/cinematic-contact.tsx` enhances the static `#contact` markup with an unpinned GSAP card turn, paper spread, light sweep and masked heading entrance. `styles/cinematic-contact.css` supplies the charcoal studio, copper card faces/edges, shadows and responsive layout. Fine-pointer tilt uses a separate transform wrapper and one demand-driven RAF. Contact triggers refresh after the earlier gallery pin; phones measure the artwork's viewport entry. Every owned event and animation is cleaned up. The existing email, copy fallback and social destinations remain; the card is decorative and hidden from assistive technology. The shared motion preference disables the enhancement. See root `CONTACT-RELEASE.md` for validation and limits.
+`components/ui/cinematic-contact.tsx` enhances the static `#contact` markup with an unpinned GSAP card turn, paper spread, light sweep and masked heading entrance. `styles/cinematic-contact.css` supplies the charcoal studio, copper card faces/edges, shadows and responsive layout. Fine-pointer tilt uses a separate transform wrapper and one demand-driven RAF. Contact triggers refresh after earlier pinned scenes; phones measure the artwork's viewport entry. Every owned event and animation is cleaned up. The existing email, copy fallback and social destinations remain; the card is decorative and hidden from assistive technology. The shared motion preference disables the enhancement. See root `CONTACT-RELEASE.md` for validation and limits.
 
 ## Liquid-glass navigation
 
@@ -62,7 +62,7 @@ For local manual browser checks, run `node scripts/build-navbar-qa.mjs` and open
 - Short GSAP ScrollTrigger portrait and system-layer sequences on desktop; unpinned layouts on mobile and short landscape screens.
 - A CSS 3D system model with scroll-driven, assembled, exploded and rotate controls; subtle pointer tilt on project cards. WebGL is scoped to the navigation capsule, with no continuous idle particle rendering.
 - Reduced-motion support and a static-view query, without visible motion buttons.
-- Seven project stories with native dialogs and external project links: BoundaryLab, Aetheris, Wayfarer, FinalForge, Averis, Sentinel and FloodGuard.
+- Three flagship stories with native dialogs and external project links: BoundaryLab, Aetheris and Wayfarer.
 - A deterministic, browser-local ownership-rule example for BoundaryLab, explicitly labeled illustrative.
 - Existing portrait, CV, email, social links and project descriptions sourced from the user's current portfolio and GitHub profile README.
 - No contact backend, analytics, accounts, paid APIs, or real security scans.
@@ -89,3 +89,22 @@ Additional project READMEs were reviewed for this edition: Wayfarer `7342e9f0670
 Static integrity and JavaScript syntax checks; browser checks recorded separately in `VERIFICATION.md`. No claim of measured production Core Web Vitals, comprehensive WCAG conformance or physical-device testing.
 
 The production root supplies the canonical URL, indexable metadata, structured data and hosting security headers. Recheck project maturity and external destinations whenever the content changes.
+
+## Interactive project preview — November 6
+
+`components/ui/project-explorers.tsx` progressively enables the existing Aetheris architecture and Wayfarer artwork. Architecture nodes expose their responsibilities and an interruptible GSAP walkthrough illustrates a request path; it makes no backend call or live-performance claim. Wayfarer uses keyboard-accessible journey tabs with short WAAPI transitions. Static HTML and case-study copy remain available without React; motion preferences remove animation while retaining the controls. `project-explorers.css` keeps the existing project palettes.
+
+Fresh home visits and reloads (including `#home` and `#main`) show the original Old Masters introduction even if the browser restores a scroll offset. Section deep links, history restoration and motion/accessibility preferences bypass it. Loading progress uses elapsed time independently of decorative pointer smoothing; the existing eight-second emergency release and native Escape behavior remain intact. No on-screen Skip control is added.
+
+## Flagship materials preview — November 6
+
+The selected-work section and footer now feature only BoundaryLab, Aetheris and Wayfarer. The smaller exploration gallery, its dialog data and its scroll/keyboard handlers are removed. Project maturity labels and evidence limitations remain unchanged.
+
+Root `art-direction.css` harmonizes warm ivory, charcoal, copper and Wayfarer evergreen while preserving the established section identities. The CSS 3D system plates have all four edges and an underside, shallow metal profiles and small recessed fasteners. The contact card uses a 2px edge and reduced tilt; raised diagram panels use soft contact shadows. These remain lightweight CSS material studies, not photographed products or physically based WebGL renders. No dependencies, model downloads or background noise layer are added. The original loader, portrait, rich footer, smooth scrolling and accessibility fallbacks are retained.
+
+Validation: TypeScript, cinematic build, static quality gate and all seven loader tests pass. Browser checks cover three project cards, removed gallery links, depth controls, project selection, case dialogs, static/no-JavaScript fallbacks and responsive widths from 305px to 829px without page overflow. Responsive desktop-browser checks are not a claim of physical-device testing or measured Core Web Vitals. This is a preview branch; production is not promoted.
+
+
+## 6 November clarity preview
+
+`components/ui/command-palette.tsx` adds native-dialog quick access, rendered through the existing React runtime. `portfolio-navigation.tsx` selects the flat CSS indicator with `webgl={false}`. The optional WebGL component is retained for reuse. Root `design-tokens.css` and `clarity.css` preserve the section palettes while improving readable text and mobile navigation. `motion.js` owns the mouse-drag/layer controls; native buttons remain the keyboard and touch alternative. See the root `REVIEW-REFINEMENTS.md` for decisions and verification limits. No new packages or providers are required.

@@ -2,11 +2,17 @@
 
 Production portfolio: https://poojana-portfolio.vercel.app/
 
-This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents seven projects with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and the Nimbus UI “Waterline” WebGL navigation adapted to a warm copper palette.
+This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents three flagship projects (BoundaryLab, Aetheris and Wayfarer) with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and a restrained copper navigation pill adapted from Nimbus UI “Waterline”. The portfolio uses its CSS spring indicator with WebGL disabled.
 
-The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and a horizontal project gallery. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
+The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and hands-on project explorers. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
 The contact section is a dark correspondence studio with ivory/copper typography and a physical calling card made from CSS 3D faces. GSAP turns the card, spreads its paper backing and moves a light sweep with scroll; fine pointer movement adds a small independent tilt. It stacks on phones and stays readable in the static view without adding a pin or another rendering library.
+
+## Review refinements — preview only
+
+The 6 November clarity pass keeps the flagship materials, section colors, original loader, portrait and signature footer. It adds a specific backend headline, larger text, a complete four-line typing loop, a native-dialog command menu (Ctrl/Command+K), mobile quick access and bottom close, selectable system-layer explanations, mouse drag rotation, bounded ribbon acceleration, and project scope/status/review rows. No grain, ribbon hover pause, new dependencies, fake metrics or contact backend were added.
+
+See [REVIEW-REFINEMENTS.md](REVIEW-REFINEMENTS.md) for decisions, checks and unmeasured budgets. Palette roles are defined in `design-tokens.css`; `clarity.css` applies the layout and readability refinements.
 
 ## Runtime
 
@@ -15,7 +21,7 @@ Vercel serves the committed root files directly. All production images, fonts, s
 The page remains usable without React, WebGL or animation:
 
 - Native anchor links are present before React mounts.
-- The navbar falls back to a CSS lens if WebGL is unavailable or its context is lost.
+- The portfolio navbar uses the CSS indicator by default; the standalone component retains its optional WebGL implementation and context-loss fallback.
 - OS reduced-motion preferences or `?motion=off` disable nonessential movement. The visible Motion and ribbon-pause buttons were removed at the user's request.
 - Content remains visible if GSAP, ScrollTrigger or JavaScript does not run.
 - The native intro dialog is closed by default without JavaScript. A separate 8-second watchdog releases it if the React bundle or an asset fails. Deep links, history restoration and reduced-motion/static views bypass the introduction.

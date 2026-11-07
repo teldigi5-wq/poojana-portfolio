@@ -34,14 +34,14 @@ export function CinematicContact({enabled}:{enabled:boolean}){
         const wide=media.conditions?.wide
         root.dataset.contactMotion="scroll"
         const scene=gsap.timeline({scrollTrigger:{
-          // This child effect mounts before the parent's gallery pin. Measure last.
+          // Measure after earlier pinned scenes have established their spacing.
           trigger:wide?root:art,refreshPriority:-10,start:"top bottom",end:wide?"top 10%":"center 55%",scrub:true,invalidateOnRefresh:true,
           onUpdate:self=>{root.dataset.contactProgress=self.progress.toFixed(3)},
         }})
         scene.fromTo(".contact-card-rig",{
-          rotationX:wide?54:30,rotationY:wide?-42:-25,rotationZ:wide?9:5,y:wide?70:30,
-        },{rotationX:16,rotationY:-20,rotationZ:-8,y:-12,ease:"none"},0)
-          .fromTo(".contact-paper",{rotationZ:0,x:0,y:0},{rotationZ:11,x:14,y:24,ease:"none"},0)
+          rotationX:wide?32:20,rotationY:wide?-24:-16,rotationZ:wide?5:3,y:wide?40:20,
+        },{rotationX:8,rotationY:-12,rotationZ:-4,y:-8,ease:"none"},0)
+          .fromTo(".contact-paper",{rotationZ:0,x:0,y:0},{rotationZ:6,x:10,y:16,ease:"none"},0)
           .fromTo(".contact-card-sheen",{xPercent:-130},{xPercent:130,ease:"none"},0)
           .fromTo(root,{"--contact-progress":0},{"--contact-progress":1,ease:"none"},0)
           .fromTo(".contact-card-shadow",{scaleX:.72,scaleY:.4,opacity:.3},{scaleX:1,scaleY:.55,opacity:.65,ease:"none"},0)

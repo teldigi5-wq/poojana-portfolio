@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 
 const source=readFileSync(new URL('../preloader-boot.js',import.meta.url),'utf8');
-function boot({hash='',query='',reduced=false,forced=false,navigation='navigate',showFails=false}={}){
+function boot({hash='',query='',reduced=false,forced=false,navigation='navigate',scrollY=0,showFails=false}={}){
   const root={dataset:{},classList:new Set()};
   root.classList.remove=root.classList.delete.bind(root.classList);
   const dialog=new EventTarget();dialog.open=false;dialog.closes=0;
@@ -16,7 +16,7 @@ function boot({hash='',query='',reduced=false,forced=false,navigation='navigate'
   preferences[0].matches=reduced;preferences[1].matches=forced;
   const events=new EventTarget();let completed=0;events.addEventListener('portfolio:intro-complete',()=>completed++);
   const timers=new Map();let id=0;
-  const context={document,location:{hash,search:query},scrollY:0,Event,URLSearchParams,
+  const context={document,location:{hash,search:query},scrollY,Event,URLSearchParams,
     performance:{now:()=>100,getEntriesByType:()=>[{type:navigation}]},
     matchMedia:q=>preferences[q.includes('forced-colors')?1:0],
     setTimeout:(fn,ms)=>{timers.set(++id,{fn,ms});return id},clearTimeout:key=>timers.delete(key),
@@ -35,6 +35,15 @@ test('completion and a late watchdog are idempotent',()=>{
   const b=boot(),late=[...b.timers.values()][0].fn;
   b.context.__portfolioIntro.complete();late();b.context.__portfolioIntro.complete();
   assert.equal(b.completed(),1);assert.equal(b.dialog.closes,1);assert.equal(b.timers.size,0);
+});
+test('fresh home visits and home reloads show the introduction at a restored scroll offset',()=>{
+  for(const hash of ['', '#home', '#main']){
+    for(const navigation of ['navigate', 'reload']){
+      const b=boot({hash,navigation,scrollY:3600});
+      assert.equal(b.dialog.open,true);assert.equal(b.context.__portfolioIntro.active,true);
+      assert.equal(b.root.dataset.introState,'loading');
+    }
+  }
 });
 test('deep links, static view, motion preferences and history restoration bypass the gate',()=>{
   for(const settings of [{hash:'#contact'},{query:'?motion=off'},{reduced:true},{forced:true},{navigation:'back_forward'}]){
