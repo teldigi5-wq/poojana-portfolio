@@ -14,6 +14,7 @@ import {PortfolioTextRoll} from "@/components/ui/text-roll"
 import {CinematicContact} from "@/components/ui/cinematic-contact"
 import {CommandPalette} from "@/components/ui/command-palette"
 import {ProjectExplorers} from "@/components/ui/project-explorers"
+import {PortraitLanyard} from "@/components/portrait-lanyard"
 import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
 
 const TOOLS = [
@@ -248,7 +249,7 @@ export function CinematicExperience(){
   const enabled=useMotionAllowed()
   useCinematicScenes(enabled)
   useCodeTypewriter(enabled)
-  return <><CommandPalette/><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
+  return <><CommandPalette/><PortraitLanyard motion={enabled}/><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */

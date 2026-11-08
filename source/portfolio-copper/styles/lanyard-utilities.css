@@ -1,0 +1,13 @@
+/* Only the supplied lanyard's utility vocabulary. No Preflight or global reset. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../components/ui/team-lanyard-rail.tsx";
+@theme inline {
+  --color-background:var(--background);--color-foreground:var(--foreground);
+  --color-muted:var(--muted);--color-muted-foreground:var(--muted-foreground);
+  --color-card:var(--card);--color-card-foreground:var(--card-foreground);
+  --color-border:var(--border);--color-ring:var(--ring);
+  --color-chart-1:var(--chart-1);--color-chart-2:var(--chart-2);--color-chart-3:var(--chart-3);
+  --color-chart-4:var(--chart-4);--color-chart-5:var(--chart-5);
+}

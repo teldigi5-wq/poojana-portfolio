@@ -6,7 +6,11 @@ This release is a static, portrait-led engineering portfolio with React navigati
 
 The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and hands-on project explorers. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
-The contact section is a dark correspondence studio with ivory/copper typography and a physical calling card made from CSS 3D faces. GSAP turns the card, spreads its paper backing and moves a light sweep with scroll; fine pointer movement adds a small independent tilt. It stacks on phones and stays readable in the static view without adding a pin or another rendering library.
+The About section has an interactive portrait lanyard adapted from the supplied React/CSS 3D component. The supplied suit portrait sits over a warm charcoal background and original copper artwork, with prominent naming, a branded ivory strap and subtle metallic hardware. CV and GitHub links live on its reverse. The original hero portrait stays in place. The contact section is a concise invitation with email, status and links; its former calling card is removed.
+
+## Portrait lanyard — 8 November preview
+
+See [LANYARD-PREVIEW.md](LANYARD-PREVIEW.md) for the component, evidence sources and verification limits. This change is prepared separately from production. It preserves the established palette, loading screen, three flagship projects and signature footer.
 
 ## Review refinements — preview only
 
@@ -39,7 +43,7 @@ pnpm run check
 pnpm run build
 ```
 
-The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar and portfolio assets, including legal notices, into root `assets/` after review. CI rebuilds all four JS/CSS files and compares them byte-for-byte with the deployed copies. `node scripts/quality-gate.mjs` validates the deployed root.
+The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar, portfolio and portrait-lanyard assets, including legal notices, into root `assets/` after review. CI rebuilds all six JS/CSS files and compares them byte-for-byte with the deployed copies. The lanyard loads near the About section and reuses the page's React instance. `node scripts/quality-gate.mjs` validates the deployed root.
 
 See [PRELOADER-RELEASE.md](PRELOADER-RELEASE.md) for the current opening and removed shutters, [CONTACT-RELEASE.md](CONTACT-RELEASE.md) for cinematic contact, [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for character roll and continuous ribbons, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for navigation/footer and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the welcome edition. No additional framework, account system or paid service is required.
 
