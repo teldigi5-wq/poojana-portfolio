@@ -14,8 +14,12 @@ export interface LanyardMember {
   role: string;
   /** Company or team line printed under the role, e.g. "Acme · Design". */
   team?: string;
-  /** Portrait, cropped to the badge's inset photograph. */
+  /** Portrait cutout, composed over the badge's printed artwork. */
   image: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  /** Short name woven into the strap. */
+  strapLabel?: string;
   /** One or two sentences printed on the back. */
   bio?: string;
   /** Short chips on the back such as "Design systems" or "Since 2021". */
@@ -103,17 +107,17 @@ function soft(distance: number, max: number) {
 function geometry(W: number, items: LanyardMember[]) {
   const u = W / MAX_W;
   const H = W * RATIO;
-  const railR = Math.max(3, 4.2 * u);
+  const railR = Math.max(0.7, 0.65 * u);
   const railY = 14 + railR;
   const ring = 9 * u;
   const pivotY = railY + ring * 0.8;
-  const strapW = Math.max(8, 11 * u);
+  const strapW = Math.max(10, 14 * u);
   const crimp = 6 * u;
-  const reel = 21 * u;
-  const cordRest = 12 * u;
+  const reel = 12 * u;
+  const cordRest = 8 * u;
   const clipH = 13 * u;
   const clipW = 30 * u;
-  const base = 56 * u;
+  const base = 45 * u;
   const straps = items.map((item, i) => base + Math.max(0, item.drop ?? DROPS[i % DROPS.length] ?? 0) * u);
   const reelTops = straps.map((len) => pivotY + len + crimp * 0.6);
   const clipTops = reelTops.map((top) => top + reel * 0.82 + cordRest);
@@ -252,7 +256,7 @@ function Hole() {
 function Finish() {
   return (
     <>
-      <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 -left-1/2 block w-[200%] opacity-70 dark:opacity-35" style={{ background: "linear-gradient(100deg, transparent 40%, color-mix(in oklab, white 26%, transparent) 48%, color-mix(in oklab, white 8%, transparent) 52%, transparent 58%)", transform: "translateX(var(--gx, 0%))" }} />
+      <span aria-hidden="true" className="badge-reflection pointer-events-none absolute inset-y-0 -left-1/2 block w-[200%] opacity-70 dark:opacity-35" style={{ background: "linear-gradient(100deg, transparent 40%, color-mix(in oklab, white 26%, transparent) 48%, color-mix(in oklab, white 8%, transparent) 52%, transparent 58%)", transform: "translateX(var(--gx, 0%))" }} />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 block bg-black" style={{ opacity: "var(--shade, 0)" }} />
     </>
   );
@@ -273,28 +277,28 @@ const BadgeFaces = React.memo(function BadgeFaces({ item, tone }: { item: Lanyar
   const links = (item.links ?? []).slice(0, 3);
   return (
     <>
-      <span data-face="front" aria-hidden="true" className="absolute inset-0 flex flex-col items-center overflow-hidden rounded-[0.85em] border border-border bg-card px-[0.8em] pb-[0.7em] text-card-foreground [backface-visibility:hidden]" style={{ transform: "translateZ(1px)" }}>
-        <Band tone={tone} tall />
+      <span data-face="front" aria-hidden="true" className="absolute inset-0 overflow-hidden border border-border bg-card text-card-foreground [backface-visibility:hidden]" style={{ transform: "translateZ(1px)" }}>
+        <svg className="badge-art" viewBox="0 0 300 465" fill="none" aria-hidden="true">
+          <path className="badge-art-copper" d="M-38 456V240c0-79 44-142 112-142s110 49 110 106c0 65-51 112-115 112H-4" strokeWidth="54" />
+          <path className="badge-art-ivory" d="M329 102 172 263l151 200" strokeWidth="43" />
+          <path className="badge-art-rule" d="M-38 456V240c0-79 44-142 112-142s110 49 110 106c0 65-51 112-115 112H-4" strokeWidth="1" />
+        </svg>
+        <span className="badge-front-heading">
+          <span className="badge-name">{item.name}</span>
+          <span className="badge-role">{item.role}</span>
+        </span>
+        <span className="badge-front-monogram" aria-hidden="true">pk·</span>
+        <span className="badge-photo">
+          {failed ? <Silhouette /> : <img src={item.image} alt="" width={item.imageWidth ?? 960} height={item.imageHeight ?? 960} draggable={false} decoding="async" onError={() => setFailed(true)} />}
+        </span>
+        <span className="badge-edition"><span>{item.team}</span><span>01 / PK</span></span>
         <Hole />
-        <span className="badge-photo relative shrink-0 bg-card" style={{ boxShadow: "0 0.15em 0.5em color-mix(in oklab, var(--color-foreground) 22%, transparent)" }}>
-          <span className="relative block size-full overflow-hidden bg-muted">
-            <Silhouette />
-            {!failed && <img src={item.image} alt="" width="960" height="960" draggable={false} decoding="async" onError={() => setFailed(true)} className="pointer-events-none absolute inset-0 block size-full select-none object-cover" />}
-          </span>
-        </span>
-        <span className="badge-name mt-[0.55em] block w-full text-center text-[1.08em] font-semibold leading-tight tracking-tight">{item.name}</span>
-        <span className="mt-[0.15em] block w-full truncate text-center text-[0.8em] leading-snug text-muted-foreground">{item.role}</span>
-        {item.team && <span className="badge-team mt-[0.5em] block w-full text-center text-[0.6em] font-medium uppercase text-muted-foreground">{item.team}</span>}
-        <span className="badge-edition mt-auto flex w-full items-center justify-between border-t border-border pt-[0.5em]">
-          <span className="badge-monogram" aria-hidden="true">pk·</span>
-          <span className="text-right font-mono text-[0.6em] leading-snug tracking-[0.08em] text-muted-foreground">PORTFOLIO<br />2026 / LK</span>
-        </span>
         <Finish />
       </span>
       <span data-face="back" aria-hidden="true" className="absolute inset-0 overflow-hidden rounded-[0.85em] border border-border bg-card text-card-foreground [backface-visibility:hidden]" style={{ transform: "rotateY(180deg) translateZ(1px)" }}>
         <Band tone={tone} />
         <Hole />
-        <span className="absolute inset-x-[0.85em] top-[2.6em] block">
+        <span className="badge-back-heading absolute inset-x-[0.85em] top-[2.6em] block">
           <span className="block truncate text-[0.95em] font-semibold leading-tight">{item.name}</span>
           <span className="block truncate text-[0.72em] leading-snug text-muted-foreground">{item.role}</span>
         </span>
@@ -304,7 +308,7 @@ const BadgeFaces = React.memo(function BadgeFaces({ item, tone }: { item: Lanyar
           </span>
         )}
         {tags.length > 0 && (
-          <span className="absolute inset-x-[0.85em] top-[9.8em] flex flex-wrap gap-[0.28em]">
+          <span className="badge-back-tags absolute inset-x-[0.85em] top-[9.8em] flex flex-wrap gap-[0.28em]">
             {tags.map((tag) => <span key={tag} className="block rounded-full border border-border bg-muted/60 px-[0.6em] py-[0.16em] text-[0.6em] leading-tight text-muted-foreground">{tag}</span>)}
           </span>
         )}
@@ -972,12 +976,12 @@ export function TeamLanyardRail({
               className={`pointer-events-none absolute left-0 top-0 ${tone}`}
               style={{ width: W, height: g.height, zIndex: isFlipped ? 40 : isActive ? 30 : 10 + i, transform: `translate3d(${((sim.current.x[i] ?? 0) - W / 2).toFixed(2)}px,0,0)` }}
             >
-              <span aria-hidden="true" className="absolute block rounded-full" style={{ left: W / 2 - 4.5 * g.u, top: g.railY - g.ring, width: 9 * g.u, height: g.ring * 2, border: `${Math.max(1.6, 2.2 * g.u).toFixed(2)}px solid color-mix(in oklab, var(--color-muted-foreground) 45%, white)`, boxShadow: "inset 1px 0 0 color-mix(in oklab, black 25%, transparent), 1px 1px 2px color-mix(in oklab, black 20%, transparent)" }} />
+              <span aria-hidden="true" data-rail-loop className="absolute block rounded-full" style={{ left: W / 2 - 4.5 * g.u, top: g.railY - g.ring, width: 9 * g.u, height: g.ring * 2, border: `${Math.max(1.6, 2.2 * g.u).toFixed(2)}px solid color-mix(in oklab, var(--color-muted-foreground) 45%, white)`, boxShadow: "inset 1px 0 0 color-mix(in oklab, black 25%, transparent), 1px 1px 2px color-mix(in oklab, black 20%, transparent)" }} />
               <span ref={(node) => { swings.current[i] = node; }} data-swing className="absolute inset-0 block" style={{ transformOrigin: `${W / 2}px ${g.pivotY}px` }}>
                 <span ref={(node) => { straps.current[i] = node; }} data-strap aria-hidden="true" className="absolute inset-0 block" style={{ ["--stretch" as string]: "0px" }}>
                   <span className="absolute block bg-black/15 blur-[2px] dark:bg-black/45" style={{ left: W / 2 - g.strapW / 2 + 3 * g.u, top: g.pivotY + 3, width: g.strapW, height: strap }} />
                   <span
-                    className="absolute block"
+                    className="lanyard-webbing absolute block"
                     style={{
                       left: W / 2 - g.strapW / 2,
                       top: g.pivotY - 2,
@@ -993,6 +997,7 @@ export function TeamLanyardRail({
                     <span className="absolute inset-y-0 left-[1.5px] right-[1.5px] block border-x border-dashed border-white/35" />
                     <span className="absolute inset-x-0 top-0 block bg-black/25" style={{ height: 7 * g.u }} />
                     <span className="absolute inset-x-[2px] block border-t border-dashed border-white/45" style={{ top: 9 * g.u }} />
+                    <span className="lanyard-strap-wordmark">{item.strapLabel ?? item.name}</span>
                   </span>
                   <svg aria-hidden="true" className="absolute overflow-visible" style={{ left: W / 2 - g.strapW * 0.75, top: g.pivotY - 4 * g.u, width: g.strapW * 1.5, height: 8 * g.u }} viewBox="0 0 30 16" preserveAspectRatio="none">
                     <rect x="2" y="3" width="26" height="10" rx="5" fill="none" stroke="color-mix(in oklab, var(--color-muted-foreground) 40%, white)" strokeWidth="3" />

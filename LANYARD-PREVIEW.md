@@ -1,4 +1,4 @@
-# Portrait lanyard preview — 7 November 2026
+# Portrait lanyard preview — 8 November 2026
 
 Base: production commit `04c4e642a84d714581a25705ebbf9ebec62545e8`.
 
@@ -6,7 +6,8 @@ Base: production commit `04c4e642a84d714581a25705ebbf9ebec62545e8`.
 
 - Preserve the original orange-lit hero portrait and its scroll layers. Place the new lanyard beside the About copy, replacing that section's static portrait.
 - Adapt the user-supplied Team Lanyard Rail with React, TypeScript, Tailwind, CSS 3D and spring/pendulum motion. No new package, WebGL engine, provider or paid service is needed.
-- Use a charcoal/evergreen badge, warm ivory text, copper trim, a larger rectangular portrait, woven strap and metallic hardware. This is a CSS material study, not a photographed physical product.
+- Use the supplied 8 November suit portrait, unchanged, over a warm charcoal/evergreen badge with original copper artwork. The cutout fills the lower card; prominent two-line naming, a branded ivory strap, slim rail, fine borders and restrained reflections take direction from the supplied Dothanyard references without copying their brand assets. This is a CSS material study, not a photographed physical product.
+- Keep the photo background in CSS rather than baking a new background into the image. The 258,779-byte transparent PNG is lazy-loaded, has explicit dimensions, and has its own 260 KiB budget. The original uploaded pixels and facial features are preserved.
 - Drag the badge, click or press Enter/Space to flip, and use Escape to return. The reverse links to the existing CV and primary GitHub account. Vertical touch scrolling stays native.
 - Lazy-load the 35 KB component near About, reuse the existing React runtime, stop its animation when settled/off-screen/hidden, and honor reduced motion and `?motion=off`. Keep a static portrait and CV link if enhancement cannot load.
 - Remove the old contact business card. Keep the invitation, email/copy control and internship status. Preserve the pixelated signature footer and original loading screen without a skip control.
@@ -22,9 +23,9 @@ Base: production commit `04c4e642a84d714581a25705ebbf9ebec62545e8`.
 
 - TypeScript check and source production build pass.
 - All seven existing preloader regression tests pass.
-- Static quality gate: 43 IDs, 46 asset/link references and 23 budgets pass. Existing critical budgets are unchanged; new lanyard assets have separate limits.
+- Static quality gate: 43 IDs, 46 asset/link references and 24 budgets pass. Existing critical budgets are unchanged; new lanyard assets have separate limits.
 - JavaScript syntax and Git whitespace checks pass. CI reproduces the new lanyard assets as well as the existing bundles byte for byte.
 - Browser interaction checks cover mouse drag, Enter flip, Tab access to the CV, Escape focus restoration, phone badge flipping, mobile menu-to-contact navigation, and desktop/mobile contact layout.
-- Responsive browser frames include 320 px and 390 px phones, tablet, short landscape, and a no-JavaScript fallback. The tested phone layouts have no horizontal document overflow.
+- Responsive browser frames include 320 px and 390 px phones, tablet, short landscape, and a no-JavaScript fallback. The tested layouts have no horizontal document overflow. Both phone badges load the new 440 × 567 portrait and flip successfully; the static fallback also loads the same portrait against the matching background.
 
 These are desktop-browser layout and interaction checks. Physical Android/iOS testing, Lighthouse, production Core Web Vitals and comprehensive accessibility conformance are not measured here. No production promotion is included in this preview.

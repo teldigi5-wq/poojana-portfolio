@@ -6,7 +6,7 @@ import type {LanyardMember, TeamLanyardRailProps} from "@/components/ui/team-lan
 
 // The optional badge uses the page's React instance. It never bundles a second one.
 Object.defineProperty(window,"__portfolioReact",{value:React,configurable:true})
-const moduleUrl="/assets/portrait-lanyard.js?v=20261107-lanyard-1"
+const moduleUrl="/assets/portrait-lanyard.js?v=20261108-editorial-1"
 const Lanyard=React.lazy(async()=>{
   const module=await import(/* @vite-ignore */ moduleUrl) as typeof import("@/components/ui/team-lanyard-rail")
   return {default:function LoadedLanyard(props:TeamLanyardRailProps){
@@ -27,7 +27,8 @@ class LanyardBoundary extends React.Component<{children:React.ReactNode},{failed
 
 const PORTRAIT: LanyardMember[] = [{
   id:"poojana-kaveesh", name:"Poojana Kaveesh", role:"Backend · AI · Security",
-  team:"SLIIT / Sri Lanka", image:"assets/portrait.webp", tone:1, drop:4,
+  team:"SLIIT / Sri Lanka", image:"assets/poojana-lanyard-portrait.png", imageWidth:440, imageHeight:567,
+  strapLabel:"KAVEESH", tone:1, drop:4,
   bio:"Building BoundaryLab. Open to an engineering internship with real technical ownership.",
   tags:["Sri Lanka", "UTC +05:30"],
   links:[{label:"View my CV",href:"assets/Poojana_Kaveesh_ATS_2026.pdf"},{label:"GitHub",href:"https://github.com/teldigi5-wq"}],
@@ -44,7 +45,7 @@ export function PortraitLanyard({motion}:{motion:boolean}) {
   },[host])
   if(!host)return null
   return nearby?createPortal(<LanyardBoundary><React.Suspense fallback={null}><Lanyard
-    className="portrait-lanyard" items={PORTRAIT} badgeWidth={242} active={0}
+    className="portrait-lanyard" items={PORTRAIT} badgeWidth={268} active={0}
     motion={motion} autoplay={false}
     labels={{flip:"Drag to move · Click or Enter to turn",back:"Your CV & source · Click or Esc to return",show:"Show"}}
     aria-label="Meet Poojana — interactive portrait badge"

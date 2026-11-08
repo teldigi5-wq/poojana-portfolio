@@ -6,9 +6,9 @@ This release is a static, portrait-led engineering portfolio with React navigati
 
 The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and hands-on project explorers. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
-The About section has an interactive portrait lanyard adapted from the supplied React/CSS 3D component. It uses a charcoal badge, copper edging, a woven strap and metallic hardware, with CV and GitHub links on its reverse. The original hero portrait stays in place. The contact section is a concise invitation with email, status and links; its former calling card is removed.
+The About section has an interactive portrait lanyard adapted from the supplied React/CSS 3D component. The supplied suit portrait sits over a warm charcoal background and original copper artwork, with prominent naming, a branded ivory strap and subtle metallic hardware. CV and GitHub links live on its reverse. The original hero portrait stays in place. The contact section is a concise invitation with email, status and links; its former calling card is removed.
 
-## Portrait lanyard — 7 November preview
+## Portrait lanyard — 8 November preview
 
 See [LANYARD-PREVIEW.md](LANYARD-PREVIEW.md) for the component, evidence sources and verification limits. This change is prepared separately from production. It preserves the established palette, loading screen, three flagship projects and signature footer.
 
