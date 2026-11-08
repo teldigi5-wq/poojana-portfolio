@@ -29,7 +29,7 @@ if(root)createRoot(root).render(<FooterBoundary><WildHuntFooter
   columns={[
     {title:"Explore",links:[{label:"Home",href:"#home"},{label:"Depth",href:"#dimension"},{label:"Work",href:"#work"},{label:"About",href:"#about"},{label:"Contact",href:"#contact"}]},
     {title:"Selected work",links:[{label:"BoundaryLab",href:"#boundary-card"},{label:"Aetheris",href:"#aetheris-card"},{label:"Wayfarer",href:"#wayfarer-card"}]},
-    {title:"Elsewhere",links:[{label:"GitHub ↗",href:"https://github.com/teldigi5-wq"},{label:"LinkedIn ↗",href:"https://www.linkedin.com/in/poojana-kaveesh-3048b8387"},{label:"View CV ↗",href:"assets/Poojana_Kaveesh_ATS_2026.pdf"}]},
+    {title:"Elsewhere",links:[{label:"GitHub ↗",href:"https://github.com/teldigi5-wq"},{label:"LinkedIn ↗",href:"https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/"},{label:"View CV ↗",href:"assets/Poojana_Kaveesh_ATS_2026.pdf"}]},
     {title:"Currently",links:[{label:"Building BoundaryLab",href:"#boundary-card"},{label:"Open to internships ↗",href:"#contact"}]},
   ]}
   colophon="Backend · Applied AI · Authorization security"
