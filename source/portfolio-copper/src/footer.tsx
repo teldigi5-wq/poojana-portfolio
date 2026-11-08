@@ -20,7 +20,7 @@ if(root)createRoot(root).render(<FooterBoundary><WildHuntFooter
   image={{src:"assets/vault.webp",alt:"Copper architectural vault",position:"50% 48%"}}
   imageHeight={.47}
   dissolve={.46}
-  grain={.16}
+  grain={0}
   tracking={0}
   height="clamp(820px, 100svh, 1080px)"
   fontFamily='"Studio Sans", system-ui, sans-serif'

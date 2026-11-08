@@ -46,5 +46,5 @@
   forced.addEventListener('change', preference);
   addEventListener('pagehide', finish);
   // Independent of React, image promises and animation frames: never strand the page.
-  timer = setTimeout(() => finish('deadline'), 8000);
+  timer = setTimeout(() => finish('deadline'), 3500);
 })();

@@ -27,7 +27,7 @@ function boot({hash='',query='',reduced=false,forced=false,navigation='navigate'
 
 test('a missing React bundle releases the native modal at the independent deadline',()=>{
   const b=boot();assert.equal(b.dialog.open,true);assert.equal(b.timers.size,1);
-  const timer=[...b.timers.values()][0];assert.equal(timer.ms,8000);timer.fn();
+  const timer=[...b.timers.values()][0];assert.ok(timer.ms <= 3500, 'the opening must release within 3.5 seconds even without React');timer.fn();
   assert.equal(b.dialog.open,false);assert.equal(b.context.__portfolioIntro.active,false);
   assert.equal(b.root.classList.has('intro-active'),false);assert.equal(b.completed(),1);
 });

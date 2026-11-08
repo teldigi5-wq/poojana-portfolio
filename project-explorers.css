@@ -7,7 +7,7 @@
 .architecture-flow{display:inline-flex;align-items:center;gap:11px;min-height:44px;margin-top:12px;font-size:12px;color:#ead6b7}
 .flow-symbol{display:grid;place-items:center;width:30px;height:30px;border:1px solid #9c805b;font-size:18px;transition:background .2s,color .2s}
 .architecture-flow:hover .flow-symbol{background:#d6b18a;color:#211b14}
-.architecture-note{font-size:11px!important;line-height:1.6;color:#bcae97!important;margin-top:9px}
+.architecture-note{font-size:12px;line-height:1.6;color:#bcae97;margin-top:9px}
 .architecture-hint{font:400 10px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;color:#c8b694;margin:0 0 22px;display:flex;justify-content:space-between;gap:10px}
 .architecture .arch-node{font-family:inherit;text-align:left;width:100%;border-radius:0;transition:border-color .25s,box-shadow .25s,background .25s}
 .architecture .gateway{display:block}

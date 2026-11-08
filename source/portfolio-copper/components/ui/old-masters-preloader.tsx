@@ -91,6 +91,13 @@ export interface OldMastersPreloaderProps {
   durationMs?: number
   /** The word is shown filling at least this long, however fast the load. */
   minLoadMs?: number
+  /** Phase timing for shorter introductions. Match these to the integration's CSS. */
+  unveilMs?: number
+  exitMs?: number
+  /** Smoothing time for real loading progress, in milliseconds. */
+  progressEaseMs?: number
+  /** Optional print texture; disabling it also skips texture generation. */
+  grain?: boolean
   /** A click, Enter, Space or the Skip control rushes the load to 100. */
   skippable?: boolean
   /** Open straight on the landing, for repeat visits. */
@@ -639,6 +646,10 @@ export default function OldMastersPreloader({
   progress,
   durationMs = 4800,
   minLoadMs = 2600,
+  unveilMs = UNVEIL_MS,
+  exitMs = EXIT_MS,
+  progressEaseMs = 170,
+  grain: grainEnabled = true,
   skippable = true,
   skipIntro = false,
   figures = DEFAULT_FIGURES,
@@ -786,8 +797,8 @@ export default function OldMastersPreloader({
 
   // Grain is painted once, on mount.
   React.useEffect(() => {
-    setGrain(paintGrain(omHash(wordmark) ^ 0x9e3779b9))
-  }, [wordmark])
+    setGrain(grainEnabled ? paintGrain(omHash(wordmark) ^ 0x9e3779b9) : "")
+  }, [wordmark, grainEnabled])
 
   // Fit the wordmark to the stage width and read the face's metrics.
   React.useEffect(() => {
@@ -856,7 +867,7 @@ export default function OldMastersPreloader({
         if (rushRef.current) target = 1
         // Loading follows real elapsed time; a slow frame must not delay entry.
         // Keep the smaller delta only for the decorative pointer physics.
-        const k = 1 - Math.exp(-elapsedStep / (rushRef.current ? 90 : 170))
+        const k = 1 - Math.exp(-elapsedStep / (rushRef.current ? 90 : Math.max(1, progressEaseMs)))
         let shown = shownRef.current + (target - shownRef.current) * k
         if (target >= 1 && shown > 0.995) shown = 1
         shownRef.current = Math.max(shownRef.current, shown)
@@ -901,7 +912,7 @@ export default function OldMastersPreloader({
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [durationMs, minLoadMs])
+  }, [durationMs, minLoadMs, progressEaseMs])
 
   // The light: shafts from above and dust in them, on a canvas.
   React.useEffect(() => {
@@ -986,7 +997,7 @@ export default function OldMastersPreloader({
   // Unveil → landing → (with children) exit → done.
   React.useEffect(() => {
     if (phase === "unveil") {
-      const t = setTimeout(() => setPhase("landing"), UNVEIL_MS)
+      const t = setTimeout(() => setPhase("landing"), unveilMs)
       return () => clearTimeout(t)
     }
     if (phase === "landing") {
@@ -1002,10 +1013,10 @@ export default function OldMastersPreloader({
       const t = setTimeout(() => {
         setPhase("done")
         onCompleteRef.current?.()
-      }, EXIT_MS)
+      }, exitMs)
       return () => clearTimeout(t)
     }
-  }, [phase, hasChildren, holdMs, wordmark, tagline])
+  }, [phase, hasChildren, holdMs, wordmark, tagline, unveilMs, exitMs])
 
   // With children: a wheel or a swipe lifts the stage.
   React.useEffect(() => {

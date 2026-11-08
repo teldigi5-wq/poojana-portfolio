@@ -68,8 +68,8 @@
 .plate-experience .plate-front,.plate-experience .plate-rear{background:linear-gradient(var(--edge-light),var(--edge-dark))}
 .plate-experience .plate-side,.plate-experience .plate-left{background:linear-gradient(90deg,var(--edge-dark),var(--edge-light))}
 .plate-experience .plate-base{background:#896a49}
-.plate-label{font-size:10px;padding-inline:7px;color:inherit}
-.plate-caption{font-size:9px;color:inherit}
+.plate-label{font-size:12px;padding-inline:7px;color:inherit;gap:12px}
+.plate-caption{font-size:12px;color:inherit;gap:12px;line-height:1.4}
 .trust-emblem{color:#ccba9a;text-shadow:0 1px 0 #fff2,0 -1px 0 #000b}
 .data-chips>span{background:linear-gradient(135deg,#403d31,#24241e);border-color:#948267;box-shadow:0 1px 0 #d4bd9333 inset,0 2px 2px #0005,0 5px 8px #0003;border-radius:2px}
 .plate-fasteners{position:absolute;inset:12px;pointer-events:none}

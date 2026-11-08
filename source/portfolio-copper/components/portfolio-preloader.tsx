@@ -45,7 +45,7 @@ export function PortfolioPreloader(){
         done()
       }
       img.addEventListener("load",finish,{once:true});img.addEventListener("error",finish,{once:true})
-      timer=window.setTimeout(finish,2500)
+      timer=window.setTimeout(finish,900)
       cleanup.push(()=>{clearTimeout(timer);img.removeEventListener("load",finish);img.removeEventListener("error",finish)})
       if(img.complete&&img.currentSrc)finish()
     }
@@ -54,7 +54,7 @@ export function PortfolioPreloader(){
     let fontDone=false
     const fonts=()=>{if(!fontDone){fontDone=true;clearTimeout(fontDeadline);done()}}
     // Resolve once, whether fonts load, fail or exceed the bounded wait.
-    const fontDeadline=window.setTimeout(fonts,2500)
+    const fontDeadline=window.setTimeout(fonts,900)
     document.fonts.ready.then(fonts,fonts)
     cleanup.push(()=>clearTimeout(fontDeadline))
     return ()=>{alive=false;cleanup.forEach(fn=>fn())}
@@ -66,9 +66,10 @@ export function PortfolioPreloader(){
     tagline="Thoughtful systems. Human experiences."
     nav={[]} labels={["BACKEND · AI · SECURITY","SRI LANKA / 2026"]}
     asides={[]} annotations={[]} plate="THE PORTFOLIO"
-    tone="noir" palette={PALETTE} duotone={true}
-    skippable={false} progress={progress} minLoadMs={1000}
-    cta={null} holdMs={220} scrollToEnter={false} tilt={1.5}
+    tone="noir" palette={PALETTE} duotone={true} grain={false}
+    skippable={false} progress={progress} minLoadMs={350} progressEaseMs={65}
+    unveilMs={850} exitMs={420}
+    cta={null} holdMs={120} scrollToEnter={false} tilt={1.5}
     className="portfolio-intro" height="100dvh" loadingLabel="Preparing"
     onComplete={()=>window.__portfolioIntro?.complete()}
   ><span/></OldMastersPreloader>

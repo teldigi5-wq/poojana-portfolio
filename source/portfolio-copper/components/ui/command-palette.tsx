@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { createPortal } from "react-dom"
+import { searchCommands } from "@/lib/command-search"
 
 const commands = [
   {label:"Home", detail:"The person behind the systems", href:"#home", group:"Section"},
@@ -25,8 +26,7 @@ export function CommandPalette() {
   const opener = React.useRef<HTMLElement | null>(null)
   const [query, setQuery] = React.useState("")
   const [status, setStatus] = React.useState("")
-  const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)
-  const matches = commands.filter(item => terms.every(term => `${item.label} ${item.detail} ${item.group}`.toLocaleLowerCase().includes(term)))
+  const matches = searchCommands(commands, query)
 
   React.useEffect(() => {
     const open = () => {
