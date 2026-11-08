@@ -28,7 +28,7 @@ The page remains usable without React, WebGL or animation:
 - The portfolio navbar uses the CSS indicator by default; the standalone component retains its optional WebGL implementation and context-loss fallback.
 - OS reduced-motion preferences or `?motion=off` disable nonessential movement. The visible Motion and ribbon-pause buttons were removed at the user's request.
 - Content remains visible if GSAP, ScrollTrigger or JavaScript does not run.
-- The native intro dialog is closed by default without JavaScript. A separate 8-second watchdog releases it if the React bundle or an asset fails. Deep links, history restoration and reduced-motion/static views bypass the introduction.
+- The native intro dialog is closed by default without JavaScript. A separate 3.5-second watchdog releases it if the React bundle or an asset fails. Deep links, history restoration and reduced-motion/static views bypass the introduction.
 
 ## Source
 
