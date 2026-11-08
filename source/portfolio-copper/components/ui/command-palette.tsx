@@ -14,7 +14,7 @@ const commands = [
   {label:"Wayfarer", detail:"Travel planning experience", href:"#wayfarer-card", group:"Project"},
   {label:"View CV", detail:"Open the résumé · PDF", href:"assets/Poojana_Kaveesh_ATS_2026.pdf", group:"Resource"},
   {label:"GitHub", detail:"Source and engineering work", href:"https://github.com/teldigi5-wq", group:"Elsewhere"},
-  {label:"LinkedIn", detail:"Professional profile", href:"https://www.linkedin.com/in/poojana-kaveesh-3048b8387", group:"Elsewhere"},
+  {label:"LinkedIn", detail:"Professional profile", href:"https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/", group:"Elsewhere"},
   {label:"Copy email", detail:"teldigi5@gmail.com", href:"", group:"Action"},
 ] as const
 
