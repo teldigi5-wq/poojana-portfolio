@@ -15,16 +15,7 @@ import {CinematicContact} from "@/components/ui/cinematic-contact"
 import {CommandPalette} from "@/components/ui/command-palette"
 import {ProjectExplorers} from "@/components/ui/project-explorers"
 import {PortraitLanyard} from "@/components/portrait-lanyard"
-import { Braces, Code2, Coffee, Database, Box, GitBranch, Layers3, Terminal, Wind, Zap } from "lucide-react"
-
-const TOOLS = [
-  {name:"React", icon:Code2}, {name:"Next.js", icon:Layers3},
-  {name:"TypeScript", icon:Braces}, {name:"Tailwind CSS", icon:Wind},
-  {name:"GSAP", icon:Zap}, {name:"Java", icon:Coffee},
-  {name:"Spring Boot", icon:GitBranch}, {name:"Python", icon:Terminal},
-  {name:"FastAPI", icon:Zap}, {name:"PostgreSQL", icon:Database},
-  {name:"Firebase", icon:Database}, {name:"Docker", icon:Box},
-]
+import { IntegrationStack } from "@/components/integration-stack"
 
 function useMotionAllowed() {
   const [allowed,setAllowed] = React.useState(false)
@@ -38,59 +29,6 @@ function useMotionAllowed() {
     return ()=>{observer.disconnect();reduce.removeEventListener("change",update);forced.removeEventListener("change",update)}
   },[])
   return allowed
-}
-
-function ToolkitRibbons({motion}:{motion:boolean}) {
-  const ref=React.useRef<HTMLElement>(null)
-  React.useEffect(()=>{
-    const root=ref.current
-    if(!root||!motion)return
-    const animations=[...root.querySelectorAll<HTMLElement>(".ribbon-track")].map((track,i)=>{
-      const animation=track.animate(
-        [{transform:"translateX(0)"},{transform:"translateX(-50%)"}],
-        {duration:i?54000:42000,iterations:Infinity,easing:"linear",direction:i?"reverse":"normal"}
-      )
-      animation.pause()
-      return animation
-    })
-    let visible=false
-    const update=()=>{
-      const playing=visible&&!document.hidden
-      root.dataset.animation=playing?"playing":"paused"
-      animations.forEach(animation=>playing?animation.play():animation.pause())
-    }
-    // Scroll adds bounded acceleration; hover never stops the ribbons.
-    let reset:ReturnType<typeof setTimeout>|undefined
-    let lastY=scrollY,lastTime=performance.now()
-    const rate={value:1}
-    const setRate=()=>animations.forEach(animation=>animation.updatePlaybackRate(rate.value))
-    const onScroll=()=>{
-      const now=performance.now(),distance=Math.abs(scrollY-lastY),elapsed=Math.max(16,now-lastTime)
-      lastY=scrollY;lastTime=now
-      if(!visible||document.hidden)return
-      if(reset)clearTimeout(reset)
-      gsap.to(rate,{value:1+Math.min(.8,distance/elapsed*.14),duration:.25,overwrite:true,onUpdate:setRate})
-      reset=setTimeout(()=>gsap.to(rate,{value:1,duration:.65,overwrite:true,onUpdate:setRate}),140)
-    }
-    addEventListener("scroll",onScroll,{passive:true})
-    const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;update()},{rootMargin:"50px"})
-    io.observe(root)
-    document.addEventListener("visibilitychange",update)
-    return ()=>{io.disconnect();document.removeEventListener("visibilitychange",update);removeEventListener("scroll",onScroll);if(reset)clearTimeout(reset);gsap.killTweensOf(rate);animations.forEach(a=>a.cancel());root.dataset.animation="static"}
-  },[motion])
-  return <section ref={ref} className="toolkit-section" aria-labelledby="toolkit-title">
-    <div className="toolkit-copy shell">
-      <div><p className="eyebrow">THE TOOLKIT / ALWAYS LEARNING</p><h2 id="toolkit-title">Different tools.<br/><em>One considered approach.</em></h2></div>
-      <div className="toolkit-aside"><p>Chosen for the problem.<br/>Used across my websites<br/>and engineering projects.</p></div>
-    </div>
-    <p className="visually-hidden">Selected toolkit: {TOOLS.map(t=>t.name).join(", ")}. These tools are used across different projects, not all on this page.</p>
-    <div className="ribbon-stage" aria-hidden="true">
-      {[0,1].map(row=><div className={`tool-ribbon ribbon-${row}`} key={row}><div className="ribbon-track">
-        {[0,1].map(copy=><div className="ribbon-group" key={copy}>{TOOLS.map(({name,icon:Icon},index)=><span className="ribbon-tool" key={name}><Icon strokeWidth={1.4}/><span>{name}</span><i>{String(index+1).padStart(2,"0")}</i></span>)}</div>)}
-      </div></div>)}
-    </div>
-    <div className="toolkit-foot shell"><span>TOOLS CHANGE. THE ATTENTION TO DETAIL STAYS.</span><span>FORM × FUNCTION × INTENT</span></div>
-  </section>
 }
 
 function useCodeTypewriter(enabled:boolean) {
@@ -152,7 +90,7 @@ function useCinematicScenes(enabled:boolean) {
           gsap.from(row,{y:18,opacity:0,duration:.65,ease:"power2.out",scrollTrigger:{trigger:row,start:"top 91%",once:true}})
         })
       })
-      scope.querySelectorAll<HTMLElement>(".case-notes-intro h4, .toolkit-copy h2").forEach(heading=>{
+      scope.querySelectorAll<HTMLElement>(".case-notes-intro h4").forEach(heading=>{
         gsap.from(heading,{y:22,opacity:0,duration:.8,ease:"power3.out",scrollTrigger:{trigger:heading,start:"top 92%",once:true}})
       })
       // A film-frame reveal replaces the old image parallax.
@@ -249,7 +187,7 @@ export function CinematicExperience(){
   const enabled=useMotionAllowed()
   useCinematicScenes(enabled)
   useCodeTypewriter(enabled)
-  return <><CommandPalette/><PortraitLanyard motion={enabled}/><ToolkitRibbons motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
+  return <><CommandPalette/><PortraitLanyard motion={enabled}/><IntegrationStack motion={enabled}/><PortfolioTextRoll enabled={enabled}/><CinematicContact enabled={enabled}/><ProjectExplorers motion={enabled}/></>
 }
 
 /** Registry compatibility with the filename in the supplied prompt. */

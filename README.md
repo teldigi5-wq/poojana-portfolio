@@ -4,7 +4,7 @@ Production portfolio: https://poojana-portfolio.vercel.app/
 
 This release is a static, portrait-led engineering portfolio with React navigation and cinematic experience islands sharing one runtime. It presents three flagship projects (BoundaryLab, Aetheris and Wayfarer) with explicit maturity labels, a CSS 3D systems sculpture, local GSAP/ScrollTrigger storytelling and a restrained copper navigation pill adapted from Nimbus UI “Waterline”. The portfolio uses its CSS spring indicator with WebGL disabled.
 
-The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, crossed toolkit ribbons, three inline engineering timelines and hands-on project explorers. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
+The opening uses the supplied Old Masters React/SVG/Canvas preloader, with a filling Poojana wordmark, luminance-masked statues and warm light. It has no Skip or Enter button and closes automatically. The previous vertical hero shutters are removed. The hero keeps looping code typing/erasing, rolling text, an infinite two-row technology carousel, three inline engineering timelines and hands-on project explorers. Four hero layers follow the supplied GSAP scroll choreography, with smaller travel on phones. The architectural footer uses canvas dithering, a bitmap wordmark and SVG flourish. Desktop, mobile and footer navigation follow the document order: Home, Depth, Work, About, Contact.
 
 The About section has an interactive portrait lanyard adapted from the supplied React/CSS 3D component. The supplied suit portrait sits over a warm charcoal background and original copper artwork, with prominent naming, a branded ivory strap and subtle metallic hardware. CV and GitHub links live on its reverse. The original hero portrait stays in place. The contact section is a concise invitation with email, status and links; its former calling card is removed.
 
@@ -14,7 +14,7 @@ See [LANYARD-PREVIEW.md](LANYARD-PREVIEW.md) for the component, evidence sources
 
 ## Review refinements — preview only
 
-The 6 November clarity pass keeps the flagship materials, section colors, original loader, portrait and signature footer. It adds a specific backend headline, larger text, a complete four-line typing loop, a native-dialog command menu (Ctrl/Command+K), mobile quick access and bottom close, selectable system-layer explanations, mouse drag rotation, bounded ribbon acceleration, and project scope/status/review rows. No grain, ribbon hover pause, new dependencies, fake metrics or contact backend were added.
+The 6 November clarity pass keeps the flagship materials, section colors, original loader, portrait and signature footer. It adds a specific backend headline, larger text, a complete four-line typing loop, a native-dialog command menu (Ctrl/Command+K), mobile quick access and bottom close, selectable system-layer explanations, mouse drag rotation,  and project scope/status/review rows. No grain, ribbon hover pause, new dependencies, fake metrics or contact backend were added.
 
 See [REVIEW-REFINEMENTS.md](REVIEW-REFINEMENTS.md) for decisions, checks and unmeasured budgets. Palette roles are defined in `design-tokens.css`; `clarity.css` applies the layout and readability refinements.
 
@@ -45,7 +45,7 @@ pnpm run build
 
 The source build writes to `source/portfolio-copper/dist/assets`. Copy the generated navbar, portfolio and portrait-lanyard assets, including legal notices, into root `assets/` after review. CI rebuilds all six JS/CSS files and compares them byte-for-byte with the deployed copies. The lanyard loads near the About section and reuses the page's React instance. `node scripts/quality-gate.mjs` validates the deployed root.
 
-See [PRELOADER-RELEASE.md](PRELOADER-RELEASE.md) for the current opening and removed shutters, [CONTACT-RELEASE.md](CONTACT-RELEASE.md) for cinematic contact, [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for character roll and continuous ribbons, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for navigation/footer and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the welcome edition. No additional framework, account system or paid service is required.
+See [PRELOADER-RELEASE.md](PRELOADER-RELEASE.md) for the current opening and removed shutters, [CONTACT-RELEASE.md](CONTACT-RELEASE.md) for cinematic contact, [TEXT-ROLL-RELEASE.md](TEXT-ROLL-RELEASE.md) for the earlier character-roll/ribbon release, [NAVIGATION-FOOTER-RELEASE.md](NAVIGATION-FOOTER-RELEASE.md) for navigation/footer and [CINEMATIC-RELEASE.md](CINEMATIC-RELEASE.md) for the welcome edition. No additional framework, account system or paid service is required.
 
 ## Security and release controls
 
@@ -63,3 +63,7 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 - The user-supplied Wild Hunt Footer source provides the canvas raster/dither and SVG flourish implementation. The portfolio passes its own wordmark, existing architectural artwork, palette and working links.
 - Character text roll adapts Motion Primitives by ibelick (MIT), using the existing WAAPI runtime for paired, staggered 3D letter faces. Source and license are retained in `components/ui/text-roll.tsx` and the generated bundle notice. Toolkit ribbons continue on hover.
 - Old Masters Preloader and four embedded WebP images come from the supplied component/demo. Its photo credits remain in source; the deployed files are extracted unchanged. The integration loads no external fonts or stock-image services.
+
+## Current preview: evidence and toolkit
+
+The 9 November preview replaces the ribbons with `integration-hero.tsx`: 88 repository-backed technologies, two continuous opposite-direction rows, local icons, category filters and project-aware search. Hover does not pause movement. A static catalog is available without JavaScript. See [TECH-STACK-INVENTORY.md](TECH-STACK-INVENTORY.md) for sources and [EVIDENCE-EXPLORER-RELEASE.md](EVIDENCE-EXPLORER-RELEASE.md) for the local policy explorer and validation.
