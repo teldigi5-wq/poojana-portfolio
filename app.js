@@ -65,29 +65,6 @@
   $$('.header a').forEach(a => a.addEventListener('click', () => closeMenu(false)));
   narrowScreen.addEventListener('change', () => closeMenu(false));
 
-  const identities = {
-    owner: {id: 'alice', authenticated: true},
-    other: {id: 'bob', authenticated: true},
-    guest: {id: null, authenticated: false}
-  };
-  function evaluateAccess(identity, resourceOwner) {
-    if (!identity.authenticated) return {allowed: false, reason: 'Sign-in is required to read this private resource.'};
-    if (identity.id !== resourceOwner) return {allowed: false, reason: 'Signing in does not grant access to another user’s data.'};
-    return {allowed: true, reason: 'The signed-in user owns this resource.'};
-  }
-  $$('[data-identity]').forEach(button => button.addEventListener('click', () => {
-    const identity = identities[button.dataset.identity];
-    const result = evaluateAccess(identity, 'alice');
-    $$('[data-identity]').forEach(option => {
-      const selected = option === button;
-      option.setAttribute('aria-pressed', String(selected));
-      option.classList.toggle('is-active', selected);
-    });
-    $('#demo-actor').textContent = identity.id ? `user: ${identity.id}` : 'anonymous';
-    $('#access-result').textContent = result.allowed ? 'ALLOW ↗' : 'DENY ×';
-    $('#access-result').classList.toggle('is-denied', !result.allowed);
-    $('#access-reason').textContent = result.reason;
-  }));
 
   const projects = {
     wayfarer: {
@@ -104,7 +81,7 @@
       sections: [
         ['The problem', 'SaaS teams need to know whether users and services can access only the data and actions they are authorized to use. Checking that a login works does not establish account ownership or tenant isolation.'],
         ['The work', 'BoundaryLab is independently maintained and separate from Aetheris Platform. I’m building it around declared allow/deny expectations, repeatable checks and reviewable evidence. The scope includes anonymous access, account ownership, user-to-user boundaries, tenant isolation and administrator privileges.'],
-        ['The boundary', 'The public website explains the product direction. This is a pre-release prototype, with no claim of complete vulnerability coverage or production readiness. The interactive example on this page is a local illustration of one ownership rule; it does not run BoundaryLab or test an external system.']
+        ['The boundary', 'The public website explains the product direction. This is a pre-release prototype, with no claim of complete vulnerability coverage or production readiness. The interactive example runs a local policy model with ownership, workspace and team-reading checks. Its trace explains each decision using synthetic identities; it does not run the BoundaryLab emulator or test an external system.']
       ], links: [['Explore BoundaryLab', 'https://boundarylab.vercel.app/']]
     },
     aetheris: {
@@ -112,7 +89,7 @@
       sections: [
         ['The problem', 'Coordinating identity, application services, state and an optional AI runtime requires clear ownership and predictable failure behavior.'],
         ['The implementation', 'Java and Spring foundations connect gateway, identity and user services with PostgreSQL, Redis and RabbitMQ. Observability is represented through OpenTelemetry, Prometheus and Grafana. The Python AI runtime lives in a separate repository behind explicit contracts.'],
-        ['Evidence & maturity', 'CI run 42329287377 at commit 1624e5a passed its scoped regression and recovery jobs, including eight relay workers racing for 24 rows in disposable PostgreSQL. The run also exercises signed User-to-RabbitMQ-to-Audit delivery. Its production activation status remains NO_GO; physical-machine and hardware-backed runtime validation are separate outstanding work.']
+        ['Evidence & maturity', 'CI run 42329287377 at commit 1624e5a passed its scoped regression and recovery jobs, including eight relay workers racing for 24 rows in disposable PostgreSQL. The run also exercises signed User-to-RabbitMQ-to-Audit delivery. In the concurrency test, all 24 events were claimed once and marked delivered. This is scoped test evidence, not an exactly-once delivery guarantee. The platform is not yet production-ready; physical-machine and hardware-backed runtime validation remain outstanding.']
       ], links: [['Inspect the CI evidence', 'https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377'], ['Platform source', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Architecture decisions', 'https://github.com/teldigi5-wq/aetheris-platform/blob/main/docs/architecture-decisions.md']]
     },
   };

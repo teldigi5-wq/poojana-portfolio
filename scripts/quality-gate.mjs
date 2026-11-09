@@ -4,6 +4,7 @@ import { extname } from "node:path";
 const failures = [];
 const fail = message => failures.push(message);
 const required = [
+  "assets/boundary-demo.js", "boundary-demo.css", "source/portfolio-copper/lib/boundary-policy.ts", "source/portfolio-copper/src/boundary-demo.ts",
   "index.html", "styles.css", "luxe.css", "project-explorers.css", "art-direction.css", "design-tokens.css", "clarity.css", "app.js", "motion.js", "preloader-boot.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
@@ -61,6 +62,7 @@ for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1]))
 }
 
 const budgets = {
+  "assets/boundary-demo.js": 8 * 1024, "boundary-demo.css": 6 * 1024,
   "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
   "project-explorers.css": 8 * 1024, "art-direction.css": 12 * 1024, "design-tokens.css": 2 * 1024, "clarity.css": 14 * 1024,

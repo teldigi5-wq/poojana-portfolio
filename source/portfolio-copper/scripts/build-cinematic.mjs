@@ -5,6 +5,9 @@ import {gzipSync} from 'node:zlib';
 import {spawnSync} from 'node:child_process';
 const sourceRoot=fileURLToPath(new URL('..',import.meta.url));
 process.chdir(sourceRoot);
+// Small, dependency-free policy demo, independent of the cinematic React bundle.
+await build({absWorkingDir:sourceRoot,entryPoints:['src/boundary-demo.ts'],outfile:'dist/assets/boundary-demo.js',bundle:true,minify:true,
+  format:'iife',platform:'browser',target:'es2022',legalComments:'external'});
 // The page already ships GSAP 3.13.0 and ScrollTrigger. Share that instance.
 // Package imports still provide full types and work normally in a React app.
 const runtime={name:'shared-gsap',setup(b){

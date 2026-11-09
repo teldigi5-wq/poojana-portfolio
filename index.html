@@ -22,17 +22,19 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="luxe.css?v=20261108-polish-1">
   <link rel="stylesheet" href="assets/liquid-navbar.css?v=20261108-editorial-1">
-  <link rel="stylesheet" href="assets/portfolio-v2.css?v=20261108-polish-1">
+  <link rel="stylesheet" href="assets/portfolio-v2.css?v=20261109-evidence-1">
   <link rel="stylesheet" href="assets/portrait-lanyard.css?v=20261108-polish-1">
   <link rel="stylesheet" href="project-explorers.css?v=20261108-polish-1">
   <link rel="stylesheet" href="art-direction.css?v=20261108-polish-1">
   <link rel="stylesheet" href="design-tokens.css?v=20261106-clarity-1">
   <link rel="stylesheet" href="clarity.css?v=20261106-clarity-1">
-  <link rel="stylesheet" href="lanyard.css?v=20261108-editorial-1">
+  <link rel="stylesheet" href="lanyard.css?v=20261109-evidence-1">
+  <link rel="stylesheet" href="boundary-demo.css?v=20261109-evidence-1">
   <script src="preloader-boot.js?v=20261108-polish-1" defer></script>
   <script src="assets/gsap.min.js" defer></script>
   <script src="assets/ScrollTrigger.min.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="assets/boundary-demo.js?v=20261109-evidence-1" defer></script>
+  <script src="app.js?v=20261109-evidence-1" defer></script>
   <script src="motion.js" defer></script>
   <script src="assets/portfolio-v2.js?v=20261108-polish-1" defer></script>
   <script type="application/ld+json">
@@ -115,14 +117,37 @@
       <article id="boundary-card" class="project project-boundary" aria-labelledby="boundary-title">
         <div class="project-stage boundary-stage">
           <div class="stage-label"><span><b class="boundary-symbol" aria-hidden="true">[↗]</b> BoundaryLab</span><span>01 / TRUST</span></div>
-          <div class="boundary-demo"><p class="eyebrow">GOOD SECURITY KNOWS</p><p class="boundary-headline">Where to draw<br>the <em>line.</em></p>
-            <div class="boundary-test"><div class="demo-top"><span>TRY AN ACCESS BOUNDARY</span><span class="example-label">ILLUSTRATIVE EXAMPLE</span></div><div class="identity-options" role="group" aria-label="Choose an example identity"><button type="button" class="is-active" data-identity="owner" aria-pressed="true">Owner</button><button type="button" data-identity="other" aria-pressed="false">Another user</button><button type="button" data-identity="guest" aria-pressed="false">Guest</button></div><div class="request-path"><span id="demo-actor">user: alice</span><span aria-hidden="true">→</span><span>alice/private</span><span id="access-result" class="access-result" role="status" aria-live="polite">ALLOW ↗</span></div><p id="access-reason">The signed-in user owns this resource.</p><p class="demo-note">Local rule example. No live scan or production security claim.</p></div>
+          <div class="boundary-demo">
+            <div class="boundary-intro"><p class="eyebrow">AUTHORIZATION, EXPLAINED</p><p class="boundary-headline">Where to draw<br>the <em>line.</em></p><p>Change the identity, resource or rule. Follow the checks behind each decision.</p></div>
+            <div class="boundary-test" data-policy-demo>
+              <div class="demo-top"><span>EXPLORE AN ACCESS BOUNDARY</span><span class="example-label">STATIC EXAMPLE</span></div>
+              <div class="identity-options" role="group" aria-label="Choose an example identity">
+                <button type="button" class="is-active" data-identity="owner" aria-pressed="true" disabled>Owner</button>
+                <button type="button" data-identity="teammate" aria-pressed="false" disabled>Teammate</button>
+                <button type="button" data-identity="outsider" aria-pressed="false" disabled>Outsider</button>
+                <button type="button" data-identity="guest" aria-pressed="false" disabled>Guest</button>
+              </div>
+              <div class="policy-fields">
+                <label for="demo-policy">Permission policy<select id="demo-policy" disabled><option value="ownership">Owner only</option><option value="team-read">Owner + team reading</option></select></label>
+                <label for="demo-resource">Resource<select id="demo-resource" disabled><option value="private">Alice’s private file</option><option value="shared">Alice’s shared file</option></select></label>
+                <label for="demo-action">Operation<select id="demo-action" disabled><option value="read">Read</option><option value="write">Write</option></select></label>
+              </div>
+              <div class="request-path"><span id="demo-actor">alice</span><span aria-hidden="true">→</span><span id="demo-path">READ / studio/alice/private</span></div>
+              <div class="decision-summary" role="status" aria-live="polite" aria-atomic="true"><span id="access-result" class="access-result">ALLOW ✓</span><p id="access-reason">Static example: Alice may read her own private file.</p></div>
+              <ol id="decision-trace" class="decision-trace" aria-label="Decision trace">
+                <li data-state="pass"><span class="trace-check">✓ Sign-in</span><span>Alice is signed in in this example.</span></li>
+                <li data-state="pass"><span class="trace-check">✓ Workspace</span><span>Identity and resource both belong to studio.</span></li>
+                <li data-state="pass"><span class="trace-check">✓ Permission</span><span>Alice owns the resource.</span></li>
+              </ol>
+              <p class="demo-note">Synthetic identities. Runs only in your browser, separately from BoundaryLab’s emulator. No external system is tested.</p>
+              <noscript><p>JavaScript is off. The static decision above remains available; interactive controls require JavaScript.</p></noscript>
+            </div>
           </div>
           <div class="stage-footer"><span>AUTHORIZATION / EVIDENCE / REPEATABILITY</span><span class="stage-tag">PRE-RELEASE PROTOTYPE</span></div>
         </div>
         <div class="project-info"><div><span class="project-number">01</span><h3 id="boundary-title">BoundaryLab</h3></div><p>Local-first authorization verification.<br>Independent of Aetheris Platform.</p><button class="round-link case-open" type="button" data-project="boundary" aria-label="Read the BoundaryLab project story">↗</button></div>
                 <dl class="project-facts" aria-label="BoundaryLab project at a glance"><div><dt>My focus</dt><dd>Authorization engineering</dd></div><div><dt>Scope</dt><dd>Ownership · tenant isolation · evidence</dd></div><div><dt>Status</dt><dd>Pre-release prototype</dd></div><div><dt>Review</dt><dd><a href="https://boundarylab.vercel.app/" target="_blank" rel="noopener noreferrer">Public product overview ↗</a></dd></div></dl>
-        <aside class="project-evidence" aria-label="BoundaryLab evidence and limits"><div><small>INTERACTIVE RULE EXAMPLE</small><strong>Three identities.<br>One ownership boundary.</strong></div><p>Compare owner, another user and guest above. This local illustration explains the expected decisions; it does not execute the BoundaryLab emulator. The project’s scope is documented in its public overview.</p><a href="https://boundarylab.vercel.app/" target="_blank" rel="noopener noreferrer">Product scope ↗</a></aside>
+        <aside class="project-evidence" aria-label="BoundaryLab evidence and limits"><div><small>RUN THE LOCAL MODEL</small><strong>Change the request.<br>Inspect the decision.</strong></div><p>A teammate can read a shared file only when the policy permits it. Switch to Write or another workspace and follow the denial. This browser model demonstrates the rules; it does not validate BoundaryLab’s emulator or a live system.</p><a href="https://boundarylab.vercel.app/" target="_blank" rel="noopener noreferrer">Product scope ↗</a></aside>
         <div class="case-notes"><div class="case-notes-intro"><span class="eyebrow">BEHIND THE INTERFACE / 01</span><h4>Trust, made<br><em>inspectable.</em></h4><p>From a permission rule to evidence you can review.</p><a href="https://boundarylab.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-link"><span data-text-roll><span class="text-roll-source">Explore BoundaryLab</span></span> ↗</a></div><ol class="case-timeline"><li><span class="case-step">01 / QUESTION</span><h4>Who can access what?</h4><p>Start with ownership, user-to-user access and explicit authorization boundaries.</p></li><li><span class="case-step">02 / ENGINEERING</span><h4>Make the boundary repeatable.</h4><p>Deterministic security scenarios connect a rule, an identity and an expected decision.</p></li><li><span class="case-step">03 / EVIDENCE</span><h4>Keep the result reviewable.</h4><p>Inspectable test evidence belongs beside the implementation. Product validation continues.</p></li></ol></div>
       </article>
 
@@ -156,7 +181,7 @@
         </div>
         <div class="project-info"><div><span class="project-number">02</span><h3 id="aetheris-title">Aetheris Platform</h3></div><p>Backend services with explicit boundaries<br>and an independently owned AI runtime.</p><button class="round-link case-open" type="button" data-project="aetheris" aria-label="Read the Aetheris project story">↗</button></div>
                 <dl class="project-facts" aria-label="Aetheris project at a glance"><div><dt>My focus</dt><dd>Backend & distributed systems</dd></div><div><dt>Stack</dt><dd>Java · Spring · PostgreSQL · Redis · RabbitMQ</dd></div><div><dt>Status</dt><dd>Research · hardware validation pending</dd></div><div><dt>Review</dt><dd><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Architecture & source ↗</a></dd></div></dl>
-        <aside class="project-evidence" aria-label="Aetheris verified CI evidence"><div><small>VERIFIED CI / 1624E5A</small><strong>8 relay workers.<br>24 outbox rows.</strong></div><p>The linked passing CI run includes a concurrent relay race in disposable PostgreSQL, plus RabbitMQ recovery and signed-event checks. Scoped engineering evidence; production activation remains NO_GO.</p><a href="https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377" target="_blank" rel="noopener noreferrer">Inspect the CI run ↗</a></aside>
+        <aside class="project-evidence" aria-label="Aetheris verified CI evidence"><div><small>VERIFIED CI / 1624E5A</small><strong>8 relay workers.<br>24 queued events.</strong></div><p>Eight workers competed for the same 24 events. In this controlled PostgreSQL test, every event was claimed once and marked delivered; none was claimed twice. This verifies that test scenario, not an exactly-once delivery guarantee. The platform is not yet production-ready.</p><a href="https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377" target="_blank" rel="noopener noreferrer">Inspect the CI run ↗</a></aside>
         <div class="case-notes"><div class="case-notes-intro"><span class="eyebrow">BEHIND THE INTERFACE / 02</span><h4>Complexity.<br><em>With structure.</em></h4><p>Architecture becomes useful when its boundaries are clear.</p><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer" class="text-link"><span data-text-roll><span class="text-roll-source">Inspect the architecture</span></span> ↗</a></div><ol class="case-timeline"><li><span class="case-step">01 / INGRESS</span><h4>One explicit entry point.</h4><p>A Spring gateway fronts identity and application services with defined responsibilities.</p></li><li><span class="case-step">02 / STATE</span><h4>Design for what persists.</h4><p>PostgreSQL, Redis and RabbitMQ separate durable data, caching and asynchronous events.</p></li><li><span class="case-step">03 / BOUNDARY</span><h4>Keep the AI runtime accountable.</h4><p>A separately owned runtime uses explicit contracts. Physical-machine validation remains pending.</p></li></ol></div>
       </article>
 
