@@ -71,3 +71,10 @@ The 9 November preview replaces the ribbons with `integration-hero.tsx`: 88 repo
 ## AI/developer continuation — 9 November 2026
 
 See the [source-aware handoff and next milestones](docs/AI_CONTINUATION_2026-11-09.md) before continuing this project. This is a documentation-only review branch; recheck current PR heads, CI and deployed state. No merge, new certification or production rollout is implied.
+
+## Continuation planning index — 9 November 2026
+- [Recovery checkpoint](docs/AI_CONTINUATION_2026-11-09.md)
+- [Non-repeating roadmap and phases](docs/AI_ROADMAP_2026-11-09.md)
+- [Milestone tracker and evidence ledger](docs/AI_MILESTONES_2026-11-09.md)
+
+Documentation-only draft [#30](https://github.com/teldigi5-wq/poojana-portfolio/pull/30); no release or blanket branch merge. Existing project-specific roadmap remains authoritative.
