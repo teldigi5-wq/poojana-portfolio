@@ -141,7 +141,14 @@
       if (spacious) {
         const system = gsap.timeline({
           defaults: {ease: 'none'},
-          scrollTrigger: {trigger: '.dimension', start: 'top top', end: () => `+=${innerHeight * .8}`, pin: '.dimension-stage', scrub: .75, anticipatePin: 1, invalidateOnRefresh: true}
+          scrollTrigger: {
+            trigger: '.dimension',
+            // Use current document geometry after the optional toolkit mounts.
+            // A restored hash position must not reuse an earlier scroll offset.
+            start: () => $('.dimension').getBoundingClientRect().top + window.scrollY,
+            end: () => `+=${innerHeight * .8}`, pin: '.dimension-stage',
+            refreshPriority: 10, scrub: .75, anticipatePin: 1, invalidateOnRefresh: true
+          }
         });
         system.fromTo(rig, {'--scroll-spread': .05}, {'--scroll-spread': 1, duration: 1}, 0)
           .fromTo('.system-camera', {rotationX: 50, rotationZ: -25}, {rotationX: 58, rotationZ: -34, duration: 1}, 0)

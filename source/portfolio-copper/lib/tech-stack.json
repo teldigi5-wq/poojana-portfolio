@@ -1,0 +1,706 @@
+[
+  {
+    "name": "React",
+    "icon": "react",
+    "group": "Interfaces",
+    "project": "Portfolio \u00b7 Aetheris \u00b7 Averis",
+    "evidence": "portfolio",
+    "id": "react"
+  },
+  {
+    "name": "TypeScript",
+    "icon": "typescript",
+    "group": "Languages",
+    "project": "BoundaryLab \u00b7 Portfolio",
+    "evidence": "portfolio",
+    "id": "typescript"
+  },
+  {
+    "name": "Java",
+    "icon": "",
+    "group": "Languages",
+    "project": "Aetheris Platform",
+    "evidence": "platform",
+    "id": "java"
+  },
+  {
+    "name": "Spring Boot",
+    "icon": "springboot",
+    "group": "Backend",
+    "project": "Aetheris services",
+    "evidence": "platform",
+    "id": "spring-boot"
+  },
+  {
+    "name": "Python",
+    "icon": "python",
+    "group": "Languages",
+    "project": "Averis \u00b7 Sentinel \u00b7 Syntra",
+    "evidence": "averis-api",
+    "id": "python"
+  },
+  {
+    "name": "FastAPI",
+    "icon": "fastapi",
+    "group": "Backend",
+    "project": "Averis \u00b7 Sentinel \u00b7 Syntra",
+    "evidence": "averis-api",
+    "id": "fastapi"
+  },
+  {
+    "name": "Next.js",
+    "icon": "nextdotjs",
+    "group": "Interfaces",
+    "project": "Averis \u00b7 Sentinel \u00b7 FloodGuard",
+    "evidence": "averis-web",
+    "id": "next-js"
+  },
+  {
+    "name": "PostgreSQL",
+    "icon": "postgresql",
+    "group": "Data & AI",
+    "project": "Aetheris \u00b7 Sentinel",
+    "evidence": "platform",
+    "id": "postgresql"
+  },
+  {
+    "name": "Docker",
+    "icon": "docker",
+    "group": "Build & delivery",
+    "project": "Aetheris \u00b7 Averis",
+    "evidence": "compose",
+    "id": "docker"
+  },
+  {
+    "name": "Firebase",
+    "icon": "firebase",
+    "group": "Data & AI",
+    "project": "BoundaryLab \u00b7 FinalForge \u00b7 FloodGuard",
+    "evidence": "finalforge",
+    "id": "firebase"
+  },
+  {
+    "name": "Flutter",
+    "icon": "flutter",
+    "group": "Interfaces",
+    "project": "FloodGuard \u00b7 Socialflow",
+    "evidence": "mobile",
+    "id": "flutter"
+  },
+  {
+    "name": "Dart",
+    "icon": "dart",
+    "group": "Languages",
+    "project": "FloodGuard \u00b7 Socialflow",
+    "evidence": "mobile",
+    "id": "dart"
+  },
+  {
+    "name": "GSAP",
+    "icon": "gsap",
+    "group": "Motion & 3D",
+    "project": "Portfolio \u00b7 Averis \u00b7 999 Lounge",
+    "evidence": "portfolio",
+    "id": "gsap"
+  },
+  {
+    "name": "Three.js",
+    "icon": "threedotjs",
+    "group": "Motion & 3D",
+    "project": "FloodGuard \u00b7 Averis",
+    "evidence": "flood-web",
+    "id": "three-js"
+  },
+  {
+    "name": "Redis",
+    "icon": "redis",
+    "group": "Data & AI",
+    "project": "Aetheris caching",
+    "evidence": "platform",
+    "id": "redis"
+  },
+  {
+    "name": "RabbitMQ",
+    "icon": "rabbitmq",
+    "group": "Data & AI",
+    "project": "Aetheris messaging",
+    "evidence": "platform",
+    "id": "rabbitmq"
+  },
+  {
+    "name": "JavaScript",
+    "icon": "javascript",
+    "group": "Languages",
+    "project": "Wayfarer \u00b7 FinalForge",
+    "evidence": "wayfarer",
+    "id": "javascript"
+  },
+  {
+    "name": "Rust",
+    "icon": "rust",
+    "group": "Languages",
+    "project": "Aetheris desktop",
+    "evidence": "tauri",
+    "id": "rust"
+  },
+  {
+    "name": "Kotlin",
+    "icon": "kotlin",
+    "group": "Languages",
+    "project": "FloodGuard Android host",
+    "evidence": "mobile",
+    "id": "kotlin"
+  },
+  {
+    "name": "HTML",
+    "icon": "html5",
+    "group": "Languages",
+    "project": "Wayfarer \u00b7 Portfolio",
+    "evidence": "wayfarer",
+    "id": "html"
+  },
+  {
+    "name": "CSS",
+    "icon": "css",
+    "group": "Languages",
+    "project": "Portfolio \u00b7 Wayfarer",
+    "evidence": "portfolio",
+    "id": "css"
+  },
+  {
+    "name": "SQL",
+    "icon": "postgresql",
+    "group": "Languages",
+    "project": "Aetheris migrations",
+    "evidence": "platform",
+    "id": "sql"
+  },
+  {
+    "name": "Bash",
+    "icon": "gnubash",
+    "group": "Languages",
+    "project": "Build & verification scripts",
+    "evidence": "platform",
+    "id": "bash"
+  },
+  {
+    "name": "PowerShell",
+    "icon": "",
+    "group": "Languages",
+    "project": "Aetheris tooling",
+    "evidence": "platform",
+    "id": "powershell"
+  },
+  {
+    "name": "Tailwind CSS",
+    "icon": "tailwindcss",
+    "group": "Interfaces",
+    "project": "Portfolio \u00b7 FloodGuard",
+    "evidence": "portfolio",
+    "id": "tailwind-css"
+  },
+  {
+    "name": "shadcn/ui",
+    "icon": "shadcnui",
+    "group": "Interfaces",
+    "project": "Portfolio component structure",
+    "evidence": "portfolio",
+    "id": "shadcn-ui"
+  },
+  {
+    "name": "Radix UI",
+    "icon": "radixui",
+    "group": "Interfaces",
+    "project": "Portfolio components",
+    "evidence": "portfolio",
+    "id": "radix-ui"
+  },
+  {
+    "name": "Lucide",
+    "icon": "lucide",
+    "group": "Interfaces",
+    "project": "Portfolio \u00b7 Aetheris",
+    "evidence": "portfolio",
+    "id": "lucide"
+  },
+  {
+    "name": "Riverpod",
+    "icon": "",
+    "group": "Interfaces",
+    "project": "FloodGuard mobile state",
+    "evidence": "mobile",
+    "id": "riverpod"
+  },
+  {
+    "name": "Electron",
+    "icon": "electron",
+    "group": "Interfaces",
+    "project": "AnyDL \u00b7 TelegramAPEX",
+    "evidence": "anydl",
+    "id": "electron"
+  },
+  {
+    "name": "Tauri",
+    "icon": "tauri",
+    "group": "Interfaces",
+    "project": "Aetheris desktop",
+    "evidence": "tauri",
+    "id": "tauri"
+  },
+  {
+    "name": "ScrollTrigger",
+    "icon": "gsap",
+    "group": "Motion & 3D",
+    "project": "Portfolio scroll scenes",
+    "evidence": "portfolio",
+    "id": "scrolltrigger"
+  },
+  {
+    "name": "Lenis",
+    "icon": "",
+    "group": "Motion & 3D",
+    "project": "Portfolio \u00b7 Averis",
+    "evidence": "portfolio",
+    "id": "lenis"
+  },
+  {
+    "name": "Motion",
+    "icon": "framer",
+    "group": "Motion & 3D",
+    "project": "FloodGuard \u00b7 AnyDL",
+    "evidence": "flood-web",
+    "id": "motion"
+  },
+  {
+    "name": "React Three Fiber",
+    "icon": "react",
+    "group": "Motion & 3D",
+    "project": "FloodGuard web scenes",
+    "evidence": "flood-web",
+    "id": "react-three-fiber"
+  },
+  {
+    "name": "Drei",
+    "icon": "threedotjs",
+    "group": "Motion & 3D",
+    "project": "FloodGuard scene helpers",
+    "evidence": "flood-web",
+    "id": "drei"
+  },
+  {
+    "name": "WebGL",
+    "icon": "webgl",
+    "group": "Motion & 3D",
+    "project": "Portfolio shader rendering",
+    "evidence": "portfolio",
+    "id": "webgl"
+  },
+  {
+    "name": "Node.js",
+    "icon": "nodedotjs",
+    "group": "Backend",
+    "project": "BoundaryLab \u00b7 FinalForge \u00b7 Wayfarer",
+    "evidence": "wayfarer",
+    "id": "node-js"
+  },
+  {
+    "name": "Spring Data JPA",
+    "icon": "spring",
+    "group": "Backend",
+    "project": "Aetheris persistence",
+    "evidence": "platform",
+    "id": "spring-data-jpa"
+  },
+  {
+    "name": "Flask",
+    "icon": "flask",
+    "group": "Backend",
+    "project": "TelegramAPEX backend",
+    "evidence": "telegram",
+    "id": "flask"
+  },
+  {
+    "name": "Express",
+    "icon": "express",
+    "group": "Backend",
+    "project": "WhatsApp service endpoints",
+    "evidence": "bot",
+    "id": "express"
+  },
+  {
+    "name": "Uvicorn",
+    "icon": "",
+    "group": "Backend",
+    "project": "Python API servers",
+    "evidence": "averis-api",
+    "id": "uvicorn"
+  },
+  {
+    "name": "Pydantic",
+    "icon": "pydantic",
+    "group": "Backend",
+    "project": "Typed API validation",
+    "evidence": "averis-api",
+    "id": "pydantic"
+  },
+  {
+    "name": "SQLAlchemy",
+    "icon": "sqlalchemy",
+    "group": "Backend",
+    "project": "Sentinel persistence",
+    "evidence": "sentinel",
+    "id": "sqlalchemy"
+  },
+  {
+    "name": "OpenAPI",
+    "icon": "openapiinitiative",
+    "group": "Backend",
+    "project": "Aetheris API documentation",
+    "evidence": "platform",
+    "id": "openapi"
+  },
+  {
+    "name": "Spring Actuator",
+    "icon": "spring",
+    "group": "Backend",
+    "project": "Aetheris service health",
+    "evidence": "platform",
+    "id": "spring-actuator"
+  },
+  {
+    "name": "Firestore",
+    "icon": "firebase",
+    "group": "Data & AI",
+    "project": "BoundaryLab rule verification",
+    "evidence": "boundary",
+    "id": "firestore"
+  },
+  {
+    "name": "Realtime Database",
+    "icon": "firebase",
+    "group": "Data & AI",
+    "project": "FloodGuard telemetry",
+    "evidence": "bot",
+    "id": "realtime-database"
+  },
+  {
+    "name": "Supabase",
+    "icon": "supabase",
+    "group": "Data & AI",
+    "project": "Averis web client",
+    "evidence": "averis-web",
+    "id": "supabase"
+  },
+  {
+    "name": "H2",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Aetheris test database",
+    "evidence": "platform",
+    "id": "h2"
+  },
+  {
+    "name": "NumPy",
+    "icon": "numpy",
+    "group": "Data & AI",
+    "project": "Syntra quant research",
+    "evidence": "runtime",
+    "id": "numpy"
+  },
+  {
+    "name": "pandas",
+    "icon": "pandas",
+    "group": "Data & AI",
+    "project": "Syntra data processing",
+    "evidence": "runtime",
+    "id": "pandas"
+  },
+  {
+    "name": "Transformers.js",
+    "icon": "huggingface",
+    "group": "Data & AI",
+    "project": "Averis browser inference",
+    "evidence": "averis-web",
+    "id": "transformers-js"
+  },
+  {
+    "name": "PyMuPDF",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Averis document parsing",
+    "evidence": "averis-api",
+    "id": "pymupdf"
+  },
+  {
+    "name": "RapidFuzz",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Averis text matching",
+    "evidence": "averis-api",
+    "id": "rapidfuzz"
+  },
+  {
+    "name": "python-docx",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Averis document handling",
+    "evidence": "averis-api",
+    "id": "python-docx"
+  },
+  {
+    "name": "n8n",
+    "icon": "n8n",
+    "group": "Data & AI",
+    "project": "Wayfarer optional workflow",
+    "evidence": "wayfarer-ai",
+    "id": "n8n"
+  },
+  {
+    "name": "Groq",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Wayfarer optional AI beta",
+    "evidence": "wayfarer-ai",
+    "id": "groq"
+  },
+  {
+    "name": "SerpApi",
+    "icon": "",
+    "group": "Data & AI",
+    "project": "Wayfarer gated search adapter",
+    "evidence": "wayfarer-ai",
+    "id": "serpapi"
+  },
+  {
+    "name": "Baileys",
+    "icon": "",
+    "group": "Integration & IoT",
+    "project": "WhatsApp linked-device integration",
+    "evidence": "bot",
+    "id": "baileys"
+  },
+  {
+    "name": "Telethon",
+    "icon": "",
+    "group": "Integration & IoT",
+    "project": "TelegramAPEX client",
+    "evidence": "telegram",
+    "id": "telethon"
+  },
+  {
+    "name": "Arduino",
+    "icon": "arduino",
+    "group": "Integration & IoT",
+    "project": "FloodGuard student hardware",
+    "evidence": "bot",
+    "id": "arduino"
+  },
+  {
+    "name": "ESP8266",
+    "icon": "espressif",
+    "group": "Integration & IoT",
+    "project": "FloodGuard telemetry transport",
+    "evidence": "bot",
+    "id": "esp8266"
+  },
+  {
+    "name": "Docker Compose",
+    "icon": "docker",
+    "group": "Build & delivery",
+    "project": "Local service orchestration",
+    "evidence": "compose",
+    "id": "docker-compose"
+  },
+  {
+    "name": "NGINX",
+    "icon": "nginx",
+    "group": "Build & delivery",
+    "project": "Aetheris dashboard container",
+    "evidence": "platform",
+    "id": "nginx"
+  },
+  {
+    "name": "Maven",
+    "icon": "apachemaven",
+    "group": "Build & delivery",
+    "project": "Aetheris Java builds",
+    "evidence": "platform",
+    "id": "maven"
+  },
+  {
+    "name": "Vite",
+    "icon": "vite",
+    "group": "Build & delivery",
+    "project": "Aetheris \u00b7 AnyDL frontend",
+    "evidence": "anydl",
+    "id": "vite"
+  },
+  {
+    "name": "esbuild",
+    "icon": "esbuild",
+    "group": "Build & delivery",
+    "project": "Portfolio production bundles",
+    "evidence": "portfolio",
+    "id": "esbuild"
+  },
+  {
+    "name": "Git",
+    "icon": "git",
+    "group": "Build & delivery",
+    "project": "Project source control",
+    "evidence": "portfolio",
+    "id": "git"
+  },
+  {
+    "name": "pnpm",
+    "icon": "pnpm",
+    "group": "Build & delivery",
+    "project": "Portfolio dependency lock",
+    "evidence": "portfolio",
+    "id": "pnpm"
+  },
+  {
+    "name": "npm",
+    "icon": "npm",
+    "group": "Build & delivery",
+    "project": "Node.js project tooling",
+    "evidence": "wayfarer",
+    "id": "npm"
+  },
+  {
+    "name": "GitHub Actions",
+    "icon": "githubactions",
+    "group": "Build & delivery",
+    "project": "Project build & test workflows",
+    "evidence": "portfolio",
+    "id": "github-actions"
+  },
+  {
+    "name": "Vercel",
+    "icon": "vercel",
+    "group": "Build & delivery",
+    "project": "Portfolio \u00b7 Wayfarer hosting",
+    "evidence": "portfolio",
+    "id": "vercel"
+  },
+  {
+    "name": "PM2",
+    "icon": "pm2",
+    "group": "Build & delivery",
+    "project": "FloodGuard service configuration",
+    "evidence": "bot",
+    "id": "pm2"
+  },
+  {
+    "name": "pytest",
+    "icon": "pytest",
+    "group": "Testing & observability",
+    "project": "Averis \u00b7 Sentinel \u00b7 Syntra",
+    "evidence": "averis-api",
+    "id": "pytest"
+  },
+  {
+    "name": "Node test runner",
+    "icon": "nodedotjs",
+    "group": "Testing & observability",
+    "project": "BoundaryLab \u00b7 Portfolio \u00b7 Wayfarer",
+    "evidence": "portfolio",
+    "id": "node-test-runner"
+  },
+  {
+    "name": "Flutter Test",
+    "icon": "flutter",
+    "group": "Testing & observability",
+    "project": "Mobile project tests",
+    "evidence": "mobile",
+    "id": "flutter-test"
+  },
+  {
+    "name": "Firebase Emulators",
+    "icon": "firebase",
+    "group": "Testing & observability",
+    "project": "BoundaryLab local rule tests",
+    "evidence": "boundary",
+    "id": "firebase-emulators"
+  },
+  {
+    "name": "Ajv",
+    "icon": "ajv",
+    "group": "Testing & observability",
+    "project": "BoundaryLab schema validation",
+    "evidence": "boundary",
+    "id": "ajv"
+  },
+  {
+    "name": "Zod",
+    "icon": "zod",
+    "group": "Testing & observability",
+    "project": "FloodGuard input validation",
+    "evidence": "flood-web",
+    "id": "zod"
+  },
+  {
+    "name": "ESLint",
+    "icon": "eslint",
+    "group": "Testing & observability",
+    "project": "Next.js project checks",
+    "evidence": "flood-web",
+    "id": "eslint"
+  },
+  {
+    "name": "Prometheus",
+    "icon": "prometheus",
+    "group": "Testing & observability",
+    "project": "Aetheris metrics configuration",
+    "evidence": "compose",
+    "id": "prometheus"
+  },
+  {
+    "name": "Grafana",
+    "icon": "grafana",
+    "group": "Testing & observability",
+    "project": "Aetheris dashboards",
+    "evidence": "compose",
+    "id": "grafana"
+  },
+  {
+    "name": "Tempo",
+    "icon": "grafana",
+    "group": "Testing & observability",
+    "project": "Aetheris trace configuration",
+    "evidence": "compose",
+    "id": "tempo"
+  },
+  {
+    "name": "Loki",
+    "icon": "grafana",
+    "group": "Testing & observability",
+    "project": "Aetheris log configuration",
+    "evidence": "compose",
+    "id": "loki"
+  },
+  {
+    "name": "Alloy",
+    "icon": "grafana",
+    "group": "Testing & observability",
+    "project": "Aetheris telemetry collection",
+    "evidence": "compose",
+    "id": "alloy"
+  },
+  {
+    "name": "OpenTelemetry",
+    "icon": "opentelemetry",
+    "group": "Testing & observability",
+    "project": "Aetheris traces & metrics",
+    "evidence": "compose",
+    "id": "opentelemetry"
+  },
+  {
+    "name": "Micrometer",
+    "icon": "",
+    "group": "Testing & observability",
+    "project": "Aetheris service instrumentation",
+    "evidence": "platform",
+    "id": "micrometer"
+  }
+]

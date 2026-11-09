@@ -77,6 +77,8 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts
           pnpm run check
           pnpm run build
+          cmp dist/assets/integration-hero.js ../../assets/integration-hero.js
+          cmp dist/assets/integration-hero.css ../../assets/integration-hero.css
           cmp dist/assets/boundary-demo.js ../../assets/boundary-demo.js
           cmp dist/assets/liquid-navbar.js ../../assets/liquid-navbar.js
           cmp dist/assets/liquid-navbar.css ../../assets/liquid-navbar.css

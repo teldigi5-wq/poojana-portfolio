@@ -1,0 +1,87 @@
+{
+  "platform": [
+    "Aetheris Platform",
+    "aetheris-platform",
+    "user-service/pom.xml"
+  ],
+  "tauri": [
+    "Aetheris desktop",
+    "aetheris-platform",
+    "apps/syntra-desktop/src-tauri/Cargo.toml"
+  ],
+  "compose": [
+    "Aetheris infrastructure",
+    "aetheris-platform",
+    "docker-compose.yml"
+  ],
+  "portfolio": [
+    "Portfolio",
+    "poojana-portfolio",
+    "source/portfolio-copper/package.json"
+  ],
+  "averis-web": [
+    "Averis web",
+    "averis-ai",
+    "apps/web/package.json"
+  ],
+  "averis-api": [
+    "Averis API",
+    "averis-ai",
+    "services/api/requirements.txt"
+  ],
+  "sentinel": [
+    "Sentinel",
+    "sentinel-security-platform",
+    "backend/pyproject.toml"
+  ],
+  "runtime": [
+    "Syntra AI Runtime",
+    "aetheris-ai-runtime",
+    "aetheris-quant/requirements.txt"
+  ],
+  "flood-web": [
+    "FloodGuard web",
+    "floodguard-website",
+    "package.json"
+  ],
+  "bot": [
+    "FloodGuard WhatsApp",
+    "floodguard-whatsapp-bot",
+    "README.md"
+  ],
+  "anydl": [
+    "AnyDL",
+    "anydl-pro-ultra",
+    "package.json"
+  ],
+  "telegram": [
+    "TelegramAPEX",
+    "TelegramAPEX-repo",
+    "requirements-electron-build.txt"
+  ],
+  "finalforge": [
+    "FinalForge",
+    "finalforge",
+    "firebase/package.json"
+  ],
+  "wayfarer": [
+    "Wayfarer",
+    "wayfarer-world-travel",
+    "package.json"
+  ],
+  "wayfarer-ai": [
+    "Wayfarer optional beta",
+    "wayfarer-world-travel",
+    "n8n/README.md"
+  ],
+  "mobile": [
+    "Mobile projects",
+    "private",
+    "Manifests and Android host source inspected"
+  ],
+  "boundary": [
+    "BoundaryLab",
+    "private",
+    "Development manifest inspected"
+  ]
+}
