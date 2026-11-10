@@ -143,9 +143,9 @@
           defaults: {ease: 'none'},
           scrollTrigger: {
             trigger: '.dimension',
-            // Use current document geometry after the optional toolkit mounts.
-            // A restored hash position must not reuse an earlier scroll offset.
-            start: () => $('.dimension').getBoundingClientRect().top + window.scrollY,
+            // Let ScrollTrigger measure the trigger and pin in the same scroll
+            // coordinate system, including refreshes away from the page top.
+            start: 'top top',
             end: () => `+=${innerHeight * .8}`, pin: '.dimension-stage',
             refreshPriority: 10, scrub: .75, anticipatePin: 1, invalidateOnRefresh: true
           }
