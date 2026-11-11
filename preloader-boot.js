@@ -7,13 +7,21 @@
   const navigation = performance.getEntriesByType('navigation')[0];
   // A fresh home visit/reload owns the opening, even when the browser restores
   // a previous scroll offset. Real section links and history remain direct.
+  // Returning visitors (intro seen in the last 7 days) go straight to the page.
+  const SEEN_KEY = 'pk-intro-seen';
+  const WEEK = 7 * 24 * 60 * 60 * 1000;
+  const store = (() => { try { return typeof localStorage === 'undefined' ? null : localStorage; } catch { return null; } })();
+  const returning = (() => {
+    try { const seen = Number(store?.getItem(SEEN_KEY)); return seen > 0 && Date.now() - seen < WEEK; } catch { return false; }
+  })();
   const bypass = (location.hash && location.hash !== '#home' && location.hash !== '#main') ||
     new URLSearchParams(location.search).get('motion') === 'off' ||
-    reduced.matches || forced.matches || navigation?.type === 'back_forward';
+    reduced.matches || forced.matches || navigation?.type === 'back_forward' || returning;
   const state = {active: false, startedAt: performance.now(), complete: () => {}};
   window.__portfolioIntro = state;
   if (bypass) {
     document.documentElement.dataset.introState = 'bypassed';
+    if (returning) document.documentElement.dataset.introReason = 'returning';
     return;
   }
   let timer;
@@ -31,6 +39,7 @@
     forced.removeEventListener('change', preference);
     removeEventListener('pagehide', finish);
     if (dialog.open) dialog.close();
+    try { store?.setItem(SEEN_KEY, String(Date.now())); } catch { /* private mode: show it next time */ }
     dispatchEvent(new Event('portfolio:intro-complete'));
   };
   const visibility = () => { if (document.hidden) finish('hidden'); };

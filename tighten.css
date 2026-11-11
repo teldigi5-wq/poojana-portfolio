@@ -1,0 +1,20 @@
+/* Tighten — calmer toolkit, collapsible case studies. */
+
+/* Toolkit: one moving row by default; the full catalogue opens with "Explore the full stack". */
+.integration-hero:not(:has([aria-expanded="true"])) .stack-track-1{display:none}
+
+/* Case studies */
+.case-notes.is-collapsed{padding-bottom:30px}
+.case-notes.is-collapsed .case-notes-intro{position:static;padding-bottom:0}
+.case-toggle{
+  display:inline-flex;align-items:center;gap:12px;margin-top:22px;min-height:46px;padding:0 18px;
+  border:1px solid var(--project-hue,#c08a5b);border-radius:999px;background:transparent;
+  color:var(--paper,#f3eddf);font-size:14px;transition:background .25s,color .25s;
+}
+.case-toggle span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#b9afa1)}
+.case-toggle i{font-style:normal;font-size:18px;line-height:1;color:var(--project-hue,#dcad7e)}
+.case-toggle:hover{background:#ffffff0d}
+.case-toggle:focus-visible{outline:2px solid var(--paper,#f3eddf);outline-offset:3px}
+.case-notes:not(.is-collapsed) .case-timeline{animation:case-open .45s ease both}
+@keyframes case-open{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.case-notes .case-timeline{animation:none!important}}
