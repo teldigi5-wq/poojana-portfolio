@@ -2,7 +2,7 @@
 .request-rail{
   --progress:0;
   --rail-top:150px;--rail-bottom:56px;
-  position:fixed;left:26px;top:var(--rail-top);bottom:var(--rail-bottom);z-index:25;
+  position:fixed;left:20px;top:var(--rail-top);bottom:var(--rail-bottom);z-index:25;
   width:14px;pointer-events:none;
   opacity:0;transform:translateX(-8px);transition:opacity .5s,transform .5s;
 }
@@ -34,7 +34,7 @@
   opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s;
 }
 .rr-stop em{font-style:normal;color:#dcad7e}
-.rr-stop:hover span,.rr-stop.is-active span{opacity:1;transform:none}
+.rr-stop:hover span,.rr-stop.is-announcing span{opacity:1;transform:none}
 .rr-stop.is-passed b{background:#c08a5b;border-color:#c08a5b}
 .rr-stop.is-active b{border-color:#dcad7e;transform:scale(1.25)}
 .request-rail.is-complete .rr-stop:last-of-type b{background:#a9c79a;border-color:#a9c79a}

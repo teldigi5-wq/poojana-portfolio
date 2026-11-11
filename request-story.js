@@ -55,6 +55,8 @@
   let target = 0;
   let frame = 0;
   let complete = false;
+  let lastActive = -1;
+  let announceTimer = 0;
 
   const paint = () => {
     frame = 0;
@@ -68,6 +70,16 @@
       marker.classList.toggle('is-passed', i < active);
       marker.classList.toggle('is-active', i === active);
     });
+    // Name the new layer briefly, then step aside so the label never covers content.
+    if (active !== lastActive) {
+      lastActive = active;
+      clearTimeout(announceTimer);
+      markers.forEach(marker => marker.classList.remove('is-announcing'));
+      if (active > 0) {
+        markers[active].classList.add('is-announcing');
+        announceTimer = setTimeout(() => markers[active].classList.remove('is-announcing'), active === STOPS.length - 1 ? 3200 : 1600);
+      }
+    }
     const done = active === STOPS.length - 1;
     if (done !== complete) {
       complete = done;
