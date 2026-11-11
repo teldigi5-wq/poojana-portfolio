@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 
 const source=readFileSync(new URL('../preloader-boot.js',import.meta.url),'utf8');
-function boot({hash='',query='',reduced=false,forced=false,navigation='navigate',scrollY=0,showFails=false}={}){
+function boot({hash='',query='',reduced=false,forced=false,navigation='navigate',scrollY=0,showFails=false,storage}={}){
   const root={dataset:{},classList:new Set()};
   root.classList.remove=root.classList.delete.bind(root.classList);
   const dialog=new EventTarget();dialog.open=false;dialog.closes=0;
@@ -20,7 +20,8 @@ function boot({hash='',query='',reduced=false,forced=false,navigation='navigate'
     performance:{now:()=>100,getEntriesByType:()=>[{type:navigation}]},
     matchMedia:q=>preferences[q.includes('forced-colors')?1:0],
     setTimeout:(fn,ms)=>{timers.set(++id,{fn,ms});return id},clearTimeout:key=>timers.delete(key),
-    addEventListener:events.addEventListener.bind(events),removeEventListener:events.removeEventListener.bind(events),dispatchEvent:events.dispatchEvent.bind(events)};
+    addEventListener:events.addEventListener.bind(events),removeEventListener:events.removeEventListener.bind(events),dispatchEvent:events.dispatchEvent.bind(events),Date};
+  if(storage)context.localStorage=storage;
   context.window=context;vm.runInNewContext(source,context);
   return {context,root,dialog,timers,preferences,document,completed:()=>completed};
 }
@@ -61,4 +62,16 @@ test('hiding the page or changing its motion preference releases an active intro
 });
 test('a browser that rejects showModal leaves normal content available',()=>{
   const b=boot({showFails:true});assert.equal(b.context.__portfolioIntro.active,false);assert.equal(b.root.classList.has('intro-active'),false);assert.equal(b.timers.size,0);
+});
+test('a completed intro is remembered and skipped for returning visitors for a week',()=>{
+  const data=new Map();const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+  const first=boot({storage});assert.equal(first.dialog.open,true);first.context.__portfolioIntro.complete();
+  assert.ok(Number(data.get('pk-intro-seen'))>0);
+  const second=boot({storage});assert.equal(second.dialog.open,false);assert.equal(second.root.dataset.introState,'bypassed');assert.equal(second.root.dataset.introReason,'returning');
+  data.set('pk-intro-seen',String(Date.now()-8*24*60*60*1000));
+  const later=boot({storage});assert.equal(later.dialog.open,true);
+});
+test('storage that throws never blocks the introduction',()=>{
+  const storage={getItem:()=>{throw Error('denied')},setItem:()=>{throw Error('denied')}};
+  const b=boot({storage});assert.equal(b.dialog.open,true);b.context.__portfolioIntro.complete();assert.equal(b.dialog.open,false);
 });
