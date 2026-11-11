@@ -169,7 +169,7 @@ function createScene(host, demo) {
   const gates = GATES.map((spec, index) => {
     const group = new Group();
     group.position.set(spec.x, 0, 0);
-    group.rotation.y = Math.PI / 2;
+    group.rotation.y = Math.PI / 2 + 0.3; // open the rings slightly toward the viewer
 
     const ringMaterial = track(new MeshStandardMaterial({ color: PALETTE.copper, metalness: 1, roughness: 0.26, emissive: new Color(PALETTE.copper), emissiveIntensity: 0.04 }));
     const ring = new Mesh(ringGeometry, ringMaterial);
@@ -245,8 +245,8 @@ function createScene(host, demo) {
   const packet = (() => {
     const group = new Group();
     const bodyMaterial = track(new MeshBasicMaterial({ color: PALETTE.ivory }));
-    const body = new Mesh(track(new SphereGeometry(0.1, 24, 24)), bodyMaterial);
-    const haloMaterial = track(new PointsMaterial({ map: glow, color: PALETTE.amber, size: 1.0, transparent: true, blending: AdditiveBlending, depthWrite: false }));
+    const body = new Mesh(track(new SphereGeometry(0.13, 24, 24)), bodyMaterial);
+    const haloMaterial = track(new PointsMaterial({ map: glow, color: PALETTE.amber, size: 1.7, transparent: true, blending: AdditiveBlending, depthWrite: false }));
     const haloGeometry = track(new BufferGeometry());
     haloGeometry.setAttribute('position', new BufferAttribute(new Float32Array(3), 3));
     const halo = new Points(haloGeometry, haloMaterial);
@@ -260,7 +260,7 @@ function createScene(host, demo) {
     const trailGeometry = track(new BufferGeometry());
     trailGeometry.setAttribute('position', new BufferAttribute(trailPositions, 3));
     trailGeometry.setAttribute('color', new BufferAttribute(trailColors, 3));
-    const trailMaterial = track(new PointsMaterial({ map: glow, size: 0.22, vertexColors: true, transparent: true, blending: AdditiveBlending, depthWrite: false }));
+    const trailMaterial = track(new PointsMaterial({ map: glow, size: 0.34, vertexColors: true, transparent: true, blending: AdditiveBlending, depthWrite: false }));
     const trail = new Points(trailGeometry, trailMaterial);
     world.add(trail);
     return { group, body, halo, light, bodyMaterial, haloMaterial, trail, trailPositions, trailColors, trailGeometry, trailCount, scale: 1 };
