@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c0b0a">
+  <meta name="color-scheme" content="dark">
+  <title>How this site was built | Poojana Kaveesh</title>
+  <meta name="description" content="Design decisions, replaced ideas, technology and measured trade-offs behind Poojana Kaveesh's portfolio.">
+  <link rel="canonical" href="https://poojana-portfolio.vercel.app/making-of">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <style>
+    @font-face{font-family:Display;src:url('/assets/display.woff') format('woff');font-weight:700;font-display:swap}
+    @font-face{font-family:Studio;src:url('/assets/sans-regular.woff') format('woff');font-weight:400;font-display:swap}
+    :root{color-scheme:dark;--bg:#100e0d;--paper:#f3eddf;--muted:#b9afa1;--amber:#dcad7e;--copper:#c08a5b;--line:#3e352d;--sage:#a9c79a;--ivory-card:#e8dfcf;--ink:#2a2016}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    body{margin:0;background:var(--bg);color:var(--paper);font-family:Studio,system-ui,sans-serif;line-height:1.6}
+    a{color:inherit}
+    a:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+    .skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:16px;z-index:9;padding:10px 14px;background:var(--amber);color:#1c140e}
+    header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px clamp(20px,5vw,68px);border-bottom:1px solid var(--line)}
+    .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:11px;letter-spacing:.14em}
+    .brand b{font:700 30px/1 Display,Arial,sans-serif;letter-spacing:-.04em}.brand b span{color:var(--amber)}
+    .back{font-size:14px;text-decoration:none;padding:10px 16px;border:1px solid var(--copper);border-radius:999px}
+    .back:hover{background:#ffffff10}
+    main{padding:0 clamp(20px,5vw,68px) 80px;max-width:1240px;margin:0 auto}
+    .hero{padding:clamp(56px,10vw,120px) 0 56px;border-bottom:1px solid var(--line)}
+    .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--amber);text-transform:uppercase}
+    h1{font-weight:400;font-size:clamp(46px,8vw,104px);line-height:.98;letter-spacing:-.055em;margin:22px 0 0}
+    h1 em,h2 em{font-family:Georgia,serif;color:var(--amber)}
+    .lede{font-size:clamp(17px,1.6vw,20px);color:#d6c9b6;max-width:60ch;margin-top:26px}
+    section{padding:64px 0;border-bottom:1px solid var(--line)}
+    .grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:clamp(24px,5vw,72px)}
+    h2{font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.04;letter-spacing:-.045em;margin:14px 0 0}
+    p{color:var(--muted);margin:0 0 16px;max-width:66ch}
+    .principles{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+    .principles li{padding:20px 22px;border:1px solid var(--line);border-radius:4px;background:#14110f}
+    .principles strong{display:block;font-weight:500;font-size:18px;color:var(--paper);margin-bottom:6px}
+    .timeline{list-style:none;padding:0 0 0 26px;margin:0;position:relative}
+    .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--amber),var(--copper) 70%,var(--sage))}
+    .timeline li{position:relative;padding:0 0 30px}
+    .timeline li::before{content:"";position:absolute;left:-26px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:1px solid var(--amber)}
+    .timeline time{font:500 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;color:var(--amber)}
+    .timeline h3{font-weight:500;font-size:20px;margin:8px 0 6px;color:var(--paper)}
+    .timeline p{margin:0}
+    .swaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    .swap{padding:20px;border-radius:4px;background:var(--ivory-card);color:var(--ink)}
+    .swap s{display:block;color:#8a7558;text-decoration-thickness:1px;margin-bottom:8px}
+    .swap strong{display:block;font-weight:500;font-size:17px;margin-bottom:8px}
+    .swap p{color:#5c4c39;margin:0;font-size:15px}
+    table{width:100%;border-collapse:collapse;font-size:15px}
+    th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+    th{font-weight:500;color:var(--paper);white-space:nowrap}
+    td{color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:8px}
+    .stat{padding:20px;border:1px solid var(--line);border-radius:4px}
+    .stat b{display:block;font:700 clamp(34px,4vw,52px)/1 Display,Arial,sans-serif;letter-spacing:-.03em;color:var(--paper)}
+    .stat span{display:block;margin-top:8px;font-size:14px;color:var(--muted)}
+    .note{font-size:13px;color:#9d8f7e}
+    footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:28px clamp(20px,5vw,68px);font-size:12px;letter-spacing:.1em;color:#9d8f7e}
+    footer a{text-decoration:none}
+    @media (max-width:820px){.grid{grid-template-columns:1fr}th{white-space:normal}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <a class="brand" href="/" aria-label="Poojana Kaveesh, home"><b>pk<span>·</span></b>POOJANA KAVEESH</a>
+    <a class="back" href="/">Back to the portfolio ↗</a>
+  </header>
+  <main id="main">
+    <div class="hero">
+      <p class="eyebrow">Making of · Process notes</p>
+      <h1>How this site<br>was <em>built.</em></h1>
+      <p class="lede">The portfolio is designed like the systems it presents: every section is a layer a request passes through, every interactive piece explains a real idea, and nothing claims more than the evidence supports.</p>
+    </div>
+
+    <section class="grid" aria-labelledby="principles-title">
+      <div><p class="eyebrow">01 / Principles</p><h2 id="principles-title">Rules the design<br><em>had to follow.</em></h2></div>
+      <ol class="principles">
+        <li><strong>Show, don’t claim.</strong>BoundaryLab’s policy explorer, the Aetheris claim race and the Wayfarer planner let visitors run an idea instead of reading about it. Each one says plainly what it is and what it is not.</li>
+        <li><strong>Evidence over adjectives.</strong>Project status is stated honestly: pre-release, research, or a public experience without live booking. The Aetheris result links to the CI run it describes.</li>
+        <li><strong>Motion is optional.</strong>Operating-system reduced-motion settings and <code>?motion=off</code> give a calm, static page. Everything still works without JavaScript.</li>
+        <li><strong>Own every byte.</strong>Fonts, images and libraries are self-hosted. A strict Content Security Policy allows no third-party scripts, CDNs or <code>eval</code>.</li>
+      </ol>
+    </section>
+
+    <section class="grid" aria-labelledby="timeline-title">
+      <div><p class="eyebrow">02 / Release log</p><h2 id="timeline-title">Two weeks,<br><em>in releases.</em></h2><p>Changes are prepared on preview branches and reviewed before they reach production.</p></div>
+      <ol class="timeline">
+        <li><time datetime="2026-10-30">30 OCT 2026</time><h3>Welcome edition</h3><p>A portrait-led palette of warm black, ivory and copper; inline question → implementation → evidence timelines for each flagship project; a horizontal gallery for further work.</p></li>
+        <li><time datetime="2026-10-30">30 OCT 2026</time><h3>Navigation and footer</h3><p>A liquid navigation pill that follows document order, a native full-screen menu on phones, and a Canvas 2D dithered footer.</p></li>
+        <li><time datetime="2026-10-31">31 OCT 2026</time><h3>Old Masters introduction</h3><p>A React, SVG and Canvas opening with a native-dialog fallback and an independent watchdog so a failed script can never trap the page.</p></li>
+        <li><time datetime="2026-11-06">06 NOV 2026</time><h3>Clarity review</h3><p>A specific headline, larger text, a quick-access command menu (⌘K), and an explorable system model.</p></li>
+        <li><time datetime="2026-11-08">08 NOV 2026</time><h3>Portrait lanyard</h3><p>A draggable, flippable CSS 3D badge in About, lazy-loaded near the section.</p></li>
+        <li><time datetime="2026-11-09">09 NOV 2026</time><h3>Evidence explorer and toolkit</h3><p>BoundaryLab’s rule becomes a working local policy explorer; the toolkit lists 88 technologies, each traced to a repository.</p></li>
+        <li><time datetime="2026-11-11">11 NOV 2026</time><h3>Review pass and 3D request trace <small style="font-size:11px;letter-spacing:.1em;color:#a8927a">PREVIEW</small></h3><p>A Three.js scene animates BoundaryLab’s live decision; playable project labs, a request-story rail and an idle-time loading strategy are prepared for review.</p></li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="swaps-title">
+      <p class="eyebrow">03 / Ideas that were replaced</p>
+      <h2 id="swaps-title">What changed,<br><em>and why.</em></h2>
+      <div class="swaps" style="margin-top:28px">
+        <article class="swap"><s>“Welcome to my portfolio.”</s><strong>“Backend systems. Built with intent.”</strong><p>A generic greeting told visitors nothing. The new line says what I build in four words.</p></article>
+        <article class="swap"><s>A one-rule permission example</s><strong>A working policy explorer</strong><p>Four identities, two resources, two operations and two policies, with a trace that shows which check decided.</p></article>
+        <article class="swap"><s>Vertical hero shutters</s><strong>An uninterrupted portrait</strong><p>The shutters competed with the photograph. Removing them made the first screen calmer and faster.</p></article>
+        <article class="swap"><s>Visible Motion and pause toggles</s><strong>System preferences</strong><p>Reduced motion now comes from the operating system and <code>?motion=off</code>, without extra controls on every visit.</p></article>
+        <article class="swap"><s>A contact business card</s><strong>A concise invitation</strong><p>Email, availability and links do the job with less to read.</p></article>
+        <article class="swap"><s>Scene parsed while scrolling</s><strong>Idle-time 3D loading</strong><p>The Three.js bundle now loads while the visitor is reading, not as they scroll into Work.</p></article>
+      </div>
+    </section>
+
+    <section class="grid" aria-labelledby="stack-title">
+      <div><p class="eyebrow">04 / Technology</p><h2 id="stack-title">Chosen for<br><em>the job.</em></h2></div>
+      <table>
+        <caption class="visually-hidden" style="position:absolute;left:-9999px">Technology used on this site</caption>
+        <tbody>
+          <tr><th scope="row">Page</th><td>Static HTML and CSS served by Vercel, with matching security headers for a second host.</td></tr>
+          <tr><th scope="row">Islands</th><td>React and TypeScript components (navigation, introduction, lanyard, footer, command menu) sharing one React runtime.</td></tr>
+          <tr><th scope="row">Motion</th><td>GSAP and ScrollTrigger for scroll storytelling, Lenis for smooth scrolling, the Web Animations API for small loops.</td></tr>
+          <tr><th scope="row">3D</th><td>Three.js r187 (WebGL) for the BoundaryLab request trace, bundled and tree-shaken with Bun; CSS 3D for the system model and lanyard.</td></tr>
+          <tr><th scope="row">Sound</th><td>Optional Web Audio tones, synthesised in the browser, off by default.</td></tr>
+          <tr><th scope="row">Quality</th><td>Node tests, a quality gate for budgets, links and headers, and CI that rebuilds the React bundles byte-for-byte.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="numbers-title">
+      <p class="eyebrow">05 / Measured, not guessed</p>
+      <h2 id="numbers-title">Numbers from<br><em>the 11 November pass.</em></h2>
+      <div class="stats">
+        <div class="stat"><b>833 → 88 ms</b><span>Main-thread blocking while scrolling the whole page, after moving 3D setup to idle time (Long Animation Frames, desktop Chrome).</span></div>
+        <div class="stat"><b>145 KB</b><span>Compressed size of the Three.js scene, loaded only where WebGL is available.</span></div>
+        <div class="stat"><b>0</b><span>Third-party scripts, fonts or CDNs.</span></div>
+        <div class="stat"><b>88</b><span>Toolkit entries, each traced to a repository that uses it.</span></div>
+      </div>
+      <p class="note" style="margin-top:18px">Measurements come from one desktop browser session. They are a check, not a certification of Core Web Vitals or of every device.</p>
+    </section>
+  </main>
+  <footer><span>© 2026 POOJANA KAVEESH</span><a href="/#contact">LET’S TALK ↗</a></footer>
+</body>
+</html>
