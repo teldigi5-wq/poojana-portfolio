@@ -15,13 +15,27 @@
 
   const load = () => {
     const script = document.createElement('script');
-    script.src = 'assets/boundary-3d.js?v=20261111-3d-2';
+    script.src = 'assets/boundary-3d.js?v=20261111-3d-3';
     script.defer = true;
     document.body.append(script);
   };
 
+  // Parsing Three.js costs a few hundred milliseconds of main-thread time. Do it while
+  // the visitor is reading (browser idle time), not while they scroll into Work.
+  let started = false;
+  const once = () => { if (started) return; started = true; observer.disconnect(); load(); };
+  const idle = cb => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 6000 }) : setTimeout(cb, 2500));
+  const whenSettled = () => {
+    const intro = document.documentElement.dataset.introState;
+    if (intro === 'loading') addEventListener('portfolio:intro-complete', () => idle(once), { once: true });
+    else idle(once);
+  };
+  if (document.readyState === 'complete') setTimeout(whenSettled, 1200);
+  else addEventListener('load', () => setTimeout(whenSettled, 1200), { once: true });
+
+  // Fallback: a visitor who jumps straight to the card still gets it.
   const observer = new IntersectionObserver(entries => {
-    if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); load(); }
+    if (entries.some(entry => entry.isIntersecting)) once();
   }, { rootMargin: '900px 0px' });
   observer.observe(card);
 })();
