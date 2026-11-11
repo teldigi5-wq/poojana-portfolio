@@ -88,6 +88,7 @@
         dupes += extra;
         if (event.deliveries) delivered++;
         tile.classList.toggle('is-duplicate', extra > 0);
+        tile.dataset.claims = String(event.claims.length);
         tile.querySelector('i').textContent = event.claims.length ? event.claims.map(w => `W${w + 1}`).join(' ') : '';
         tile.style.setProperty('--w', event.claims.length ? event.claims[event.claims.length - 1] : -1);
       });
@@ -211,7 +212,10 @@
         const li = document.createElement('li');
         const label = d === 0 ? 'Arrive' : d === days - 1 ? 'Depart' : 'Explore';
         const items = stops.map(s => `<span data-kind="${s.kind}">${s.name}</span>`);
-        if (pace === 'relaxed') items.push('<span data-kind="free">Open afternoon</span>');
+        if (pace === 'relaxed') {
+          const evening = stops.findIndex(s => s.kind === 'evening');
+          items.splice(evening < 0 ? items.length : evening, 0, '<span data-kind="free">Open afternoon</span>');
+        }
         li.innerHTML = `<strong>Day ${d + 1}<small>${label}</small></strong>${items.join('')}`;
         return li;
       }));

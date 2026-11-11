@@ -52,7 +52,7 @@
 .claim-event[data-state=claimed]{border-color:hsl(var(--hue) 45% 58%);background:hsl(var(--hue) 35% 16%);color:#f3eddf;animation:claim-pop .35s ease}
 .claim-event[data-state=done]{border-color:#6f8f63;background:#25331f;color:#d9e8cf}
 .claim-event.is-duplicate{border-color:#e0644a;background:#3a1a12;color:#ffd9cf;box-shadow:0 0 0 1px #e0644a66,0 0 14px -2px #e0644a99}
-.claim-event.is-duplicate::after{content:"×2";position:absolute;right:6px;top:6px;font-size:10px;color:#ff9b84}
+.claim-event.is-duplicate::after{content:"×" attr(data-claims);position:absolute;right:6px;top:6px;font-size:10px;color:#ff9b84}
 @keyframes claim-pop{from{transform:scale(.92)}to{transform:none}}
 
 .lab-stats{grid-column:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0;border-top:1px solid #3e352d;padding-top:16px}
