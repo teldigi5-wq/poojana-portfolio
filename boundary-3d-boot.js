@@ -15,7 +15,7 @@
 
   const load = () => {
     const script = document.createElement('script');
-    script.src = 'assets/boundary-3d.js?v=20261111-3d-3';
+    script.src = 'assets/boundary-3d.js?v=20261111-3d-5';
     script.defer = true;
     document.body.append(script);
   };

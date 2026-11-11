@@ -299,10 +299,10 @@ function createScene(host, demo) {
   const labels = document.createElement('div');
   labels.className = 'b3d-labels';
   labels.setAttribute('aria-hidden', 'true');
-  const labelEls = [...GATES.map((g, i) => `0${i + 1} ${g.label}`), 'RESOURCE'].map(text => {
+  const labelEls = [...GATES.map((g, i) => [`0${i + 1}`, g.label]), ['04', 'RESOURCE']].map(([num, text]) => {
     const el = document.createElement('span');
     el.className = 'b3d-label';
-    el.innerHTML = `<i></i>${text}`;
+    el.innerHTML = `<i></i><b>${num}</b><span> ${text}</span>`;
     labels.append(el);
     return el;
   });
@@ -410,7 +410,10 @@ function createScene(host, demo) {
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     // Narrow viewports: pull back so the whole corridor stays in frame.
-    const fit = MathUtils.clamp(1.55 / camera.aspect, 1, 1.9);
+    // Portrait phones: pull back less and widen the lens instead, so the gates stay large.
+    const fit = MathUtils.clamp(1.55 / camera.aspect, 1, camera.aspect < 1 ? 1.45 : 1.9);
+    camera.fov = camera.aspect < 1 ? 44 : 34;
+    lookTarget.y = camera.aspect < 1 ? 0.75 : -0.05; // centre the corridor in tall panels
     cameraBase.set(-3.4 * fit, 2.5 * fit, 7.6 * fit);
     camera.updateProjectionMatrix();
     requestRender();
