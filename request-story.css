@@ -1,0 +1,64 @@
+/* Request story rail — left gutter, desktop only. */
+.request-rail{
+  --progress:0;
+  --rail-top:150px;--rail-bottom:56px;
+  position:fixed;left:26px;top:var(--rail-top);bottom:var(--rail-bottom);z-index:25;
+  width:14px;pointer-events:none;
+  opacity:0;transform:translateX(-8px);transition:opacity .5s,transform .5s;
+}
+.request-rail.is-visible{opacity:1;transform:none}
+.rr-track{position:absolute;left:6px;top:0;bottom:0;width:1px;background:#c08a5b38;overflow:hidden}
+.rr-fill{position:absolute;inset:0;background:linear-gradient(#dcad7e,#c08a5b);transform-origin:top;transform:scaleY(var(--progress))}
+.request-rail.is-complete .rr-fill{background:linear-gradient(#dcad7e,#a9c79a)}
+
+.rr-packet{
+  position:absolute;left:1px;top:calc(var(--progress) * 100%);width:11px;height:11px;margin-top:-5.5px;
+  border-radius:50%;background:#f3eddf;
+  box-shadow:0 0 0 3px #dcad7e33,0 0 16px 3px #dcad7ecc;
+  transition:background .4s,box-shadow .4s;
+}
+.rr-packet i{position:absolute;left:50%;bottom:100%;width:1px;height:42px;margin-left:-.5px;background:linear-gradient(transparent,#dcad7e)}
+.request-rail.is-complete .rr-packet{background:#eaf3e3;box-shadow:0 0 0 3px #a9c79a40,0 0 18px 4px #a9c79acc}
+.request-rail.is-complete .rr-packet i{background:linear-gradient(transparent,#a9c79a)}
+
+.rr-stop{
+  position:absolute;left:0;top:calc(var(--at) * 100%);margin-top:-7px;
+  display:flex;align-items:center;gap:10px;height:14px;
+  pointer-events:auto;color:#b9a58e;text-decoration:none;
+}
+.rr-stop b{width:13px;height:13px;border-radius:50%;border:1px solid #c08a5b80;background:#100e0d;transition:border-color .3s,background .3s,transform .3s}
+.rr-stop span{
+  display:flex;gap:8px;align-items:center;white-space:nowrap;
+  font:500 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 8px;background:#100e0de6;border:1px solid #c08a5b40;border-radius:2px;
+  opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s;
+}
+.rr-stop em{font-style:normal;color:#dcad7e}
+.rr-stop:hover span,.rr-stop.is-active span{opacity:1;transform:none}
+.rr-stop.is-passed b{background:#c08a5b;border-color:#c08a5b}
+.rr-stop.is-active b{border-color:#dcad7e;transform:scale(1.25)}
+.request-rail.is-complete .rr-stop:last-of-type b{background:#a9c79a;border-color:#a9c79a}
+.request-rail.is-complete .rr-stop:last-of-type em{color:#a9c79a}
+
+/* The rail sits on dark and on the ivory BoundaryLab / contact panels: keep labels legible on both. */
+.rr-stop span{color:#e9dcc8}
+
+/* Contact: the request resolves. */
+.contact-ok{
+  display:inline-flex;align-items:center;gap:10px;margin-bottom:18px;
+  font:500 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;color:#4f6b45;
+  padding:7px 11px;border:1px solid #7f9c7266;border-radius:2px;background:#eef3e6;
+  transition:opacity .6s,transform .6s cubic-bezier(.2,.7,.2,1);
+}
+/* Only hide it for the reveal when the script is running. */
+.rs-ready .contact-ok{opacity:0;transform:translateY(8px)}
+.contact-ok b{width:7px;height:7px;border-radius:50%;background:#6f9a60;box-shadow:0 0 0 3px #6f9a6033}
+.rs-ready .contact-ok.is-visible{opacity:1;transform:none}
+
+@media (max-width:1180px){.request-rail{display:none}}
+@media (prefers-reduced-motion:reduce){
+  .request-rail,.rr-stop span,.contact-ok{transition:none}
+}
+@media (forced-colors:active){
+  .rr-packet,.rr-stop b{forced-color-adjust:none;border:1px solid CanvasText}
+}
