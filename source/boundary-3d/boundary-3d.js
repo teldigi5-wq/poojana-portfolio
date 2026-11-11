@@ -578,6 +578,7 @@ function createScene(host, demo) {
 
   /* ---------- loop control ---------- */
   let visible = false;
+  let compiled = false;
   let frameId = 0;
   let renderQueued = false;
 
@@ -590,13 +591,13 @@ function createScene(host, demo) {
     if (!reduce && visible && !document.hidden) frameId = requestAnimationFrame(frame);
   }
   function start() {
-    if (frameId) return;
+    if (frameId || !compiled) return;
     last = performance.now();
     frameId = requestAnimationFrame(frame);
   }
   function requestRender() {
     if (!reduce) return;            // the animated loop already renders every frame
-    if (renderQueued) return;
+    if (renderQueued || !compiled) return;
     renderQueued = true;
     requestAnimationFrame(now => {
       renderQueued = false;
@@ -621,7 +622,14 @@ function createScene(host, demo) {
   host.dataset.decision = decision.allowed ? 'allow' : 'deny';
   if (reduce) settle(); else resetRun();
   resize();
-  requestRender();
+  // Compile shaders off the critical path where the browser supports parallel compilation.
+  const ready = typeof renderer.compileAsync === 'function'
+    ? renderer.compileAsync(scene, camera).catch(() => {})
+    : Promise.resolve();
+  ready.then(() => {
+    compiled = true;
+    if (reduce) requestRender(); else if (visible) start();
+  });
 
   function dispose() {
     cancelAnimationFrame(frameId);
@@ -659,7 +667,9 @@ function mount() {
   intro.append(chamber);
 
   let instance;
-  const boot = () => {
+  const idle = cb => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 3000 }) : setTimeout(cb, 200));
+  const boot = () => idle(build);
+  const build = () => {
     try {
       instance = createScene(chamber, demo);
       chamber.dataset.ready = 'true';
