@@ -1,0 +1,28 @@
+/* Details: context cursor, ⌘K terminal. */
+.context-cursor{
+  position:fixed;left:0;top:0;z-index:200;pointer-events:none;
+  width:0;height:0;
+}
+.context-cursor span{
+  position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:6px;
+  padding:6px 10px;border-radius:999px;white-space:nowrap;
+  font:500 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:#1c140e;background:#dcad7e;box-shadow:0 6px 18px #0006;
+  opacity:0;transform:scale(.6);transform-origin:0 0;transition:opacity .18s,transform .22s cubic-bezier(.2,.8,.2,1.2);
+}
+.context-cursor.is-on span{opacity:1;transform:scale(1)}
+.context-cursor.is-pressed span{transform:scale(.9)}
+
+.command-terminal{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin-top:14px;padding:12px 14px;
+  border:1px solid #7e675166;border-radius:6px;background:#0f0c0a;
+  font-size:13px;line-height:1.5;color:#d8c9b5;
+}
+.command-terminal code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#dcad7e}
+.command-terminal kbd{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;padding:1px 6px;border:1px solid #7e6751;border-radius:3px;color:#f3eddf}
+.command-terminal a{color:#f3eddf;text-decoration:underline;text-underline-offset:3px}
+.command-terminal[data-tone=hint]{color:#a8927a;font-size:12px}
+.command-terminal[data-tone=ok]{border-color:#7f9c7280}
+.command-terminal[data-tone=ok] code{color:#a9c79a}
+.command-terminal[data-tone=deny]{border-color:#e0644a80}
+.command-terminal[data-tone=deny] code{color:#ff9b84}

@@ -1,24 +1,57 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#080f17">
+  <meta name="theme-color" content="#0c0b0a">
   <meta name="robots" content="noindex">
-  <title>Page not found | Poojana Kaveesh</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="studio.css?v=71">
+  <title>No route here | Poojana Kaveesh</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <style>
+    @font-face{font-family:Display;src:url('/assets/display.woff') format('woff');font-weight:700;font-display:swap}
+    @font-face{font-family:Studio;src:url('/assets/sans-regular.woff') format('woff');font-weight:400;font-display:swap}
+    :root{color-scheme:dark;--bg:#100e0d;--paper:#f3eddf;--muted:#b9afa1;--amber:#dcad7e;--copper:#c08a5b;--line:#3e352d;--pass:#a9c79a;--deny:#e0644a}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100svh;display:grid;place-items:center;padding:32px 22px;background:radial-gradient(ellipse at 70% 30%,#3a2516 0%,var(--bg) 60%);color:var(--paper);font-family:Studio,system-ui,sans-serif}
+    main{width:min(760px,100%)}
+    .brand{display:inline-flex;align-items:center;gap:10px;color:var(--paper);text-decoration:none;font-size:12px;letter-spacing:.14em}
+    .brand b{font:700 30px/1 Display,Arial,sans-serif;letter-spacing:-.04em}
+    .brand b span{color:var(--amber)}
+    .code{display:block;margin:48px 0 0;font:700 clamp(120px,24vw,230px)/.8 Display,Arial,sans-serif;letter-spacing:-.05em;color:#a88a69;opacity:.4}
+    h1{margin:18px 0 0;font-weight:400;font-size:clamp(38px,6vw,64px);line-height:1.02;letter-spacing:-.045em}
+    h1 em{font-family:Georgia,serif;color:var(--amber)}
+    p{color:var(--muted);font-size:16px;line-height:1.6;max-width:46ch;margin:18px 0 0}
+    .trace{list-style:none;margin:30px 0 0;padding:16px 18px;border:1px solid var(--line);border-radius:4px;background:#0c0a09cc;font:13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d8c9b5}
+    .trace li{display:flex;gap:14px}
+    .trace b{font-weight:400;min-width:110px}
+    .pass b{color:var(--pass)}.deny b{color:var(--deny)}
+    .path{color:var(--amber);word-break:break-all}
+    nav{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+    nav a{display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 20px;border:1px solid var(--copper);border-radius:999px;color:var(--paper);text-decoration:none;font-size:14px}
+    nav a:first-child{background:var(--amber);border-color:var(--amber);color:#1c140e}
+    nav a:hover{background:#ffffff12}nav a:first-child:hover{background:var(--paper)}
+    nav a:focus-visible,.brand:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+  </style>
 </head>
-<body class="studio error-page">
-  <main class="error-shell">
-    <a class="brand" href="./" aria-label="Poojana Kaveesh portfolio home"><b>PK<span>.</span></b><span>Poojana Kaveesh</span></a>
-    <div class="error-card panel">
-      <span class="error-code" aria-hidden="true">404</span>
-      <p class="eyebrow">PAGE NOT FOUND</p>
-      <h1>This page took a wrong turn.</h1>
-      <p>The link may be outdated, but the projects are still right where they belong.</p>
-      <div class="actions"><a class="btn primary" href="./">Back home <span>→</span></a><a class="btn" href="./#projects">View projects <span>↓</span></a></div>
-    </div>
+<body>
+  <main>
+    <a class="brand" href="/" aria-label="Poojana Kaveesh, home"><b>pk<span>·</span></b>POOJANA KAVEESH</a>
+    <span class="code" aria-hidden="true">404</span>
+    <h1>This route has<br><em>no handler.</em></h1>
+    <p>The request reached the site, but nothing here answers to that address. The link may be old or mistyped.</p>
+    <ol class="trace" aria-label="Request trace">
+      <li class="pass"><b>✓ Gateway</b><span>Request received</span></li>
+      <li class="deny"><b>× Router</b><span>No route for <span class="path" id="missing-path">this path</span></span></li>
+      <li><b>— Handler</b><span>Not reached</span></li>
+    </ol>
+    <nav aria-label="Ways back">
+      <a href="/">Back to home ↗</a>
+      <a href="/#work">See selected work</a>
+      <a href="/assets/Poojana_Kaveesh_ATS_2026.pdf">Read the CV</a>
+    </nav>
   </main>
+  <script>
+    (function(){var el=document.getElementById('missing-path');if(el&&location.pathname)el.textContent=decodeURIComponent(location.pathname).slice(0,80);})();
+  </script>
 </body>
 </html>
