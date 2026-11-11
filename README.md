@@ -67,3 +67,14 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 ## Current preview: evidence and toolkit
 
 The 9 November preview replaces the ribbons with `integration-hero.tsx`: 88 repository-backed technologies, two continuous opposite-direction rows, local icons, category filters and project-aware search. Hover does not pause movement. A static catalog is available without JavaScript. See [TECH-STACK-INVENTORY.md](TECH-STACK-INVENTORY.md) for sources and [EVIDENCE-EXPLORER-RELEASE.md](EVIDENCE-EXPLORER-RELEASE.md) for the local policy explorer and validation.
+
+## Review fixes — 11 November preview
+
+Prepared on the `fix/review-polish` branch; not merged to production. `review-fixes.css` and `review-fixes.js` load after the existing files and change nothing else:
+
+- The hero code card has a soft backdrop so it stays legible over the KAVEESH wordmark.
+- On shorter laptop screens (height ≤ 820px), the hero copy is tightened so "Explore selected work" sits above the fold without crowding the status row or cropping the portrait.
+- The Selected Work index sticks below the header on desktop, highlights the current project and hides after the three featured projects.
+- "Follow a request" scrolls the Aetheris diagram into view when it is off-screen, respecting reduced motion.
+
+Checked in Chrome at 1536×674 against the live site. Phone layouts were not re-tested.
