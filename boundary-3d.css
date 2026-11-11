@@ -1,0 +1,59 @@
+/* BoundaryLab 3D request trace — a dark viewing chamber inside the ivory card. */
+.b3d-chamber{
+  position:relative;
+  margin:36px 0 0;
+  height:clamp(300px,27vw,430px);
+  border-radius:4px;
+  overflow:hidden;
+  background:radial-gradient(ellipse at 70% 60%,#2a1d14 0%,#120e0b 70%);
+  box-shadow:0 30px 60px -30px #2b1a0c99,inset 0 0 0 1px #c08a5b33;
+  cursor:grab;
+  touch-action:pan-y;
+  isolation:isolate;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.b3d-chamber[data-ready=true],.b3d-chamber[data-ready=lost]{opacity:1;transform:none}
+.b3d-chamber.is-dragging{cursor:grabbing}
+.b3d-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+
+.b3d-caption{
+  position:absolute;left:16px;right:16px;top:14px;z-index:2;
+  display:flex;justify-content:space-between;gap:12px;
+  font:500 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;
+  color:#d8c3a8;pointer-events:none;
+}
+.b3d-caption b{display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:#a9c79a;box-shadow:0 0 10px #a9c79a;vertical-align:1px}
+.b3d-chamber[data-decision=deny] .b3d-caption b{background:#e0644a;box-shadow:0 0 10px #e0644a}
+.b3d-hint{color:#a8927a}
+
+.b3d-labels{position:absolute;inset:0;z-index:1;pointer-events:none}
+.b3d-label{
+  position:absolute;left:0;top:0;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;padding:4px 7px;
+  font:500 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em;
+  color:#e9dcc8;background:#120e0bb3;border:1px solid #c08a5b40;border-radius:2px;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  transition:color .4s,border-color .4s;
+}
+.b3d-label i{width:5px;height:5px;border-radius:50%;background:#6d5a48;transition:background .4s,box-shadow .4s}
+.b3d-label[data-state=pass]{border-color:#a9c79a66}
+.b3d-label[data-state=pass] i{background:#a9c79a;box-shadow:0 0 8px #a9c79a}
+.b3d-label[data-state=deny]{color:#ffd9cf;border-color:#e0644a80}
+.b3d-label[data-state=deny] i{background:#e0644a;box-shadow:0 0 8px #e0644a}
+.b3d-label[data-state=skipped]{color:#8d7c6a}
+
+.b3d-fallback{position:absolute;inset:auto 16px 14px;z-index:2;font-size:12px;color:#d8c3a8}
+
+@media (max-width:760px){
+  .b3d-chamber{height:300px;margin-top:28px}
+  .b3d-label{font-size:8px;padding:3px 5px}
+  .b3d-hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .b3d-chamber{transition:none;transform:none}
+}
+@media (forced-colors:active){
+  .b3d-chamber{border:1px solid CanvasText}
+}
