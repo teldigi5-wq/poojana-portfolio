@@ -47,6 +47,46 @@ async function introSettled() {
   });
 }
 
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
+
+/*
+ * Progressive shader warm-up. Some drivers (notably ANGLE on Direct3D, i.e. Chrome on
+ * Windows) finish compiling a shader only on its first draw, which can stall the page
+ * for over a second if everything is drawn at once. Instead, draw one kind of material
+ * per frame into a 1×1 scissor while the canvas is still hidden.
+ */
+async function warmUp(renderer, world, target, composer) {
+  const { scene, camera } = world;
+  const items = [];
+  scene.traverse(object => { if ((object.isMesh || object.isPoints || object.isSprite) && object.material) items.push(object); });
+  const programKey = material => `${material.type}|${material.name}|${material.vertexShader?.length || 0}|${material.fragmentShader?.length || 0}|${material.customProgramCacheKey?.() || ''}`;
+  const groups = new Map();
+  for (const object of items) {
+    const key = programKey(object.material);
+    if (!groups.has(key)) groups.set(key, object);
+  }
+  const visible = items.map(object => object.visible);
+  const scissor = renderer.getScissorTest();
+  renderer.setScissorTest(true);
+  renderer.setScissor(0, 0, 1, 1);
+  try {
+    for (const representative of groups.values()) {
+      items.forEach(object => { object.visible = object === representative; });
+      renderer.setRenderTarget(target);
+      renderer.render(scene, camera);
+      renderer.setRenderTarget(null);
+      await nextFrame();
+    }
+    items.forEach((object, i) => { object.visible = visible[i]; });
+    if (composer) { composer.render(0.016); await nextFrame(); }   // bloom and finish passes
+  } finally {
+    items.forEach((object, i) => { object.visible = visible[i]; });
+    renderer.setScissorTest(scissor);
+    renderer.setScissor(0, 0, renderer.domElement.width, renderer.domElement.height);
+  }
+  return groups.size;
+}
+
 const WORLDS = {
   gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') }
 };
@@ -225,6 +265,12 @@ function boot() {
     buildComposer();
     size();
     governor.reset();
+    if (!world.warmed) {
+      timings[`${name}:warm-programs`] = await warmUp(renderer, world, composer ? composer.readBuffer : null, composer);
+      world.warmed = true;
+      mark(`${name}:warmed`);
+      if (active?.name !== name) return;
+    }
     // Render one (dark, un-ignited) frame so nothing flashes, then wait for the intro to finish
     // and ignite the moment the hero is actually on screen.
     render(0.016);

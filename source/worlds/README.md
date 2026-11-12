@@ -17,7 +17,7 @@ bun build stage.js --splitting --format=esm --minify --target=browser \
   --outdir=<repo>/assets/worlds/js --entry-naming='[name].[ext]' --chunk-naming='[name]-[hash].[ext]'
 ```
 
-Bump `?v=` for `stage.js` in `worlds-boot.js` after a rebuild (chunk names are content-hashed).
+Chunk names are content-hashed; the entry gets a fresh `?v=` from the update script.
 
 ## Blender assets
 
@@ -26,3 +26,6 @@ blender --background --python source/blender/gateway.py -- <output_dir>
 ```
 
 Writes `export/gateway.glb`, `blend/gateway.blend` and a preview render.
+
+After every rebuild run `node scripts/update-worlds-boot.mjs`: it inlines `worlds-boot.js`
+into `index.html` with the new hashed chunk names, so all chunks preload in parallel.
