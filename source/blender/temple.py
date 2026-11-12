@@ -734,7 +734,7 @@ def flame_mesh(name, mat, loc, scale=1.0):
 
 
 # ================================================================ figures (original)
-def metaball_figure(name, mat, pose="torch", height=1.0):
+def metaball_figure(name, mat, pose="torch", height=1.0, head=True):
     """An original draped classical figure built from metaballs (body) plus a lathed,
     fold-displaced robe. pose: 'torch' (right arm raised), 'vessel' (jar on shoulder),
     'offering' (a shallow bowl held forward). All figures are draped."""
@@ -763,7 +763,10 @@ def metaball_figure(name, mat, pose="torch", height=1.0):
         e.stiffness = 2.0
 
     male = False   # every figure is draped: cloth reads as marble far better than procedural anatomy
-    # Head: cranium, jaw, hair mass and (for the goddess) a low bun.
+    # Head: cranium, jaw, hair mass and (for the goddess) a low bun. head=False leaves the
+    # neck open for a scanned head (temple_photoreal.py mounts a CC0 marble bust there).
+    if not head:
+        ball = (lambda real: (lambda p, r, scale=(1, 1, 1): None if p[2] > 0.84 else real(p, r, scale)))(ball)
     ball((0, -0.005, 0.93), 0.085, (0.74, 0.84, 1.0))
     ball((0, -0.03, 0.893), 0.05, (0.78, 0.8, 0.9))
     ball((0, -0.072, 0.922), 0.022, (0.6, 1.0, 1.3))        # nose: a shadow line at distance
@@ -771,7 +774,8 @@ def metaball_figure(name, mat, pose="torch", height=1.0):
     if not male:
         ball((0, 0.075, 0.922), 0.056)
         ball((0, 0.06, 0.962), 0.05, (1.1, 0.8, 0.6))
-    capsule((0, 0.0, 0.83), (0, 0.006, 0.885), 0.05)
+    if head:
+        capsule((0, 0.0, 0.83), (0, 0.006, 0.885), 0.05)
     # Torso masses that blend into one body.
     ball((0, 0.012, 0.818), 0.14, (1.25 if male else 1.15, 0.5, 0.45))       # trapezius / shoulder line
     ball((0, 0, 0.75), 0.15, (1.08 if male else 1.0, 0.6, 0.85))            # chest
@@ -798,6 +802,13 @@ def metaball_figure(name, mat, pose="torch", height=1.0):
         capsule((-0.12, 0, 0.8), (-0.15, 0.0, 0.64), 0.049)
         capsule((-0.15, 0.0, 0.64), (-0.15, -0.02, 0.5), 0.042)
         ball((-0.15, -0.02, 0.49), 0.041)
+    elif pose == "rest":   # both arms down; the right hand gathers the drapery at the hip
+        capsule((0.12, 0, 0.8), (0.15, 0.0, 0.64), 0.05)
+        capsule((0.15, 0.0, 0.64), (0.13, -0.05, 0.53), 0.042)
+        ball((0.12, -0.06, 0.52), 0.04)
+        capsule((-0.12, 0, 0.8), (-0.15, 0.01, 0.64), 0.05)
+        capsule((-0.15, 0.01, 0.64), (-0.15, 0.0, 0.5), 0.042)
+        ball((-0.15, 0.0, 0.49), 0.04)
     else:  # offering: right forearm forward holding a shallow bowl, left arm relaxed
         capsule((0.12, 0, 0.8), (0.16, -0.02, 0.66), 0.05)
         capsule((0.16, -0.02, 0.66), (0.12, -0.15, 0.62), 0.042)
@@ -892,7 +903,7 @@ def metaball_figure(name, mat, pose="torch", height=1.0):
                     20, mat, loc=(0.09, 0.05, 0.96))
         jar.rotation_euler = (0.2, -0.5, 0)
         parts.append(jar)
-    else:
+    elif pose == "offering":
         bowl = lathe(name + "Bowl", [(0.0, 0.0), (0.03, 0.0), (0.075, 0.025), (0.08, 0.03), (0.0, 0.012)], 20, mat,
                      loc=(0.11, -0.19, 0.645))
         parts.append(bowl)

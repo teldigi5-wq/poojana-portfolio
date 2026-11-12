@@ -10,7 +10,7 @@
  * device; it drops automatically when frames run slow. `?tier=` overrides it.
  */
 import {
-  ACESFilmicToneMapping, PMREMGenerator, SRGBColorSpace, Vector2, WebGLRenderer
+  ACESFilmicToneMapping, NoToneMapping, PMREMGenerator, SRGBColorSpace, Vector2, WebGLRenderer
 } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -88,7 +88,7 @@ async function warmUp(renderer, world, target, composer) {
 }
 
 const WORLDS = {
-  temple: { host: '#home .hero-visual', section: '#home', load: () => import('./temple.js') },
+  temple: { host: '#home .hero-visual', section: '#home', load: () => import('./temple-film.js') },
   strata: { host: '#dimension .system-object', section: '#dimension', load: () => import('./strata.js'), prefetch: true }
 };
 
@@ -279,6 +279,8 @@ function boot() {
     detach();
     active = { name, world, host, section: document.querySelector(spec.section) };
     host.prepend(canvas);
+    // Pre-rendered (already tone-mapped) worlds opt out of the engine's filmic curve.
+    renderer.toneMapping = world.toneMapping === 'none' ? NoToneMapping : ACESFilmicToneMapping;
     buildComposer();
     size();
     governor.reset();

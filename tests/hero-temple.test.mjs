@@ -22,7 +22,7 @@ test("the portrait is unchanged and the visual layer is aria-hidden", () => {
 });
 
 test("hero assets are local (CSP: no new hosts)", () => {
-  for (const file of ["temple.css", "temple-hero.js", "source/worlds/temple.js"]) {
+  for (const file of ["temple.css", "temple-hero.js", "source/worlds/temple-film.js"]) {
     const text = readFileSync(file, "utf8");
     assert.doesNotMatch(text, /https?:\/\/(?!www\.w3\.org\/2000\/svg)/, file);
     assert.doesNotMatch(text, /\beval\(|new Function\(/, file);

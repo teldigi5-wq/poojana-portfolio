@@ -12,14 +12,14 @@
 
 /* ---------- the scene's still (no WebGL, reduced motion, ?motion=off) and the live canvas ---------- */
 .hero-temple .temple-still{position:absolute;inset:0;display:block}
-.hero-temple .temple-still img{width:100%;height:100%;object-fit:cover;object-position:42% 40%;display:block;transition:opacity 1.4s var(--t-ease)}
+.hero-temple .temple-still img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:scale(1.02);display:block;transition:opacity 1.4s var(--t-ease)}
 .hero-temple .hero-visual.world-live .temple-still img{opacity:0}
 .hero-temple .portrait-halo{opacity:.6}
 /* Legibility: the headline column sits on a deep, warm shade; the scene opens up behind the portrait. */
 .hero-temple .hero-shade,
 .hero-temple .hero-visual.world-live .hero-shade{
   background:
-    linear-gradient(90deg,#0c0b0a 0%,#0c0b0af2 22%,#0c0b0aa6 40%,#0c0b0a1f 58%,transparent 70%),
+    linear-gradient(90deg,#0c0b0af5 0%,#0c0b0ae6 20%,#0c0b0aa6 33%,#0c0b0a40 43%,transparent 50%),
     linear-gradient(0deg,#0c0b0a 0%,#0c0b0a00 26%),
     linear-gradient(180deg,#0c0b0acc 0%,#0c0b0a00 18%);
 }
@@ -123,7 +123,7 @@
   .hero-temple .hero-shade,
   .hero-temple .hero-visual.world-live .hero-shade{background:linear-gradient(180deg,#0c0b0ab3 0%,#0c0b0a00 16%,#0c0b0a00 30%,#0c0b0ae6 44%,#0c0b0ad9 72%,#0c0b0a 100%)}
   .hero-meander,.hero-temple .hero-edition{display:none}
-  .hero-temple .temple-still img{object-position:50% 12%}
+  .hero-temple .temple-still img{object-position:50% 50%}
 }
 
 /* ---------- reduced motion, forced colours, no pinning ---------- */

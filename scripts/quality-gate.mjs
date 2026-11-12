@@ -98,10 +98,10 @@ const budgets = {
   "assets/intro-flowers.webp": 20 * 1024, "assets/intro-david.webp": 30 * 1024,
   // Temple hero (see TEMPLE-RELEASE.md): scoped layout/type CSS, the scroll choreography that
   // reuses the existing GSAP/ScrollTrigger/Lenis, the two self-hosted OFL font files and the
-  // designed stills used for reduced motion and as the poster before the scene ignites.
+  // path-traced posters used for reduced motion and as the first frame before the sequence plays.
   "temple.css": 12 * 1024, "temple-hero.js": 8 * 1024,
   "assets/fonts/cormorant-garamond-latin-500-normal.woff2": 32 * 1024, "assets/fonts/cormorant-garamond-latin-500-italic.woff2": 32 * 1024,
-  "assets/worlds/temple-still.webp": 120 * 1024, "assets/worlds/temple-still-mobile.webp": 80 * 1024
+  "assets/worlds/temple/poster-desktop.webp": 260 * 1024, "assets/worlds/temple/poster-phone.webp": 200 * 1024
 };
 for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);
 for (const file of required.filter(path => [".js", ".css", ".html", ".json", ".tsx", ".ts"].includes(extname(path)))) {
@@ -130,6 +130,16 @@ if (/https:\/\/cdn\.|unsafe-eval/i.test(value("Content-Security-Policy") ?? ""))
       const bytes = statSync(`${worldsDir}/${name}`).size;
       total += bytes;
       if (bytes > 1.5 * 1024 * 1024) fail(`${worldsDir}/${name} exceeds the 1.5 MB per-world budget`);
+    }
+    // Pre-rendered sequences (the photoreal temple): each device loads one set. Budget per set 2 MB
+    // (32 path-traced frames); every set counts towards the 6 MB total.
+    for (const sub of readdirSync(worldsDir, { withFileTypes: true }).filter(d => d.isDirectory() && d.name !== "js")) {
+      for (const set of readdirSync(`${worldsDir}/${sub.name}`, { withFileTypes: true }).filter(d => d.isDirectory())) {
+        const dir = `${worldsDir}/${sub.name}/${set.name}`;
+        const bytes = readdirSync(dir).filter(n => /\.webp$/.test(n)).reduce((sum, n) => sum + statSync(`${dir}/${n}`).size, 0);
+        total += bytes;
+        if (bytes > 2 * 1024 * 1024) fail(`${dir} sequence exceeds its 2 MB budget`);
+      }
     }
     if (total > 6 * 1024 * 1024) fail("world assets exceed the 6 MB total budget");
     const jsDir = `${worldsDir}/js`;

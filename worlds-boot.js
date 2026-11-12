@@ -7,7 +7,8 @@
    without WebGL; the page is complete without it. */
 (() => {
   const CHUNKS = /*CHUNKS*/[];
-  const ASSETS = ['assets/worlds/temple.glb', 'assets/worlds/temple-floor.webp', 'assets/worlds/temple-limestone.webp', 'assets/worlds/temple-marble.webp'];
+  // The temple's first frame is the HTML poster (already preloaded); later frames load after ignition.
+  const ASSETS = [];
   const query = new URLSearchParams(location.search);
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || query.get('motion') === 'off' || query.get('tier') === 'still') return;
   if (navigator.connection && navigator.connection.saveData) return;
