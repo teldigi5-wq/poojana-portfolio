@@ -19,7 +19,7 @@ import {
   PointLight, Points, Scene, ShaderMaterial, SpotLight, Sprite, SpriteMaterial, SRGBColorSpace, TextureLoader,
   UniformsLib, UniformsUtils, Vector3
 } from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFLoader } from './loaders.js';
 
 const BG = 0x0c0b0a;
 const AMBER = 0xdcad7e;

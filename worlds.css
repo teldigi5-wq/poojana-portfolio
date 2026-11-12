@@ -20,3 +20,7 @@
 @media (prefers-reduced-motion:reduce){
   .world-canvas{display:none}
 }
+
+/* Strata: the Blender stack replaces the CSS plates. The old markup stays as the no-WebGL fallback. */
+.system-object .world-canvas{-webkit-mask-image:radial-gradient(ellipse 58% 58% at 50% 48%,#000 52%,transparent 100%);mask-image:radial-gradient(ellipse 58% 58% at 50% 48%,#000 52%,transparent 100%)}
+.system-object.world-live .system-interaction,.system-object.world-live .system-shadow{opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}

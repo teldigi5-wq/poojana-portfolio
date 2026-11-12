@@ -26,7 +26,7 @@
     const link = document.createElement('link');
     link.rel = 'preload'; link.href = href; link.fetchPriority = 'low';
     link.as = href.endsWith('.glb') ? 'fetch' : 'image';
-    if (href.endsWith('.glb')) link.crossOrigin = 'anonymous';
+    link.crossOrigin = 'anonymous';   // three's loaders request with CORS; a mismatch would waste the preload
     head.append(link);
   }
   const script = document.createElement('script');

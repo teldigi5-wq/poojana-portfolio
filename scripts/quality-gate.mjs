@@ -131,7 +131,8 @@ if (/https:\/\/cdn\.|unsafe-eval/i.test(value("Content-Security-Policy") ?? ""))
       const chunks = readdirSync(jsDir).filter(name => name.endsWith(".js"));
       const gz = name => gzipSync(readFileSync(`${jsDir}/${name}`)).length;
       const engine = chunks.filter(name => name === "stage.js" || name.startsWith("stage-")).reduce((sum, name) => sum + gz(name), 0);
-      if (engine > 165 * 1024) fail(`world engine is ${engine} bytes gzip (budget 165 KiB)`);
+      // Shared code: the render engine plus the glTF loader every world uses (it sat inside the gateway chunk until a second world needed it).
+      if (engine > 180 * 1024) fail(`world engine is ${engine} bytes gzip (budget 180 KiB)`);
       for (const name of chunks.filter(name => !name.startsWith("stage"))) if (gz(name) > 30 * 1024) fail(`${jsDir}/${name} exceeds the 30 KiB gzip per-world budget`);
       for (const name of chunks) if (/\beval\(|new Function\(/.test(readFileSync(`${jsDir}/${name}`, "utf8"))) fail(`${jsDir}/${name} uses eval`);
     }

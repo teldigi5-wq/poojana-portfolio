@@ -88,7 +88,8 @@ async function warmUp(renderer, world, target, composer) {
 }
 
 const WORLDS = {
-  gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') }
+  gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') },
+  strata: { host: '#dimension .system-object', section: '#dimension', load: () => import('./strata.js'), prefetch: true }
 };
 
 const root = document.documentElement;
@@ -202,7 +203,7 @@ function boot() {
     state.tier = tier;
     state.settings = TIER_SETTINGS[tier];
     governor.reset();
-    active?.world.setTier?.(state);
+    if (active) { active.world.setTier?.(state); active.world.tierApplied = tier; }
     buildComposer();
     size();
   };
@@ -242,22 +243,33 @@ function boot() {
     active = null;
   };
 
+  // Load, build and compile a world once; later activations reuse it.
+  const preparing = new Map();
+  function prepare(name) {
+    if (!preparing.has(name)) {
+      preparing.set(name, (async () => {
+        const module = await WORLDS[name].load();
+        mark(`${name}:module`);
+        const world = await module.create({ renderer, getEnvironment, state });
+        mark(`${name}:created`);
+        // Compile shaders before the first visible frame.
+        try { await renderer.compileAsync(world.scene, world.camera); } catch { /* older drivers: compile on first frame */ }
+        mark(`${name}:compiled`);
+        world.tierApplied = tier;
+        loaded.set(name, world);
+        return world;
+      })());
+    }
+    return preparing.get(name);
+  }
+
   async function activate(name) {
     if (active?.name === name) return;
     const spec = WORLDS[name];
     const host = document.querySelector(spec.host);
     if (!host) return;
-    let world = loaded.get(name);
-    if (!world) {
-      const module = await spec.load();
-      mark(`${name}:module`);
-      world = await module.create({ renderer, getEnvironment, state });
-      mark(`${name}:created`);
-      // Compile shaders before the first visible frame.
-      try { await renderer.compileAsync(world.scene, world.camera); } catch { /* older drivers: compile on first frame */ }
-      mark(`${name}:compiled`);
-      loaded.set(name, world);
-    }
+    const world = await prepare(name);
+    if (world.tierApplied !== tier) { world.setTier?.(state); world.tierApplied = tier; }
     if (tier === 'still') return;
     detach();
     active = { name, world, host, section: document.querySelector(spec.section) };
@@ -302,11 +314,21 @@ function boot() {
       }
     });
   }, { rootMargin: '80px 0px' });
+  // Worlds further down the page are built a little before they are needed, when the browser is idle.
+  const idle = window.requestIdleCallback ? callback => requestIdleCallback(callback, { timeout: 2500 }) : callback => setTimeout(callback, 300);
+  const prefetch = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      prefetch.unobserve(entry.target);
+      idle(() => { if (tier !== 'still') prepare(entry.target.dataset.world).catch(() => {}); });
+    });
+  }, { rootMargin: '150% 0px' });
   Object.entries(WORLDS).forEach(([name, spec]) => {
     const section = document.querySelector(spec.section);
     if (!section) return;
     section.dataset.world = name;
     io.observe(section);
+    if (spec.prefetch) prefetch.observe(section);
   });
 
   addEventListener('pointermove', event => {
