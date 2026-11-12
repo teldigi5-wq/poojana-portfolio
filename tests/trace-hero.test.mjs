@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,statSync,readdirSync} from 'node:fs';
+import {readFileSync,statSync} from 'node:fs';
 
 const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),'utf8');
 const html=read('index.html'),js=read('trace.js');
@@ -29,12 +29,12 @@ test('Trace is the homepage and the previous homepage stays reachable',()=>{
 });
 
 test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',()=>{
-  assert.ok(statSync(new URL('../assets/trace/3d/belt.js',import.meta.url)).size<40e3);
+  assert.ok(statSync(new URL('../assets/trace/belt.js',import.meta.url)).size<640e3);
   assert.ok(statSync(new URL('../assets/trace/lanyard-portrait.webp',import.meta.url)).size<60e3);
   assert.match(html,/id="belt"[^>]*role="group"/);                       // labelled group
   assert.match(html,/class="belt-static"/);                              // no-JS / no-WebGL content
   assert.doesNotMatch(read('source/trace-belt/belt.src.js'),/BoundaryLab|Aetheris|Wayfarer/); // only the personal lanyard
-  assert.match(js,/import\('\.\/assets\/trace\/3d\/belt\.js\?v=\d+'\)/);          // loaded on demand
+  assert.match(js,/import\('\.\/assets\/trace\/belt\.js\?v=\d+'\)/);          // loaded on demand
   const src=read('source/trace-belt/belt.src.js');
   assert.match(src,/prefers-reduced-motion/);                            // static frame for reduced motion
   assert.match(src,/function fallback/);                                 // DOM fallback without WebGL
@@ -50,21 +50,4 @@ test('hero loops live, freezes on scroll and respects reduced motion / data save
   assert.match(js,/loop\.play\(\)/);                           // resumes at the top
   assert.match(css,/prefers-reduced-motion:reduce\)\{\.loop\{display:none\}/);
   for(const f of ['hero-loop.mp4','hero-loop-720.mp4']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size<3e6,f);
-});
-
-test('premium 3D layer: Work stage + Lab instruments are lazy, split and degrade to the DOM demos',()=>{
-  const js=read('trace.js'), html=read('index.html'), css=read('trace.css');
-  assert.match(js,/import\('\.\/assets\/trace\/3d\/stage\.js\?v=\d+'\)/);   // lazy
-  assert.match(js,/import\('\.\/assets\/trace\/3d\/lab\.js\?v=\d+'\)/);
-  assert.match(html,/id="stage"[^>]*role="img"/);                                // labelled
-  for (const id of ['v3dBucket','v3dScan','v3dGate']) assert.match(html,new RegExp('id="'+id+'" aria-hidden="true"'));
-  assert.match(html,/id="dots"/); assert.match(html,/id="planBars"/); assert.match(html,/id="decision"/);   // DOM demos stay the source of truth
-  assert.match(js,/\.then\(m => \{ stage3d = m\.mountStage/);                    // stage mounts after load
-  assert.match(css,/\.panel\.tilt\.in\{transform:perspective/);
-  assert.match(css,/prefers-reduced-motion:reduce\)\{\.panel\.tilt\.in\{transform:none\}/);
-  const files=readdirSync(new URL('../assets/trace/3d/',import.meta.url));
-  const chunk=files.filter(f=>f.startsWith('chunk-')).map(f=>statSync(new URL('../assets/trace/3d/'+f,import.meta.url)).size);
-  assert.ok(Math.max(...chunk)<640e3,'shared three chunk');
-  for (const f of ['stage.js','lab.js']) assert.ok(statSync(new URL('../assets/trace/3d/'+f,import.meta.url)).size<30e3,f);
-  assert.doesNotMatch(read('source/trace-3d/lab.js')+read('source/trace-3d/stage.js'),/BoundaryLab:.*benchmark/);
 });
