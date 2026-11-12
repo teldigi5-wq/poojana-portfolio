@@ -186,3 +186,15 @@ dialog.pal::backdrop{background:rgba(10,15,30,.28);-webkit-backdrop-filter:blur(
 .to-top.on{opacity:1;transform:none;pointer-events:auto}
 .to-top:focus-visible{outline:2px solid #2b4bff;outline-offset:3px}
 @media(max-width:600px){.to-top{right:14px;bottom:14px;padding:11px 15px}}
+/* real refraction (Chromium): the page behind the bar is bent by an SVG backdrop filter */
+.glass-nav.lg-real{background:rgba(255,255,255,.34);-webkit-backdrop-filter:url(#lgNav) saturate(1.55) brightness(1.07);backdrop-filter:url(#lgNav) saturate(1.55) brightness(1.07);
+  box-shadow:0 12px 34px rgba(20,40,110,.18),0 2px 6px rgba(20,40,110,.10),inset 0 0 0 1px rgba(255,255,255,.34),inset 0 -10px 20px rgba(255,255,255,.08)}
+.glass-nav.lg-real.tone-dark{background:rgba(10,16,34,.26);-webkit-backdrop-filter:url(#lgNav) saturate(1.45) brightness(.92);backdrop-filter:url(#lgNav) saturate(1.45) brightness(.92);
+  box-shadow:0 14px 38px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.26),inset 0 1px 0 rgba(255,255,255,.34)}
+/* dark moments: keep every floating control legible */
+.glass-nav.tone-dark a{color:#f4f7ff;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.glass-nav.tone-dark a[aria-current="true"]{color:#fff}
+html.ui-dark .badge,html.ui-dark .talk,html.ui-dark .to-top{background:rgba(12,18,38,.55);border-color:rgba(255,255,255,.22);color:#f2f5ff;box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.22)}
+html.ui-dark .badge b,html.ui-dark .badge span,html.ui-dark .talk,html.ui-dark .to-top{color:#f2f5ff}
+html.ui-dark .badge span{opacity:.78}
+.badge,.talk,.to-top{transition:background .35s,color .3s,border-color .35s,box-shadow .35s}

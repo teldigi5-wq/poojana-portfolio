@@ -1,4 +1,5 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
+import { mountRefraction } from './assets/trace/glass-refract.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -11,6 +12,7 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
 /* ---------- liquid glass nav ---------- */
 const nav = $('#nav');
 const glass = mountGlassNav(nav, { imgSrc: 'assets/trace/hero-scene.webp', thickness: 20, activeSelector: '[aria-current="true"]' });
+if (glass && mountRefraction(nav, { thickness: 20 })) glass.setSpecOnly(true);   // Chromium: bend the real page behind the bar
 
 /* ---------- hero: dive into the terminal, driven by scroll ---------- */
 const hero = $('#trace');
@@ -270,7 +272,7 @@ function sampleTone() {
     if (t && t.dataset.tone === 'dark') dark++;
   }
   const next = dark >= 2 || root.style.getPropertyValue('--dark') > 0.45 ? 'dark' : '';
-  if (next !== tone) { tone = next; nav.classList.toggle('tone-dark', !!tone); glass && glass.setBackdrop({ adaptT: tone ? 1 : 0 }); }
+  if (next !== tone) { tone = next; nav.classList.toggle('tone-dark', !!tone); root.classList.toggle('ui-dark', !!tone); glass && glass.setBackdrop({ adaptT: tone ? 1 : 0 }); }
 }
 let ticking = false;
 const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } };
