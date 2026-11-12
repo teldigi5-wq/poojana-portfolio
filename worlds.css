@@ -1,0 +1,22 @@
+/* World stage (immersive v3). The canvas is decoration: aria-hidden, no pointer events,
+   and it only appears once its first frame has rendered. */
+.world-canvas{
+  position:absolute;inset:0;width:100%!important;height:100%!important;display:block;
+  pointer-events:none;opacity:0;transition:opacity 1.2s ease;
+}
+.world-live>.world-canvas{opacity:1}
+
+/* Gateway: the 3D scene replaces the faint vault photograph behind the portrait. */
+.hero-visual.world-live .vault{opacity:0!important;transition:opacity 1.2s ease}
+.hero-visual.world-live .portrait-halo{opacity:.55}
+/* Keep the left-hand text legible over the scene. */
+.hero-visual.world-live .hero-shade{
+  background:linear-gradient(90deg,#0b0a09 0%,#0b0a09e6 22%,#0b0a0900 58%,#0b0a0966 100%);
+}
+@media (max-width:760px){
+  .hero-visual.world-live .hero-shade{background:linear-gradient(180deg,#0b0a09cc 0%,#0b0a0900 35%,#0b0a0900 70%,#0b0a09cc 100%)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .world-canvas{display:none}
+}

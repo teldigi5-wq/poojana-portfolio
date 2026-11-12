@@ -112,6 +112,32 @@ for (const name of ["Cross-Origin-Opener-Policy", "Permissions-Policy", "Referre
 }
 if (/https:\/\/cdn\.|unsafe-eval/i.test(value("Content-Security-Policy") ?? "")) fail("CSP permits an unnecessary CDN or eval");
 
+// Immersive v3 world stage: per-world asset and code budgets (see IMMERSIVE-V3-PLAN.md).
+{
+  const { readdirSync } = await import("node:fs");
+  const { gzipSync } = await import("node:zlib");
+  const worldsDir = "assets/worlds";
+  if (existsSync(worldsDir)) {
+    const models = readdirSync(worldsDir).filter(name => /\.(glb|webp|ktx2)$/.test(name));
+    let total = 0;
+    for (const name of models) {
+      const bytes = statSync(`${worldsDir}/${name}`).size;
+      total += bytes;
+      if (bytes > 1.5 * 1024 * 1024) fail(`${worldsDir}/${name} exceeds the 1.5 MB per-world budget`);
+    }
+    if (total > 6 * 1024 * 1024) fail("world assets exceed the 6 MB total budget");
+    const jsDir = `${worldsDir}/js`;
+    if (existsSync(jsDir)) {
+      const chunks = readdirSync(jsDir).filter(name => name.endsWith(".js"));
+      const gz = name => gzipSync(readFileSync(`${jsDir}/${name}`)).length;
+      const engine = chunks.filter(name => name === "stage.js" || name.startsWith("stage-")).reduce((sum, name) => sum + gz(name), 0);
+      if (engine > 165 * 1024) fail(`world engine is ${engine} bytes gzip (budget 165 KiB)`);
+      for (const name of chunks.filter(name => !name.startsWith("stage"))) if (gz(name) > 30 * 1024) fail(`${jsDir}/${name} exceeds the 30 KiB gzip per-world budget`);
+      for (const name of chunks) if (/\beval\(|new Function\(/.test(readFileSync(`${jsDir}/${name}`, "utf8"))) fail(`${jsDir}/${name} uses eval`);
+    }
+  }
+}
+
 if (failures.length) {
   failures.forEach(message => console.error(`QUALITY GATE FAILED: ${message}`));
   process.exit(1);
