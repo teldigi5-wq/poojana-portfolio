@@ -302,7 +302,7 @@ export async function create({ renderer, getEnvironment, state }) {
       el.type = 'button';
       el.tabIndex = -1;
       el.style.cssText = 'position:absolute;left:0;top:0;width:168px;text-align:left;background:rgba(14,12,10,.72);border:1px solid rgba(220,173,126,.45);border-left:2px solid #dcad7e;color:#efe6d6;padding:9px 12px;font:12px/1.4 Georgia,serif;pointer-events:auto;cursor:pointer;backdrop-filter:blur(6px);transition:opacity .3s,border-color .3s';
-      el.innerHTML = `<span style="display:block;font:600 10px/1 system-ui,sans-serif;letter-spacing:.18em;color:#dcad7e;margin-bottom:5px">${n} / ${title.toUpperCase()}</span>${text}`;
+      el.innerHTML = `<span data-h style="display:block;font:600 10px/1 system-ui,sans-serif;letter-spacing:.18em;color:#dcad7e;margin-bottom:5px">${n} / ${title.toUpperCase()}</span><span data-t>${text}</span>`;
       const line = document.createElement('i');
       line.style.cssText = 'position:absolute;left:0;top:0;height:1px;background:linear-gradient(90deg,rgba(220,173,126,.9),rgba(220,173,126,.25));transform-origin:0 0;pointer-events:none';
       const dot = document.createElement('i');
@@ -396,15 +396,23 @@ export async function create({ renderer, getEnvironment, state }) {
         const py = (-probe.y * 0.5 + 0.5) * boxHeight;
         const lx = boxWidth - 176;
         const ly = Math.max(py - 22, floorY);
-        floorY = ly + 92;
-        c.el.style.display = c.line.style.display = c.dot.style.display = narrow ? 'none' : '';
-        c.el.style.transform = `translate(${lx}px,${ly}px)`;
+        if (!narrow) floorY = ly + 92;
+        c.el.style.width = narrow ? 'max-content' : '168px';
+        c.el.style.padding = narrow ? '5px 7px' : '9px 12px';
+        c.el.firstChild.style.whiteSpace = narrow ? 'nowrap' : '';
+        c.el.firstChild.style.fontSize = narrow ? '9px' : '10px';
+        c.el.firstChild.style.marginBottom = narrow ? '0' : '5px';
+        c.el.lastChild.style.display = narrow ? 'none' : '';
+        const nx = narrow ? 4 : lx;
+        const ny = narrow ? Math.max(py - 11, floorY) : ly;
+        if (narrow) floorY = ny + 30;
+        c.el.style.transform = `translate(${nx}px,${ny}px)`;
         c.el.style.opacity = name === selected ? 1 : 0.62;
         c.el.style.borderLeftColor = name === selected ? '#f1c994' : '#8d6f4f';
         c.dot.style.transform = `translate(${px}px,${py}px)`;
-        const len = Math.max(0, lx - px);
+        const len = narrow ? Math.max(0, px - 96) : Math.max(0, lx - px);
         c.line.style.width = `${len}px`;
-        c.line.style.transform = `translate(${px}px,${py}px)`;
+        c.line.style.transform = narrow ? `translate(96px,${py}px)` : `translate(${px}px,${py}px)`;
       }
     }
 

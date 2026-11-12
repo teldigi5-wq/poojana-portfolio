@@ -15,3 +15,8 @@
 .system-object .temple-notes{opacity:0;transition:opacity .35s}
 .system-object.world-live .temple-notes{opacity:1}
 .system-object.world-live .system-interaction,.system-object.world-live .system-shadow{opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}
+
+/* No WebGL, reduced motion or still tier: a photograph of the temple replaces the old CSS plates. */
+.system-object .system-plate{display:none}
+.system-object::before{content:'';position:absolute;inset:0;pointer-events:none;background:url(assets/worlds/temple-still.webp) center/contain no-repeat;-webkit-mask-image:radial-gradient(ellipse 62% 60% at 50% 48%,#000 46%,transparent 98%);mask-image:radial-gradient(ellipse 62% 60% at 50% 48%,#000 46%,transparent 98%);transition:opacity .5s}
+.system-object.world-live::before{opacity:0}
