@@ -25,15 +25,31 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
   return [(iu[0] - 0.5) / s[0] + 0.5, (iu[1] - 0.5) / s[1] + 0.5];
 };
 const fitHero = () => {            // keep the headline clear of the laptop on any viewport shape
-  root.style.setProperty('--hs', 1);
+  root.style.setProperty('--hs', 1); root.classList.remove('tight');
   if (!heroCopy || vw < 721) return;
   const room = toViewport([0.5, 0.44])[1] * vh - 16;   // top edge of the laptop in the viewport
-  const r = heroCopy.getBoundingClientRect(); const need = r.bottom - r.top + parseFloat(getComputedStyle(heroCopy).top);
-  root.classList.remove('tight');
-  if (need > room) root.style.setProperty('--hs', Math.max(0.5, room / need).toFixed(3));
-  if (heroCopy.getBoundingClientRect().bottom > room + 4) root.classList.add('tight');   // still too tall: drop the subhead
+  const topPx = parseFloat(getComputedStyle(heroCopy).top);
+  const need = () => heroCopy.getBoundingClientRect().height + topPx;
+  const SLACK = 8, fitTo = () => { for (let i = 0; i < 3; i++) { const n = need(); if (n <= room + SLACK) return true; const cur = parseFloat(getComputedStyle(root).getPropertyValue('--hs')) || 1; root.style.setProperty('--hs', Math.max(0.5, cur * room / n).toFixed(3)); } return need() <= room + SLACK; };
+  if (!fitTo() || parseFloat(getComputedStyle(root).getPropertyValue('--hs')) < 0.72) {   // too cramped: drop the subhead, refit
+    root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
+  }
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
+/* hero polish: word-by-word headline, Colombo clock, pointer spotlight, magnetic buttons */
+const h1 = $('#h1');
+if (h1 && !h1.dataset.split) { h1.dataset.split = 1; h1.innerHTML = h1.textContent.trim().split(/\s+/).map((w, i) => `<span class="w"><span style="--i:${i}">${esc(w)}</span></span>`).join(' '); }
+const clockEl = $('#clock');
+const tick = () => { if (clockEl) clockEl.textContent = 'Colombo ' + new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Colombo', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); };
+tick(); setInterval(tick, 30000);
+if (!reduce && matchMedia('(hover: hover)').matches) {
+  let sx = 0, sy = 0, mxp = 0, myp = 0, sraf = 0;
+  addEventListener('pointermove', e => { mxp = e.clientX; myp = e.clientY; if (!sraf) sraf = requestAnimationFrame(() => { sraf = 0; sx += (mxp - sx) * 0.9; sy += (myp - sy) * 0.9; root.style.setProperty('--mx', mxp + 'px'); root.style.setProperty('--my', myp + 'px'); }); }, { passive: true });
+  $$('.mag').forEach(b => {
+    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${((e.clientX - r.left) / r.width - 0.5) * 10}px, ${((e.clientY - r.top) / r.height - 0.5) * 8}px)`; });
+    b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+  });
+}
 const bootEl = $('#boot');
 let seenPast = false;
 let entered = !!location.hash;          // deep links skip the gate
@@ -52,6 +68,25 @@ const BOOT = [
   ['', 'tree', '├─ lab/        live demos you can run'],
   ['', 'tree', '└─ contact/    open to internships'],
 ];
+/* optional sound + haptics (off until the visitor opts in) */
+const sndBtn = $('#snd');
+let soundOn = false, actx = null;
+try { soundOn = localStorage.getItem('trace-sound') === '1'; } catch (e) {}
+const audio = () => { if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } if (actx && actx.state === 'suspended') actx.resume(); return actx; };
+let lastTick = 0;
+function sfx(kind) {
+  if (!soundOn) return;
+  const a = audio(); if (!a) return; const t = a.currentTime;
+  const tone = (f, at, dur, vol, type = 'sine') => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t + at); g.gain.exponentialRampToValueAtTime(vol, t + at + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + at + dur); o.connect(g).connect(a.destination); o.start(t + at); o.stop(t + at + dur + 0.05); };
+  if (kind === 'key') { const n = performance.now(); if (n - lastTick < 28) return; lastTick = n; tone(1800 + Math.random() * 500, 0, 0.035, 0.035, 'square'); }
+  else if (kind === 'blip') tone(660 + Math.random() * 240, 0, 0.06, 0.05, 'triangle');
+  else if (kind === 'grant') { tone(523, 0, 0.35, 0.07); tone(784, 0.09, 0.45, 0.07); tone(1046, 0.18, 0.7, 0.06); }
+  else if (kind === 'enter') { tone(880, 0, 0.12, 0.06, 'triangle'); tone(1320, 0.05, 0.18, 0.05, 'triangle'); }
+}
+const buzz = p => { if (soundOn && navigator.vibrate) try { navigator.vibrate(p); } catch (e) {} };
+const paintSnd = () => { if (!sndBtn) return; sndBtn.setAttribute('aria-pressed', soundOn); sndBtn.textContent = soundOn ? 'sound on' : 'sound off'; sndBtn.setAttribute('aria-label', soundOn ? 'Turn terminal sound and haptics off' : 'Turn terminal sound and haptics on'); };
+sndBtn && sndBtn.addEventListener('click', () => { soundOn = !soundOn; try { localStorage.setItem('trace-sound', soundOn ? '1' : '0'); } catch (e) {} if (soundOn) { audio(); sfx('enter'); } paintSnd(); });
+paintSnd();
 const SMALL = innerWidth < 700, NB = SMALL ? 10 : 20, TOUCH = matchMedia('(hover: none)').matches;
 if (SMALL) { BOOT[8][2] = '├─ lab/        live demos'; BOOT[7][2] = '├─ projects/   3 projects'; BOOT[9][2] = '└─ contact/    open to work'; }
 if (TOUCH && enterBtn) enterBtn.innerHTML = 'Tap to step into the stack';
@@ -81,7 +116,7 @@ async function playBoot() {
     if (c === 'cmd') {
       for (let i = 1; i <= t.length; i++) {
         if (id !== bootRun) return;
-        bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`;
+        bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`; sfx('key');
         await sleep(d + Math.random() * 22);
       }
       out.push(line(p, c, t)); draw(); await sleep(240);
@@ -90,14 +125,14 @@ async function playBoot() {
         if (id !== bootRun) return;
         const bar = '█'.repeat(n) + '░'.repeat(NB - n);
         bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="scr">${scr(ok, n / NB)}</span> <span class="bar">[${bar}] ${String(Math.round(n * 100 / NB)).padStart(3)}%</span><span class="caret"></span>`;
-        if (stat2) stat2.textContent = `session ${sess} · ${Math.round(n * 100 / NB)}%`;
+        if (stat2) stat2.textContent = `session ${sess} · ${Math.round(n * 100 / NB)}%`; if (n % 2 === 0) sfx('blip');
         await sleep(30 + Math.random() * 40);
       }
       out.push(line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(NB)}] 100%</span>`); draw(); await sleep(280);
     } else if (c === 'grant') {
       draw(); await sleep(320);
       out.push(line(p, c, t)); draw();
-      term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
+      sfx('grant'); buzz([18, 40, 26]); term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
       await sleep(380);
     } else if (c === 'tree') {
       out.push(line(p, c, t)); draw(); await sleep(170);
@@ -111,6 +146,7 @@ async function playBoot() {
   bootDone = true; showEnter(true);
 }
 function bootSync(boot) {
+  const live = boot > 0.5; term.classList.toggle('live', live); if (sndBtn) sndBtn.tabIndex = live ? 0 : -1;
   if (boot > 0.35 && !bootRun) { reduce ? (bootRun = 1, bootStatic()) : playBoot(); }
   else if (boot < 0.02 && bootRun) { bootRun = 0; bootDone = false; showEnter(false); bootEl.innerHTML = ''; term.classList.remove('granted', 'run'); setStat('idle', false); }
 }
@@ -135,7 +171,7 @@ function rainSync(dark) {
 addEventListener('resize', () => { if (rainOn) rainSize(); });
 function enterStack() {
   if (!bootDone && !reduce) { bootRun++; bootStatic(); bootDone = true; return; }
-  entered = true;
+  entered = true; sfx('enter'); buzz(12);
   const g = $('#gateway'); if (g) g.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
 }
 enterBtn && enterBtn.addEventListener('click', enterStack);
@@ -194,6 +230,7 @@ function frame() {
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
+  root.style.setProperty('--spot', reduce ? 0 : (0.9 * (1 - smooth(0, 0.35, t))).toFixed(3));
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
   bootSync(boot); rainSync(dark);
