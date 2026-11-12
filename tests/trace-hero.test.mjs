@@ -25,3 +25,12 @@ test('trace is served at / and the previous homepage stays reachable',()=>{
   assert.deepEqual(cfg.rewrites,[{source:'/',destination:'/trace.html'},{source:'/classic',destination:'/index.html'}]);
   assert.match(html,/rel="canonical" href="https:\/\/poojana-portfolio\.vercel\.app\/"/);
 });
+
+test('lanyard badge is lazy, accessible and light',()=>{
+  assert.ok(statSync(new URL('../assets/trace/lanyard-portrait.webp',import.meta.url)).size<60e3);
+  assert.ok(statSync(new URL('../assets/trace/lanyard.js',import.meta.url)).size<12e3);
+  assert.match(html,/id="lanyBtn"[^>]*aria-pressed/);          // keyboard flip control
+  assert.match(html,/class="lany-face back" aria-hidden="true"/);  // back links hidden until flipped
+  assert.match(js,/import\('\.\/assets\/trace\/lanyard\.js'\)/);   // loaded on demand
+  assert.match(read('assets/trace/lanyard.js'),/prefers-reduced-motion/);
+});

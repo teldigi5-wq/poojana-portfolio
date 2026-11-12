@@ -36,6 +36,12 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
   }
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
+/* lanyard: loaded when the contact section is near */
+const lany = $('#lanyard');
+if (lany && 'IntersectionObserver' in window) {
+  const lio = new IntersectionObserver(([en]) => { if (en.isIntersecting) { lio.disconnect(); import('./assets/trace/lanyard.js').then(m => m.mountLanyard(lany)).catch(() => {}); } }, { rootMargin: '400px' });
+  lio.observe(lany);
+}
 /* hero polish: word-by-word headline, Colombo clock, pointer spotlight, magnetic buttons */
 const h1 = $('#h1');
 if (h1 && !h1.dataset.split) { h1.dataset.split = 1; h1.innerHTML = h1.textContent.trim().split(/\s+/).map((w, i) => `<span class="w"><span style="--i:${i}">${esc(w)}</span></span>`).join(' '); }
