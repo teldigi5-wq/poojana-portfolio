@@ -3,11 +3,7 @@
 .hero-luxe .hero-visual{background:#0a0908;overflow:hidden}
 .temple-video{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;
-  filter:saturate(.9) contrast(1.05) brightness(1.02);
-  transform:scale(1.04);transform-origin:50% 42%;will-change:transform;
-  animation:temple-breathe 22s ease-in-out infinite alternate;
 }
-@keyframes temple-breathe{to{transform:scale(1.09) translate3d(0,-.6%,0)}}
 
 /* Colour grade: warm the shadows, keep the dome's cool light, pull the edges into the page. */
 .temple-grade{

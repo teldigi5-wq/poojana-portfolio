@@ -1,47 +1,41 @@
 /* Temple navigation: a bronze lintel that knows which hall you are in. */
 .temple-nav-wrap{flex-shrink:0}
-.temple-nav{position:relative;display:flex;align-items:center;gap:0;padding:6px;border-radius:999px;isolation:isolate;
-  background:linear-gradient(180deg,#26201a8c,#0f0c0a8c);
-  box-shadow:inset 0 1px 0 #ffffff1c,inset 0 -1px 0 #00000066,0 24px 60px -24px #000,0 0 0 1px #0000004d;
-  backdrop-filter:blur(22px) saturate(1.35);-webkit-backdrop-filter:blur(22px) saturate(1.35)}
-/* hairline gradient border: bright copper at the top edge, fading round the sides */
-.temple-nav::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:-1;
-  background:linear-gradient(180deg,#e6ba83a6,#b8876433 45%,#b8876459);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.tn-pip{position:absolute;z-index:0;left:0;top:5px;bottom:5px;width:var(--pip-w,0);transform:translateX(var(--pip-x,0));
-  border-radius:999px;background:linear-gradient(180deg,#f0d3a226,#b8876414);
-  box-shadow:inset 0 1px 0 #ffe7c233,inset 0 0 0 1px #e6ba8355,0 8px 24px -10px #d69d67aa;transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),opacity .3s;opacity:var(--pip-o,0)}
-.tn-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 17px;border-radius:999px;
-  color:#b9ab97;font:500 12.5px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:color .25s}
-.tn-item small{font:italic 400 12px/1 Georgia,"Times New Roman",serif;color:#8a6a50;letter-spacing:.02em;text-transform:none;transition:color .25s}
-.tn-item:hover{color:#f6eddc}.tn-item:hover small{color:#d69d67}
-.tn-item[aria-current="true"]{color:#f6eddc}
-.tn-item[aria-current="true"] small{color:#e6ba83}
-.tn-item:focus-visible{outline:2px solid var(--focus,#e6ba83);outline-offset:2px}
-/* Hero chapter ticks: three marks under Home that fill as the temple scrolls. */
-.tn-ticks{position:absolute;left:50%;bottom:6px;display:flex;gap:4px;transform:translateX(-50%);opacity:0;transition:opacity .3s}
-.tn-ticks b{width:10px;height:2px;border-radius:2px;background:#ffffff2e;transition:background .3s,width .3s}
-.tn-ticks b.on{background:#e6ba83;width:16px}
+/* Editorial bar: no box, no glow. Sentence-case links, one hairline that follows the section. */
+.temple-nav{position:relative;display:flex;align-items:center;gap:clamp(22px,2.6vw,44px);padding:0 2px}
+.tn-pip{position:absolute;left:0;bottom:6px;height:1px;width:var(--pip-w,0);transform:translateX(var(--pip-x,0));opacity:var(--pip-o,0);
+  background:linear-gradient(90deg,transparent,#e6ba83 18%,#e6ba83 82%,transparent);
+  transition:transform .6s cubic-bezier(.2,.8,.2,1),width .6s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.tn-item{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 2px;
+  color:#a89a86;font:450 14.5px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.005em;text-decoration:none;white-space:nowrap;
+  transition:color .35s}
+.tn-item small{display:none}
+.tn-item:hover,.tn-item[aria-current="true"]{color:#f3eadb}
+.tn-item:focus-visible{outline:2px solid var(--focus,#e6ba83);outline-offset:4px;border-radius:2px}
+/* Hero chapter ticks sit under Home while the temple scrolls. */
+.tn-ticks{position:absolute;left:50%;bottom:-1px;display:flex;gap:4px;transform:translateX(-50%);opacity:0;transition:opacity .3s}
+.tn-ticks b{width:8px;height:1px;background:#ffffff40;transition:background .3s,width .3s}
+.tn-ticks b.on{background:#e6ba83;width:14px}
 .is-in-hero .tn-ticks{opacity:1}
+.is-in-hero .tn-item[data-nav="home"] .tn-ticks{bottom:-6px}
 /* Header: transparent over the hero, frosted once you scroll. No hard band. */
 .header.header{border-bottom:0!important;background:linear-gradient(180deg,#0b0a09cc 0%,#0b0a0966 55%,#0b0a0900 100%)!important;transition:background .4s,height .3s,backdrop-filter .4s}
 .header.header.is-scrolled{background:linear-gradient(180deg,#0c0b0aeb,#0c0b0abf)!important;-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2)}
 .header.header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;opacity:0;transition:opacity .4s;
   background:linear-gradient(90deg,transparent,#b8876466 20%,#e6ba8399 50%,#b8876466 80%,transparent)}
 .header.header.is-scrolled::after{opacity:1}
-.header .brand-name{letter-spacing:.14em;font-size:9.5px;line-height:1.5;color:#e9dcc6}
+.header .brand-name{letter-spacing:.16em;font-size:9px;line-height:1.55;color:#cdbfa9}
 .header .brand-mark{filter:drop-shadow(0 2px 14px #000a)}
-/* right-hand controls share the nav's glass language */
-.header .command-trigger{border-radius:999px;border:0;background:linear-gradient(180deg,#26201a8c,#0f0c0a8c);color:#d8c8b0;
-  box-shadow:inset 0 1px 0 #ffffff1c,0 0 0 1px #b8876440;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.header .command-trigger:hover{color:#f6eddc;box-shadow:inset 0 1px 0 #ffffff26,0 0 0 1px #e6ba8399}
-.header .contact-link{position:relative;gap:12px;padding:0 8px 0 20px;min-height:48px;border-radius:999px;border:0;color:#1a140e;font-weight:600;letter-spacing:.02em;
-  background:linear-gradient(180deg,#f0d3a2,#d69d67);box-shadow:inset 0 1px 0 #fff6,0 10px 28px -12px #d69d67cc;transition:transform .3s,box-shadow .3s}
-.header .contact-link span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#1a140e;color:#f0d3a2;font-size:15px;transition:transform .3s}
-.header .contact-link:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 #fff8,0 14px 34px -10px #e6ba83}
-.header .contact-link:hover span{transform:rotate(45deg)}
+/* right-hand controls: hairline outline, no fills */
+.header .command-trigger{border-radius:999px;border:1px solid #ffffff24;background:transparent;color:#a89a86;font-size:12px;
+  transition:color .3s,border-color .3s}
+.header .command-trigger:hover{color:#f3eadb;border-color:#e6ba8399}
+.header .contact-link{position:relative;gap:14px;padding:0 6px 0 22px;min-height:46px;border-radius:999px;border:1px solid #e6ba8366;background:transparent;
+  color:#f3eadb;font-weight:500;letter-spacing:.01em;transition:background .35s,color .35s,border-color .35s}
+.header .contact-link span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#e6ba83;color:#17110b;font-size:14px;transition:transform .35s}
+.header .contact-link:hover{background:#e6ba83;color:#17110b;border-color:#e6ba83}
+.header .contact-link:hover span{background:#17110b;color:#e6ba83;transform:rotate(45deg)}
 @media(max-width:1239px){.tn-wide{display:none}}
-@media(max-width:1100px) and (min-width:901px){.tn-item{padding:0 11px;font-size:11.5px;letter-spacing:.04em}.tn-item small{display:none}}
+@media(max-width:1100px) and (min-width:901px){.temple-nav{gap:16px}.tn-item{font-size:13.5px}}
 @media(max-width:900px){.temple-nav-wrap{display:none}}
 @media(prefers-reduced-motion:reduce){.tn-pip,.tn-ticks,.tn-ticks b,.header .contact-link,.header .contact-link span{transition:none}}
 #liquid-nav-root{display:none!important}
