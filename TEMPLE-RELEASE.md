@@ -52,6 +52,10 @@ changed. CSP unchanged in both `vercel.json` and `staticwebapp.config.json`.
   fps; fixes: one texture fetch instead of three on low, anisotropic filtering only on medium/high,
   near/far column LODs, low tier uses the far LOD everywhere, explicit front-to-back draw order.
 - Preloader end → scene ignite: 3–70 ms (scene compiled and warmed before the intro closes).
+- LCP, Lighthouse-style throttling (1.6 Mbps, 150 ms RTT, 4× CPU), served locally:
+  1440×900 **2.76 s** (previous branch 3.85 s; LCP element = the scene still, now preloaded per
+  viewport). 390×844 **3.38 s** (previous 3.22 s; LCP element = the portrait, unchanged by this work,
+  difference within run-to-run noise). CLS 0.013 / 0.003.
 - No page errors; no horizontal overflow at 1440×900 or 390×844 (all tiers + reduced motion).
 - **Not measured:** real fps on an Intel UHD. The software rasteriser is vertex-bound in a way a GPU is
   not, so its numbers only rank changes. The governor still protects you: on low, average frame time

@@ -19,6 +19,8 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/display.woff" as="font" type="font/woff" crossorigin>
   <link rel="preload" href="assets/hero-portrait.webp" as="image" imagesrcset="assets/hero-portrait-mobile.webp 1000w, assets/hero-portrait.webp 1672w" imagesizes="(max-width: 760px) 150vw, 110vw">
+  <link rel="preload" href="assets/worlds/temple-still.webp" as="image" type="image/webp" media="not all and (max-width: 760px) and (orientation: portrait)" fetchpriority="high">
+  <link rel="preload" href="assets/worlds/temple-still-mobile.webp" as="image" type="image/webp" media="(max-width: 760px) and (orientation: portrait)" fetchpriority="high">
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="luxe.css?v=20261108-polish-1">
@@ -110,7 +112,7 @@
   </dialog>
   <main id="main">
     <section class="hero hero-luxe hero-temple" id="home" aria-labelledby="hero-title">
-      <div class="hero-visual" aria-hidden="true"><picture class="temple-still"><source media="(max-width: 760px) and (orientation: portrait)" srcset="assets/worlds/temple-still-mobile.webp" width="720" height="1280"><img src="assets/worlds/temple-still.webp" width="1600" height="900" alt="" decoding="async"></picture><div class="portrait-halo"></div><div class="hero-shade"></div></div>
+      <div class="hero-visual" aria-hidden="true"><picture class="temple-still"><source media="(max-width: 760px) and (orientation: portrait)" srcset="assets/worlds/temple-still-mobile.webp" width="720" height="1280"><img src="assets/worlds/temple-still.webp" width="1600" height="900" alt="" fetchpriority="high"></picture><div class="portrait-halo"></div><div class="hero-shade"></div></div>
       <div class="hero-top shell"><div class="eyebrow"><span class="status-dot"></span> OPEN TO INTERNSHIPS</div><p class="hero-coordinates">SRI LANKA<br><span id="local-time">UTC +05:30</span></p></div>
       <div class="hero-copy shell">
         <p class="hero-kicker"><span class="kicker-rule" aria-hidden="true"></span><span data-type>Poojana Kaveesh</span><span class="kicker-sep" aria-hidden="true">/</span><span data-type>Backend &amp; authorization security</span></p>
