@@ -1,15 +1,23 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Liquid glass nav lab</title><link rel="stylesheet" href="assets/trace/glass-nav.css">
-<style>html,body{margin:0;height:300vh;font-family:Inter,system-ui,sans-serif}
+<title>Liquid glass lab</title><link rel="stylesheet" href="assets/trace/glass-nav.css">
+<style>html,body{margin:0;height:300vh;font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif}
 .bg{position:fixed;inset:0;background:url(assets/trace/hero-scene.webp) center/cover no-repeat;z-index:-1}
 .card{position:absolute;left:50%;top:150vh;transform:translateX(-50%);width:min(640px,86vw);padding:32px;border-radius:24px;background:rgba(255,255,255,.8);box-shadow:0 20px 60px rgba(30,50,120,.15)}
-h1{position:absolute;top:22vh;width:100%;text-align:center;font-size:56px;letter-spacing:-.04em;color:#0e1116;margin:0}</style></head><body>
+h1{position:absolute;top:20vh;width:100%;text-align:center;font-size:56px;letter-spacing:-.04em;color:#0e1116;margin:0}
+.hint{position:fixed;bottom:18px;left:0;right:0;text-align:center;font:13px/1 ui-monospace,monospace;color:#33415f;z-index:5}</style></head><body>
 <div class="bg"></div><h1>Liquid glass lab</h1>
 <header class="glass-nav" id="nav"><canvas class="glass-gl"></canvas><nav aria-label="Primary">
 <a href="#trace" aria-current="true">Trace</a><a href="#work">Work</a><a href="#lab">Lab</a><a href="#about">About</a><a href="#cv">CV</a><span class="kbd">⌘K</span></nav></header>
-<div class="card"><h2>Scroll: content passes under the glass</h2><p>Text under the bar stays readable. Only the rim bends light.</p></div>
+<div class="glass-lens" id="lens"><canvas class="glass-gl"></canvas><div class="glyphs"><span>‹</span><span>+</span><span>○</span></div></div>
+<div class="card"><h2>Scroll: content passes under the glass</h2><p>Past the hero the bar drops to rim-only so text under it stays readable.</p></div>
+<div class="hint">drag the big lens over the scene</div>
 <script type="module">import {mountGlassNav} from './assets/trace/glass-nav.js';
-const nav=document.getElementById('nav');
-const api=mountGlassNav(nav,{imgSrc:'assets/trace/hero-scene.webp'});
+const nav=document.getElementById('nav'), lens=document.getElementById('lens');
+const n=mountGlassNav(nav,{imgSrc:'assets/trace/hero-scene.webp',thickness:20});
+const l=mountGlassNav(lens,{imgSrc:'assets/trace/hero-scene.webp',blob:false,thickness:22});
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();nav.querySelectorAll('a').forEach(x=>x.removeAttribute('aria-current'));a.setAttribute('aria-current','true')}));
-window.__glass=!!api;</script></body></html>
+const upd=()=>{const m=1-Math.min(Math.max(scrollY/(innerHeight*0.45),0),1);n&&n.setMode(m);};addEventListener('scroll',upd,{passive:true});upd();
+let drag=null;lens.addEventListener('pointerdown',e=>{lens.setPointerCapture(e.pointerId);const r=lens.getBoundingClientRect();drag=[e.clientX-r.left,e.clientY-r.top]});
+lens.addEventListener('pointermove',e=>{if(!drag)return;lens.style.left=(e.clientX-drag[0])+'px';lens.style.top=(e.clientY-drag[1])+'px';l&&l.redraw()});
+lens.addEventListener('pointerup',()=>drag=null);
+window.__glass=!!(n&&l);</script></body></html>
