@@ -12,9 +12,6 @@ import {
 
 const TAGS = [
   { id: 'me', kind: 'id', name: ['Poojana', 'Kaveesh'], role: 'BACKEND · AI · SECURITY', sub: 'SLIIT · IT UNDERGRADUATE', c: ['#2b4bff', '#0fa37f'], label: 'Poojana Kaveesh, backend engineer' },
-  { id: 'bl', kind: 'proj', name: 'BoundaryLab', status: 'Prototype', line: ['Authorization', 'verification'], c: ['#7a5cff', '#2bb5ff'], href: '#work', label: 'BoundaryLab, pre-release prototype' },
-  { id: 'ae', kind: 'proj', name: 'Aetheris', status: 'Research', line: ['Controlled tests,', 'not production'], c: ['#0fa37f', '#b6f09c'], href: '#work', label: 'Aetheris Platform, research' },
-  { id: 'wf', kind: 'proj', name: 'Wayfarer', status: 'Public', line: ['Rule-based', 'trip planner'], c: ['#ff7a45', '#ff3d8b'], href: '#work', label: 'Wayfarer, public project' },
 ];
 const CW = 1, CH = 1.5, BAND_W = 0.13, BAND_L = 0.82, SEG = BAND_L / 3, G = 9.5;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -117,8 +114,8 @@ export async function mountBelt(root, opts = {}) {
   function build() {
     rigs.forEach(r => { scene.remove(r.band, r.group, r.trolley); r.band.geometry.dispose(); });
     rigs = [];
-    const n = W >= 980 ? 4 : W >= 640 ? 3 : 2;
-    U = clamp(W / (n * 1.3), 120, 230);
+    const n = 1;
+    U = clamp(Math.min(W / 1.5, H / 3.15), 130, 300);
     const Hw = H / U, Ww = W / U, railY = Hw / 2 - 0.42; railYw = railY; const pitch = Math.min(1.34, Ww / n);
     camera.aspect = W / H; camera.fov = 20; const dist = (Hw / 2) / Math.tan(Math.PI * 20 / 360); camera.position.set(0, 0, dist); camera.far = dist * 3; camera.updateProjectionMatrix(); camera.lookAt(0, 0, 0);
     rail.scale.set(Ww + 0.4, 1, 1); rail.position.set(0, railY, -0.02);
@@ -267,6 +264,6 @@ export async function mountBelt(root, opts = {}) {
 /* ---------- no WebGL: the same cards, hanging in the DOM with a CSS sway ---------- */
 function fallback(root, stage, portrait) {
   const ul = document.createElement('ul'); ul.className = 'belt-fb'; ul.setAttribute('aria-hidden', 'true');
-  TAGS.slice(0, 3).forEach((t, i) => { const li = document.createElement('li'); li.style.setProperty('--i', i); const im = new Image(); im.alt = ''; im.src = drawTag(t, portrait, i).toDataURL('image/webp', 0.85); li.append(document.createElement('span'), im); ul.append(li); });
+  TAGS.forEach((t, i) => { const li = document.createElement('li'); li.style.setProperty('--i', i); const im = new Image(); im.alt = ''; im.src = drawTag(t, portrait, i).toDataURL('image/webp', 0.85); li.append(document.createElement('span'), im); ul.append(li); });
   stage.append(ul); root.classList.add('is-fallback'); return { destroy() { ul.remove(); } };
 }

@@ -28,12 +28,12 @@ test('Trace is the homepage and the previous homepage stays reachable',()=>{
   assert.match(html,/rel="canonical" href="https:\/\/poojana-portfolio\.vercel\.app\/"/);
 });
 
-test('crew belt (Three.js) is lazy, accessible and degrades gracefully',()=>{
+test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',()=>{
   assert.ok(statSync(new URL('../assets/trace/belt.js',import.meta.url)).size<640e3);
   assert.ok(statSync(new URL('../assets/trace/lanyard-portrait.webp',import.meta.url)).size<60e3);
   assert.match(html,/id="belt"[^>]*role="group"/);                       // labelled group
   assert.match(html,/class="belt-static"/);                              // no-JS / no-WebGL content
-  assert.match(html,/<ul class="sr-only">[\s\S]*href="#work"/);          // keyboard route to the projects
+  assert.doesNotMatch(read('source/trace-belt/belt.src.js'),/BoundaryLab|Aetheris|Wayfarer/); // only the personal lanyard
   assert.match(js,/import\('\.\/assets\/trace\/belt\.js'\)/);          // loaded on demand
   const src=read('source/trace-belt/belt.src.js');
   assert.match(src,/prefers-reduced-motion/);                            // static frame for reduced motion
