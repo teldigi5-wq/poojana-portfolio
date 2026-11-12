@@ -4,7 +4,7 @@
  * An original Greek temple interior (Blender asset: assets/worlds/temple.glb, built by
  * source/blender/temple.py). Scrolling walks the camera down the nave towards the
  * torch-bearer in the apse. A small flame — the request — leaves her torch and travels
- * down the aisle between the columns, clearing GET → TLS → AUTHZ → 200 OK on the way.
+ * down the aisle between the columns.
  *
  * Cost model (the low tier must hold 60 fps on an Intel UHD):
  *  - every bay module is ONE instanced draw (columns, entablature, vault, walls);
@@ -52,41 +52,6 @@ function glowTexture() {
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   return texture;
-}
-
-/** A protocol chip, rendered once to a texture: ivory text, copper hairline, engraved feel. */
-function labelSprite(text, tone) {
-  const pad = 18, h = 64;
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  const font = '500 28px ui-monospace, SFMono-Regular, Consolas, monospace';
-  ctx.font = font;
-  const w = Math.ceil(ctx.measureText(text).width) + pad * 2 + 24;
-  canvas.width = w; canvas.height = h;
-  ctx.font = font;
-  ctx.fillStyle = 'rgba(16,13,10,0.84)';
-  ctx.strokeStyle = tone === 'ok' ? 'rgba(243,237,223,0.75)' : 'rgba(192,138,91,0.75)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  if (ctx.roundRect) ctx.roundRect(1, 1, w - 2, h - 2, 3); else ctx.rect(1, 1, w - 2, h - 2);
-  ctx.fill(); ctx.stroke();
-  // Inner hairline: a quiet "engraved plaque" double rule.
-  ctx.strokeStyle = 'rgba(192,138,91,0.25)';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(5.5, 5.5, w - 11, h - 11);
-  ctx.fillStyle = tone === 'ok' ? '#f3eddf' : '#c08a5b';
-  ctx.beginPath(); ctx.arc(pad + 6, h / 2, 5, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#f3eddf';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, pad + 22, h / 2 + 1);
-  const texture = new CanvasTexture(canvas);
-  texture.colorSpace = SRGBColorSpace;
-  texture.anisotropy = 4;
-  const material = new SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false, opacity: 0, fog: false, sizeAttenuation: false });
-  const sprite = new Sprite(material);
-  sprite.userData.aspect = w / h;
-  sprite.renderOrder = 10;
-  return { sprite, texture, material };
 }
 
 /* ---------- the stone shader (shared by every tier) ----------
@@ -575,17 +540,6 @@ export async function create({ renderer, getEnvironment, state }) {
     return best;
   };
   const JOURNEY = 7.0, REST = 3.0, CYCLE = JOURNEY + REST;
-  const labels = [
-    { text: 'GET /work', z: pairZ(7), tone: 'step' },
-    { text: 'TLS ✓', z: pairZ(5), tone: 'step' },
-    { text: 'AUTHZ ✓ scope:read', z: pairZ(3), tone: 'step' },
-    { text: '200 OK', z: pairZ(1), tone: 'ok' }
-  ].map(spec => {
-    const l = labelSprite(spec.text, spec.tone);
-    track(l.texture); track(l.material);
-    scene.add(l.sprite);
-    return { ...l, param: paramAtZ(spec.z), opacity: 0, slot: 0 };
-  });
   const exitParam = paramAtZ(pairZ(0)) + 0.02;
 
   /* --- veil: the hall wakes from darkness, and flares to light at the hand-off --- */
@@ -639,12 +593,10 @@ export async function create({ renderer, getEnvironment, state }) {
   setTier(state);
 
   /* --- framing --- */
-  let narrow = false, chipHeight = 0.034, viewHeight = 900;
+  let narrow = false;
   const resize = (width, height) => {
     camera.aspect = width / height;
     narrow = camera.aspect < 0.9;
-    chipHeight = MathUtils.clamp(26 / height, 0.02, 0.05);
-    viewHeight = height;
     // Desktop: the vanishing point sits left of centre, in the gap between the headline and
     // the portrait. Phone: centred and lifted into the window above the headline.
     if (narrow) camera.setViewOffset(width, height, 0, height * 0.16, width, height);
@@ -661,7 +613,7 @@ export async function create({ renderer, getEnvironment, state }) {
   const after = (delay, dur = 1.4) => igniteAt < 0 ? 0 : MathUtils.clamp((time - igniteAt - delay) / dur, 0, 1);
   const ease3 = t => 1 - Math.pow(1 - t, 3);
 
-  const camRight = new Vector3(), camUp = new Vector3(), tmp = new Vector3();
+  const tmp = new Vector3();
   let walk = 0;   // smoothed scroll progress
 
   const update = (dt, s) => {
@@ -743,27 +695,6 @@ export async function create({ renderer, getEnvironment, state }) {
     core.lookAt(camera.position);
     halo.lookAt(camera.position);
 
-    let current = -1;
-    labels.forEach((l, i) => { if (clock >= 0 && t < JOURNEY && u > l.param - 0.01) current = i; });
-    camRight.setFromMatrixColumn(camera.matrixWorld, 0);
-    camUp.setFromMatrixColumn(camera.matrixWorld, 1);
-    const dist = camera.position.distanceTo(request.position);
-    const pxToWorld = 2 * dist * Math.tan(MathUtils.degToRad(camera.fov) / 2) / viewHeight;
-    labels.forEach((l, i) => {
-      const slot = current - i;
-      const weight = slot < 0 ? 0 : [1, 0.6, 0.38, 0.24][Math.min(slot, 3)];
-      const target = weight * intensity;
-      l.opacity += (target - l.opacity) * Math.min(1, dt * (target > l.opacity ? 9 : 6));
-      l.slot += ((slot < 0 ? 0 : slot) - l.slot) * Math.min(1, dt * 8);
-      l.material.opacity = l.opacity;
-      l.sprite.visible = l.material.opacity > 0.01;
-      l.sprite.scale.set(chipHeight * l.sprite.userData.aspect, chipHeight, 1);
-      const chipPx = chipHeight * viewHeight;
-      l.sprite.position.copy(request.position)
-        .addScaledVector(camUp, (chipPx * 0.9 + l.slot * chipPx * 1.25) * pxToWorld)
-        .addScaledVector(camRight, (18 + chipPx * l.sprite.userData.aspect * 0.5) * pxToWorld);
-    });
-
     for (let i = TRAIL - 1; i > 0; i--) {
       trailPositions[i * 3] = trailPositions[(i - 1) * 3];
       trailPositions[i * 3 + 1] = trailPositions[(i - 1) * 3 + 1];
@@ -792,7 +723,7 @@ export async function create({ renderer, getEnvironment, state }) {
     scene, camera, update, resize, setTier, dispose, ignite,
     // Review hook: jump the world clock forward (software-rendered screenshots run at ~1 fps,
     // so the 50 ms frame-step cap would otherwise keep them inside the wake-up fade).
-    debug: { labels, torches: torchPositions, get tier() { return tierName; }, advance(seconds) { time += seconds; } },
+    debug: { torches: torchPositions, get tier() { return tierName; }, advance(seconds) { time += seconds; } },
     bloom: { strength: 0.75, radius: 0.55, threshold: 0.86 },
     finish: { vignette: 0.48, grain: 0.03 }
   };

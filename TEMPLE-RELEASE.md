@@ -21,8 +21,8 @@ world-stage architecture — `stage.js`, tiers, governor — exists only there).
   oculus shadows. Contact shadows at column bases and plinths are analytic in the floor shader.
 - **Story.** After the Old Masters intro closes, the temple wakes: the hall fades up, braziers ignite
   near → far, daylight comes up, the torch lights last; then a flame leaves the torch and walks the
-  aisle between the columns, clearing `GET /work → TLS ✓ → AUTHZ ✓ scope:read → 200 OK` (ivory/copper
-  chips).
+  aisle between the columns. (The protocol chips — GET /work, TLS, AUTHZ, 200 OK — were removed on
+  request; the flame stays.)
 - **Hero** (`index.html`, `temple.css`, `temple-hero.js`). Kicker, a Cormorant Garamond headline with
   one italic word, one value line, two actions (View work, Download CV), a quiet scroll cue, a
   numerals-only index rail and a meander divider. The portrait markup is unchanged. On desktop the
