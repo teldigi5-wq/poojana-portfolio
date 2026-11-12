@@ -54,7 +54,8 @@ jobs:
                       if data.get(key): self.refs.append(data[key])
 
           parser = Parser()
-          parser.feed((root / 'index.html').read_text(encoding='utf-8'))
+          for page in ('classic.html', 'index.html'):
+              parser.feed((root / page).read_text(encoding='utf-8'))
           missing = []
           for ref in parser.refs:
               if ref.startswith(('#', 'mailto:', 'tel:')): continue

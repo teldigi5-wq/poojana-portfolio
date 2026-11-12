@@ -6,7 +6,7 @@ const fail = message => failures.push(message);
 const required = [
   "assets/integration-hero.js", "assets/integration-hero.css", "source/portfolio-copper/components/ui/integration-hero.tsx", "source/portfolio-copper/components/ui/button.tsx",
   "assets/boundary-demo.js", "boundary-demo.css", "source/portfolio-copper/lib/boundary-policy.ts", "source/portfolio-copper/src/boundary-demo.ts",
-  "index.html", "styles.css", "luxe.css", "project-explorers.css", "art-direction.css", "design-tokens.css", "clarity.css", "app.js", "motion.js", "preloader-boot.js",
+  "classic.html", "index.html", "styles.css", "luxe.css", "project-explorers.css", "art-direction.css", "design-tokens.css", "clarity.css", "app.js", "motion.js", "preloader-boot.js",
   "assets/liquid-navbar.js", "assets/liquid-navbar.css",
   "assets/portfolio-v2.js", "assets/portfolio-v2.css",
   "assets/portrait-lanyard.js", "assets/portrait-lanyard.css", "assets/poojana-lanyard-portrait.png", "lanyard.css",
@@ -44,7 +44,7 @@ for (const icon of new Set(toolkit.map(tool => tool.icon).filter(Boolean))) {
 if (iconBytes > 192 * 1024) fail("toolkit icons exceed aggregate 192 KiB budget");
 for (const tool of toolkit) if (!evidence[tool.evidence] || !tool.project) fail(`missing toolkit evidence: ${tool.name}`);
 
-const html = readFileSync("index.html", "utf8");
+const html = readFileSync("classic.html", "utf8");
 const styles = `${readFileSync("styles.css", "utf8")}\n${readFileSync("luxe.css", "utf8")}\n${readFileSync("assets/liquid-navbar.css", "utf8")}\n${readFileSync("assets/portfolio-v2.css", "utf8")}`;
 const app = readFileSync("app.js", "utf8");
 const motion = readFileSync("motion.js", "utf8");
@@ -82,7 +82,7 @@ const budgets = {
   // Optional toolkit catalog: shared React, local icons, no CDN dependency.
   "assets/integration-hero.js": 56 * 1024, "assets/integration-hero.css": 10 * 1024,
   "assets/boundary-demo.js": 8 * 1024, "boundary-demo.css": 6 * 1024,
-  "index.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
+  "classic.html": 64 * 1024, "styles.css": 48 * 1024, "luxe.css": 48 * 1024,
   "app.js": 32 * 1024, "motion.js": 24 * 1024,
   "project-explorers.css": 8 * 1024, "art-direction.css": 12 * 1024, "design-tokens.css": 2 * 1024, "clarity.css": 14 * 1024,
   "assets/liquid-navbar.js": 300 * 1024, "assets/liquid-navbar.css": 24 * 1024,

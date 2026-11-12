@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,statSync} from 'node:fs';
 
 const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),'utf8');
-const html=read('trace.html'),js=read('trace.js');
+const html=read('index.html'),js=read('trace.js');
 
 test('hero assets referenced by the trace page exist and stay light',()=>{
   for(const [p,max] of [['assets/trace/hero-scene.webp',120e3],['assets/trace/hero-pushin.mp4',3e6],['assets/trace/glass-nav.js',60e3]])
@@ -20,9 +20,11 @@ test('CSP allows same-origin media',()=>{
   assert.match(read('vercel.json'),/media-src 'self'/);
 });
 
-test('trace is served at / and the previous homepage stays reachable',()=>{
+test('Trace is the homepage and the previous homepage stays reachable',()=>{
   const cfg=JSON.parse(read('vercel.json'));
-  assert.deepEqual(cfg.rewrites,[{source:'/',destination:'/trace.html'},{source:'/classic',destination:'/index.html'}]);
+  assert.ok(cfg.redirects.some(r=>r.source==='/trace'&&r.destination==='/'));
+  assert.match(html,/id="trace"/);                                  // index.html is the Trace page
+  assert.match(read('classic.html'),/Engineering with intent/);     // previous homepage kept at /classic
   assert.match(html,/rel="canonical" href="https:\/\/poojana-portfolio\.vercel\.app\/"/);
 });
 
