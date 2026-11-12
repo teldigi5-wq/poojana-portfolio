@@ -282,6 +282,38 @@ export async function create({ renderer, getEnvironment, state }) {
   const lastDim = { foundation: -1, trust: -1, experience: -1 };
   const lookAt = new Vector3();
 
+  /* --- callouts: say what each layer of the temple stands for --- */
+  const NOTES = {
+    experience: ['01', 'Experience', 'The roof, what visitors see: interface, motion, accessibility.'],
+    trust: ['02', 'Trust', 'The columns carrying the weight: sign-in, permissions, validation.'],
+    foundation: ['03', 'Foundation', 'The base nobody sees: data, APIs, infrastructure.']
+  };
+  const MID = { foundation: 0.12, trust: 0.39, experience: 0.27 };
+  const callouts = {};
+  if (host) {
+    const layerBox = document.createElement('div');
+    layerBox.className = 'temple-notes';
+    layerBox.setAttribute('aria-hidden', 'true');
+    layerBox.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:3;font-family:Georgia,serif';
+    for (const name of LAYERS) {
+      const [n, title, text] = NOTES[name];
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.tabIndex = -1;
+      el.style.cssText = 'position:absolute;left:0;top:0;width:168px;text-align:left;background:rgba(14,12,10,.72);border:1px solid rgba(220,173,126,.45);border-left:2px solid #dcad7e;color:#efe6d6;padding:9px 12px;font:12px/1.4 Georgia,serif;pointer-events:auto;cursor:pointer;backdrop-filter:blur(6px);transition:opacity .3s,border-color .3s';
+      el.innerHTML = `<span style="display:block;font:600 10px/1 system-ui,sans-serif;letter-spacing:.18em;color:#dcad7e;margin-bottom:5px">${n} / ${title.toUpperCase()}</span>${text}`;
+      const line = document.createElement('i');
+      line.style.cssText = 'position:absolute;left:0;top:0;height:1px;background:linear-gradient(90deg,rgba(220,173,126,.9),rgba(220,173,126,.25));transform-origin:0 0;pointer-events:none';
+      const dot = document.createElement('i');
+      dot.style.cssText = 'position:absolute;left:0;top:0;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50%;background:#dcad7e;box-shadow:0 0 10px #dcad7e;pointer-events:none';
+      el.addEventListener('click', () => document.querySelector(`button[data-layer="${name}"]`)?.click());
+      layerBox.append(line, dot, el);
+      callouts[name] = { el, line, dot };
+    }
+    host.appendChild(layerBox);
+  }
+  const probe = new Vector3();
+
   const resize = (width, height) => {
     aspect = width / Math.max(1, height);
     boxWidth = width; boxHeight = height; visibleHeight = height;
@@ -340,6 +372,29 @@ export async function create({ renderer, getEnvironment, state }) {
     camera.position.set(0, focus + Math.sin(e0) * distance, Math.cos(e0) * distance);
     camera.lookAt(lookAt);
 
+    if (host) {
+      camera.updateMatrixWorld();
+      const narrow = boxWidth < 520;
+      for (const name of LAYERS) {
+        const c = callouts[name];
+        probe.set(0.95, MID[name] + layer[name].position.y, 0);
+        root.localToWorld(probe);
+        probe.project(camera);
+        const px = (probe.x * 0.5 + 0.5) * boxWidth;
+        const py = (-probe.y * 0.5 + 0.5) * boxHeight;
+        const lx = boxWidth - 176;
+        const ly = py - 22;
+        c.el.style.display = c.line.style.display = c.dot.style.display = narrow ? 'none' : '';
+        c.el.style.transform = `translate(${lx}px,${ly}px)`;
+        c.el.style.opacity = name === selected ? 1 : 0.62;
+        c.el.style.borderLeftColor = name === selected ? '#f1c994' : '#8d6f4f';
+        c.dot.style.transform = `translate(${px}px,${py}px)`;
+        const len = Math.max(0, lx - px);
+        c.line.style.width = `${len}px`;
+        c.line.style.transform = `translate(${px}px,${py}px)`;
+      }
+    }
+
     const lit = igniteAt < 0 ? 0 : MathUtils.clamp((time - igniteAt) / 1.4, 0, 1);
     key.intensity = (look === 'pbr' ? 2.2 : 1.8) * lit;
     rim.intensity = 1.6 * lit;
@@ -355,6 +410,7 @@ export async function create({ renderer, getEnvironment, state }) {
 
   const dispose = () => {
     disposables.forEach(item => item.dispose?.());
+    host?.querySelector('.temple-notes')?.remove();
     key.shadow.map?.dispose();
   };
 
