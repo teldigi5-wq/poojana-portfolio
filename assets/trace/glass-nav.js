@@ -166,7 +166,8 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
     const el = hovered || links.find(a => a.matches(activeSelector)) || links[0];
     if (!blob || !el) { st.tx = st.x = 0; st.tw = st.w = 0; kick(); return; }
     const r = el.getBoundingClientRect();
-    st.tx = r.left - hr.left + r.width / 2; st.tw = r.width + 22;
+    const tw = r.width + 12; const cx = r.left - hr.left + r.width / 2;
+    st.tw = tw; st.tx = Math.min(Math.max(cx, tw / 2 + 6), hr.width - tw / 2 - 6);
     if (snap || reduce) { st.x = st.tx; st.w = st.tw; st.vx = st.vw = 0; }
     kick();
   };
