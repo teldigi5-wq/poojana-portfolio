@@ -9,11 +9,9 @@
   .header .brand,.header .header-right{display:none}
   .temple-nav-wrap{display:block;position:absolute;inset:0;pointer-events:none}
   .tb{--bar-top:36px;--bar-h:56px;--gold:#d7b068;--gold-hi:#f4d99a;--gold-lo:#8d6a2e;position:relative;height:112px;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s}
-  .header.is-nav-hidden:not(:focus-within) .tb{transform:translateY(-116%);opacity:0;pointer-events:none}
-  .header.is-nav-hidden:not(:focus-within) .tb *{pointer-events:none}
 
   /* the marble slab with a gold line top and bottom */
-  .tb-bar{position:absolute;left:0;right:0;top:var(--bar-top);height:var(--bar-h);
+  .tb-bar{position:absolute;left:0;right:0;top:var(--bar-top);height:var(--bar-h);pointer-events:none;clip-path:inset(0 0 -40px 0);transition:clip-path .6s cubic-bezier(.2,.8,.2,1),opacity .4s .15s;
     background:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='90'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .045' numOctaves='4' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 .62 0 0 0 0 .52 0 0 0 0 .36 -30 0 0 0 10.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E") 0 0/700px 100%,
       linear-gradient(180deg,#171310,#0a0908 70%,#100d0a);
@@ -60,6 +58,25 @@
 }
 @media (prefers-reduced-motion:reduce){.tb,.tn-item::after,.tn-medal img{transition:none}}
 /* The sticky project index sits just under the marble bar. */
-@media (min-width:901px){.work-index{top:96px!important;transition:top .5s cubic-bezier(.2,.8,.2,1),opacity .3s,border-color .3s}html.nav-hidden .work-index{top:0!important}}
+@media (min-width:901px){.work-index{top:96px!important;transition:top .5s cubic-bezier(.2,.8,.2,1),opacity .3s,border-color .3s}html.nav-compact .work-index{top:0!important}}
 /* Keep the portrait's head clear of the bar: a little smaller and lower. */
 @media (min-width:901px) and (min-height:621px){.hero-luxe .hero-figure{bottom:-44px;left:10%;width:92%}}
+
+/* Compact mode: after the first screen the bar folds into the medallion, which opens it again. */
+@media (min-width:901px){
+  .tb-statue{transition:opacity .35s,transform .6s cubic-bezier(.2,.8,.2,1)}
+  .tn-side{transition:opacity .35s .12s,visibility 0s}
+  .tn-medal{cursor:pointer}
+  .tn-medal::before{content:"";position:absolute;left:-34px;right:-34px;top:34%;height:54%;z-index:-1;opacity:0;transition:opacity .3s;
+    background:linear-gradient(180deg,#171310,#0a0908 70%,#100d0a);border-top:2px solid #d7b068;border-bottom:2px solid #d7b068;box-shadow:0 16px 30px -14px #000}
+  .header.is-nav-compact:not(.is-nav-open) .tn-medal::before{opacity:1}
+  .header.is-nav-compact:not(.is-nav-open) .tb-bar{clip-path:inset(0 calc(50% - 86px) -40px calc(50% - 86px));opacity:0;transition:clip-path .6s cubic-bezier(.2,.8,.2,1),opacity .25s}
+  .header.is-nav-compact:not(.is-nav-open) .tb-zeus{opacity:0;transform:translateX(-60px)}
+  .header.is-nav-compact:not(.is-nav-open) .tb-athena{opacity:0;transform:translateX(60px)}
+  .header.is-nav-compact:not(.is-nav-open) .tn-side{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,visibility 0s .2s}
+  .header.is-nav-compact:not(.is-nav-open) .tn-medal img{filter:drop-shadow(0 10px 18px #000c) drop-shadow(0 0 14px #d7b06844)}
+  /* a quiet pulse invites the click while the bar is folded */
+  .header.is-nav-compact:not(.is-nav-open) .tn-medal::after{content:"";position:absolute;inset:6% 12% 22%;border-radius:50%;box-shadow:0 0 0 0 #f4d99a55;animation:tn-pulse 2.8s ease-out infinite}
+}
+@keyframes tn-pulse{0%{box-shadow:0 0 0 0 #f4d99a55}70%,100%{box-shadow:0 0 0 22px #f4d99a00}}
+@media (prefers-reduced-motion:reduce){.tb-bar,.tb-statue,.tn-side{transition:none}.tn-medal::after{animation:none!important}}

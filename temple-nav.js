@@ -30,17 +30,37 @@
     if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) key = 'contact';
     setCurrent(key);
   };
-  // Hide the bar while reading downward, bring it back on the way up or near the top.
+  // After the first screen the bar folds into the medallion; clicking it opens the full bar again.
   const header = document.getElementById('header');
-  let lastY = scrollY;
-  const autoHide = () => {
-    const y = scrollY, delta = y - lastY;
-    if (Math.abs(delta) < 6) return;
-    const hide = delta > 0 && y > 140;
-    header?.classList.toggle('is-nav-hidden', hide);
-    document.documentElement.classList.toggle('nav-hidden', hide);
-    lastY = y;
+  const medal = nav.querySelector('.tn-medal');
+  const root = document.documentElement;
+  const desktop = matchMedia('(min-width: 901px)');
+  let compact = false, open = false, openedAt = 0;
+  const sync = () => {
+    header?.classList.toggle('is-nav-compact', compact);
+    header?.classList.toggle('is-nav-open', open);
+    root.classList.toggle('nav-compact', compact);
+    if (compact) {
+      medal.setAttribute('aria-expanded', String(open));
+      medal.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    } else {
+      medal.removeAttribute('aria-expanded');
+      medal.setAttribute('aria-label', 'Poojana Kaveesh, back to the top');
+    }
   };
+  const setOpen = value => { open = value; openedAt = scrollY; sync(); };
+  const autoHide = () => {
+    if (!desktop.matches) { if (compact || open) { compact = open = false; sync(); } return; }
+    const y = scrollY;
+    if (!compact && y > 160) { compact = true; open = false; sync(); }
+    else if (compact && y < 90) { compact = open = false; sync(); }
+    else if (compact && open && Math.abs(y - openedAt) > 220) setOpen(false);   // scrolled away: fold again
+  };
+  medal.addEventListener('click', event => { if (compact) { event.preventDefault(); setOpen(!open); } });
+  nav.querySelectorAll('.tn-item').forEach(a => a.addEventListener('click', () => { if (compact) setOpen(false); }));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && compact && open) { setOpen(false); medal.focus(); } });
+  document.addEventListener('pointerdown', event => { if (compact && open && !event.target.closest('.temple-nav')) setOpen(false); });
+  desktop.addEventListener?.('change', autoHide);
   let raf = 0;
   const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); autoHide(); }); };
   addEventListener('scroll', onScroll, { passive: true });
