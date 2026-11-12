@@ -235,9 +235,9 @@ function frame() {
   else {
     const e = x => x * x * (3 - 2 * x);
     z = t < 0.7 ? 1 + 2.7 * e(t / 0.7) : 1 + 2.7 * (1 - e((t - 0.7) / 0.3));
-    dark = smooth(0.5, 0.72, t) * (1 - smooth(0.8, 1.0, t));
-    boot = smooth(0.62, 0.74, t) * (1 - smooth(0.82, 0.92, t));
-    veil = smooth(0.72, 1.0, t) * 0.86;
+    dark = Math.pow(smooth(0.52, 0.70, t), 2.6) * (1 - smooth(0.81, 0.865, t));   // snaps in/out: no long half-dark grey fog
+    boot = smooth(0.62, 0.74, t) * (1 - smooth(0.78, 0.83, t));
+    veil = smooth(0.74, 0.84, t) * 0.86;
   }
   let zEff = z;
   if (vidReady) {
