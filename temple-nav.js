@@ -30,8 +30,19 @@
     if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) key = 'contact';
     setCurrent(key);
   };
+  // Hide the bar while reading downward, bring it back on the way up or near the top.
+  const header = document.getElementById('header');
+  let lastY = scrollY;
+  const autoHide = () => {
+    const y = scrollY, delta = y - lastY;
+    if (Math.abs(delta) < 6) return;
+    const hide = delta > 0 && y > 140;
+    header?.classList.toggle('is-nav-hidden', hide);
+    document.documentElement.classList.toggle('nav-hidden', hide);
+    lastY = y;
+  };
   let raf = 0;
-  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); autoHide(); }); };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', () => { const k = current; current = ''; setCurrent(k); update(); });
   if (document.fonts?.ready) document.fonts.ready.then(() => { const k = current; current = ''; setCurrent(k); });

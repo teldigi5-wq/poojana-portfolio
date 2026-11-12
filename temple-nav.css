@@ -3,12 +3,14 @@
 #liquid-nav-root{display:none!important}
 .temple-nav-wrap{display:none}
 @media (min-width:901px){
-  :root{--header-h:120px}
-  .header.header{height:120px;padding:0;gap:0;border:0!important;background:none!important;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
+  :root{--header-h:112px}
+  .header.header{height:112px;padding:0;gap:0;border:0!important;background:none!important;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
   .header.header::after{display:none}
   .header .brand,.header .header-right{display:none}
   .temple-nav-wrap{display:block;position:absolute;inset:0;pointer-events:none}
-  .tb{--bar-top:40px;--bar-h:64px;--gold:#d7b068;--gold-hi:#f4d99a;--gold-lo:#8d6a2e;position:relative;height:120px}
+  .tb{--bar-top:36px;--bar-h:56px;--gold:#d7b068;--gold-hi:#f4d99a;--gold-lo:#8d6a2e;position:relative;height:112px;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s}
+  .header.is-nav-hidden:not(:focus-within) .tb{transform:translateY(-116%);opacity:0;pointer-events:none}
+  .header.is-nav-hidden:not(:focus-within) .tb *{pointer-events:none}
 
   /* the marble slab with a gold line top and bottom */
   .tb-bar{position:absolute;left:0;right:0;top:var(--bar-top);height:var(--bar-h);
@@ -21,13 +23,13 @@
     background:linear-gradient(90deg,var(--gold-lo),var(--gold) 6%,var(--gold-hi) 50%,var(--gold) 94%,var(--gold-lo));box-shadow:0 0 10px #d7b06888}
   .tb-bar::before{top:0}.tb-bar::after{bottom:0}
 
-  .tb-statue{position:absolute;top:0;height:104px;width:auto;z-index:2;pointer-events:none;filter:drop-shadow(0 6px 12px #000a)}
+  .tb-statue{position:absolute;top:0;height:92px;width:auto;z-index:2;pointer-events:none;filter:drop-shadow(0 6px 12px #000a)}
   .tb-zeus{left:0}.tb-athena{right:0}
 
   .temple-nav{position:absolute;inset:0;z-index:3}
   .tn-side{position:absolute;top:var(--bar-top);height:var(--bar-h);display:flex;align-items:center;justify-content:space-evenly;pointer-events:auto}
-  .tn-left{left:clamp(96px,9vw,150px);right:calc(50% + 92px)}
-  .tn-right{left:calc(50% + 92px);right:clamp(96px,9vw,150px)}
+  .tn-left{left:clamp(96px,9vw,150px);right:calc(50% + 82px)}
+  .tn-right{left:calc(50% + 82px);right:clamp(96px,9vw,150px)}
   .tn-item{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 6px;text-decoration:none;white-space:nowrap;
     font:600 16px/1 "Cormorant Garamond","Cinzel",Georgia,"Times New Roman",serif;letter-spacing:.08em;text-transform:uppercase;color:#e8dbbd;
     text-shadow:0 1px 8px #000c;transition:color .3s,text-shadow .3s}
@@ -46,16 +48,18 @@
   .tn-ticks b.on{background:var(--gold-hi);width:11px}
   .is-in-hero .tn-ticks{opacity:1}
 
-  .tn-medal{position:absolute;left:50%;top:0;width:135px;transform:translateX(-50%);z-index:4;pointer-events:auto;display:block;border-radius:50%}
+  .tn-medal{position:absolute;left:50%;top:0;width:118px;transform:translateX(-50%);z-index:4;pointer-events:auto;display:block;border-radius:50%}
   .tn-medal img{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 14px #000b);transition:filter .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
   .tn-medal:hover img{filter:drop-shadow(0 0 16px #f4d99a99) drop-shadow(0 8px 14px #000b);transform:scale(1.04)}
   .tn-medal:focus-visible{outline:2px solid var(--focus,#f4d99a);outline-offset:2px}
 }
 @media (min-width:901px) and (max-width:1180px){
   .tn-item{font-size:13px;letter-spacing:.05em;padding:0 3px}
-  .tn-left{left:96px;right:calc(50% + 80px)}.tn-right{left:calc(50% + 80px);right:96px}
-  .tb-statue{height:88px;margin-top:16px}.tn-medal{width:118px;top:8px}
+  .tn-left{left:92px;right:calc(50% + 76px)}.tn-right{left:calc(50% + 76px);right:92px}
+  .tb-statue{height:80px;margin-top:12px}.tn-medal{width:104px;top:6px}
 }
 @media (prefers-reduced-motion:reduce){.tb,.tn-item::after,.tn-medal img{transition:none}}
 /* The sticky project index sits just under the marble bar. */
-@media (min-width:901px){.work-index{top:104px!important}}
+@media (min-width:901px){.work-index{top:96px!important;transition:top .5s cubic-bezier(.2,.8,.2,1),opacity .3s,border-color .3s}html.nav-hidden .work-index{top:0!important}}
+/* Keep the portrait's head clear of the bar: a little smaller and lower. */
+@media (min-width:901px) and (min-height:621px){.hero-luxe .hero-figure{bottom:-44px;left:10%;width:92%}}
