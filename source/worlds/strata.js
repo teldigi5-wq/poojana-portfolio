@@ -256,7 +256,12 @@ export async function create({ renderer, getEnvironment, state }) {
     return Number.isFinite(value) ? value : fallback;
   };
 
+  const host = rig?.closest('.system-object');
   let aspect = 1;
+  let boxWidth = 1;
+  let boxHeight = 1;
+  let visibleHeight = 1;          // how much of the box is on screen (short laptops cut it off)
+  let shiftY = 0;
   let time = 0;
   let igniteAt = -1;
   let spread = 0.05;
@@ -268,6 +273,7 @@ export async function create({ renderer, getEnvironment, state }) {
 
   const resize = (width, height) => {
     aspect = width / Math.max(1, height);
+    boxWidth = width; boxHeight = height; visibleHeight = height;
     camera.aspect = aspect;
     camera.fov = aspect < 0.9 ? 34 : 30;
     camera.updateProjectionMatrix();
@@ -310,12 +316,25 @@ export async function create({ renderer, getEnvironment, state }) {
     root.rotation.y = yaw + s.pointer.x * 0.1 + settle * 0.5;
     root.rotation.x = s.pointer.y * 0.025;
 
+    // Frame what is actually visible: the box can extend below a short viewport (header above, controls below).
+    if (host) {
+      const r = host.getBoundingClientRect();
+      const top = Math.max(r.top, 76);
+      const bottom = Math.min(r.bottom, innerHeight - 8);
+      const visible = MathUtils.clamp(bottom - top, 220, boxHeight);
+      const shift = Math.round((top + bottom) / 2 - (r.top + r.height / 2));
+      if (Math.abs(shift - shiftY) > 1 || Math.abs(visible - visibleHeight) > 1) {
+        shiftY = shift; visibleHeight = visible;
+        camera.setViewOffset(boxWidth, boxHeight, 0, -shiftY, boxWidth, boxHeight);
+      }
+    }
+
     // Camera: far enough to hold the whole stack, rising a little as it opens.
     const halfTan = Math.tan(MathUtils.degToRad(camera.fov / 2));
     const e0 = MathUtils.degToRad(27 + 14 * spread);
     const needHeight = ((0.45 + 1.45 * spread) * Math.cos(e0) + 2.0 * Math.sin(e0)) * 1.08;
     const needWidth = 2.3 * 1.05;
-    const distance = Math.max(needHeight / (2 * halfTan), needWidth / (2 * halfTan * aspect)) * (1 + settle * 0.25);
+    const distance = Math.max(needHeight / (2 * halfTan) * (boxHeight / visibleHeight), needWidth / (2 * halfTan * aspect)) * (1 + settle * 0.25);
     const elevation = e0;
     const selectedLift = rest[selected] + LIFT[selected] * spread;
     focus += ((0.12 + 0.52 * spread + (selectedLift - (0.12 + 0.52 * spread)) * 0.1) - focus) * ease(5);
