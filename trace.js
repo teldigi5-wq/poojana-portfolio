@@ -36,11 +36,14 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
   }
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
-/* lanyard: loaded when the contact section is near */
-const lany = $('#lanyard');
-if (lany && 'IntersectionObserver' in window) {
-  const lio = new IntersectionObserver(([en]) => { if (en.isIntersecting) { lio.disconnect(); import('./assets/trace/lanyard.js').then(m => m.mountLanyard(lany)).catch(() => {}); } }, { rootMargin: '400px' });
-  lio.observe(lany);
+/* crew belt (Three.js): loaded when the contact section is near; tapping a project tag opens the work */
+const belt = $('#belt');
+if (belt && 'IntersectionObserver' in window) {
+  const bio = new IntersectionObserver(([en]) => {
+    if (!en.isIntersecting) return; bio.disconnect();
+    import('./assets/trace/belt.js').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp', onOpen: t => { unlock(); const w = $('#work'); if (w) w.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); dispatchEvent(new CustomEvent('trace:project', { detail: t.id })); } })).catch(() => {});
+  }, { rootMargin: '500px' });
+  bio.observe(belt);
 }
 /* hero polish: word-by-word headline, Colombo clock, pointer spotlight, magnetic buttons */
 const h1 = $('#h1');
@@ -363,6 +366,7 @@ function showProject(i) {
   $$('.row', listEl).forEach((r, k) => r.setAttribute('aria-selected', k === i));
   detailEl.innerHTML = `<span class="chip ac">0${i + 1} · ${STAGES[p.stage].toUpperCase()}</span><h3>${p.name}</h3><p>${p.lede}</p><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="evi">${p.evi}</div><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
 }
+addEventListener('trace:project', e => { const k = PROJECTS.findIndex(p => p.id === e.detail); if (k >= 0) showProject(k); });
 listEl.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) showProject(+r.dataset.i); });
 listEl.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); const n = (sel + (e.key === 'ArrowDown' ? 1 : -1) + PROJECTS.length) % PROJECTS.length; showProject(n); $$('.row', listEl)[n].focus(); } });
 showProject(0);
