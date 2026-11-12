@@ -1,15 +1,20 @@
 /* Temple navigation: a bronze lintel that knows which hall you are in. */
 .temple-nav-wrap{flex-shrink:0}
-.temple-nav{position:relative;display:flex;align-items:center;gap:2px;padding:5px;border-radius:999px;
-  background:linear-gradient(180deg,#1d1812f2,#120f0cf2);border:1px solid #b887644d;
-  box-shadow:inset 0 1px 0 #ffffff12,0 14px 40px -18px #000c;backdrop-filter:blur(14px) saturate(1.1);-webkit-backdrop-filter:blur(14px) saturate(1.1)}
+.temple-nav{position:relative;display:flex;align-items:center;gap:0;padding:6px;border-radius:999px;isolation:isolate;
+  background:linear-gradient(180deg,#26201a8c,#0f0c0a8c);
+  box-shadow:inset 0 1px 0 #ffffff1c,inset 0 -1px 0 #00000066,0 24px 60px -24px #000,0 0 0 1px #0000004d;
+  backdrop-filter:blur(22px) saturate(1.35);-webkit-backdrop-filter:blur(22px) saturate(1.35)}
+/* hairline gradient border: bright copper at the top edge, fading round the sides */
+.temple-nav::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:-1;
+  background:linear-gradient(180deg,#e6ba83a6,#b8876433 45%,#b8876459);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
 .tn-pip{position:absolute;z-index:0;left:0;top:5px;bottom:5px;width:var(--pip-w,0);transform:translateX(var(--pip-x,0));
-  border-radius:999px;background:linear-gradient(180deg,#d69d6733,#b8876418);border:1px solid #d69d6773;
-  box-shadow:0 0 22px -6px #d69d6788;transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),opacity .3s;opacity:var(--pip-o,0)}
-.tn-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 15px;border-radius:999px;
-  color:#c9bba7;font:500 13px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;white-space:nowrap;transition:color .25s}
-.tn-item small{font:italic 400 11px/1 Georgia,"Times New Roman",serif;color:#b88764;letter-spacing:.04em;min-width:1.5em;text-align:right;transition:color .25s}
-.tn-item:hover{color:#f0e8d9}
+  border-radius:999px;background:linear-gradient(180deg,#f0d3a226,#b8876414);
+  box-shadow:inset 0 1px 0 #ffe7c233,inset 0 0 0 1px #e6ba8355,0 8px 24px -10px #d69d67aa;transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),opacity .3s;opacity:var(--pip-o,0)}
+.tn-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 17px;border-radius:999px;
+  color:#b9ab97;font:500 12.5px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:color .25s}
+.tn-item small{font:italic 400 12px/1 Georgia,"Times New Roman",serif;color:#8a6a50;letter-spacing:.02em;text-transform:none;transition:color .25s}
+.tn-item:hover{color:#f6eddc}.tn-item:hover small{color:#d69d67}
 .tn-item[aria-current="true"]{color:#f6eddc}
 .tn-item[aria-current="true"] small{color:#e6ba83}
 .tn-item:focus-visible{outline:2px solid var(--focus,#e6ba83);outline-offset:2px}
@@ -18,16 +23,25 @@
 .tn-ticks b{width:10px;height:2px;border-radius:2px;background:#ffffff2e;transition:background .3s,width .3s}
 .tn-ticks b.on{background:#e6ba83;width:16px}
 .is-in-hero .tn-ticks{opacity:1}
-/* Header: meander hairline instead of a plain rule. */
-.header{border-bottom-color:transparent!important}
-.header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:12px;pointer-events:none;opacity:.22;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12' fill='none' stroke='%23b88764' stroke-width='1.2'%3E%3Cpath d='M0 11V1h10v7H4V4.5h3.5M12 11V1h10v7h-6V4.5h3.5' stroke-linejoin='miter'/%3E%3C/svg%3E") repeat-x left bottom/24px 12px;
-  transform:translateY(6px);transition:opacity .3s}
-.header.is-scrolled::after{opacity:.12}
-.header.is-scrolled .tn-item{min-height:40px}
+/* Header: transparent over the hero, frosted once you scroll. No hard band. */
+.header.header{border-bottom:0!important;background:linear-gradient(180deg,#0b0a09cc 0%,#0b0a0966 55%,#0b0a0900 100%)!important;transition:background .4s,height .3s,backdrop-filter .4s}
+.header.header.is-scrolled{background:linear-gradient(180deg,#0c0b0aeb,#0c0b0abf)!important;-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2)}
+.header.header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:linear-gradient(90deg,transparent,#b8876466 20%,#e6ba8399 50%,#b8876466 80%,transparent)}
+.header.header.is-scrolled::after{opacity:1}
+.header .brand-name{letter-spacing:.14em;font-size:9.5px;line-height:1.5;color:#e9dcc6}
+.header .brand-mark{filter:drop-shadow(0 2px 14px #000a)}
+/* right-hand controls share the nav's glass language */
+.header .command-trigger{border-radius:999px;border:0;background:linear-gradient(180deg,#26201a8c,#0f0c0a8c);color:#d8c8b0;
+  box-shadow:inset 0 1px 0 #ffffff1c,0 0 0 1px #b8876440;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.header .command-trigger:hover{color:#f6eddc;box-shadow:inset 0 1px 0 #ffffff26,0 0 0 1px #e6ba8399}
+.header .contact-link{position:relative;gap:12px;padding:0 8px 0 20px;min-height:48px;border-radius:999px;border:0;color:#1a140e;font-weight:600;letter-spacing:.02em;
+  background:linear-gradient(180deg,#f0d3a2,#d69d67);box-shadow:inset 0 1px 0 #fff6,0 10px 28px -12px #d69d67cc;transition:transform .3s,box-shadow .3s}
+.header .contact-link span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#1a140e;color:#f0d3a2;font-size:15px;transition:transform .3s}
+.header .contact-link:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 #fff8,0 14px 34px -10px #e6ba83}
+.header .contact-link:hover span{transform:rotate(45deg)}
 @media(max-width:1239px){.tn-wide{display:none}}
-@media(max-width:1100px) and (min-width:901px){.tn-item{padding:0 10px;font-size:12px}.tn-item small{display:none}}
+@media(max-width:1100px) and (min-width:901px){.tn-item{padding:0 11px;font-size:11.5px;letter-spacing:.04em}.tn-item small{display:none}}
 @media(max-width:900px){.temple-nav-wrap{display:none}}
-@media(prefers-reduced-motion:reduce){.tn-pip,.tn-ticks,.tn-ticks b{transition:none}}
+@media(prefers-reduced-motion:reduce){.tn-pip,.tn-ticks,.tn-ticks b,.header .contact-link,.header .contact-link span{transition:none}}
 #liquid-nav-root{display:none!important}
