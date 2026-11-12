@@ -21,10 +21,14 @@ export function initialTier({ gpu = '', coarse = false, width = 1440, memory = 8
 }
 
 /** Rolling frame-time monitor; returns a new tier or null. Exported for tests. */
-export function createGovernor({ slowMs = 22, verySlowMs = 40, window = 90 } = {}) {
+export function createGovernor({ slowMs = 22, verySlowMs = 40, window = 90, warmup = 45 } = {}) {
   const samples = [];
+  // Frames right after a (re)start or tier change include shader compiles and
+  // render-target rebuilds; they say nothing about steady-state cost.
+  let skip = warmup;
   return {
     sample(ms, tier) {
+      if (skip > 0) { skip--; return null; }
       samples.push(ms);
       if (samples.length < window) return null;
       const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
@@ -34,6 +38,6 @@ export function createGovernor({ slowMs = 22, verySlowMs = 40, window = 90 } = {
       if (avg > slowMs && index > 1) return TIERS[index - 1];
       return null;
     },
-    reset() { samples.length = 0; }
+    reset() { samples.length = 0; skip = warmup; }
   };
 }

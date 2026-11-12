@@ -22,7 +22,7 @@ test('a valid ?tier= override always wins; an invalid one is ignored', () => {
 });
 
 test('the governor steps down one tier when frames are slow, and to still from low', () => {
-  const g = createGovernor({ window: 10 });
+  const g = createGovernor({ window: 10, warmup: 0 });
   for (let i = 0; i < 9; i++) assert.equal(g.sample(30, 'high'), null);
   assert.equal(g.sample(30, 'high'), 'medium');
   for (let i = 0; i < 9; i++) g.sample(16, 'medium');
@@ -30,4 +30,13 @@ test('the governor steps down one tier when frames are slow, and to still from l
   for (let i = 0; i < 9; i++) g.sample(50, 'low');
   assert.equal(g.sample(50, 'low'), 'still');
   assert.deepEqual(TIERS, ['still', 'low', 'medium', 'high']);
+});
+
+test('frames during warm-up after a tier change are ignored', () => {
+  const g = createGovernor({ window: 5, warmup: 3 });
+  for (let i = 0; i < 3; i++) assert.equal(g.sample(200, 'high'), null);
+  for (let i = 0; i < 4; i++) g.sample(16, 'high');
+  assert.equal(g.sample(16, 'high'), null, 'compile spikes did not count');
+  g.reset();
+  for (let i = 0; i < 3; i++) assert.equal(g.sample(200, 'medium'), null);
 });

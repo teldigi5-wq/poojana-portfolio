@@ -111,6 +111,7 @@ function boot() {
     if (tier === 'still') { stop(); detach(); canvas.remove(); return; }
     state.tier = tier;
     state.settings = TIER_SETTINGS[tier];
+    governor.reset();
     active?.world.setTier?.(state);
     buildComposer();
     size();
