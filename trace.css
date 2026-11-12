@@ -199,8 +199,8 @@ html.ui-dark .badge b,html.ui-dark .badge span,html.ui-dark .talk,html.ui-dark .
 html.ui-dark .badge span{opacity:.78}
 .badge,.talk,.to-top{transition:background .35s,color .3s,border-color .35s,box-shadow .35s}
 /* hero ambient life */
-.live{position:fixed;inset:0;z-index:-1;pointer-events:none;width:100%;height:100%}
+.loop{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;opacity:0;pointer-events:none}.loop.on{opacity:1}
 .marker{animation:bob 6s ease-in-out infinite}
 .marker:nth-of-type(2){animation-delay:-1.2s}.marker:nth-of-type(3){animation-delay:-2.4s}.marker:nth-of-type(4){animation-delay:-3.6s}.marker:nth-of-type(5){animation-delay:-4.8s}
 @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -5px}}
-@media(prefers-reduced-motion:reduce){.live{display:none}.marker{animation:none}}
+@media(prefers-reduced-motion:reduce){.loop{display:none}.marker{animation:none}}

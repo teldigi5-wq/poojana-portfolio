@@ -41,12 +41,13 @@ test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',(
   assert.match(read('trace.css'),/\.belt-canvas\{[^}]*touch-action:pan-y/); // vertical scroll stays native
 });
 
-test('hero is alive without scrolling and respects reduced motion',()=>{
-  const js=read('trace.js'), live=read('assets/trace/hero-live.js');
-  assert.match(js,/mountLive\(/);
-  assert.match(read('index.html'),/id="live"/);
-  assert.match(live,/if \(!ctx \|\| reduce\) return null/);
-  assert.match(live,/document\.hidden/);                      // pauses in background tabs
-  assert.match(read('trace.css'),/prefers-reduced-motion:reduce\)\{\.live\{display:none\}/);
-  assert.ok(statSync(new URL('../assets/trace/hero-live.js',import.meta.url)).size<12e3);
+test('hero loops live, freezes on scroll and respects reduced motion / data saver',()=>{
+  const js=read('trace.js'), html=read('index.html'), css=read('trace.css');
+  assert.match(html,/id="loop"[^>]*muted[^>]*loop[^>]*playsinline/);
+  assert.match(js,/hero-loop\.mp4/);
+  assert.match(js,/!reduce && !saveData/);                    // no autoplay for reduced motion / data saver
+  assert.match(js,/loop\.pause\(\)/);                          // freezes when scrolling starts
+  assert.match(js,/loop\.play\(\)/);                           // resumes at the top
+  assert.match(css,/prefers-reduced-motion:reduce\)\{\.loop\{display:none\}/);
+  for(const f of ['hero-loop.mp4','hero-loop-720.mp4']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size<3e6,f);
 });

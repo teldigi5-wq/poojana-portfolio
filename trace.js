@@ -1,6 +1,5 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
 import { mountRefraction } from './assets/trace/glass-refract.js';
-import { mountLive } from './assets/trace/hero-live.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -38,7 +37,6 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
     root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
   }
 };
-const live = mountLive($('#live'), { reduce, place: (iu, z) => { const vp = toViewport(iu); return [(origin[0] + (vp[0] - origin[0]) * z) * vw, (origin[1] + (vp[1] - origin[1]) * z) * vh]; } });
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 /* ID-badge lanyard (Three.js): loaded when the contact section is near */
 const belt = $('#belt');
@@ -197,6 +195,15 @@ addEventListener('keydown', e => {
 });
 
 /* scroll-scrubbed push-in video (progressive: still + CSS zoom remain the fallback) */
+/* looping live scene: plays on its own at the top, freezes on the first scroll, then the scrubbed dive takes over */
+const loop = $('#loop');
+const saveData = !!(navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
+let loopOn = false;
+if (loop && !reduce && !saveData) {
+  loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
+  loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-720.mp4' : 'assets/trace/hero-loop.mp4';   // 1080p on large screens
+  loop.play().catch(() => {});
+}
 const vid = $('#pushin');
 const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
 let vidReady = false, vidDur = 0;
@@ -218,6 +225,11 @@ function frame() {
   }
   const tr = clamp(y / span);
   const t = tr <= A_END ? tr / A_END * 0.72 : tr <= B_END ? 0.72 + (tr - A_END) / (B_END - A_END) * 0.06 : 0.78 + (tr - B_END) / (1 - B_END) * 0.22;
+  if (loopOn) {                                   // live at the very top; frozen the moment scrolling starts
+    if (y > 4 && !loop.paused) loop.pause();
+    else if (y <= 4 && loop.paused && !document.hidden) loop.play().catch(() => {});
+    if (!vidReady) loop.style.opacity = 1 - clamp(y / 90);   // no scrub video: hand back to the still + CSS zoom
+  }
   let z = 1, dark = 0, veil, boot = 0;
   if (reduce) { veil = clamp(y / (vh * 0.8)) * 0.86; }
   else {
@@ -236,11 +248,10 @@ function frame() {
     const vo = toViewport(VEND);
     vid.style.transformOrigin = (vo[0] * 100) + '% ' + (vo[1] * 100) + '%';
     vid.style.transform = `scale(${extra.toFixed(4)})`;
-    vid.style.opacity = t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t);
+    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(y / 140) : 1);
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
-  if (live) live.setView(zEff, 1 - smooth(0.03, 0.2, t));
   root.style.setProperty('--spot', reduce ? 0 : (0.9 * (1 - smooth(0, 0.35, t))).toFixed(3));
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
