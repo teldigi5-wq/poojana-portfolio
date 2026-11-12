@@ -58,8 +58,22 @@ function frame() {
     glass.setBackdrop({ zoom: z, ox: origin[0], oy: origin[1], veil, dark });
     glass.setMode(reduce ? 1 : 1 - smooth(span * 0.92, span + vh * 0.5, y));
   }
+  sampleTone();
   $('#progress').style.transform = `scaleX(${clamp(y / Math.max(document.documentElement.scrollHeight - vh, 1)).toFixed(4)})`;
   $('#rail').classList.toggle('on', y > span * 0.9 && innerWidth >= 1100);
+}
+/* adaptive tone: look at what sits under the bar and switch to light-on-dark when needed */
+let tone = '';
+function sampleTone() {
+  const r = nav.getBoundingClientRect(); const y = r.top + r.height / 2;
+  let dark = 0;
+  for (const x of [r.left + r.width * 0.15, r.left + r.width * 0.5, r.left + r.width * 0.85]) {
+    const el = document.elementsFromPoint(x, y).find(e => !e.closest('#nav, .badge, .talk, .rail, .marker, .hint'));
+    const t = el && el.closest('[data-tone]');
+    if (t && t.dataset.tone === 'dark') dark++;
+  }
+  const next = dark >= 2 || root.style.getPropertyValue('--dark') > 0.45 ? 'dark' : '';
+  if (next !== tone) { tone = next; nav.classList.toggle('tone-dark', !!tone); glass && glass.setBackdrop({ adaptT: tone ? 1 : 0 }); }
 }
 let ticking = false;
 const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } };
