@@ -19,3 +19,9 @@ test('push-in video is progressive enhancement with a still fallback',()=>{
 test('CSP allows same-origin media',()=>{
   assert.match(read('vercel.json'),/media-src 'self'/);
 });
+
+test('trace is served at / and the previous homepage stays reachable',()=>{
+  const cfg=JSON.parse(read('vercel.json'));
+  assert.deepEqual(cfg.rewrites,[{source:'/',destination:'/trace.html'},{source:'/classic',destination:'/index.html'}]);
+  assert.match(html,/rel="canonical" href="https:\/\/poojana-portfolio\.vercel\.app\/"/);
+});
