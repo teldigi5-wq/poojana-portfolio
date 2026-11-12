@@ -209,7 +209,7 @@ const VEND = [0.49, 0.43];            // laptop screen centre in the last video 
 let vidReady = false, vidDur = 0;
 const lite = reduce || innerWidth < 700 || (navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
 if (vid && !lite) {
-  vid.src = 'assets/trace/hero-pushin.mp4';
+  vid.src = 'assets/trace/hero-pushin-1080.mp4';
   vid.addEventListener('loadeddata', () => { vidDur = vid.duration || 5; vidReady = true; root.classList.add('has-video'); frame(); }, { once: true });
   vid.addEventListener('error', () => { vidReady = false; root.classList.remove('has-video'); vid.style.opacity = 0; });
   vid.load();
@@ -248,7 +248,7 @@ function frame() {
     const vo = toViewport(VEND);
     vid.style.transformOrigin = (vo[0] * 100) + '% ' + (vo[1] * 100) + '%';
     vid.style.transform = `scale(${extra.toFixed(4)})`;
-    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(y / 140) : 1);
+    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(y / 48) : 1);
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
