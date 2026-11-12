@@ -1,0 +1,20 @@
+/* Story layer: chapter interludes and a chapter marker. Sticky, not pinned, so no scroll-spacer conflicts. */
+.story-beat{position:relative;min-height:62vh;display:grid;place-items:center;padding:12vh 24px;overflow:clip;background:radial-gradient(60% 55% at 50% 50%,rgba(220,173,126,.1),transparent 70%)}
+.sb-stick{position:relative;width:100%;max-width:1100px;display:grid;place-items:center;text-align:center}
+.sb-num{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:italic 400 clamp(180px,34vw,520px)/1 "Cormorant Garamond",Georgia,serif;color:transparent;-webkit-text-stroke:1px rgba(220,173,126,.2);letter-spacing:-.02em;pointer-events:none;user-select:none;white-space:nowrap}
+.sb-body{position:relative;max-width:860px}
+.sb-kicker{font:600 11px/1 system-ui,sans-serif;letter-spacing:.34em;color:#dcad7e;margin:0 0 18px}
+.sb-title{font:italic 400 clamp(46px,8vw,120px)/.95 "Cormorant Garamond",Georgia,serif;color:#f4ecdc;margin:0 0 26px;letter-spacing:-.01em}
+.sb-text{font:400 clamp(19px,2.3vw,30px)/1.45 Georgia,serif;color:#f4ecdc;margin:0}
+.sb-meander{position:absolute;left:50%;bottom:-6vh;width:min(420px,70vw);height:12px;transform:translateX(-50%);opacity:.5;background:repeating-linear-gradient(90deg,#dcad7e 0 2px,transparent 2px 12px)}
+html.story-on .story-beat{height:190vh;min-height:0;padding:0;display:block}
+html.story-on .sb-stick{position:sticky;top:0;height:100vh;max-width:none;padding:0 24px}
+html.story-on .sb-body{opacity:var(--o,0);transform:translateY(calc((1 - var(--o,0)) * 30px));will-change:opacity,transform}
+html.story-on .sb-num{transform:translate(-50%,calc(-50% + var(--p,0) * -14vh));opacity:calc(.25 + var(--o,0) * .75)}
+html.story-on .sb-text .sw{opacity:var(--w,.14);transition:opacity .12s linear}
+.story-hud{position:fixed;left:24px;bottom:22px;z-index:60;display:none;align-items:center;gap:10px;font:600 10px/1 system-ui,sans-serif;letter-spacing:.24em;color:#dcad7e;pointer-events:none;opacity:0;transition:opacity .4s}
+.story-hud i{width:28px;height:1px;background:#dcad7e}
+.story-hud b{font:italic 400 15px/1 Georgia,serif;letter-spacing:.06em;color:#f4ecdc}
+.story-hud em{font:italic 400 14px/1 Georgia,serif;letter-spacing:0;color:#f4ecdc;opacity:.8}
+@media (min-width:901px){html.story-on .story-hud{display:flex}html.story-on .story-hud.is-on{opacity:1}}
+@media (prefers-reduced-motion:reduce){html.story-on .story-beat{height:auto;min-height:62vh;padding:12vh 24px}html.story-on .sb-stick{position:relative;height:auto}html.story-on .sb-body{opacity:1;transform:none}html.story-on .sb-text .sw{opacity:1}}
