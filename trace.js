@@ -26,6 +26,70 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); };
 const bootEl = $('#boot');
+/* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
+const enterBtn = $('#enter');
+const BOOT = [
+  ['$ ', 'cmd', './trace --target poojana-kaveesh', 38],
+  ['> ', 'dim', 'resolving gateway ........... ', 0, 'ok'],
+  ['> ', 'dim', 'negotiating TLS 1.3 ......... ', 0, 'ok'],
+  ['> ', 'dim', 'bypassing rate limiter ...... ', 0, 'ok'],
+  ['> ', 'bar', 'decrypting portfolio.enc  ', 0],
+  ['> ', 'dim', 'mounting projects, lab, contact ... ', 0, 'ok'],
+  ['< ', 'grant', 'ACCESS GRANTED  200 OK  42 ms', 0],
+];
+let bootRun = 0, bootDone = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const line = (pre, cls, txt, ok) => `<i>${esc(pre.trim())}</i> ${cls === 'grant' ? `<span class="grant">${esc(txt)}</span>` : cls === 'dim' ? `<span class="dim">${esc(txt)}</span>${ok ? `<b class="ok">${ok}</b>` : ''}` : esc(txt)}`;
+function bootStatic() {
+  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => line(p, c, c === 'bar' ? t + '[██████████] 100%' : t, ok)).join('\n');
+  showEnter(true);
+}
+function showEnter(on) { if (!enterBtn) return; enterBtn.classList.toggle('on', on); enterBtn.tabIndex = on ? 0 : -1; }
+async function playBoot() {
+  const id = ++bootRun; bootDone = false; showEnter(false);
+  const out = []; const draw = (extra = '') => { if (id === bootRun) bootEl.innerHTML = out.join('\n') + extra + '<span class="caret"></span>'; };
+  for (const [p, c, t, d, ok] of BOOT) {
+    if (id !== bootRun) return;
+    if (c === 'cmd') {
+      for (let i = 1; i <= t.length; i++) {
+        if (id !== bootRun) return;
+        bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`;
+        await sleep(d + Math.random() * 40);
+      }
+      out.push(line(p, c, t)); draw(); await sleep(380);
+    } else if (c === 'bar') {
+      for (let n = 0; n <= 20; n++) {
+        if (id !== bootRun) return;
+        const bar = '█'.repeat(n) + '░'.repeat(20 - n);
+        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="bar">[${bar}] ${String(n * 5).padStart(3)}%</span><span class="caret"></span>`;
+        await sleep(55 + Math.random() * 70);
+      }
+      out.push(line(p, 'dim', t) + '<span class="bar">[' + '█'.repeat(20) + '] 100%</span>'); draw(); await sleep(260);
+    } else {
+      draw(); await sleep(c === 'grant' ? 300 : 240 + Math.random() * 220);
+      out.push(line(p, c, t, ok)); draw(); await sleep(c === 'grant' ? 200 : 120);
+    }
+  }
+  if (id !== bootRun) return;
+  bootEl.innerHTML = out.join('\n') + '\n<i>$</i> <span class="caret"></span>';
+  bootDone = true; showEnter(true);
+}
+function bootSync(boot) {
+  if (boot > 0.35 && !bootRun) { reduce ? (bootRun = 1, bootStatic()) : playBoot(); }
+  else if (boot < 0.02 && bootRun) { bootRun = 0; bootDone = false; showEnter(false); bootEl.innerHTML = ''; }
+}
+function enterStack() {
+  if (!bootDone && !reduce) { bootRun++; bootStatic(); bootDone = true; return; }
+  const g = $('#gateway'); if (g) g.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+enterBtn && enterBtn.addEventListener('click', enterStack);
+addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.repeat || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
+  if (!enterBtn.classList.contains('on') && !(bootRun && !bootDone)) return;
+  const a = document.activeElement; if (a && a !== document.body && a !== enterBtn && /^(A|BUTTON|INPUT|TEXTAREA|SELECT|SUMMARY)$/.test(a.tagName)) return;
+  e.preventDefault(); enterStack();
+});
+
 /* scroll-scrubbed push-in video (progressive: still + CSS zoom remain the fallback) */
 const vid = $('#pushin');
 const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
@@ -38,10 +102,12 @@ if (vid && !lite) {
   vid.load();
 }
 
+const A_END = 0.45, B_END = 0.8;   // dive | dark hold (terminal plays) | exit
 function frame() {
   const y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
-  const t = clamp(y / span);
+  const tr = clamp(y / span);
+  const t = tr <= A_END ? tr / A_END * 0.72 : tr <= B_END ? 0.72 + (tr - A_END) / (B_END - A_END) * 0.06 : 0.78 + (tr - B_END) / (1 - B_END) * 0.22;
   let z = 1, dark = 0, veil, boot = 0;
   if (reduce) { veil = clamp(y / (vh * 0.8)) * 0.86; }
   else {
@@ -67,6 +133,7 @@ function frame() {
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
   if (bootEl) bootEl.style.opacity = boot;
+  bootSync(boot);
   const onDark = dark > 0.45; root.style.setProperty('--navink', onDark ? '#eef2ff' : '#0e1116'); root.style.setProperty('--navkbd', onDark ? '#a9bbff' : '#1f3fd0');
   const fade = 1 - smooth(0, 0.22, t);
   heroCopy.style.opacity = fade; heroCopy.style.transform = `translateY(${(-t * 60).toFixed(1)}px) scale(${(1 - t * 0.04).toFixed(3)})`;

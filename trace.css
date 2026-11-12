@@ -15,6 +15,14 @@ a{color:inherit}button{font:inherit;color:inherit}
 .veil{position:fixed;inset:0;z-index:-2;background:#fff;opacity:var(--veil);pointer-events:none}
 .dark{position:fixed;inset:0;z-index:30;background:#0a0f1c;opacity:var(--dark);pointer-events:none;display:grid;place-items:center}
 .dark pre{margin:0;font:500 clamp(13px,1.6vw,18px)/1.8 var(--mono);color:#c9d1e6;opacity:var(--boot,0);text-align:left}
+.dark pre{min-height:15.4em;white-space:pre;width:min(46ch,88vw)}.dark .dim{color:#5d6985}.dark .bar{color:#7cf0c8}.dark .ok{color:#7cf0c8}.dark .grant{color:#7cf0c8;text-shadow:0 0 18px rgba(124,240,200,.55)}
+.caret{display:inline-block;width:.6em;height:1.1em;background:#7cf0c8;vertical-align:-.18em;margin-left:2px;animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}
+.enter{position:absolute;left:50%;bottom:11vh;transform:translate(-50%,10px);opacity:0;pointer-events:none;border:1px solid rgba(124,240,200,.4);background:rgba(124,240,200,.08);color:#d8fff1;font:500 14px/1 var(--mono);padding:14px 22px;border-radius:999px;cursor:pointer;transition:opacity .5s,transform .5s,background .2s;display:inline-flex;gap:10px;align-items:center;white-space:nowrap}
+.enter.on{opacity:1;transform:translate(-50%,0);pointer-events:auto;animation:pulse 2.2s ease-in-out infinite}.enter:hover,.enter:focus-visible{background:rgba(124,240,200,.18);outline:2px solid #7cf0c8;outline-offset:3px}
+.enter kbd{font:inherit;color:#7cf0c8;border:1px solid rgba(124,240,200,.45);border-radius:6px;padding:3px 7px}.enter span{color:#7f8aa3}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(124,240,200,.07)}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:700px){.enter span{display:none}.enter{bottom:14vh}}
 .dark b{color:#7cf0c8;font-weight:500}.dark i{font-style:normal;color:#7f8aa3}
 
 /* chrome: avatar badge, glass nav (see glass-nav.css), talk button, progress, rail */
@@ -34,7 +42,7 @@ a{color:inherit}button{font:inherit;color:inherit}
 .rail a:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:6px}
 
 /* hero */
-.hero{position:relative;height:300vh}.hero-stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.hero{position:relative;height:400vh}.hero-stick{position:sticky;top:0;height:100vh;overflow:hidden}
 .hero-copy{position:absolute;left:0;right:0;top:clamp(92px,12vh,130px);text-align:center;padding:0 24px;will-change:opacity,transform}
 .status{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;font:500 12px/1 var(--mono);color:#28406b;margin-bottom:16px}
 .status i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
@@ -127,7 +135,7 @@ dialog.pal::backdrop{background:rgba(10,15,30,.28);-webkit-backdrop-filter:blur(
 
 @media(max-width:720px){.marker{display:none}.badge b,.badge span{display:none}.badge{padding:0 8px;width:56px;justify-content:center}.talk{display:none}.hero h1{font-size:clamp(38px,11.5vw,54px)}.hint{bottom:18px;font-size:13px}}
 @media(max-width:480px){.glass-nav{max-width:calc(100% - 96px)}.glass-nav a{padding:0 9px;font-size:13px}.glass-nav .kbd,.glass-nav .sep{display:none}.badge{left:12px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero{height:100vh}.reveal{opacity:1;transform:none;transition:none}.marker i{animation:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero{height:100vh}.reveal{opacity:1;transform:none;transition:none}.caret,.enter.on{animation:none}.marker i{animation:none}}
 
 .glass-nav a{color:var(--navink,#0e1116)}.glass-nav .kbd{color:var(--navkbd,#1f3fd0)}.badge b,.talk{transition:color .3s}
 .glass-nav a[aria-current="true"]{color:var(--navink,#06102e)}
