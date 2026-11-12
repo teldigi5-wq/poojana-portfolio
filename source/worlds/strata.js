@@ -290,6 +290,7 @@ export async function create({ renderer, getEnvironment, state }) {
   };
   const MID = { foundation: 0.12, trust: 0.39, experience: 0.27 };
   const callouts = {};
+  let notesObserver = null;
   if (host) {
     const layerBox = document.createElement('div');
     layerBox.className = 'temple-notes';
@@ -311,6 +312,10 @@ export async function create({ renderer, getEnvironment, state }) {
       callouts[name] = { el, line, dot };
     }
     host.appendChild(layerBox);
+    // Only show the notes while the whole temple is on screen; they would float alone otherwise.
+    notesObserver = new IntersectionObserver(([entry]) => { layerBox.style.visibility = entry.intersectionRatio > 0.25 ? 'visible' : 'hidden'; }, { threshold: [0, 0.15, 0.25, 0.4] });
+    notesObserver.observe(host);
+    layerBox.style.visibility = 'hidden';
   }
   const probe = new Vector3();
 
@@ -374,6 +379,12 @@ export async function create({ renderer, getEnvironment, state }) {
 
     if (host) {
       camera.updateMatrixWorld();
+      const hr = host.getBoundingClientRect();
+      const seen = Math.min(hr.bottom, innerHeight) - Math.max(hr.top, 76);
+      const need = Math.min(boxHeight * 0.7, innerHeight * 0.55);
+      const notesOn = seen >= need;
+      const box = host.querySelector('.temple-notes');
+      if (box) box.style.opacity = notesOn ? '' : '0';
       const narrow = boxWidth < 520;
       let floorY = -1e9;
       for (const name of ['experience', 'trust', 'foundation']) {
@@ -412,6 +423,7 @@ export async function create({ renderer, getEnvironment, state }) {
 
   const dispose = () => {
     disposables.forEach(item => item.dispose?.());
+    notesObserver?.disconnect();
     host?.querySelector('.temple-notes')?.remove();
     key.shadow.map?.dispose();
   };
