@@ -5,7 +5,7 @@
 export const TIERS = ['still', 'low', 'medium', 'high'];
 export const TIER_SETTINGS = {
   high: { dpr: 1.75, bloom: true, bloomScale: 1, particles: 1 },
-  medium: { dpr: 1.25, bloom: true, bloomScale: 0.5, particles: 0.55 },
+  medium: { dpr: 1, bloom: true, bloomScale: 0.4, particles: 0.55 },
   low: { dpr: 1, bloom: false, bloomScale: 0, particles: 0.3 }
 };
 

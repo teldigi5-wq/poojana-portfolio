@@ -14,7 +14,7 @@
   const load = () => {
     const script = document.createElement('script');
     script.type = 'module';
-    script.src = 'assets/worlds/js/stage.js?v=20261112-v3-2';
+    script.src = 'assets/worlds/js/stage.js?v=20261112-v3-3';
     document.head.append(script);
   };
   const idle = cb => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 800));

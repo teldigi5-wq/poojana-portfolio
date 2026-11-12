@@ -87,7 +87,9 @@ function boot() {
     if (composer) {
       composer.setPixelRatio(renderer.getPixelRatio());
       composer.setSize(width, height);
-      bloomPass?.resolution.set(width * state.settings.bloomScale, height * state.settings.bloomScale);
+      // composer.setSize sized bloom at full resolution; scale it down per tier (the expensive part on integrated GPUs).
+      const ratio = renderer.getPixelRatio() * state.settings.bloomScale;
+      bloomPass?.setSize(Math.max(64, Math.round(width * ratio)), Math.max(64, Math.round(height * ratio)));
     }
   };
 
