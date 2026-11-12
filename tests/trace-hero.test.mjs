@@ -40,3 +40,13 @@ test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',(
   assert.match(src,/function fallback/);                                 // DOM fallback without WebGL
   assert.match(read('trace.css'),/\.belt-canvas\{[^}]*touch-action:pan-y/); // vertical scroll stays native
 });
+
+test('hero is alive without scrolling and respects reduced motion',()=>{
+  const js=read('trace.js'), live=read('assets/trace/hero-live.js');
+  assert.match(js,/mountLive\(/);
+  assert.match(read('index.html'),/id="live"/);
+  assert.match(live,/if \(!ctx \|\| reduce\) return null/);
+  assert.match(live,/document\.hidden/);                      // pauses in background tabs
+  assert.match(read('trace.css'),/prefers-reduced-motion:reduce\)\{\.live\{display:none\}/);
+  assert.ok(statSync(new URL('../assets/trace/hero-live.js',import.meta.url)).size<12e3);
+});

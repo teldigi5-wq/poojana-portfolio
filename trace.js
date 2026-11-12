@@ -1,5 +1,6 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
 import { mountRefraction } from './assets/trace/glass-refract.js';
+import { mountLive } from './assets/trace/hero-live.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -37,6 +38,7 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
     root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
   }
 };
+const live = mountLive($('#live'), { reduce, place: (iu, z) => { const vp = toViewport(iu); return [(origin[0] + (vp[0] - origin[0]) * z) * vw, (origin[1] + (vp[1] - origin[1]) * z) * vh]; } });
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 /* ID-badge lanyard (Three.js): loaded when the contact section is near */
 const belt = $('#belt');
@@ -238,6 +240,7 @@ function frame() {
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
+  if (live) live.setView(zEff, 1 - smooth(0.03, 0.2, t));
   root.style.setProperty('--spot', reduce ? 0 : (0.9 * (1 - smooth(0, 0.35, t))).toFixed(3));
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
