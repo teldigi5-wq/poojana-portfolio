@@ -45,7 +45,7 @@
         trigger: hero, start: 'top top', end: () => `+=${Math.round(innerHeight * (small ? 1.1 : 1.5))}`,
         pin: true, scrub: 0.7, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 100,
         onUpdate: self => {
-          target = self.progress;
+          target = self.progress; window.__templeProgress = self.progress;
           chapters.forEach((li, i) => li.classList.toggle('is-active', self.progress >= ranges[i][0] && self.progress < ranges[i][1]));
           if (fill) fill.style.transform = `scaleX(${self.progress})`;
           const idx = ranges.findIndex(r => self.progress >= r[0] && self.progress < r[1]);
@@ -58,6 +58,8 @@
       .to(figure, { scale: 1.07, yPercent: 3, duration: 1 }, 0)
       .to(wordmark, { letterSpacing: '0.16em', opacity: 0.55, duration: 1 }, 0)
       .to(bottom, { autoAlpha: 0, duration: 0.18 }, 0.04);
+    const helmet = hero.querySelector('.hero-helmet');
+    if (helmet) tl.fromTo(helmet, { autoAlpha: 0, y: 44, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.17, ease: 'power2.out' }, 0.2);
 
     addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   };

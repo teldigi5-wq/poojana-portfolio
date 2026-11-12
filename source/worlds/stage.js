@@ -340,6 +340,13 @@ function boot() {
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); stop(); detach(); canvas.remove(); root.dataset.worldTier = 'still'; });
 
   // Debug handle for the visual-audit script (read-only information).
+
+  // The hero helmet has its own transparent renderer (the shared canvas is opaque). Not on phones.
+  const helmetHost = document.querySelector('.hero-helmet');
+  if (helmetHost && innerWidth >= 760) {
+    import('./helmet.js').then(module => module.mount({ host: helmetHost, tier })).catch(error => { root.dataset.helmetError = String(error?.message || error).slice(0, 120); });
+  }
+
   window.__worldStage = { get tier() { return tier; }, get active() { return active?.name || null; }, setTier, timings, get world() { return active?.world || null; } };
 }
 
