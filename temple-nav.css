@@ -1,41 +1,61 @@
-/* Temple navigation: a bronze lintel that knows which hall you are in. */
-.temple-nav-wrap{flex-shrink:0}
-/* Editorial bar: no box, no glow. Sentence-case links, one hairline that follows the section. */
-.temple-nav{position:relative;display:flex;align-items:center;gap:clamp(22px,2.6vw,44px);padding:0 2px}
-.tn-pip{position:absolute;left:0;bottom:6px;height:1px;width:var(--pip-w,0);transform:translateX(var(--pip-x,0));opacity:var(--pip-o,0);
-  background:linear-gradient(90deg,transparent,#e6ba83 18%,#e6ba83 82%,transparent);
-  transition:transform .6s cubic-bezier(.2,.8,.2,1),width .6s cubic-bezier(.2,.8,.2,1),opacity .3s}
-.tn-item{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 2px;
-  color:#a89a86;font:450 14.5px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.005em;text-decoration:none;white-space:nowrap;
-  transition:color .35s}
-.tn-item small{display:none}
-.tn-item:hover,.tn-item[aria-current="true"]{color:#f3eadb}
-.tn-item:focus-visible{outline:2px solid var(--focus,#e6ba83);outline-offset:4px;border-radius:2px}
-/* Hero chapter ticks sit under Home while the temple scrolls. */
-.tn-ticks{position:absolute;left:50%;bottom:-1px;display:flex;gap:4px;transform:translateX(-50%);opacity:0;transition:opacity .3s}
-.tn-ticks b{width:8px;height:1px;background:#ffffff40;transition:background .3s,width .3s}
-.tn-ticks b.on{background:#e6ba83;width:14px}
-.is-in-hero .tn-ticks{opacity:1}
-.is-in-hero .tn-item[data-nav="home"] .tn-ticks{bottom:-6px}
-/* Header: transparent over the hero, frosted once you scroll. No hard band. */
-.header.header{border-bottom:0!important;background:linear-gradient(180deg,#0b0a09cc 0%,#0b0a0966 55%,#0b0a0900 100%)!important;transition:background .4s,height .3s,backdrop-filter .4s}
-.header.header.is-scrolled{background:linear-gradient(180deg,#0c0b0aeb,#0c0b0abf)!important;-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2)}
-.header.header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;opacity:0;transition:opacity .4s;
-  background:linear-gradient(90deg,transparent,#b8876466 20%,#e6ba8399 50%,#b8876466 80%,transparent)}
-.header.header.is-scrolled::after{opacity:1}
-.header .brand-name{letter-spacing:.16em;font-size:9px;line-height:1.55;color:#cdbfa9}
-.header .brand-mark{filter:drop-shadow(0 2px 14px #000a)}
-/* right-hand controls: hairline outline, no fills */
-.header .command-trigger{border-radius:999px;border:1px solid #ffffff24;background:transparent;color:#a89a86;font-size:12px;
-  transition:color .3s,border-color .3s}
-.header .command-trigger:hover{color:#f3eadb;border-color:#e6ba8399}
-.header .contact-link{position:relative;gap:14px;padding:0 6px 0 22px;min-height:46px;border-radius:999px;border:1px solid #e6ba8366;background:transparent;
-  color:#f3eadb;font-weight:500;letter-spacing:.01em;transition:background .35s,color .35s,border-color .35s}
-.header .contact-link span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#e6ba83;color:#17110b;font-size:14px;transition:transform .35s}
-.header .contact-link:hover{background:#e6ba83;color:#17110b;border-color:#e6ba83}
-.header .contact-link:hover span{background:#17110b;color:#e6ba83;transform:rotate(45deg)}
-@media(max-width:1239px){.tn-wide{display:none}}
-@media(max-width:1100px) and (min-width:901px){.temple-nav{gap:16px}.tn-item{font-size:13.5px}}
-@media(max-width:900px){.temple-nav-wrap{display:none}}
-@media(prefers-reduced-motion:reduce){.tn-pip,.tn-ticks,.tn-ticks b,.header .contact-link,.header .contact-link span{transition:none}}
+/* Temple navigation (desktop): a dark marble bar with gold trim, Zeus and Athena at the ends and a
+   laurel medallion in the middle. Three links either side. Phones keep the existing menu. */
 #liquid-nav-root{display:none!important}
+.temple-nav-wrap{display:none}
+@media (min-width:901px){
+  :root{--header-h:120px}
+  .header.header{height:120px;padding:0;gap:0;border:0!important;background:none!important;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
+  .header.header::after{display:none}
+  .header .brand,.header .header-right{display:none}
+  .temple-nav-wrap{display:block;position:absolute;inset:0;pointer-events:none}
+  .tb{--bar-top:40px;--bar-h:64px;--gold:#d7b068;--gold-hi:#f4d99a;--gold-lo:#8d6a2e;position:relative;height:120px}
+
+  /* the marble slab with a gold line top and bottom */
+  .tb-bar{position:absolute;left:0;right:0;top:var(--bar-top);height:var(--bar-h);
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='90'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .045' numOctaves='4' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 .62 0 0 0 0 .52 0 0 0 0 .36 -30 0 0 0 10.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E") 0 0/700px 100%,
+      linear-gradient(180deg,#171310,#0a0908 70%,#100d0a);
+    background-blend-mode:soft-light,normal;
+    box-shadow:0 22px 44px -18px #000,inset 0 0 40px #0009}
+  .tb-bar::before,.tb-bar::after{content:"";position:absolute;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--gold-lo),var(--gold) 6%,var(--gold-hi) 50%,var(--gold) 94%,var(--gold-lo));box-shadow:0 0 10px #d7b06888}
+  .tb-bar::before{top:0}.tb-bar::after{bottom:0}
+
+  .tb-statue{position:absolute;top:0;height:104px;width:auto;z-index:2;pointer-events:none;filter:drop-shadow(0 6px 12px #000a)}
+  .tb-zeus{left:0}.tb-athena{right:0}
+
+  .temple-nav{position:absolute;inset:0;z-index:3}
+  .tn-side{position:absolute;top:var(--bar-top);height:var(--bar-h);display:flex;align-items:center;justify-content:space-evenly;pointer-events:auto}
+  .tn-left{left:clamp(96px,9vw,150px);right:calc(50% + 92px)}
+  .tn-right{left:calc(50% + 92px);right:clamp(96px,9vw,150px)}
+  .tn-item{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 6px;text-decoration:none;white-space:nowrap;
+    font:600 16px/1 "Cormorant Garamond","Cinzel",Georgia,"Times New Roman",serif;letter-spacing:.08em;text-transform:uppercase;color:#e8dbbd;
+    text-shadow:0 1px 8px #000c;transition:color .3s,text-shadow .3s}
+  .tn-item:hover{color:#fff2cf}
+  .tn-item[aria-current="true"]{color:var(--gold-hi);text-shadow:0 0 14px #f4d99a88,0 1px 8px #000c}
+  .tn-item:focus-visible{outline:2px solid var(--focus,#f4d99a);outline-offset:3px;border-radius:2px}
+  /* active mark: a gold line with a diamond, and a soft glow on the top rule */
+  .tn-item::after{content:"";position:absolute;left:-6px;right:-6px;bottom:2px;height:9px;opacity:0;transform:scaleX(.4);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1);
+    background:
+      linear-gradient(var(--gold),var(--gold)) center 4px/100% 1px no-repeat,
+      linear-gradient(135deg,transparent 40%,var(--gold-hi) 41% 59%,transparent 60%) center/9px 9px no-repeat;
+    -webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  .tn-item[aria-current="true"]::after{opacity:1;transform:none}
+  .tn-ticks{position:absolute;left:50%;top:calc(100% - 4px);display:flex;gap:3px;transform:translateX(-50%);opacity:0;transition:opacity .3s}
+  .tn-ticks b{width:6px;height:2px;background:#ffffff40;transition:background .3s,width .3s}
+  .tn-ticks b.on{background:var(--gold-hi);width:11px}
+  .is-in-hero .tn-ticks{opacity:1}
+
+  .tn-medal{position:absolute;left:50%;top:0;width:135px;transform:translateX(-50%);z-index:4;pointer-events:auto;display:block;border-radius:50%}
+  .tn-medal img{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 14px #000b);transition:filter .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
+  .tn-medal:hover img{filter:drop-shadow(0 0 16px #f4d99a99) drop-shadow(0 8px 14px #000b);transform:scale(1.04)}
+  .tn-medal:focus-visible{outline:2px solid var(--focus,#f4d99a);outline-offset:2px}
+}
+@media (min-width:901px) and (max-width:1180px){
+  .tn-item{font-size:13px;letter-spacing:.05em;padding:0 3px}
+  .tn-left{left:96px;right:calc(50% + 80px)}.tn-right{left:calc(50% + 80px);right:96px}
+  .tb-statue{height:88px;margin-top:16px}.tn-medal{width:118px;top:8px}
+}
+@media (prefers-reduced-motion:reduce){.tb,.tn-item::after,.tn-medal img{transition:none}}
+/* The sticky project index sits just under the marble bar. */
+@media (min-width:901px){.work-index{top:104px!important}}

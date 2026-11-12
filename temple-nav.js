@@ -4,8 +4,7 @@
   const nav = document.querySelector('.temple-nav');
   if (!nav) return;
   const items = [...nav.querySelectorAll('.tn-item')];
-  const pip = nav.querySelector('.tn-pip');
-  const byKey = Object.fromEntries(items.map(a => [a.dataset.nav, a]));
+    const byKey = Object.fromEntries(items.map(a => [a.dataset.nav, a]));
   const ticks = [...nav.querySelectorAll('.tn-ticks b')];
   // Sections in page order and which link each one belongs to.
   const map = [['#home', 'home'], ['.intro', 'home'], ['#toolkit', 'dimension'], ['#dimension', 'dimension'],
@@ -14,18 +13,12 @@
 
   let current = '';
   const place = key => {
-    let a = byKey[key];
-    if (!a || getComputedStyle(a).display === 'none') a = key === 'approach' ? byKey.about : a;
-    if (!a) { nav.style.setProperty('--pip-o', 0); return; }
-    nav.style.setProperty('--pip-x', `${a.offsetLeft}px`);
-    nav.style.setProperty('--pip-w', `${a.offsetWidth}px`);
-    nav.style.setProperty('--pip-o', 1);
+    // The active mark is pure CSS (aria-current); nothing to position.
   };
   const setCurrent = key => {
     if (key === current) return;
     current = key;
     items.forEach(a => a.dataset.nav === key ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
-    if (key === 'approach' && getComputedStyle(byKey.approach).display === 'none') byKey.about.setAttribute('aria-current', 'true');
     document.documentElement.classList.toggle('is-in-hero', key === 'home');
     place(key);
   };
