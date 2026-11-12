@@ -168,6 +168,13 @@ def build():
     seam.data.materials.append(glow)
     shade_smooth_by_angle(seam, 80)
 
+    # Halo: a soft, wider tube around the seam. The runtime draws it additively with a
+    # view-angle falloff, giving a bloom-like glow without post-processing.
+    halo_mat = material("Halo", (0.0, 0.0, 0.0), 0.0, 1.0, emission=(1.0, 0.66, 0.40), strength=1.0)
+    halo = to_mesh(curve_object("SeamHalo", arch_points(inset=FRAME_W / 2 + 0.004, segments=32), bevel_depth=0.075))
+    halo.data.materials.append(halo_mat)
+    shade_smooth_by_angle(halo, 80)
+
     # Engraved ticks along the outer face (front), a measured, instrument-like rhythm.
     outer = arch_points(inset=-(FRAME_W / 2 - 0.035), segments=TICKS - 1)[1:-1]  # on the front face, near the outer edge
     ticks = []
@@ -230,10 +237,11 @@ def build():
     bpy.ops.object.join()
     step.name = "GatewayPlinth"
     seam.name = "GatewaySeam"
+    halo.name = "GatewayHalo"
 
     root = bpy.data.objects.new("Gateway", None)
     bpy.context.collection.objects.link(root)
-    for o in (frame, step, seam):
+    for o in (frame, step, seam, halo):
         o.parent = root
     root.rotation_euler = (math.radians(90), 0, 0)  # build plane was XY; stand it up in Blender's Z-up world
     return scene, root

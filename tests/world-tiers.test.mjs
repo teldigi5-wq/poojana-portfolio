@@ -7,9 +7,10 @@ test('software renderers get the still tier (no live 3D)', () => {
   assert.equal(initialTier({ gpu: 'llvmpipe (LLVM 15.0.7, 256 bits)' }), 'still');
 });
 
-test('phones start low, integrated GPUs medium, discrete GPUs high', () => {
+test('phones and entry-level integrated GPUs start low, stronger integrated medium, discrete high', () => {
   assert.equal(initialTier({ gpu: 'Adreno (TM) 642L', coarse: true, width: 390 }), 'low');
-  assert.equal(initialTier({ gpu: 'ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11)' }), 'medium');
+  assert.equal(initialTier({ gpu: 'ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A9) Direct3D11 vs_5_0 ps_5_0, D3D11)' }), 'low');
+  assert.equal(initialTier({ gpu: 'ANGLE (Intel, Intel(R) Iris(R) Xe Graphics Direct3D11)' }), 'medium');
   assert.equal(initialTier({ gpu: 'ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Laptop GPU Direct3D11)' }), 'high');
   assert.equal(initialTier({ gpu: 'Apple M2' }), 'high');
   assert.equal(initialTier({ gpu: 'Unknown', memory: 2 }), 'low');

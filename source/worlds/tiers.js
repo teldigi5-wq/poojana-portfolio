@@ -16,7 +16,9 @@ export function initialTier({ gpu = '', coarse = false, width = 1440, memory = 8
   if (coarse && width < 760) return 'low';
   if (memory && memory <= 2) return 'low';
   if (/apple (m\d|gpu)|nvidia|geforce|rtx|radeon rx|radeon pro/i.test(gpu)) return 'high';
-  if (/intel|uhd|iris|mali|adreno|powervr|radeon(tm)? graphics|vega/i.test(gpu) || memory <= 4 || cores <= 4) return 'medium';
+  // Entry-level integrated GPUs (measured: Intel UHD runs low at 60 fps, medium at ~30 fps).
+  if (/uhd|hd graphics|mali|adreno|powervr|videocore/i.test(gpu)) return 'low';
+  if (/intel|iris|arc|radeon(tm)? graphics|vega/i.test(gpu) || memory <= 4 || cores <= 4) return 'medium';
   return 'high';
 }
 

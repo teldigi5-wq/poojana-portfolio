@@ -15,8 +15,9 @@
  */
 import {
   AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture, CatmullRomCurve3, Color, DoubleSide,
-  Fog, Group, MathUtils, Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, PointLight, Points,
-  Scene, ShaderMaterial, SpotLight, Sprite, SpriteMaterial, SRGBColorSpace, Vector3
+  Fog, Group, MathUtils, Mesh, MeshBasicMaterial, MeshMatcapMaterial, PerspectiveCamera, PlaneGeometry,
+  PointLight, Points, Scene, ShaderMaterial, SpotLight, Sprite, SpriteMaterial, SRGBColorSpace, TextureLoader,
+  UniformsLib, UniformsUtils, Vector3
 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -80,39 +81,77 @@ function labelSprite(text, tone) {
   return { sprite, texture, material };
 }
 
-/* Seam glow: light pulses travelling along the arch, a flash when the request passes,
-   and an ignition wipe from the crown. Parameterised by position along the arch. */
-function glowMaterialFor(base, gateIndex) {
-  const material = base.clone();
+/* Seam glow and halo: light pulses travel along the arch, a flash when the request passes,
+   and an ignition wipe from the crown. Custom shaders (no lighting maths), shared by every
+   quality tier; parameterised by position along the arch, so no UVs are needed. */
+const ARCH_GLSL = `
+  uniform float uTime, uIgnite, uFlash, uOffset, uDim;
+  varying vec3 vArch;
+  float archParam(vec3 p) {
+    float h = -p.z;
+    if (h < ${LEG.toFixed(3)}) return p.x < 0.0 ? h : ${SEAM_LENGTH.toFixed(4)} - h;
+    float a = atan(h - ${LEG.toFixed(3)}, p.x);
+    return ${LEG.toFixed(3)} + (3.14159265 - a) * ${SEAM_R.toFixed(4)};
+  }
+  float archEnergy(out float lit) {
+    float s = archParam(vArch) / ${SEAM_LENGTH.toFixed(4)};
+    lit = smoothstep(0.0, 0.06, uIgnite * 1.12 - abs(s - 0.5) * 2.0);
+    float f1 = fract(s - uTime * 0.11 + uOffset);
+    float f2 = fract(s + uTime * 0.07 + uOffset * 1.7);
+    return exp(-pow((f1 - 0.5) * 18.0, 2.0)) + 0.6 * exp(-pow((f2 - 0.5) * 24.0, 2.0));
+  }`;
+
+function glowMaterialsFor(gateIndex) {
   const uniforms = {
     uTime: { value: 0 }, uIgnite: { value: 0 }, uFlash: { value: 0 },
-    uOffset: { value: gateIndex * 0.37 }, uDim: { value: Math.pow(0.6, gateIndex) }
+    uOffset: { value: gateIndex * 0.37 }, uDim: { value: Math.pow(0.6, gateIndex) },
+    uColor: { value: new Color(1.0, 0.66, 0.40) }
   };
-  material.onBeforeCompile = shader => {
-    Object.assign(shader.uniforms, uniforms);
-    shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vArch;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvArch = position;');
-    shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', `#include <common>
-        varying vec3 vArch;
-        uniform float uTime, uIgnite, uFlash, uOffset, uDim;
-        float archParam(vec3 p) {
-          float h = -p.z;
-          if (h < ${LEG.toFixed(3)}) return p.x < 0.0 ? h : ${SEAM_LENGTH.toFixed(4)} - h;
-          float a = atan(h - ${LEG.toFixed(3)}, p.x);
-          return ${LEG.toFixed(3)} + (3.14159265 - a) * ${SEAM_R.toFixed(4)};
-        }`)
-      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-        float s = archParam(vArch) / ${SEAM_LENGTH.toFixed(4)};
-        float lit = smoothstep(0.0, 0.06, uIgnite * 1.12 - abs(s - 0.5) * 2.0);
-        float f1 = fract(s - uTime * 0.11 + uOffset);
-        float f2 = fract(s + uTime * 0.07 + uOffset * 1.7);
-        float pulse = exp(-pow((f1 - 0.5) * 18.0, 2.0)) + 0.6 * exp(-pow((f2 - 0.5) * 24.0, 2.0));
-        totalEmissiveRadiance *= lit * uDim * (0.55 + 1.25 * pulse) + uFlash * 2.2 * lit;`);
-  };
-  material.customProgramCacheKey = () => 'gateway-glow';
-  return { material, uniforms };
+  const seam = new ShaderMaterial({
+    fog: true,
+    uniforms: UniformsUtils.clone(UniformsLib.fog),
+    vertexShader: `varying vec3 vArch;
+      #include <fog_pars_vertex>
+      void main() { vArch = position; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mvPosition;
+      #include <fog_vertex>
+      }`,
+    fragmentShader: `uniform vec3 uColor; ${ARCH_GLSL}
+      #include <fog_pars_fragment>
+      void main() {
+        float lit; float pulse = archEnergy(lit);
+        vec3 c = uColor * 6.0 * (lit * uDim * (0.55 + 1.25 * pulse) + uFlash * 2.2 * lit);
+        gl_FragColor = vec4(c, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        #include <fog_fragment>
+      }`
+  });
+  const halo = new ShaderMaterial({
+    transparent: true, depthWrite: false, blending: AdditiveBlending, fog: true,
+    uniforms: UniformsUtils.clone(UniformsLib.fog),
+    vertexShader: `varying vec3 vArch; varying vec3 vNormalV; varying vec3 vViewV;
+      #include <fog_pars_vertex>
+      void main() { vArch = position; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        vNormalV = normalize(normalMatrix * normal); vViewV = -mvPosition.xyz; gl_Position = projectionMatrix * mvPosition;
+      #include <fog_vertex>
+      }`,
+    fragmentShader: `uniform vec3 uColor; ${ARCH_GLSL}
+      varying vec3 vNormalV; varying vec3 vViewV;
+      #include <fog_pars_fragment>
+      void main() {
+        float lit; float pulse = archEnergy(lit);
+        float facing = pow(abs(dot(normalize(vNormalV), normalize(vViewV))), 2.2);
+        float e = lit * uDim * (0.35 + 0.9 * pulse) + uFlash * 1.6 * lit;
+        gl_FragColor = vec4(uColor * e * 0.55, facing * clamp(e, 0.0, 1.0) * 0.5);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        #include <fog_fragment>
+      }`
+  });
+  // Both materials read the same uniform objects, so one update drives the whole gateway.
+  Object.assign(seam.uniforms, uniforms);
+  Object.assign(halo.uniforms, uniforms);
+  return { seam, halo, uniforms };
 }
 
 /* Brushed copper: micro-variation in roughness so highlights break up like real metal. */
@@ -210,11 +249,10 @@ function dustMaterial(texture, pixelRatio) {
 
 /* ---------- the world ---------- */
 
-export async function create({ renderer, environment, state }) {
+export async function create({ renderer, getEnvironment, state }) {
   const scene = new Scene();
   scene.background = new Color(BG);
   scene.fog = new Fog(BG, 6, 20);
-  scene.environment = environment;
   scene.environmentIntensity = 0.32;
 
   const camera = new PerspectiveCamera(32, 1, 0.1, 60);
@@ -224,17 +262,37 @@ export async function create({ renderer, environment, state }) {
   const track = item => { disposables.push(item); return item; };
 
   /* --- gateways (Blender asset) --- */
-  const gltf = await new GLTFLoader().loadAsync('assets/worlds/gateway.glb');
+  const textures = new TextureLoader();
+  const [gltf, copperCap, darkCap] = await Promise.all([
+    new GLTFLoader().loadAsync('assets/worlds/gateway.glb'),
+    textures.loadAsync('assets/worlds/matcap-copper.webp'),
+    textures.loadAsync('assets/worlds/matcap-darkmetal.webp')
+  ]);
+  copperCap.colorSpace = darkCap.colorSpace = SRGBColorSpace;
+  track(copperCap); track(darkCap);
   const template = gltf.scene;
-  let baseGlow = null;
+  // Two looks for the metal: physically based (lit, reflective) for capable GPUs, and a
+  // Blender-baked matcap for integrated GPUs and phones (no lights, tiny shaders).
+  const looks = { pbr: {}, matcap: {} };
   template.traverse(object => {
     if (!object.isMesh) return;
     const m = object.material;
     m.side = 0;
-    // Saturated copper: neutral studio reflections otherwise read as pale gold.
-    if (m.name.startsWith('Copper')) { m.metalness = 1; m.roughness = 0.34; m.envMapIntensity = 0.75; m.color.setRGB(0.66, 0.30, 0.15); upgradeCopper(m); }
-    if (m.name.startsWith('DarkMetal')) m.envMapIntensity = 0.6;
-    if (m.name.startsWith('Glow')) baseGlow = m;
+    if (m.name.startsWith('Copper')) {
+      // Saturated copper: neutral studio reflections otherwise read as pale gold.
+      m.metalness = 1; m.roughness = 0.34; m.envMapIntensity = 0.75; m.color.setRGB(0.66, 0.30, 0.15); upgradeCopper(m);
+      looks.pbr.copper = m;
+      looks.matcap.copper ||= track(new MeshMatcapMaterial({ matcap: copperCap, name: 'CopperMatcap' }));
+      object.userData.metal = 'copper';
+    }
+    if (m.name.startsWith('DarkMetal')) {
+      m.envMapIntensity = 0.6;
+      looks.pbr.dark = m;
+      looks.matcap.dark ||= track(new MeshMatcapMaterial({ matcap: darkCap, name: 'DarkMatcap' }));
+      object.userData.metal = 'dark';
+    }
+    if (m.name.startsWith('Glow')) object.userData.glow = 'seam';
+    if (m.name.startsWith('Halo')) object.userData.glow = 'halo';
   });
 
   const corridor = new Group();
@@ -246,10 +304,13 @@ export async function create({ renderer, environment, state }) {
     const gate = template.clone(true);
     gate.scale.setScalar(1.05 * Math.pow(0.975, i));
     gate.position.set(Math.sin(i * 0.7) * 0.05, 0, -i * GATE_SPACING);
-    // One glow material per gateway, so each can flash and ignite on its own.
-    const { material, uniforms } = glowMaterialFor(baseGlow, i);
-    track(material);
-    gate.traverse(object => { if (object.isMesh && object.material.name.startsWith('Glow')) object.material = material; });
+    // One glow material set per gateway, so each can flash and ignite on its own.
+    const { seam, halo: haloMat, uniforms } = glowMaterialsFor(i);
+    track(seam); track(haloMat);
+    gate.traverse(object => {
+      if (object.userData.glow === 'seam') object.material = seam;
+      if (object.userData.glow === 'halo') { object.material = haloMat; object.renderOrder = 2; }
+    });
     corridor.add(gate);
     gates.push({ object: gate, uniforms, flash: 0 });
   }
@@ -359,7 +420,15 @@ export async function create({ renderer, environment, state }) {
 
   /* --- tiers --- */
   let dustCount = DUST_MAX;
+  const metals = [];
+  scene.traverse(object => { if (object.isMesh && object.userData.metal) metals.push(object); });
+  const lights = [key, rim, seamLight];
   const setTier = s => {
+    const look = s.tier === 'low' ? looks.matcap : looks.pbr;
+    metals.forEach(object => { object.material = look[object.userData.metal]; });
+    lights.forEach(light => { light.visible = s.tier !== 'low'; });
+    requestLight.visible = s.tier === 'high';
+    scene.environment = s.tier === 'low' ? null : getEnvironment();
     dustCount = Math.floor(DUST_MAX * s.settings.particles);
     dustGeometry.setDrawRange(0, dustCount);
     shaftMats.forEach((m, i) => { m.visible = i < (s.tier === 'low' ? 2 : 4); });

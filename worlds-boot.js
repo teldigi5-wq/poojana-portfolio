@@ -1,4 +1,5 @@
-/* Loads the world stage (immersive v3) as soon as the page is parsed. Skipped with reduced motion, ?motion=off, Save-Data,
+/* Loads the world stage (immersive v3) as early as possible: this file is async in <head>,
+   so it runs before the page's deferred scripts. Skipped with reduced motion, ?motion=off, Save-Data,
    or without WebGL; the page is complete without it. */
 (() => {
   const query = new URLSearchParams(location.search);
@@ -11,8 +12,13 @@
   } catch { return; }
 
   // Start at once so the Gateway is ready the moment the hero appears: while the
-  // introduction plays, or within about a second for returning visitors. Both
-  // requests are low priority so the portrait (the page's main image) loads first.
+  // introduction plays, or within about a second for returning visitors. Requests
+  // are low priority so the portrait (the page's main image) loads first.
+  for (const href of ['assets/worlds/matcap-copper.webp', 'assets/worlds/matcap-darkmetal.webp']) {
+    const link = document.createElement('link');
+    link.rel = 'preload'; link.as = 'image'; link.href = href; link.fetchPriority = 'low';
+    document.head.append(link);
+  }
   const preload = document.createElement('link');
   preload.rel = 'preload';
   preload.as = 'fetch';
@@ -24,6 +30,6 @@
   const script = document.createElement('script');
   script.type = 'module';
   script.fetchPriority = 'low';
-  script.src = 'assets/worlds/js/stage.js?v=20261112-v3-4';
+  script.src = 'assets/worlds/js/stage.js?v=20261112-v3-5';
   document.head.append(script);
 })();

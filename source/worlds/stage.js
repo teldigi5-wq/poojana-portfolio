@@ -36,8 +36,10 @@ const FinishShader = {
 };
 
 /** Resolves when the opening introduction has finished (or immediately if there is none). */
-function introSettled() {
-  if (root.dataset.introState !== 'loading') return Promise.resolve();
+async function introSettled() {
+  // The intro script is deferred; wait until it has run before reading its state.
+  if (document.readyState === 'loading') await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
+  if (root.dataset.introState !== 'loading') return;
   return new Promise(resolve => {
     addEventListener('portfolio:intro-complete', resolve, { once: true });
     // Never wait forever on the intro.
@@ -90,12 +92,19 @@ function boot() {
   canvas.setAttribute('aria-hidden', 'true');
   canvas.tabIndex = -1;
 
-  // Shared studio reflections for metals (generated once, in idle time).
-  const pmrem = new PMREMGenerator(renderer);
-  const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  pmrem.dispose();
+  // Shared studio reflections for physically based metals. Generated only when a tier needs
+  // them: the low tier uses baked matcaps, which skips this cost entirely on weaker GPUs.
+  let environment = null;
+  const getEnvironment = () => {
+    if (!environment) {
+      const pmrem = new PMREMGenerator(renderer);
+      environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      pmrem.dispose();
+      mark('environment');
+    }
+    return environment;
+  };
 
-  mark('environment');
   const state = { tier, settings: TIER_SETTINGS[tier], pointer: new Vector2(), pointerTarget: new Vector2(), progress: 0 };
   const loaded = new Map();
   const governor = createGovernor();
@@ -202,7 +211,7 @@ function boot() {
     if (!world) {
       const module = await spec.load();
       mark(`${name}:module`);
-      world = await module.create({ renderer, environment, state });
+      world = await module.create({ renderer, getEnvironment, state });
       mark(`${name}:created`);
       // Compile shaders before the first visible frame.
       try { await renderer.compileAsync(world.scene, world.camera); } catch { /* older drivers: compile on first frame */ }
