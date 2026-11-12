@@ -26,6 +26,17 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); };
 const bootEl = $('#boot');
+/* scroll-scrubbed push-in video (progressive: still + CSS zoom remain the fallback) */
+const vid = $('#pushin');
+const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
+let vidReady = false, vidDur = 0;
+const lite = reduce || innerWidth < 700 || (navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
+if (vid && !lite) {
+  vid.src = 'assets/trace/hero-pushin.mp4';
+  vid.addEventListener('loadeddata', () => { vidDur = vid.duration || 5; vidReady = true; root.classList.add('has-video'); frame(); }, { once: true });
+  vid.addEventListener('error', () => { vidReady = false; root.classList.remove('has-video'); vid.style.opacity = 0; });
+  vid.load();
+}
 
 function frame() {
   const y = scrollY;
@@ -40,6 +51,19 @@ function frame() {
     boot = smooth(0.62, 0.74, t) * (1 - smooth(0.82, 0.92, t));
     veil = smooth(0.72, 1.0, t) * 0.86;
   }
+  let zEff = z;
+  if (vidReady) {
+    const p = smooth(0, 0.5, t) * (t <= 0.7 ? 1 : 1 - smooth(0.7, 1, t));
+    const extra = 1 + 0.9 * (t <= 0.5 ? 0 : smooth(0.5, 0.7, t)) * (t <= 0.7 ? 1 : 1 - smooth(0.7, 1, t));
+    const target = p * vidDur * 0.999;
+    if (Math.abs(vid.currentTime - target) > 0.02 && !vid.seeking) vid.currentTime = target;
+    const vo = toViewport(VEND);
+    vid.style.transformOrigin = (vo[0] * 100) + '% ' + (vo[1] * 100) + '%';
+    vid.style.transform = `scale(${extra.toFixed(4)})`;
+    vid.style.opacity = t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t);
+    zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
+    if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
+  }
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
   if (bootEl) bootEl.style.opacity = boot;
@@ -50,12 +74,12 @@ function frame() {
   const mk = 1 - smooth(0, 0.14, t);
   for (const m of markers) {
     const vp = toViewport(m.iu);
-    const px = (origin[0] + (vp[0] - origin[0]) * z) * vw, py = (origin[1] + (vp[1] - origin[1]) * z) * vh;
+    const px = (origin[0] + (vp[0] - origin[0]) * zEff) * vw, py = (origin[1] + (vp[1] - origin[1]) * zEff) * vh;
     m.el.style.left = px + 'px'; m.el.style.top = py + 'px'; m.el.style.opacity = mk; m.el.style.pointerEvents = mk < 0.2 ? 'none' : 'auto';
     m.el.tabIndex = mk < 0.2 ? -1 : 0;
   }
   if (glass) {
-    glass.setBackdrop({ zoom: z, ox: origin[0], oy: origin[1], veil, dark });
+    glass.setBackdrop({ zoom: zEff, ox: origin[0], oy: origin[1], veil, dark });
     glass.setMode(reduce ? 1 : 1 - smooth(span * 0.92, span + vh * 0.5, y));
   }
   sampleTone();
