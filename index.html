@@ -34,7 +34,6 @@
   <link rel="stylesheet" href="review-fixes.css?v=20261111-review-1">
   <link rel="stylesheet" href="boundary-3d.css?v=20261111-3d-1">
   <link rel="stylesheet" href="request-story.css?v=20261111-story-2">
-  <link rel="stylesheet" href="project-labs.css?v=20261111-labs-2">
   <link rel="stylesheet" href="details.css?v=20261111-details-1">
   <link rel="stylesheet" href="tighten.css?v=20261111-tight-1">
   <link rel="stylesheet" href="mobile.css?v=20261111-mobile-1">
@@ -48,7 +47,6 @@
   <script src="review-fixes.js?v=20261111-review-1" defer></script>
   <script src="boundary-3d-boot.js?v=20261111-3d-3" defer></script>
   <script src="request-story.js?v=20261111-story-2" defer></script>
-  <script src="project-labs.js?v=20261111-labs-2" defer></script>
   <script src="tighten.js?v=20261111-tight-1" defer></script>
   <script src="details.js?v=20261111-details-1" defer></script>
   <script type="application/ld+json">
@@ -197,16 +195,6 @@
         <div class="project-info"><div><span class="project-number">02</span><h3 id="aetheris-title">Aetheris Platform</h3></div><p>Backend services with explicit boundaries<br>and an independently owned AI runtime.</p><button class="round-link case-open" type="button" data-project="aetheris" aria-label="Read the Aetheris project story">↗</button></div>
                 <dl class="project-facts" aria-label="Aetheris project at a glance"><div><dt>My focus</dt><dd>Backend & distributed systems</dd></div><div><dt>Stack</dt><dd>Java · Spring · PostgreSQL · Redis · RabbitMQ</dd></div><div><dt>Status</dt><dd>Research · hardware validation pending</dd></div><div><dt>Review</dt><dd><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Architecture & source ↗</a></dd></div></dl>
         <aside class="project-evidence" aria-label="Aetheris verified CI evidence"><div><small>VERIFIED CI / 1624E5A</small><strong>8 relay workers.<br>24 queued events.</strong></div><p>Eight workers competed for the same 24 events. In this controlled PostgreSQL test, every event was claimed once and marked delivered; none was claimed twice. This verifies that test scenario, not an exactly-once delivery guarantee. The platform is not yet production-ready.</p><a href="https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377" target="_blank" rel="noopener noreferrer">Inspect the CI run ↗</a></aside>
-        <section class="project-lab claim-lab" aria-labelledby="claim-lab-title" data-claim-lab>
-          <div class="lab-intro"><small>TRY THE PATTERN</small><h4 id="claim-lab-title">Eight workers.<br><em>One claim each.</em></h4><p>Send 24 events to 8 competing workers. With row locking, each idle worker claims a different event. Turn locking off to see why the pattern matters.</p>
-            <div class="lab-controls"><button type="button" class="lab-run" data-claim-run disabled>Send 24 events <span aria-hidden="true">↗</span></button><label class="lab-switch"><input type="checkbox" data-claim-lock checked disabled><span>Row locking</span></label></div>
-            <p class="lab-note">Simulated in your browser to illustrate the claim pattern. It is not connected to Aetheris and does not reproduce the CI run.</p></div>
-          <div class="lab-stage" aria-hidden="true">
-            <div class="claim-workers" data-claim-workers></div>
-            <div class="claim-queue" data-claim-queue></div>
-          </div>
-          <dl class="lab-stats" role="status" aria-live="polite" aria-atomic="true"><div><dt>Delivered</dt><dd data-claim-delivered>0 / 24</dd></div><div><dt>Extra claims</dt><dd data-claim-dupes>0</dd></div><div><dt>Result</dt><dd data-claim-result>Ready</dd></div></dl>
-        </section>
         <div class="case-notes"><div class="case-notes-intro"><span class="eyebrow">BEHIND THE INTERFACE / 02</span><h4>Complexity.<br><em>With structure.</em></h4><p>Architecture becomes useful when its boundaries are clear.</p><a href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer" class="text-link"><span data-text-roll><span class="text-roll-source">Inspect the architecture</span></span> ↗</a></div><ol class="case-timeline"><li><span class="case-step">01 / INGRESS</span><h4>One explicit entry point.</h4><p>A Spring gateway fronts identity and application services with defined responsibilities.</p></li><li><span class="case-step">02 / STATE</span><h4>Design for what persists.</h4><p>PostgreSQL, Redis and RabbitMQ separate durable data, caching and asynchronous events.</p></li><li><span class="case-step">03 / BOUNDARY</span><h4>Keep the AI runtime accountable.</h4><p>A separately owned runtime uses explicit contracts. Physical-machine validation remains pending.</p></li></ol></div>
       </article>
 
@@ -221,16 +209,6 @@
         <div class="project-info"><div><span class="project-number">03</span><h3 id="wayfarer-title">Wayfarer</h3></div><p>Connecting discovery, planning<br>and the first moments of arrival.</p><button class="round-link case-open" type="button" data-project="wayfarer" aria-label="Read the Wayfarer project story">↗</button></div>
                 <dl class="project-facts" aria-label="Wayfarer project at a glance"><div><dt>My focus</dt><dd>Full-stack product development</dd></div><div><dt>Scope</dt><dd>Discovery · itineraries · local persistence</dd></div><div><dt>Status</dt><dd>Public planning experience · no live booking</dd></div><div><dt>Review</dt><dd><a href="https://github.com/teldigi5-wq/wayfarer-world-travel" target="_blank" rel="noopener noreferrer">Planning app & source ↗</a></dd></div></dl>
         <aside class="project-evidence" aria-label="Wayfarer working demo and scope"><div><small>WORKING PUBLIC EXPERIENCE</small><strong>6 local planning assistants.</strong></div><p>Rule-based helpers support itineraries, budgets and arrival checklists using browser-local plans. Explore the deployed app; provider-based AI and live booking remain disabled.</p><a href="https://wayfarer-world-travel.vercel.app/" target="_blank" rel="noopener noreferrer">Try the live app ↗</a></aside>
-        <section class="project-lab plan-lab" aria-labelledby="plan-lab-title" data-plan-lab>
-          <div class="lab-intro"><small>TRY THE APPROACH</small><h4 id="plan-lab-title">Rules in.<br><em>A plan out.</em></h4><p>Pick a place, a length and a pace. A few readable rules turn them into a first draft, and you can see which rule shaped each choice.</p>
-            <div class="plan-fields">
-              <label>Destination<select data-plan-place disabled><option value="kandy">Kandy</option><option value="ella">Ella</option><option value="galle">Galle</option></select></label>
-              <label>Days<select data-plan-days disabled><option value="2">2 days</option><option value="3" selected>3 days</option></select></label>
-              <label>Pace<select data-plan-pace disabled><option value="relaxed">Relaxed</option><option value="balanced" selected>Balanced</option><option value="packed">Packed</option></select></label>
-            </div>
-            <p class="lab-note">A small sketch written for this page to show rule-based planning. The full Wayfarer app has its own assistants and data.</p></div>
-          <div class="plan-output" role="status" aria-live="polite"><ol class="plan-days" data-plan-days-out><li><strong>Day 1</strong><span>Choose options to draft a plan.</span></li></ol><ul class="plan-rules" data-plan-rules aria-label="Rules applied"></ul></div>
-        </section>
         <div class="case-notes"><div class="case-notes-intro"><span class="eyebrow">BEHIND THE INTERFACE / 03</span><h4>From a place.<br><em>To a plan.</em></h4><p>A connected journey that stays useful without paid APIs.</p><a href="https://wayfarer-world-travel.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-link"><span data-text-roll><span class="text-roll-source">Discover Wayfarer</span></span> ↗</a></div><ol class="case-timeline"><li><span class="case-step">01 / DISCOVER</span><h4>Find a direction.</h4><p>Destination context connects the first spark of inspiration with practical travel research.</p></li><li><span class="case-step">02 / PLAN</span><h4>Bring the details together.</h4><p>Rule-based planning assistants coordinate itineraries, budgets and checklists in the browser.</p></li><li><span class="case-step">03 / ARRIVE</span><h4>Make the handoff honest.</h4><p>Saved plans stay local. Live prices, bookings and official requirements lead to external providers.</p></li></ol></div>
       </article>
       </div>

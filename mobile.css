@@ -17,7 +17,6 @@
   .stage-footer,.stage-footer span,.wayfarer-stage .stage-footer{font-size:10px!important}
   .journey-chapters,.journey-number{font-size:11px}
   .b3d-caption{font-size:11px}
-  .plan-days strong small{font-size:11px}
 
   /* Hero: keep the call to action readable where it meets the portrait. */
   .hero-luxe .hero-explore{
@@ -30,10 +29,6 @@
   .b3d-chamber{height:360px}
   .b3d-label span{display:none}
   .b3d-label{font-size:10px;padding:4px 6px}
-
-  /* Claim race: fewer, larger tiles per row read better than many tiny ones. */
-  .claim-event{min-height:46px}
-  .lab-stats dd{font-size:15px}
 }
 
 /* Tablets: hero footer labels were 8px. */

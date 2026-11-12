@@ -60,7 +60,6 @@
     const CONTEXTS = [
       ['.b3d-chamber, .system-object, .system-exhibit', 'Drag'],
       ['.boundary-test', 'Try it'],
-      ['[data-claim-lab], [data-plan-lab]', 'Play'],
       ['.architecture', 'Inspect'],
       ['.hero-code', 'Read'],
       ['.compact-project, .gallery-track > *', 'Open'],
