@@ -88,7 +88,7 @@ async function warmUp(renderer, world, target, composer) {
 }
 
 const WORLDS = {
-  gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') },
+  temple: { host: '#home .hero-visual', section: '#home', load: () => import('./temple.js') },
   strata: { host: '#dimension .system-object', section: '#dimension', load: () => import('./strata.js'), prefetch: true }
 };
 
@@ -211,8 +211,13 @@ function boot() {
   const render = dt => {
     state.pointer.lerp(state.pointerTarget, Math.min(1, dt * 3));
     if (active.section) {
-      const r = active.section.getBoundingClientRect();
-      state.progress = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+      // A pinned section reports its own scrubbed progress (its box does not move while pinned).
+      const pinned = active.section.worldProgress;
+      if (typeof pinned === 'number') state.progress = pinned;
+      else {
+        const r = active.section.getBoundingClientRect();
+        state.progress = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+      }
     }
     active.world.update(dt, state);
     if (finishPass) finishPass.uniforms.uTime.value += dt;

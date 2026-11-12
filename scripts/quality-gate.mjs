@@ -95,7 +95,13 @@ const budgets = {
   "assets/portfolio-v2.css": 32 * 1024,
   "assets/hero-portrait.webp": 300 * 1024, "assets/hero-portrait-mobile.webp": 120 * 1024,
   "assets/intro-apollo.webp": 40 * 1024, "assets/intro-hercules.webp": 24 * 1024,
-  "assets/intro-flowers.webp": 20 * 1024, "assets/intro-david.webp": 30 * 1024
+  "assets/intro-flowers.webp": 20 * 1024, "assets/intro-david.webp": 30 * 1024,
+  // Temple hero (see TEMPLE-RELEASE.md): scoped layout/type CSS, the scroll choreography that
+  // reuses the existing GSAP/ScrollTrigger/Lenis, the two self-hosted OFL font files and the
+  // designed stills used for reduced motion and as the poster before the scene ignites.
+  "temple.css": 12 * 1024, "temple-hero.js": 8 * 1024,
+  "assets/fonts/cormorant-garamond-latin-500-normal.woff2": 32 * 1024, "assets/fonts/cormorant-garamond-latin-500-italic.woff2": 32 * 1024,
+  "assets/worlds/temple-still.webp": 120 * 1024, "assets/worlds/temple-still-mobile.webp": 80 * 1024
 };
 for (const [file, budget] of Object.entries(budgets)) if (statSync(file).size > budget) fail(`${file} exceeds ${budget} bytes`);
 for (const file of required.filter(path => [".js", ".css", ".html", ".json", ".tsx", ".ts"].includes(extname(path)))) {

@@ -1,0 +1,146 @@
+/* The Temple hero (replaces the Gateway). Scoped to .hero-temple and loaded after the
+   older hero layers, so it overrides them without editing them.
+   Type: Cormorant Garamond (self-hosted, SIL OFL — assets/fonts/CORMORANT-OFL.txt) for the
+   headline, the existing Studio sans for everything else. */
+@font-face{font-family:'Temple Serif';src:url('assets/fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Temple Serif';src:url('assets/fonts/cormorant-garamond-latin-500-italic.woff2') format('woff2');font-weight:500;font-style:italic;font-display:swap}
+
+.hero-temple{
+  --t-ivory:#f3eddf;--t-text:#d3c6b3;--t-quiet:#a89a87;--t-copper:#c08a5b;--t-copper-lit:#dfaa7c;
+  --t-ease:cubic-bezier(.16,1,.3,1);
+}
+
+/* ---------- the scene's still (no WebGL, reduced motion, ?motion=off) and the live canvas ---------- */
+.hero-temple .temple-still{position:absolute;inset:0;display:block}
+.hero-temple .temple-still img{width:100%;height:100%;object-fit:cover;object-position:42% 40%;display:block;transition:opacity 1.4s var(--t-ease)}
+.hero-temple .hero-visual.world-live .temple-still img{opacity:0}
+.hero-temple .portrait-halo{opacity:.6}
+/* Legibility: the headline column sits on a deep, warm shade; the scene opens up behind the portrait. */
+.hero-temple .hero-shade,
+.hero-temple .hero-visual.world-live .hero-shade{
+  background:
+    linear-gradient(90deg,#0c0b0a 0%,#0c0b0af2 22%,#0c0b0aa6 40%,#0c0b0a1f 58%,transparent 70%),
+    linear-gradient(0deg,#0c0b0a 0%,#0c0b0a00 26%),
+    linear-gradient(180deg,#0c0b0acc 0%,#0c0b0a00 18%);
+}
+
+/* ---------- copy: kicker, headline, value line, actions ---------- */
+.hero-temple .hero-copy{top:clamp(178px,25vh,250px);width:min(52vw,720px)}
+.hero-temple .hero-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:0;font:500 12px/1.5 Studio,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--t-copper-lit)}
+.hero-temple .kicker-rule{width:34px;height:1px;background:linear-gradient(90deg,var(--t-copper),transparent)}
+.hero-temple .kicker-sep{color:var(--t-quiet)}
+.hero-temple .hero-statement.temple-title{
+  margin:22px 0 0 -.04em;            /* optical alignment: serif side-bearing */
+  max-width:none;
+  font:500 clamp(54px,6.3vw,108px)/.94 'Temple Serif',Georgia,'Times New Roman',serif;
+  letter-spacing:-.018em;color:var(--t-ivory);text-wrap:balance;
+}
+.hero-temple .temple-title .tl{display:block;overflow:hidden;padding:.02em 0 .1em;margin-bottom:-.1em}
+.hero-temple .temple-title .tl>span{display:inline-block;will-change:transform}
+.hero-temple .temple-title em{font-style:italic;color:var(--t-copper-lit);letter-spacing:-.01em;padding-right:.04em}
+.hero-temple .hero-description{max-width:34em;margin-top:26px;font:400 17px/1.65 Studio,Arial,sans-serif;color:var(--t-text)}
+.hero-temple .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;pointer-events:auto;
+  /* reset the older single-link .hero-explore pill (kept as a class for the React entrance) */
+  width:auto;padding:0;border:0;border-radius:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.hero-temple .hero-actions small{font-size:10px}
+
+.temple-cta{
+  position:relative;display:inline-flex;align-items:center;gap:14px;min-height:52px;padding:0 26px;border-radius:999px;
+  font:500 14px/1 Studio,Arial,sans-serif;letter-spacing:.02em;text-decoration:none;
+  transition:background-color .35s var(--t-ease),border-color .35s var(--t-ease),color .35s var(--t-ease);
+}
+.temple-cta-primary{background:var(--t-ivory);color:#16110c}
+.temple-cta-primary:hover{background:#fff8ec}
+.temple-cta-primary .cta-icon{display:grid;place-items:center;width:26px;height:26px;margin-right:-12px;border-radius:50%;background:#16110c;color:var(--t-ivory);font-size:13px;transition:transform .45s var(--t-ease)}
+.temple-cta-primary:hover .cta-icon{transform:rotate(-45deg)}
+.temple-cta-ghost{border:1px solid #c08a5b8c;color:var(--t-ivory);background:#0c0b0a66;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.temple-cta-ghost:hover{border-color:var(--t-copper-lit)}
+.temple-cta-ghost small{font-size:10px;letter-spacing:.16em;color:var(--t-copper-lit)}
+.temple-cta:focus-visible{outline:2px solid var(--focus,#77b9cd);outline-offset:4px}
+
+/* ---------- museum placard beside the portrait ---------- */
+.hero-temple .hero-nameplate{gap:14px}
+.hero-temple .hero-nameplate .nameplate-line{background:var(--t-copper)}
+
+/* ---------- index rail (section numbers + progress); hands over to the request rail ---------- */
+.hero-index{
+  --hero-progress:0;
+  position:absolute;left:18px;top:50%;z-index:7;margin:0;padding:0 0 0 16px;list-style:none;
+  display:flex;flex-direction:column;gap:16px;transform:translateY(-50%);
+  font:500 10px/1 Studio,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7f7364;
+}
+.hero-index:before,.hero-index-fill{content:'';position:absolute;left:0;top:2px;bottom:2px;width:1px;background:#c08a5b33}
+.hero-index-fill{background:linear-gradient(var(--t-copper-lit),var(--t-copper));transform-origin:top;transform:scaleY(var(--hero-progress))}
+.hero-index li{display:flex;align-items:center;gap:10px}
+.hero-index b{font-weight:500;font-variant-numeric:tabular-nums}
+.hero-index span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}   /* names live in the main navigation */
+.hero-index .is-current{color:var(--t-ivory)}
+.hero-index .is-current b:after{content:'';display:inline-block;width:4px;height:4px;margin-left:8px;border-radius:50%;background:var(--t-copper-lit);vertical-align:middle}
+@media (max-width:1180px){.hero-index{display:none}}
+
+/* ---------- bottom bar: scroll cue, meander marquee, edition ---------- */
+.hero-temple .hero-bottom{gap:28px;font:500 11px/1 Studio,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--t-quiet)}
+.hero-temple .scroll-cue{display:inline-flex;align-items:center;gap:12px;color:var(--t-text)}
+.hero-temple .scroll-cue i{position:relative;width:1px;height:30px;background:#c08a5b40;overflow:hidden}
+.hero-temple .scroll-cue i:after{content:'';position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--t-copper-lit);animation:temple-cue 2.4s cubic-bezier(.7,0,.3,1) infinite}
+@keyframes temple-cue{0%{top:-40%}70%,100%{top:100%}}
+/* Greek key as a quiet divider (an inline SVG pattern; CSP allows data: images). */
+.hero-meander{
+  flex:1;max-width:520px;height:12px;opacity:.5;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 11.5h24M0 .5h24M1 11V3h9v6H5V6h3' fill='none' stroke='%23c08a5b' stroke-width='1'/%3E%3C/svg%3E") repeat-x 0 0/24px 12px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+  animation:temple-meander 36s linear infinite;
+}
+@keyframes temple-meander{to{background-position:-240px 0}}
+.hero-temple .hero-edition{color:var(--t-quiet)}
+
+/* ---------- hand-off to the next section: a dark wipe with a meander leading edge ---------- */
+.temple-wipe{
+  position:absolute;inset:0;z-index:9;pointer-events:none;transform:translateY(101%);
+  background:radial-gradient(120% 80% at 50% 0%,#2a1d13 0%,#0c0b0a 55%);
+}
+.temple-wipe:before{
+  content:'';position:absolute;left:0;right:0;top:-1px;height:14px;opacity:.8;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 11.5h24M0 .5h24M1 11V3h9v6H5V6h3' fill='none' stroke='%23dfaa7c' stroke-width='1'/%3E%3C/svg%3E") repeat-x 0 0/24px 12px;
+  box-shadow:0 -18px 40px -12px #dfaa7c40;
+}
+
+/* Hide the old hero furniture if it is ever re-added. */
+.hero-temple .hero-wordmark,.hero-temple .hero-code{display:none}
+
+/* ---------- tablet / phone ---------- */
+@media (max-width:1100px){
+  .hero-temple .hero-copy{width:min(64vw,620px)}
+  .hero-temple .hero-statement.temple-title{font-size:clamp(50px,7.2vw,78px)}
+}
+@media (max-width:760px){
+  .hero-temple .hero-copy{top:168px;width:100%}
+  .hero-temple .hero-kicker{font-size:11px;letter-spacing:.14em}
+  .hero-temple .hero-statement.temple-title{font-size:clamp(44px,12.6vw,60px);margin-top:16px}
+  .hero-temple .hero-description{font-size:16px;margin-top:18px;max-width:30em}
+  .hero-temple .hero-actions{margin-top:24px;gap:10px}
+  .temple-cta{min-height:48px;padding:0 20px}
+  .hero-temple .hero-shade,
+  .hero-temple .hero-visual.world-live .hero-shade{background:linear-gradient(180deg,#0c0b0ab3 0%,#0c0b0a00 16%,#0c0b0a00 30%,#0c0b0ae6 44%,#0c0b0ad9 72%,#0c0b0a 100%)}
+  .hero-meander,.hero-temple .hero-edition{display:none}
+  .hero-temple .temple-still img{object-position:50% 12%}
+}
+
+/* ---------- reduced motion, forced colours, no pinning ---------- */
+@media (prefers-reduced-motion:reduce){
+  .hero-meander,.hero-temple .scroll-cue i:after{animation:none}
+  .temple-wipe{display:none}
+}
+.motion-off .hero-meander,.motion-off .hero-temple .scroll-cue i:after{animation:none}
+.motion-off .temple-wipe{display:none}
+@media (forced-colors:active){
+  .temple-cta{border:1px solid ButtonText}
+  .hero-meander,.temple-wipe{display:none}
+}
+
+/* While the intro covers the page, the headline waits below its masks so the entrance never
+   flashes. CSS-only and tied to the intro's own state: if anything fails, the class is removed
+   by the intro's watchdog and the text is simply visible. */
+@media (prefers-reduced-motion:no-preference){
+  html.intro-active:not(.motion-off) .hero-temple .temple-title .tl>span{transform:translateY(112%)}
+}

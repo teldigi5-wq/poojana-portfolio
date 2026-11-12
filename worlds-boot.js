@@ -2,12 +2,12 @@
    scripts/update-worlds-boot.mjs inlines it and fills in the hashed chunk list.
 
    Starts as early as possible — before the page's deferred scripts — and preloads every
-   file the hero world needs in parallel, so the Gateway is ready the moment the hero is
+   file the hero world needs in parallel, so the Temple is ready the moment the hero is
    visible. Skipped for reduced motion, ?motion=off, ?tier=still, Save-Data and devices
    without WebGL; the page is complete without it. */
 (() => {
   const CHUNKS = /*CHUNKS*/[];
-  const ASSETS = ['assets/worlds/gateway.glb', 'assets/worlds/matcap-copper.webp', 'assets/worlds/matcap-darkmetal.webp'];
+  const ASSETS = ['assets/worlds/temple.glb', 'assets/worlds/temple-floor.webp', 'assets/worlds/temple-limestone.webp', 'assets/worlds/temple-marble.webp'];
   const query = new URLSearchParams(location.search);
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || query.get('motion') === 'off' || query.get('tier') === 'still') return;
   if (navigator.connection && navigator.connection.saveData) return;
