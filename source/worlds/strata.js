@@ -17,7 +17,7 @@
 import {
   BoxGeometry, CanvasTexture, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DirectionalLight,
   ExtrudeGeometry, Fog, Group, HemisphereLight, MathUtils, Mesh, MeshBasicMaterial,
-  MeshStandardMaterial, PCFSoftShadowMap, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, Shape,
+  MeshStandardMaterial, PCFSoftShadowMap, ShadowMaterial, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, Shape,
   SphereGeometry, SRGBColorSpace, TorusGeometry, Vector3
 } from 'three';
 
@@ -210,8 +210,8 @@ export async function create({ renderer, getEnvironment, state }) {
 
   /* --- ground and contact shadow --- */
   const floorTexture = track(gradientTexture([[0, '#2b251d'], [0.6, '#211b14'], [1, '#1c1711']]));
-  const floorPbr = track(new MeshStandardMaterial({ color: 0x14110f, metalness: 0.1, roughness: 0.5, envMapIntensity: 0.55 }));
-  const floorFlat = track(new MeshBasicMaterial({ map: floorTexture }));
+  const floorPbr = track(new ShadowMaterial({ opacity: 0.5 }));
+  const floorFlat = track(new ShadowMaterial({ opacity: 0.0 }));
   const floor = new Mesh(new CircleGeometry(9, 64), floorFlat);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.002;
@@ -247,7 +247,7 @@ export async function create({ renderer, getEnvironment, state }) {
   const setTier = s => {
     look = s.tier === 'low' ? 'flat' : 'pbr';
     floor.material = look === 'pbr' ? floorPbr : floorFlat;
-    scene.background.set(look === 'pbr' ? 0x14100c : 0x1c1711);
+    scene.background.set(look === 'pbr' ? 0x1a1611 : 0x191510);
     scene.fog.color.copy(scene.background);
     scene.environment = look === 'pbr' ? getEnvironment() : null;
     const size = s.tier === 'high' ? 2048 : 1024;
@@ -375,7 +375,8 @@ export async function create({ renderer, getEnvironment, state }) {
     if (host) {
       camera.updateMatrixWorld();
       const narrow = boxWidth < 520;
-      for (const name of LAYERS) {
+      let floorY = -1e9;
+      for (const name of ['experience', 'trust', 'foundation']) {
         const c = callouts[name];
         probe.set(0.95, MID[name] + layer[name].position.y, 0);
         root.localToWorld(probe);
@@ -383,7 +384,8 @@ export async function create({ renderer, getEnvironment, state }) {
         const px = (probe.x * 0.5 + 0.5) * boxWidth;
         const py = (-probe.y * 0.5 + 0.5) * boxHeight;
         const lx = boxWidth - 176;
-        const ly = py - 22;
+        const ly = Math.max(py - 22, floorY);
+        floorY = ly + 92;
         c.el.style.display = c.line.style.display = c.dot.style.display = narrow ? 'none' : '';
         c.el.style.transform = `translate(${lx}px,${ly}px)`;
         c.el.style.opacity = name === selected ? 1 : 0.62;
@@ -418,6 +420,6 @@ export async function create({ renderer, getEnvironment, state }) {
     scene, camera, update, resize, setTier, dispose, ignite,
     debug: { get spread() { return spread; }, get yaw() { return yaw; }, dim },
     bloom: { strength: 0.18, radius: 0.4, threshold: 1.6 },
-    finish: { vignette: 0.38, grain: 0.03 }
+    finish: { vignette: 0.1, grain: 0.02 }
   };
 }
