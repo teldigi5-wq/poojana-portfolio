@@ -204,3 +204,23 @@ html.ui-dark .badge span{opacity:.78}
 .marker:nth-of-type(2){animation-delay:-1.2s}.marker:nth-of-type(3){animation-delay:-2.4s}.marker:nth-of-type(4){animation-delay:-3.6s}.marker:nth-of-type(5){animation-delay:-4.8s}
 @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -5px}}
 @media(prefers-reduced-motion:reduce){.loop{display:none}.marker{animation:none}}
+
+/* ===== premium 3D layer: Work stage, Lab instruments, tilt cards ===== */
+.stage3d,.v3d{position:relative;overflow:hidden;border-radius:20px;background:radial-gradient(120% 110% at 50% -10%,#1b2a60 0%,#0c1330 55%,#080c1e 100%);box-shadow:inset 0 0 0 1px rgba(160,185,255,.16),0 14px 40px rgba(20,40,110,.28)}
+.stage3d{height:clamp(250px,30vw,330px);margin:0 0 22px}
+.v3d{height:190px;border-radius:16px;margin:0 0 4px}
+.stage3d canvas,.v3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block;outline:none}
+.stage3d canvas:focus-visible{box-shadow:inset 0 0 0 2px #7aa2ff}
+.stage3d::after,.v3d::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 60% at 20% 0%,rgba(255,255,255,.10),transparent 60%),linear-gradient(180deg,transparent 70%,rgba(8,12,30,.55))}
+.n3d{position:absolute;left:0;top:0;z-index:2;pointer-events:none;white-space:nowrap;padding:3px 7px;border-radius:999px;border:1px solid rgba(160,185,255,.28);background:rgba(20,32,80,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#d6e0ff;font:500 10px/1.2 var(--mono);opacity:0;transition:opacity .35s}
+.s3d-hint{position:absolute;right:12px;bottom:10px;z-index:3;pointer-events:none;color:#9fb0e6;font:500 10.5px/1 var(--mono);letter-spacing:.04em;opacity:.9;transition:opacity .4s}
+.stage3d.touched .s3d-hint{opacity:0}
+.demo.has3d .dots{display:none}
+/* tilt: cards lean toward the pointer with a moving highlight (set by trace.js) */
+.panel.tilt.in{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s;will-change:transform}
+.panel.tilt{position:relative}
+.panel.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(420px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.55),transparent 55%);mix-blend-mode:soft-light}
+.panel.tilt.hot::after{opacity:1}
+.panel.tilt.hot{box-shadow:0 34px 90px rgba(30,50,120,.22)}
+@media(max-width:860px){.stage3d{height:250px}}
+@media(prefers-reduced-motion:reduce){.panel.tilt.in{transform:none}.panel.tilt::after{display:none}}

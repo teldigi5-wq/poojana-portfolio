@@ -102,8 +102,11 @@
     <h2 id="wk-h" class="reveal">Three projects. Honest status on each.</h2>
     <p class="lede reveal">Select a project to read what it is, what has actually been verified, and where to inspect it. The track shows how far each one has travelled.</p>
     <div class="svc">
-      <div class="panel list reveal" id="list" role="listbox" aria-label="Projects"></div>
-      <article class="panel detail reveal" id="detail" aria-live="polite"></article>
+      <div class="panel list tilt reveal" id="list" role="listbox" aria-label="Projects"></div>
+      <article class="panel detail tilt reveal" aria-live="polite">
+        <div class="stage3d" id="stage" role="img" aria-label="Interactive 3D model of the selected project's architecture. Drag to orbit."><canvas tabindex="0"></canvas><span class="s3d-hint" aria-hidden="true">Drag to orbit</span></div>
+        <div id="detail"></div>
+      </article>
     </div>
   </div>
 </section>
@@ -114,20 +117,23 @@
     <h2 id="lb-h" class="reveal">Things I understand, you can poke.</h2>
     <p class="lede reveal">Three small models in place of a skills list. They are teaching sketches with synthetic data, not benchmarks.</p>
     <div class="labgrid">
-      <div class="panel demo reveal" id="demoLimit">
+      <div class="panel demo tilt reveal" id="demoLimit">
         <header><h3>Rate limiter</h3><span class="chip ac">token bucket</span></header>
+        <div class="v3d" id="v3dBucket" aria-hidden="true"><canvas></canvas></div>
         <div class="dots" id="dots" aria-hidden="true"></div>
         <p id="limitMsg">Same bucket as the console above. Send requests until it runs dry, then watch it refill.</p>
         <div><button class="btn" id="limitBtn" type="button">Send request</button></div>
       </div>
-      <div class="panel demo reveal" id="demoPlan">
+      <div class="panel demo tilt reveal" id="demoPlan">
         <header><h3>Query plan</h3><span class="chip ac">index vs scan</span></header>
+        <div class="v3d" id="v3dScan" aria-hidden="true"><canvas></canvas></div>
         <div class="bars" id="planBars"></div>
         <p id="planMsg"></p>
         <button class="sw" id="idxSw" role="switch" aria-checked="false" type="button"><span></span>CREATE INDEX ON orders(user_id)</button>
       </div>
-      <div class="panel demo reveal" id="demoAuth">
+      <div class="panel demo tilt reveal" id="demoAuth">
         <header><h3>Access decision</h3><span class="chip ac">synthetic</span></header>
+        <div class="v3d" id="v3dGate" aria-hidden="true"><canvas></canvas></div>
         <div class="seg" id="who" role="group" aria-label="Who is asking"></div>
         <div class="seg" id="op" role="group" aria-label="Operation"></div>
         <div class="decision" id="decision" aria-live="polite"></div>

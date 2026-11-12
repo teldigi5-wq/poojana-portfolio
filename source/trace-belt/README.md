@@ -1,12 +1,5 @@
-# Trace crew belt
+# Lanyard source
 
-`belt.src.js` is the source of `assets/trace/belt.js` (Three.js scene: rail, trolleys, PBD strap, rigid cards, SAT collisions, pointer drag).
-It is loaded on demand by `trace.js` when the contact section nears the viewport.
-
-Rebuild:
-
-    npm i three@0.187.0 esbuild
-    npx esbuild source/trace-belt/belt.src.js --bundle --minify --format=esm --target=es2020 \
-      --legal-comments=none --outfile=assets/trace/belt.js
-
+`belt.src.js` is the Three.js ID-badge lanyard. It now builds together with the Work/Lab scenes into one
+code-split bundle; see `source/trace-3d/README.md` for the build command. Output: `assets/trace/3d/belt.js`.
 Three.js is MIT licensed, see `assets/trace/THREE-LICENSE.txt`.

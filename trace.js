@@ -43,7 +43,7 @@ const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
   const bio = new IntersectionObserver(([en]) => {
     if (!en.isIntersecting) return; bio.disconnect();
-    import('./assets/trace/belt.js?v=2').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
+    import('./assets/trace/3d/belt.js?v=3').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
   }, { rootMargin: '500px' });
   bio.observe(belt);
 }
@@ -314,6 +314,7 @@ setActive('trace');
 
 /* ---------- shared rate limiter (console + lab) ---------- */
 const CAP = 6, REFILL_MS = 1200;
+const lab3d = {};   // filled when the 3D instruments load
 const limiter = { tokens: CAP, last: performance.now(),
   refill() { const now = performance.now(); const add = (now - this.last) / REFILL_MS; if (add >= 1) { const n = Math.floor(add); this.tokens = Math.min(CAP, this.tokens + n); this.last += n * REFILL_MS; } if (this.tokens >= CAP) this.last = now; },
   take() { this.refill(); if (this.tokens >= 1) { this.tokens -= 1; return true; } return false; },
@@ -349,11 +350,12 @@ function send() {
   } else {
     const r = limiter.retryMs();
     $('#hdrs').innerHTML = `<span class="hd-bad">status: 429 Too Many Requests</span>\ntime: ${ms} ms\nretry-after: ${(r / 1000).toFixed(1)} s\nx-ratelimit-limit: ${CAP}\nx-ratelimit-remaining: 0\ncontent-type: application/json`;
+    lab3d.bucket && lab3d.bucket.flash();
     $('#body').innerHTML = colorize({ error: 'rate_limited', message: 'Slow down. The bucket refills one token every 1.2 seconds.', retry_after_ms: r });
   }
 }
 $('#send').addEventListener('click', send);
-$('#limitBtn').addEventListener('click', () => { const ok = limiter.take(); paintDots(); $('#limitMsg').textContent = ok ? `200 OK. ${Math.floor(limiter.tokens)} of ${CAP} tokens left.` : `429. Bucket empty, next token in ${(limiter.retryMs() / 1000).toFixed(1)} s.`; });
+$('#limitBtn').addEventListener('click', () => { const ok = limiter.take(); paintDots(); if (!ok && lab3d.bucket) lab3d.bucket.flash(); $('#limitMsg').textContent = ok ? `200 OK. ${Math.floor(limiter.tokens)} of ${CAP} tokens left.` : `429. Bucket empty, next token in ${(limiter.retryMs() / 1000).toFixed(1)} s.`; });
 
 /* ---------- 03 projects ---------- */
 const PROJECTS = [
@@ -372,11 +374,13 @@ const PROJECTS = [
 ];
 const STAGES = ['Research', 'Prototype', 'Public'];
 const listEl = $('#list'), detailEl = $('#detail');
+let stage3d = null;
 let sel = 0;
 listEl.innerHTML = PROJECTS.map((p, i) => `<button class="row" role="option" type="button" data-i="${i}" aria-selected="${i === 0}"><span><b>${p.name}</b><small>${p.tag}</small></span><span><span class="track"><i style="left:${p.stage * 33.3}%;width:33.4%"></i></span><span class="stages">${STAGES.map(s => `<span>${s}</span>`).join('')}</span></span></button>`).join('');
 function showProject(i) {
   sel = i; const p = PROJECTS[i];
   $$('.row', listEl).forEach((r, k) => r.setAttribute('aria-selected', k === i));
+  stage3d && stage3d.setProject(i);
   detailEl.innerHTML = `<span class="chip ac">0${i + 1} · ${STAGES[p.stage].toUpperCase()}</span><h3>${p.name}</h3><p>${p.lede}</p><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="evi">${p.evi}</div><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
 }
 listEl.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) showProject(+r.dataset.i); });
@@ -390,6 +394,7 @@ function paintPlan() {
   const seq = 420, ix = 0.4, cur = idx ? ix : seq;
   const w = ms => Math.round((Math.log10(ms) + 1) / 4 * 100);
   planBars.innerHTML = `<div class="bar"><b>Seq Scan on orders<span>${seq} ms</span></b><div><i style="width:${w(seq)}%;background:${idx ? 'rgba(14,17,22,.18)' : 'var(--warn)'}"></i></div></div><div class="bar"><b>Index Scan on idx_orders_user_id<span>${ix} ms</span></b><div><i style="width:${idx ? w(ix) : 0}%;background:var(--ok)"></i></div></div>`;
+  lab3d.scan && lab3d.scan.setIndexed(idx);
   planMsg.textContent = idx ? 'With the index the planner jumps to the matching rows instead of reading all 1,000,000. Illustrative timings.' : 'Without an index the planner reads every row to find one user’s orders. Illustrative timings.';
 }
 swEl.addEventListener('click', () => { swEl.setAttribute('aria-checked', swEl.getAttribute('aria-checked') !== 'true'); paintPlan(); });
@@ -404,6 +409,7 @@ function paintAuth() {
   const signed = true, sameWs = who !== 2, perm = who === 0 || (who === 1 && op === 0);
   const allow = signed && sameWs && perm;
   const line = (ok, name, why) => `<div>${ok ? '✓' : '✗'} ${name}: ${why}</div>`;
+  lab3d.gate && lab3d.gate.set({ signed, sameWs, perm });
   $('#decision').className = 'decision ' + (allow ? 'ok' : 'bad');
   $('#decision').innerHTML = `${w.toLowerCase()} → ${o.toUpperCase()} /studio/alice/shared<br><b>${allow ? 'ALLOW ✓' : 'DENY ✗'}</b>` +
     line(signed, 'Sign-in', 'signed in') + line(sameWs, 'Workspace', sameWs ? 'same workspace' : 'different workspace') +
@@ -444,4 +450,33 @@ if (toTop) {
   document.querySelectorAll('a[href="#trace"]').forEach(a => a.addEventListener('click', goTop));
   const sync = () => toTop.classList.toggle('on', scrollY > innerHeight * 1.2);
   addEventListener('scroll', sync, { passive: true }); sync();
+}
+
+/* ---------- premium 3D layer: lazy-loaded scenes for Work and Lab ---------- */
+const whenNear = (el, fn, margin = 600) => {
+  if (!el) return; if (!('IntersectionObserver' in window)) return;
+  const o = new IntersectionObserver(([en]) => { if (!en.isIntersecting) return; o.disconnect(); fn(); }, { rootMargin: margin + 'px' }); o.observe(el);
+};
+whenNear($('#stage'), () => import('./assets/trace/3d/stage.js?v=1').then(m => { stage3d = m.mountStage($('#stage')); stage3d && stage3d.setProject(sel, true); }).catch(() => {}));
+whenNear($('#lab'), () => import('./assets/trace/3d/lab.js?v=1').then(m => {
+  const mk = (id, fn) => { const el = $(id); if (!el) return null; const r = fn(el); if (r) el.closest('.demo').classList.add('has3d'); else el.hidden = true; return r; };
+  lab3d.bucket = mk('#v3dBucket', el => m.mountBucket(el, { cap: CAP, tokens: () => { limiter.refill(); return limiter.tokens; }, frac: () => (limiter.tokens >= CAP ? 0 : (performance.now() - limiter.last) / REFILL_MS) }));
+  lab3d.scan = mk('#v3dScan', el => m.mountScan(el));
+  lab3d.gate = mk('#v3dGate', el => m.mountGate(el));
+  paintPlan(); paintAuth();
+}).catch(() => {}));
+
+/* tilt cards: lean toward the pointer, highlight follows it (fine pointers, no reduced motion) */
+if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  $$('.tilt').forEach(el => {
+    let raf = 0;
+    el.addEventListener('pointermove', e => {
+      if (raf) return; raf = requestAnimationFrame(() => {
+        raf = 0; const r = el.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--ry', ((px - 0.5) * 7).toFixed(2) + 'deg'); el.style.setProperty('--rx', ((0.5 - py) * 5).toFixed(2) + 'deg');
+        el.style.setProperty('--gx', (px * 100).toFixed(1) + '%'); el.style.setProperty('--gy', (py * 100).toFixed(1) + '%'); el.classList.add('hot');
+      });
+    });
+    el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); el.classList.remove('hot'); });
+  });
 }
