@@ -204,7 +204,7 @@ if (vid && !lite) {
   vid.load();
 }
 
-const A_END = 0.5, B_END = 0.6;   // dive | dark hold (terminal plays) | exit
+const A_END = 0.5, B_END = 0.72;   // dive | dark hold (terminal plays) | exit
 function frame() {
   let y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
