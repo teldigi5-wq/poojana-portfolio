@@ -35,41 +35,62 @@ const BOOT = [
   ['> ', 'dim', 'resolving gateway ........... ', 0, 'ok'],
   ['> ', 'dim', 'negotiating TLS 1.3 ......... ', 0, 'ok'],
   ['> ', 'dim', 'bypassing rate limiter ...... ', 0, 'ok'],
-  ['> ', 'bar', 'decrypting portfolio.enc  ', 0],
-  ['> ', 'dim', 'mounting projects, lab, contact ... ', 0, 'ok'],
+  ['> ', 'bar', 'decrypting ', 0, 'portfolio.enc'],
+  ['> ', 'dim', 'mounting file system ........ ', 0, 'ok'],
   ['< ', 'grant', 'ACCESS GRANTED  200 OK  42 ms', 0],
+  ['', 'tree', '├─ projects/   BoundaryLab · Aetheris · Wayfarer'],
+  ['', 'tree', '├─ lab/        live demos you can run'],
+  ['', 'tree', '└─ contact/    open to internships'],
 ];
+const term = $('#term'), stat1 = $('#stat1'), stat2 = $('#stat2');
+const setStat = (s, run) => { if (stat1) stat1.innerHTML = `<u></u>${s}`; term.classList.toggle('run', !!run); };
+const sess = Array.from({ length: 4 }, () => '0123456789abcdef'[Math.random() * 16 | 0]).join('');
+const GL = '▒▓░#@%&$01';
+const scr = (s, p) => { const k = Math.floor(p * s.length); return s.slice(0, k) + [...s.slice(k)].map(ch => ch === '.' ? '.' : GL[Math.random() * GL.length | 0]).join(''); };
 let bootRun = 0, bootDone = false;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const line = (pre, cls, txt, ok) => `<i>${esc(pre.trim())}</i> ${cls === 'grant' ? `<span class="grant">${esc(txt)}</span>` : cls === 'dim' ? `<span class="dim">${esc(txt)}</span>${ok ? `<b class="ok">${ok}</b>` : ''}` : esc(txt)}`;
+const line = (pre, cls, txt, ok) => cls === 'tree' ? `<span class="tree">${esc(txt).replace(/(projects\/|lab\/|contact\/)/, '<em>$1</em>')}</span>` : `<i>${esc(pre.trim())}</i> ${cls === 'grant' ? `<span class="grant">${esc(txt)}</span>` : cls === 'dim' ? `<span class="dim">${esc(txt)}</span>${ok ? `<b class="ok">${ok}</b>` : ''}` : esc(txt)}`;
 function bootStatic() {
-  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => line(p, c, c === 'bar' ? t + '[██████████] 100%' : t, ok)).join('\n');
+  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => c === 'bar' ? line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(20)}] 100%</span>` : line(p, c, t, ok)).join('\n');
+  term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
   showEnter(true);
 }
 function showEnter(on) { if (!enterBtn) return; enterBtn.classList.toggle('on', on); enterBtn.tabIndex = on ? 0 : -1; }
 async function playBoot() {
   const id = ++bootRun; bootDone = false; showEnter(false);
-  const out = []; const draw = (extra = '') => { if (id === bootRun) bootEl.innerHTML = out.join('\n') + extra + '<span class="caret"></span>'; };
+  term.classList.remove('granted'); setStat('connecting', true); if (stat2) stat2.textContent = `session ${sess}`;
+  const out = []; const draw = () => { if (id === bootRun) bootEl.innerHTML = out.join('\n') + (out.length ? '\n' : '') + '<span class="caret"></span>'; };
+  const STAT = { 2: 'resolving', 3: 'handshake', 4: 'bypassing', 5: 'decrypting', 6: 'mounting' };
+  let k = 0;
   for (const [p, c, t, d, ok] of BOOT) {
     if (id !== bootRun) return;
+    k++; if (STAT[k]) setStat(STAT[k], true);
     if (c === 'cmd') {
       for (let i = 1; i <= t.length; i++) {
         if (id !== bootRun) return;
         bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`;
         await sleep(d + Math.random() * 22);
       }
-      out.push(line(p, c, t)); draw(); await sleep(220);
+      out.push(line(p, c, t)); draw(); await sleep(240);
     } else if (c === 'bar') {
       for (let n = 0; n <= 20; n++) {
         if (id !== bootRun) return;
         const bar = '█'.repeat(n) + '░'.repeat(20 - n);
-        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="bar">[${bar}] ${String(n * 5).padStart(3)}%</span><span class="caret"></span>`;
-        await sleep(28 + Math.random() * 36);
+        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="scr">${scr(ok, n / 20)}</span> <span class="bar">[${bar}] ${String(n * 5).padStart(3)}%</span><span class="caret"></span>`;
+        if (stat2) stat2.textContent = `session ${sess} · ${n * 5}%`;
+        await sleep(30 + Math.random() * 40);
       }
-      out.push(line(p, 'dim', t) + '<span class="bar">[' + '█'.repeat(20) + '] 100%</span>'); draw(); await sleep(260);
+      out.push(line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(20)}] 100%</span>`); draw(); await sleep(280);
+    } else if (c === 'grant') {
+      draw(); await sleep(320);
+      out.push(line(p, c, t)); draw();
+      term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
+      await sleep(380);
+    } else if (c === 'tree') {
+      out.push(line(p, c, t)); draw(); await sleep(170);
     } else {
-      draw(); await sleep(c === 'grant' ? 300 : 130 + Math.random() * 120);
-      out.push(line(p, c, t, ok)); draw(); await sleep(c === 'grant' ? 200 : 120);
+      draw(); await sleep(130 + Math.random() * 120);
+      out.push(line(p, c, t, ok)); draw(); await sleep(110);
     }
   }
   if (id !== bootRun) return;
@@ -78,8 +99,27 @@ async function playBoot() {
 }
 function bootSync(boot) {
   if (boot > 0.35 && !bootRun) { reduce ? (bootRun = 1, bootStatic()) : playBoot(); }
-  else if (boot < 0.02 && bootRun) { bootRun = 0; bootDone = false; showEnter(false); bootEl.innerHTML = ''; }
+  else if (boot < 0.02 && bootRun) { bootRun = 0; bootDone = false; showEnter(false); bootEl.innerHTML = ''; term.classList.remove('granted', 'run'); setStat('idle', false); }
 }
+/* faint falling code behind the terminal, only runs while the dark layer is showing */
+const rain = $('#rain'); const rctx = rain && rain.getContext('2d');
+let rainOn = false, cols = [], rw = 0, rh = 0;
+const RG = '0123456789abcdef{}[]<>/=;:·'.split('');
+function rainSize() { if (!rain) return; rw = rain.width = Math.ceil(innerWidth / 2); rh = rain.height = Math.ceil(innerHeight / 2); cols = Array.from({ length: Math.ceil(rw / 11) }, () => ({ y: Math.random() * rh, v: 0.6 + Math.random() * 1.6 })); }
+function rainTick() {
+  if (!rainOn) return;
+  rctx.fillStyle = 'rgba(7,11,22,.16)'; rctx.fillRect(0, 0, rw, rh);
+  rctx.font = '10px monospace';
+  cols.forEach((c, i) => { rctx.fillStyle = Math.random() < 0.06 ? 'rgba(200,255,238,.9)' : 'rgba(124,240,200,.55)'; rctx.fillText(RG[Math.random() * RG.length | 0], i * 11, c.y); c.y += c.v * 5; if (c.y > rh && Math.random() > 0.975) c.y = 0; else if (c.y > rh + 80) c.y = 0; });
+  requestAnimationFrame(rainTick);
+}
+function rainSync(dark) {
+  if (!rain || reduce) return;
+  const want = dark > 0.05;
+  if (want && !rainOn) { rainSize(); rainOn = true; requestAnimationFrame(rainTick); }
+  else if (!want && rainOn) { rainOn = false; rctx.clearRect(0, 0, rw, rh); }
+}
+addEventListener('resize', () => { if (rainOn) rainSize(); });
 function enterStack() {
   if (!bootDone && !reduce) { bootRun++; bootStatic(); bootDone = true; return; }
   entered = true;
@@ -142,8 +182,7 @@ function frame() {
   }
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
-  if (bootEl) bootEl.style.opacity = boot;
-  bootSync(boot);
+  bootSync(boot); rainSync(dark);
   const onDark = dark > 0.45; root.style.setProperty('--navink', onDark ? '#eef2ff' : '#0e1116'); root.style.setProperty('--navkbd', onDark ? '#a9bbff' : '#1f3fd0');
   const fade = 1 - smooth(0, 0.22, t);
   heroCopy.style.opacity = fade; heroCopy.style.transform = `translateY(${(-t * 60).toFixed(1)}px) scale(${(1 - t * 0.04).toFixed(3)})`;
