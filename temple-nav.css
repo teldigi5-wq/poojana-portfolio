@@ -67,9 +67,14 @@
   .tb-statue{transition:opacity .35s,transform .6s cubic-bezier(.2,.8,.2,1)}
   .tn-side{transition:opacity .35s .12s,visibility 0s}
   .tn-medal{cursor:pointer}
-  .tn-medal::before{content:"";position:absolute;left:-34px;right:-34px;top:34%;height:54%;z-index:-1;opacity:0;transition:opacity .3s;
-    background:linear-gradient(180deg,#171310,#0a0908 70%,#100d0a);border-top:2px solid #d7b068;border-bottom:2px solid #d7b068;box-shadow:0 16px 30px -14px #000}
+  /* Folded: the icon alone on a round marble disc. The full medallion (with the bar's plates) fades out. */
+  .tn-medal::before{content:"";position:absolute;left:24.5%;width:51%;top:12%;height:58%;z-index:-1;border-radius:50%;opacity:0;transition:opacity .3s;
+    background:radial-gradient(circle at 50% 40%,#1a1612,#0b0907 75%);box-shadow:0 10px 26px -6px #000d,0 0 0 1px #d7b06833}
+  .tn-medal img{transition:opacity .3s,filter .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
+  .tn-medal .tn-icon{position:absolute;left:0;top:0;opacity:0}
   .header.is-nav-compact:not(.is-nav-open) .tn-medal::before{opacity:1}
+  .header.is-nav-compact:not(.is-nav-open) .tn-medal img:not(.tn-icon){opacity:0}
+  .header.is-nav-compact:not(.is-nav-open) .tn-medal .tn-icon{opacity:1}
   .header.is-nav-compact:not(.is-nav-open) .tb-bar{clip-path:inset(0 calc(50% - 86px) -40px calc(50% - 86px));opacity:0;transition:clip-path .6s cubic-bezier(.2,.8,.2,1),opacity .25s}
   .header.is-nav-compact:not(.is-nav-open) .tb-zeus{opacity:0;transform:translateX(-60px)}
   .header.is-nav-compact:not(.is-nav-open) .tb-athena{opacity:0;transform:translateX(60px)}
