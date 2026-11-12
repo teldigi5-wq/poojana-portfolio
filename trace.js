@@ -26,6 +26,8 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); };
 const bootEl = $('#boot');
+let entered = !!location.hash;          // deep links skip the gate
+const unlock = () => { entered = true; };
 /* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
 const enterBtn = $('#enter');
 const BOOT = [
@@ -80,9 +82,12 @@ function bootSync(boot) {
 }
 function enterStack() {
   if (!bootDone && !reduce) { bootRun++; bootStatic(); bootDone = true; return; }
+  entered = true;
   const g = $('#gateway'); if (g) g.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
 }
 enterBtn && enterBtn.addEventListener('click', enterStack);
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('a[href^="#"]')) unlock(); }, true);
+addEventListener('hashchange', unlock);
 addEventListener('keydown', e => {
   if (e.key !== 'Enter' || e.repeat || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
   if (!enterBtn.classList.contains('on') && !(bootRun && !bootDone)) return;
@@ -104,8 +109,13 @@ if (vid && !lite) {
 
 const A_END = 0.5, B_END = 0.6;   // dive | dark hold (terminal plays) | exit
 function frame() {
-  const y = scrollY;
+  let y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
+  const lockY = span * 0.56;             // inside the dark hold
+  if (!reduce) {
+    if (y < span * 0.3) entered = false;
+    if (!entered && y > lockY) { scrollTo({ top: lockY, behavior: 'instant' }); y = lockY; }
+  }
   const tr = clamp(y / span);
   const t = tr <= A_END ? tr / A_END * 0.72 : tr <= B_END ? 0.72 + (tr - A_END) / (B_END - A_END) * 0.06 : 0.78 + (tr - B_END) / (1 - B_END) * 0.22;
   let z = 1, dark = 0, veil, boot = 0;
