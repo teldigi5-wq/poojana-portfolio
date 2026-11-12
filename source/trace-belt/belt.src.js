@@ -13,7 +13,7 @@ import {
 const TAGS = [
   { id: 'me', kind: 'id', name: ['Poojana', 'Kaveesh'], role: 'BACKEND · AI · SECURITY', sub: 'SLIIT · IT UNDERGRADUATE', c: ['#2b4bff', '#0fa37f'], label: 'Poojana Kaveesh, backend engineer' },
 ];
-const CW = 1, CH = 1.5, BAND_W = 0.13, BAND_L = 0.82, SEG = BAND_L / 3, G = 9.5;
+const CW = 1, CH = 1.5, BAND_W = 0.11, BAND_L = 0.82, SEG = BAND_L / 3, G = 9.5;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 /* ---------- textures ---------- */
@@ -61,11 +61,11 @@ function drawTag(t, img, i) {
 }
 function roundRect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
 function bandCanvas() {
-  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 640; const x = cv.getContext('2d');
-  const g = x.createLinearGradient(0, 0, 128, 0); g.addColorStop(0, '#e2dccb'); g.addColorStop(.5, '#f7f3e8'); g.addColorStop(1, '#dcd5c3'); x.fillStyle = g; x.fillRect(0, 0, 128, 640);
-  x.fillStyle = 'rgba(14,17,22,.78)'; x.font = `800 27px ${SANS}`; x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.save(); x.translate(64, 320); x.rotate(Math.PI / 2); x.letterSpacing = '5px'; x.fillText('POOJANA KAVEESH', 0, 0); x.restore();
-  x.strokeStyle = 'rgba(14,17,22,.25)'; x.lineWidth = 3; x.strokeRect(10, -4, 108, 648);
+  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 512; const x = cv.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 128, 0); g.addColorStop(0, '#e2dccb'); g.addColorStop(.5, '#f7f3e8'); g.addColorStop(1, '#dcd5c3'); x.fillStyle = g; x.fillRect(0, 0, 128, 512);
+  x.fillStyle = 'rgba(14,17,22,.82)'; x.font = `800 22px ${SANS}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.save(); x.translate(64, 256); x.rotate(Math.PI / 2); x.letterSpacing = '3px'; x.fillText('POOJANA KAVEESH', 0, 0); x.restore();
+  x.strokeStyle = 'rgba(14,17,22,.25)'; x.lineWidth = 3; x.beginPath(); x.moveTo(12,0); x.lineTo(12,512); x.moveTo(116,0); x.lineTo(116,512); x.stroke();
   return cv;
 }
 function sheenCanvas() {
@@ -209,7 +209,7 @@ export async function mountBelt(root, opts = {}) {
         const nxt = r.curve.getPoint(Math.min(1, (k + 1) / (N - 1))), pre = r.curve.getPoint(Math.max(0, (k - 1) / (N - 1)));
         let tx = nxt.x - pre.x, ty = nxt.y - pre.y; const tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl; const px = -ty * BAND_W / 2, py = tx * BAND_W / 2;
         pos.setXYZ(2 * k, V.x + px, V.y + py, 0); pos.setXYZ(2 * k + 1, V.x - px, V.y - py, 0);
-        const v = len / 1.9; uv.setXY(2 * k, 0, v); uv.setXY(2 * k + 1, 1, v); prev = { x: V.x, y: V.y };
+        const v = len / (BAND_W * 4); uv.setXY(2 * k, 0, v); uv.setXY(2 * k + 1, 1, v); prev = { x: V.x, y: V.y };
       }
       pos.needsUpdate = true; uv.needsUpdate = true;
     }
