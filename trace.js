@@ -41,7 +41,7 @@ const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
   const bio = new IntersectionObserver(([en]) => {
     if (!en.isIntersecting) return; bio.disconnect();
-    import('./assets/trace/belt.js').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
+    import('./assets/trace/belt.js?v=2').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
   }, { rootMargin: '500px' });
   bio.observe(belt);
 }
@@ -60,7 +60,6 @@ if (!reduce && matchMedia('(hover: hover)').matches) {
   });
 }
 const bootEl = $('#boot');
-let seenPast = false;
 let entered = !!location.hash;          // deep links skip the gate
 const unlock = () => { entered = true; };
 /* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
@@ -211,8 +210,6 @@ function frame() {
   const span = Math.max(hero.offsetHeight - vh, 1);
   const lockY = span * 0.56;             // inside the dark hold
   if (!reduce) {
-    if (y > lockY) seenPast = true;
-    if (seenPast && y < span * 0.3) { entered = false; seenPast = false; }   // came back up: re-arm the gate
     if (!entered && y > lockY) { scrollTo({ top: lockY, behavior: 'instant' }); y = lockY; }
   }
   const tr = clamp(y / span);
@@ -422,3 +419,13 @@ palIn.addEventListener('keydown', e => {
 });
 palList.addEventListener('click', e => { if (e.target.closest('a')) pal.close(); });
 pal.addEventListener('click', e => { if (e.target === pal) pal.close(); });
+
+/* back to the top — instant jump, so you never replay the dive/terminal on the way up */
+const toTop = document.getElementById('toTop');
+if (toTop) {
+  const goTop = e => { e && e.preventDefault(); scrollTo({ top: 0, behavior: 'instant' }); history.replaceState(null, '', location.pathname); };
+  toTop.addEventListener('click', goTop);
+  document.querySelectorAll('a[href="#trace"]').forEach(a => a.addEventListener('click', goTop));
+  const sync = () => toTop.classList.toggle('on', scrollY > innerHeight * 1.2);
+  addEventListener('scroll', sync, { passive: true }); sync();
+}

@@ -34,7 +34,7 @@ test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',(
   assert.match(html,/id="belt"[^>]*role="group"/);                       // labelled group
   assert.match(html,/class="belt-static"/);                              // no-JS / no-WebGL content
   assert.doesNotMatch(read('source/trace-belt/belt.src.js'),/BoundaryLab|Aetheris|Wayfarer/); // only the personal lanyard
-  assert.match(js,/import\('\.\/assets\/trace\/belt\.js'\)/);          // loaded on demand
+  assert.match(js,/import\('\.\/assets\/trace\/belt\.js\?v=\d+'\)/);          // loaded on demand
   const src=read('source/trace-belt/belt.src.js');
   assert.match(src,/prefers-reduced-motion/);                            // static frame for reduced motion
   assert.match(src,/function fallback/);                                 // DOM fallback without WebGL
