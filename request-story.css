@@ -34,7 +34,11 @@
   opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s;
 }
 .rr-stop em{font-style:normal;color:#dcad7e}
-.rr-stop:hover span,.rr-stop.is-announcing span{opacity:1;transform:none}
+.rr-stop:hover span{opacity:1;transform:none}
+/* Entering a layer pulses its dot instead of showing a label over the content. */
+.rr-stop.is-announcing b{animation:rr-pulse 1.4s ease-out}
+@keyframes rr-pulse{0%{box-shadow:0 0 0 0 #dcad7ecc}100%{box-shadow:0 0 0 12px #dcad7e00}}
+@media (prefers-reduced-motion:reduce){.rr-stop.is-announcing b{animation:none}}
 .rr-stop.is-passed b{background:#c08a5b;border-color:#c08a5b}
 .rr-stop.is-active b{border-color:#dcad7e;transform:scale(1.25)}
 .request-rail.is-complete .rr-stop:last-of-type b{background:#a9c79a;border-color:#a9c79a}
