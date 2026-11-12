@@ -32,7 +32,7 @@ a{color:inherit}button{font:inherit;color:inherit}
 .enter kbd{font:inherit;color:#7cf0c8;border:1px solid rgba(124,240,200,.45);border-radius:6px;padding:3px 7px}.enter span{color:#7f8aa3}
 @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(124,240,200,.07)}}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media(max-width:700px){.enter{bottom:9vh;font-size:13px;padding:13px 18px}.term-title{display:none}.dark pre{min-height:21em;padding:16px}}
+@media(max-width:700px){.enter{bottom:9vh;font-size:13px;padding:13px 18px}.term-title{display:none}.term-bar{justify-content:space-between}.dark pre{min-height:19em;padding:16px 14px;font-size:clamp(10.5px,2.9vw,12.5px)}.term-foot{font-size:10.5px}}
 .dark b{color:#7cf0c8;font-weight:500}.dark i{font-style:normal;color:#7f8aa3}
 
 /* chrome: avatar badge, glass nav (see glass-nav.css), talk button, progress, rail */

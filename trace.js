@@ -35,6 +35,7 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
 };
 const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 const bootEl = $('#boot');
+let seenPast = false;
 let entered = !!location.hash;          // deep links skip the gate
 const unlock = () => { entered = true; };
 /* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
@@ -51,6 +52,9 @@ const BOOT = [
   ['', 'tree', '├─ lab/        live demos you can run'],
   ['', 'tree', '└─ contact/    open to internships'],
 ];
+const SMALL = innerWidth < 700, NB = SMALL ? 10 : 20, TOUCH = matchMedia('(hover: none)').matches;
+if (SMALL) { BOOT[8][2] = '├─ lab/        live demos'; BOOT[7][2] = '├─ projects/   3 projects'; BOOT[9][2] = '└─ contact/    open to work'; }
+if (TOUCH && enterBtn) enterBtn.innerHTML = 'Tap to step into the stack';
 const term = $('#term'), stat1 = $('#stat1'), stat2 = $('#stat2');
 const setStat = (s, run) => { if (stat1) stat1.innerHTML = `<u></u>${s}`; term.classList.toggle('run', !!run); };
 const sess = Array.from({ length: 4 }, () => '0123456789abcdef'[Math.random() * 16 | 0]).join('');
@@ -60,7 +64,7 @@ let bootRun = 0, bootDone = false;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const line = (pre, cls, txt, ok) => cls === 'tree' ? `<span class="tree">${esc(txt).replace(/(projects\/|lab\/|contact\/)/, '<em>$1</em>')}</span>` : `<i>${esc(pre.trim())}</i> ${cls === 'grant' ? `<span class="grant">${esc(txt)}</span>` : cls === 'dim' ? `<span class="dim">${esc(txt)}</span>${ok ? `<b class="ok">${ok}</b>` : ''}` : esc(txt)}`;
 function bootStatic() {
-  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => c === 'bar' ? line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(20)}] 100%</span>` : line(p, c, t, ok)).join('\n');
+  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => c === 'bar' ? line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(NB)}] 100%</span>` : line(p, c, t, ok)).join('\n');
   term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
   showEnter(true);
 }
@@ -82,14 +86,14 @@ async function playBoot() {
       }
       out.push(line(p, c, t)); draw(); await sleep(240);
     } else if (c === 'bar') {
-      for (let n = 0; n <= 20; n++) {
+      for (let n = 0; n <= NB; n++) {
         if (id !== bootRun) return;
-        const bar = '█'.repeat(n) + '░'.repeat(20 - n);
-        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="scr">${scr(ok, n / 20)}</span> <span class="bar">[${bar}] ${String(n * 5).padStart(3)}%</span><span class="caret"></span>`;
-        if (stat2) stat2.textContent = `session ${sess} · ${n * 5}%`;
+        const bar = '█'.repeat(n) + '░'.repeat(NB - n);
+        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="scr">${scr(ok, n / NB)}</span> <span class="bar">[${bar}] ${String(Math.round(n * 100 / NB)).padStart(3)}%</span><span class="caret"></span>`;
+        if (stat2) stat2.textContent = `session ${sess} · ${Math.round(n * 100 / NB)}%`;
         await sleep(30 + Math.random() * 40);
       }
-      out.push(line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(20)}] 100%</span>`); draw(); await sleep(280);
+      out.push(line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(NB)}] 100%</span>`); draw(); await sleep(280);
     } else if (c === 'grant') {
       draw(); await sleep(320);
       out.push(line(p, c, t)); draw();
@@ -162,7 +166,8 @@ function frame() {
   const span = Math.max(hero.offsetHeight - vh, 1);
   const lockY = span * 0.56;             // inside the dark hold
   if (!reduce) {
-    if (y < span * 0.3) entered = false;
+    if (y > lockY) seenPast = true;
+    if (seenPast && y < span * 0.3) { entered = false; seenPast = false; }   // came back up: re-arm the gate
     if (!entered && y > lockY) { scrollTo({ top: lockY, behavior: 'instant' }); y = lockY; }
   }
   const tr = clamp(y / span);
