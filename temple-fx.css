@@ -1,16 +1,16 @@
 /* Temple FX: custom cursor, gold dust, spotlight cards. Fine pointers only, off for reduced motion. */
 .fx-cursor,.fx-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:2147483000;opacity:0;will-change:transform}
-.fx-cursor{width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid rgba(220,173,126,.85);border-radius:50%;display:grid;place-items:center;transition:width .25s,height .25s,margin .25s,background .25s,opacity .3s,border-color .25s;mix-blend-mode:normal}
-.fx-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#f1c994;box-shadow:0 0 10px #dcad7e;transition:opacity .3s,transform .05s}
+.fx-cursor{width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid rgba(244,236,220,.7);border-radius:50%;display:grid;place-items:center;transition:width .25s,height .25s,margin .25s,background .25s,opacity .3s,border-color .25s;mix-blend-mode:normal}
+.fx-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#f4ecdc;transition:opacity .3s,transform .05s}
 .fx-cursor span{font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;color:#14100c;opacity:0;transition:opacity .2s}
 html.fx-on .fx-cursor,html.fx-on .fx-dot{opacity:1}
-.fx-cursor.is-link{width:58px;height:58px;margin:-29px 0 0 -29px;background:rgba(220,173,126,.14)}
+.fx-cursor.is-link{width:52px;height:52px;margin:-26px 0 0 -26px;background:rgba(244,236,220,.08)}
 .fx-cursor.is-label{width:78px;height:78px;margin:-39px 0 0 -39px;background:#dcad7e;border-color:#dcad7e}
 .fx-cursor.is-label span{opacity:1}
 .fx-cursor.is-down{width:26px;height:26px;margin:-13px 0 0 -13px}
 html.fx-on,html.fx-on a,html.fx-on button,html.fx-on [role=button],html.fx-on label,html.fx-on select{cursor:none}
 html.fx-on input,html.fx-on textarea{cursor:text}
-.fx-dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.55}
+.fx-dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.28}
 @media (max-width:900px),(pointer:coarse){.fx-cursor,.fx-dot{display:none}.fx-dust{opacity:.35}}
 /* spotlight on project stages */
 .project-stage{--mx:50%;--my:50%;transition:transform .35s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}

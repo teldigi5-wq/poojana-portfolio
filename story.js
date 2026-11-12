@@ -35,9 +35,7 @@
         list.forEach((w, k) => w.style.setProperty('--w', (0.14 + 0.86 * clamp(lit - k)).toFixed(2)));
       }
       if (r.top < vh * 0.6) chapter = beat;
-      const near = r.top < vh * 0.5 && r.bottom > vh * 0.35;
-      if (near && !inside[i]) { inside[i] = true; if (r.top > -vh * 0.8) strike(beat); }
-      else if (!near && (r.top > vh * 0.95 || r.bottom < vh * 0.05)) inside[i] = false;
+
     });
     if (hud) {
       const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
@@ -50,44 +48,32 @@
       hud.classList.toggle('is-on', scrollY > innerHeight * 0.6);
     }
   };
-  /* --- the strike: a clip of Zeus hurling his thunderbolt plays over the page; on the flash the chapter opens --- */
-  const FLASH = 2.8;                     // seconds into the clip where the bolt lands
-  const clip = document.createElement('video');
-  clip.className = 'story-zeus';
-  clip.muted = true; clip.playsInline = true; clip.preload = 'none'; clip.setAttribute('aria-hidden', 'true');
-  clip.innerHTML = '<source src="assets/story/zeus.webm" type="video/webm"><source src="assets/story/zeus.mp4" type="video/mp4">';
-  document.body.append(clip);
-  let loaded = false; let current2 = null; let flashed = false; let lastStrike = 0; let shakeUntil = 0;
-  const warm = () => { if (!loaded) { loaded = true; clip.preload = 'auto'; clip.load(); } };
-  const flash = () => {
-    if (flashed || !current2) return;
-    flashed = true;
-    const beat = current2; const stick = beat.querySelector('.sb-stick');
-    beat.classList.remove('is-struck'); void beat.offsetWidth; beat.classList.add('is-struck');
-    shakeUntil = performance.now() + 450;
-    const shake = () => {
-      const left = shakeUntil - performance.now();
-      stick.style.transform = left > 0 ? `translate(${(Math.random() - 0.5) * 12 * left / 450}px,${(Math.random() - 0.5) * 12 * left / 450}px)` : '';
-      if (left > 0) requestAnimationFrame(shake);
-    };
-    shake();
+  /* --- a framed film plate in each chapter: Zeus hurls the thunderbolt once when the chapter comes into view --- */
+  const plates = beats.map((beat, i) => {
+    const fig = document.createElement('figure');
+    fig.className = 'sb-plate';
+    fig.setAttribute('aria-hidden', 'true');
+    fig.innerHTML = '<video muted playsinline preload="none" poster="assets/story/zeus-poster.webp"><source src="assets/story/zeus.webm" type="video/webm"><source src="assets/story/zeus.mp4" type="video/mp4"></video><figcaption>PLATE ' + beat.dataset.chapter + ' · THE THROW</figcaption>';
+    beat.querySelector('.sb-stick').append(fig);
+    const video = fig.firstChild;
+    video.addEventListener('ended', () => { video.currentTime = 2.0; });
+    return { fig, video, played: false };
+  });
+  const playPlate = i => {
+    const p = plates[i];
+    if (p.played) return;
+    p.played = true;
+    p.video.preload = 'auto';
+    p.video.currentTime = 0;
+    p.video.play().catch(() => {});
   };
-  clip.addEventListener('timeupdate', () => { if (clip.currentTime >= FLASH) flash(); });
-  clip.addEventListener('ended', () => { clip.classList.remove('is-on'); flash(); });
-  const strike = beat => {
-    const now = performance.now();
-    if (now - lastStrike < 4200 || !loaded) return;
-    lastStrike = now;
-    current2 = beat; flashed = false;
-    clip.currentTime = 0;
-    clip.classList.add('is-on');
-    clip.play().catch(() => { clip.classList.remove('is-on'); current2 = beat; flash(); });
-    setTimeout(() => clip.classList.remove('is-on'), 3900);
-  };
-  const inside = beats.map(() => false);
+  const plateObserver = new IntersectionObserver(entries => entries.forEach(e => {
+    const i = beats.indexOf(e.target);
+    if (e.isIntersecting && e.intersectionRatio > 0.2) playPlate(i);
+    else if (!e.isIntersecting) { plates[i].played = false; plates[i].video.pause(); }
+  }), { threshold: [0, 0.2] });
+  beats.forEach(b => plateObserver.observe(b));
 
-  const firstBeat = beats[0];
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) warm(); }, { rootMargin: '2500px 0px' }).observe(firstBeat);
   const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
   addEventListener('scroll', request, { passive: true });
   addEventListener('resize', request);

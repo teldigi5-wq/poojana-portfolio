@@ -21,7 +21,7 @@
   };
   resize();
   addEventListener('resize', resize);
-  const count = fine ? 46 : 22;
+  const count = fine ? 16 : 8;
   for (let i = 0; i < count; i++) motes.push({ x: Math.random(), y: Math.random(), z: 0.3 + Math.random() * 0.9, s: Math.random() * 6.28 });
   let lastY = scrollY; let vel = 0; let mx = 0.5; let my = 0.5; let running = true;
   addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, { passive: true });
@@ -76,18 +76,6 @@
     dot.style.transform = `translate(${x}px,${y}px)`;
     requestAnimationFrame(follow);
   })();
-
-  /* --- magnetic controls --- */
-  const magnets = document.querySelectorAll('.exhibit-controls button,.round-link,.tn-medal,.hero-cta a,.contact a.button,.layer-buttons button');
-  magnets.forEach(el => {
-    el.addEventListener('pointermove', e => {
-      const r = el.getBoundingClientRect();
-      const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
-      const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
-      el.style.transform = `translate(${dx * 8}px,${dy * 8}px)`;
-    });
-    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
-  });
 
   /* --- project stages: a gold spotlight follows the pointer --- */
   document.querySelectorAll('.project-stage').forEach(stage => {
