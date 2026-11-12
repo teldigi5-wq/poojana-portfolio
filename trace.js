@@ -24,7 +24,16 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
   const s = va > IMG_A ? [1, IMG_A / va] : [va / IMG_A, 1];
   return [(iu[0] - 0.5) / s[0] + 0.5, (iu[1] - 0.5) / s[1] + 0.5];
 };
-const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); };
+const fitHero = () => {            // keep the headline clear of the laptop on any viewport shape
+  root.style.setProperty('--hs', 1);
+  if (!heroCopy || vw < 721) return;
+  const room = toViewport([0.5, 0.44])[1] * vh - 16;   // top edge of the laptop in the viewport
+  const r = heroCopy.getBoundingClientRect(); const need = r.bottom - r.top + parseFloat(getComputedStyle(heroCopy).top);
+  root.classList.remove('tight');
+  if (need > room) root.style.setProperty('--hs', Math.max(0.5, room / need).toFixed(3));
+  if (heroCopy.getBoundingClientRect().bottom > room + 4) root.classList.add('tight');   // still too tall: drop the subhead
+};
+const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 const bootEl = $('#boot');
 let entered = !!location.hash;          // deep links skip the gate
 const unlock = () => { entered = true; };
