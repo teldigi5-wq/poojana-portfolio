@@ -88,7 +88,6 @@ async function warmUp(renderer, world, target, composer) {
 }
 
 const WORLDS = {
-  gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') },
   strata: { host: '#dimension .system-object', section: '#dimension', load: () => import('./strata.js'), prefetch: true }
 };
 

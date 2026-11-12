@@ -1,0 +1,54 @@
+/* Hellenic hero: a cinematic walk through a temple hall, scrubbed by scroll, behind the portrait.
+   Without JavaScript, with reduced motion or ?motion=off the poster frame stays as a still. */
+.hero-luxe .hero-visual{background:#0a0908;overflow:hidden}
+.temple-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;
+  filter:saturate(.9) contrast(1.05) brightness(1.02);
+  transform:scale(1.04);transform-origin:50% 42%;will-change:transform;
+  animation:temple-breathe 22s ease-in-out infinite alternate;
+}
+@keyframes temple-breathe{to{transform:scale(1.09) translate3d(0,-.6%,0)}}
+
+/* Colour grade: warm the shadows, keep the dome's cool light, pull the edges into the page. */
+.temple-grade{
+  position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(ellipse 70% 55% at 50% 12%,#9bb8ff40,transparent 60%),linear-gradient(180deg,#d19a5c26,#3a1c0a55);
+}
+.temple-grain{
+  position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-luxe .hero-shade{
+  background:
+    linear-gradient(90deg,#0b0a09e6 0%,#0b0a09b3 22%,#0b0a0926 52%,#0b0a0966 100%),
+    linear-gradient(180deg,#0b0a0999 0%,#0b0a0900 20%,#0b0a0900 72%,#0b0a09e6 100%);
+}
+.portrait-halo{opacity:.5}
+
+/* Chapters: three captions that arrive as the camera walks the aisle. */
+.temple-chapters{position:absolute;z-index:5;left:max(5vw,28px);top:clamp(150px,27vh,290px);width:min(460px,40vw);pointer-events:none}
+.temple-chapters ol{list-style:none;margin:0;padding:0;position:relative;min-height:150px}
+.temple-chapters li{position:absolute;inset:0 auto auto 0;opacity:0;transform:translate3d(0,14px,0);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.temple-chapters li.is-active{opacity:1;transform:none}
+.chapter-no{display:block;font:500 11px/1 var(--mono,ui-monospace,monospace);letter-spacing:.34em;color:var(--copper,#b88764);margin-bottom:14px}
+.temple-chapters h2{margin:0 0 14px;font:400 clamp(36px,4.2vw,68px)/1.02 Georgia,'Times New Roman',serif;letter-spacing:-.02em;color:var(--ivory,#e5d8c2);font-style:italic}
+.temple-chapters p{margin:0;font-size:15px;line-height:1.65;color:#e5d8c2e0;max-width:36ch;text-shadow:0 1px 18px #000a}
+.temple-rail{position:absolute;left:0;right:0;top:-30px;height:1px;background:#e5d8c230}
+.temple-rail-fill{position:absolute;inset:0;background:var(--copper,#b88764);transform:scaleX(0);transform-origin:0 50%}
+.temple-meander{
+  position:absolute;z-index:4;left:0;right:0;bottom:clamp(54px,8vh,84px);height:12px;pointer-events:none;opacity:.34;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12' fill='none' stroke='%23b88764' stroke-width='1.2'%3E%3Cpath d='M0 11V1h10v7H4V4.5h3.5M12 11V1h10v7h-6V4.5h3.5' stroke-linejoin='miter'/%3E%3C/svg%3E") repeat-x center/24px 12px;
+}
+.temple-chapters,.temple-meander{display:none}
+.has-temple-scroll .temple-chapters,.has-temple-scroll .temple-meander{display:block}
+
+@media (max-width:900px){
+  .temple-chapters{left:22px;width:calc(100% - 44px);top:clamp(120px,21vh,200px)}
+  .temple-chapters h2{font-size:clamp(32px,9vw,46px)}
+  .temple-chapters p{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .temple-video{animation:none;transform:none}
+  .temple-chapters,.temple-meander{display:none!important}
+}
