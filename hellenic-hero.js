@@ -26,6 +26,7 @@
     document.documentElement.classList.add('has-temple-scroll');
 
     const ranges = [[0.26, 0.5], [0.5, 0.76], [0.76, 1.01]];
+    let lastChapter = -2;
     let target = 0;
     let shown = 0;
     let lastSeek = -1;
@@ -42,11 +43,13 @@
       defaults: { ease: 'none' },
       scrollTrigger: {
         trigger: hero, start: 'top top', end: () => `+=${Math.round(innerHeight * (small ? 1.1 : 1.5))}`,
-        pin: true, scrub: 0.7, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 1,
+        pin: true, scrub: 0.7, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 100,
         onUpdate: self => {
           target = self.progress;
           chapters.forEach((li, i) => li.classList.toggle('is-active', self.progress >= ranges[i][0] && self.progress < ranges[i][1]));
           if (fill) fill.style.transform = `scaleX(${self.progress})`;
+          const idx = ranges.findIndex(r => self.progress >= r[0] && self.progress < r[1]);
+          if (idx !== lastChapter) { lastChapter = idx; document.dispatchEvent(new CustomEvent('temple:chapter', { detail: { index: idx } })); }
         }
       }
     });

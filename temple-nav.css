@@ -1,0 +1,33 @@
+/* Temple navigation: a bronze lintel that knows which hall you are in. */
+.temple-nav-wrap{flex-shrink:0}
+.temple-nav{position:relative;display:flex;align-items:center;gap:2px;padding:5px;border-radius:999px;
+  background:linear-gradient(180deg,#1d1812f2,#120f0cf2);border:1px solid #b887644d;
+  box-shadow:inset 0 1px 0 #ffffff12,0 14px 40px -18px #000c;backdrop-filter:blur(14px) saturate(1.1);-webkit-backdrop-filter:blur(14px) saturate(1.1)}
+.tn-pip{position:absolute;z-index:0;left:0;top:5px;bottom:5px;width:var(--pip-w,0);transform:translateX(var(--pip-x,0));
+  border-radius:999px;background:linear-gradient(180deg,#d69d6733,#b8876418);border:1px solid #d69d6773;
+  box-shadow:0 0 22px -6px #d69d6788;transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),opacity .3s;opacity:var(--pip-o,0)}
+.tn-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 15px;border-radius:999px;
+  color:#c9bba7;font:500 13px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.01em;text-decoration:none;white-space:nowrap;transition:color .25s}
+.tn-item small{font:italic 400 11px/1 Georgia,"Times New Roman",serif;color:#b88764;letter-spacing:.04em;min-width:1.5em;text-align:right;transition:color .25s}
+.tn-item:hover{color:#f0e8d9}
+.tn-item[aria-current="true"]{color:#f6eddc}
+.tn-item[aria-current="true"] small{color:#e6ba83}
+.tn-item:focus-visible{outline:2px solid var(--focus,#e6ba83);outline-offset:2px}
+/* Hero chapter ticks: three marks under Home that fill as the temple scrolls. */
+.tn-ticks{position:absolute;left:50%;bottom:6px;display:flex;gap:4px;transform:translateX(-50%);opacity:0;transition:opacity .3s}
+.tn-ticks b{width:10px;height:2px;border-radius:2px;background:#ffffff2e;transition:background .3s,width .3s}
+.tn-ticks b.on{background:#e6ba83;width:16px}
+.is-in-hero .tn-ticks{opacity:1}
+/* Header: meander hairline instead of a plain rule. */
+.header{border-bottom-color:transparent!important}
+.header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:12px;pointer-events:none;opacity:.22;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12' fill='none' stroke='%23b88764' stroke-width='1.2'%3E%3Cpath d='M0 11V1h10v7H4V4.5h3.5M12 11V1h10v7h-6V4.5h3.5' stroke-linejoin='miter'/%3E%3C/svg%3E") repeat-x left bottom/24px 12px;
+  transform:translateY(6px);transition:opacity .3s}
+.header.is-scrolled::after{opacity:.12}
+.header.is-scrolled .tn-item{min-height:40px}
+@media(max-width:1239px){.tn-wide{display:none}}
+@media(max-width:1100px) and (min-width:901px){.tn-item{padding:0 10px;font-size:12px}.tn-item small{display:none}}
+@media(max-width:900px){.temple-nav-wrap{display:none}}
+@media(prefers-reduced-motion:reduce){.tn-pip,.tn-ticks,.tn-ticks b{transition:none}}
+#liquid-nav-root{display:none!important}
