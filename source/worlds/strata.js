@@ -1,93 +1,86 @@
 /*
- * The Strata — Depth world (immersive v3, phase 2).
+ * The Temple of Depth — Depth world (immersive v3, phase 2, Greek direction).
  *
- * A three-layer hardware stack (Blender asset: assets/worlds/strata.glb, built by
- * source/blender/strata.py): a glass display in a copper bezel (Experience), a brass
- * plate with a lock cylinder (Trust) and an anodised housing with a circuit board
- * (Foundation). The slabs slide on four steel guide rods, so the exploded view is
- * a real mechanism.
+ * A Greek temple built from three layers, procedurally (no model file):
+ *   Foundation  the stepped stylobate (marble)
+ *   Trust       the colonnade: fluted columns, capitals, a cella wall
+ *   Experience  the entablature and pediment, with gold acroteria and a lit oculus
  *
- * The existing page controls drive it, so nothing about the section's behaviour
- * changed: the scroll scrub, "Assembled" / "Exploded" / "Scroll driven", the drag
- * and Rotate controls and the layer buttons all write to #system-rig, and this world
- * reads from there every frame.
+ * The existing page controls drive it: scroll scrub, Assembled / Exploded / Scroll driven,
+ * drag and Rotate, and the layer buttons all write to #system-rig, and this world reads
+ * from there every frame, so the section behaves as before.
  *
- * Realism comes from physically based materials (anodised aluminium, brushed copper,
- * brass, steel, rubber, smoked glass), real shadows between the layers on capable
- * GPUs, and a baked contact shadow everywhere. Integrated GPUs get Blender-baked
- * matcaps with no lights.
+ * Realism: procedural veined marble, fluted columns with entasis, a gilded metal, soft
+ * shadows between the layers and a baked contact shadow. Integrated GPUs skip the
+ * environment and shadow map and are lit by simple lights.
  */
 import {
-  CanvasTexture, CircleGeometry, Color, DirectionalLight, DoubleSide, Fog, Group, MathUtils, Mesh,
-  MeshBasicMaterial, MeshMatcapMaterial, MeshPhysicalMaterial, MeshStandardMaterial, PCFSoftShadowMap,
-  PerspectiveCamera, PlaneGeometry, Scene, SRGBColorSpace, TextureLoader, Vector3
+  BoxGeometry, CanvasTexture, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DirectionalLight,
+  ExtrudeGeometry, Fog, Group, HemisphereLight, MathUtils, Mesh, MeshBasicMaterial,
+  MeshStandardMaterial, PCFSoftShadowMap, PerspectiveCamera, PlaneGeometry, RepeatWrapping, Scene, Shape,
+  SphereGeometry, SRGBColorSpace, TorusGeometry, Vector3
 } from 'three';
-import { GLTFLoader } from './loaders.js';
 
 const BG = 0x0c0b0a;
 const AMBER = new Color(0xdcad7e);
-// Separation of the layers when exploded, and the stack's resting heights. These match
-// source/blender/strata.py (the glTF nodes carry the resting heights themselves).
-const LIFT = { foundation: 0, trust: 0.55, experience: 1.1 };
-const TOP_WASHER = 0.283;          // top of the assembled stack (experience bezel + washer)
-const NUT_SEAT = 0.04;             // the rod ends inside the acorn nut
+const LIFT = { foundation: 0, trust: 0.45, experience: 0.9 };
+const REST = { foundation: 0, trust: 0.24, experience: 1.02 };
 const LAYERS = ['foundation', 'trust', 'experience'];
-const BASE_YAW = -0.52;
+const BASE_YAW = -0.5;
 
-/* Brushed metal: faint streaks in the roughness, so highlights stretch like machined metal. */
-function brushed(material, key) {
-  material.onBeforeCompile = shader => {
-    shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vBrush;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvBrush = position;');
-    shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', `#include <common>
-        varying vec3 vBrush;
-        float brushHash(vec2 p) { return fract(sin(dot(p, vec2(41.3, 289.1))) * 43758.5453); }`)
-      .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
-        float streak = brushHash(vec2(floor(vBrush.x * 700.0), floor(vBrush.z * 14.0)));
-        roughnessFactor = clamp(roughnessFactor * (0.8 + 0.4 * streak), 0.06, 1.0);`);
-  };
-  material.customProgramCacheKey = () => `strata-brushed-${key}`;
-}
-
-/* The physically based look of each material. */
-function pbr(kind) {
-  switch (kind) {
-    case 'copper': { const m = new MeshStandardMaterial({ color: new Color(0.70, 0.34, 0.17), metalness: 1, roughness: 0.34, envMapIntensity: 0.9 }); brushed(m, 'copper'); return m; }
-    case 'brass': { const m = new MeshStandardMaterial({ color: new Color(0.62, 0.45, 0.21), metalness: 1, roughness: 0.32, envMapIntensity: 0.9 }); brushed(m, 'brass'); return m; }
-    case 'anodised': { const m = new MeshStandardMaterial({ color: new Color(0.05, 0.048, 0.052), metalness: 0.85, roughness: 0.46, envMapIntensity: 0.8 }); brushed(m, 'anodised'); return m; }
-    case 'steel': return new MeshStandardMaterial({ color: new Color(0.66, 0.67, 0.69), metalness: 1, roughness: 0.3, envMapIntensity: 0.9 });
-    case 'rubber': return new MeshStandardMaterial({ color: new Color(0.02, 0.02, 0.02), metalness: 0, roughness: 0.95, envMapIntensity: 0.3 });
-    case 'silicon': return new MeshStandardMaterial({ color: new Color(0.016, 0.016, 0.019), metalness: 0.1, roughness: 0.4, envMapIntensity: 0.7 });
-    case 'panel': return new MeshStandardMaterial({ color: new Color(0.03, 0.028, 0.03), metalness: 0.2, roughness: 0.62, envMapIntensity: 0.5 });
-    case 'lettering': return new MeshStandardMaterial({ color: new Color(0.86, 0.66, 0.46), metalness: 0.7, roughness: 0.34, envMapIntensity: 0.8 });
-    case 'glass': return new MeshPhysicalMaterial({
-      color: new Color(0.02, 0.019, 0.018), metalness: 0, roughness: 0.04, transparent: true, opacity: 0.3,
-      clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.6, depthWrite: false, side: DoubleSide
-    });
-    default: return new MeshBasicMaterial({ color: AMBER.clone().multiplyScalar(2.4), toneMapped: false });   // glow
+/* Veined marble, painted once into a canvas. */
+function marbleTexture(seed, tint) {
+  const size = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  let state = seed;
+  const rand = () => { state = (state * 16807) % 2147483647; return state / 2147483647; };
+  ctx.fillStyle = tint;
+  ctx.fillRect(0, 0, size, size);
+  for (let i = 0; i < 90; i++) {            // soft clouds
+    const g = ctx.createRadialGradient(rand() * size, rand() * size, 0, rand() * size, rand() * size, 60 + rand() * 120);
+    g.addColorStop(0, `rgba(120,112,100,${0.04 + rand() * 0.05})`);
+    g.addColorStop(1, 'rgba(120,112,100,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, size, size);
   }
-}
-
-/* The low tier: a Blender-baked matcap per metal. No lights, no environment, tiny shaders. */
-function matcapFor(kind, caps) {
-  const dark = { matcap: caps.dark };
-  switch (kind) {
-    case 'copper': return new MeshMatcapMaterial({ matcap: caps.copper });
-    case 'brass': return new MeshMatcapMaterial({ matcap: caps.copper, color: new Color(1.0, 0.9, 0.56) });
-    case 'lettering': return new MeshMatcapMaterial({ matcap: caps.copper, color: new Color(1.25, 1.05, 0.9) });
-    case 'anodised': return new MeshMatcapMaterial({ ...dark, color: new Color(0.9, 0.9, 0.95) });
-    case 'steel': return new MeshMatcapMaterial({ ...dark, color: new Color(2.6, 2.6, 2.7) });
-    case 'rubber': return new MeshMatcapMaterial({ ...dark, color: new Color(0.3, 0.3, 0.3) });
-    case 'silicon': return new MeshMatcapMaterial({ ...dark, color: new Color(0.5, 0.5, 0.55) });
-    case 'panel': return new MeshMatcapMaterial({ ...dark, color: new Color(0.55, 0.55, 0.58) });
-    case 'glass': return new MeshMatcapMaterial({ ...dark, color: new Color(0.9, 0.9, 1), transparent: true, opacity: 0.4, depthWrite: false });
-    default: return new MeshBasicMaterial({ color: AMBER.clone().multiplyScalar(2.2), toneMapped: false });
+  ctx.filter = 'blur(0.8px)';
+  for (let v = 0; v < 16; v++) {            // veins
+    let x = rand() * size; let y = rand() * size; let a = rand() * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(x, y);
+    const steps = 30 + Math.floor(rand() * 40);
+    for (let k = 0; k < steps; k++) {
+      a += (rand() - 0.5) * 0.9;
+      x += Math.cos(a) * (6 + rand() * 9); y += Math.sin(a) * (6 + rand() * 9);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(${96 + rand() * 30},${90 + rand() * 24},${84 + rand() * 24},${0.18 + rand() * 0.3})`;
+    ctx.lineWidth = 0.6 + rand() * 1.8;
+    ctx.stroke();
   }
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  texture.wrapS = texture.wrapT = RepeatWrapping;
+  texture.anisotropy = 4;
+  return texture;
 }
 
-/* A soft radial gradient, used for the floor falloff and the contact shadow. */
+/* A column shaft: tapered (entasis) with 20 flutes. */
+function flutedShaft(rBottom, rTop, height) {
+  const geometry = new CylinderGeometry(rTop, rBottom, height, 100, 12, true);
+  const pos = geometry.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i); const z = pos.getZ(i);
+    const a = Math.atan2(z, x);
+    const flute = 1 - 0.07 * (1 - Math.pow(Math.abs(Math.sin(a * 10)), 0.55));
+    pos.setX(i, x * flute); pos.setZ(i, z * flute);
+  }
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/* The low tier skips shadows and environment; the page colour is matched either way. */
 function gradientTexture(stops) {
   const size = 256;
   const canvas = document.createElement('canvas');
@@ -102,13 +95,11 @@ function gradientTexture(stops) {
   return texture;
 }
 
-const stripName = name => name.replace(/\d{3}$/, '');
-
 export async function create({ renderer, getEnvironment, state }) {
   const scene = new Scene();
   scene.background = new Color(BG);
-  scene.fog = new Fog(BG, 7, 16);
-  scene.environmentIntensity = 0.5;
+  scene.fog = new Fog(BG, 8, 18);
+  scene.environmentIntensity = 0.55;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = PCFSoftShadowMap;
 
@@ -116,88 +107,114 @@ export async function create({ renderer, getEnvironment, state }) {
   const disposables = [];
   const track = item => { disposables.push(item); return item; };
 
-  const textures = new TextureLoader();
-  const [gltf, copperCap, darkCap] = await Promise.all([
-    new GLTFLoader().loadAsync('assets/worlds/strata.glb'),
-    textures.loadAsync('assets/worlds/matcap-copper.webp'),
-    textures.loadAsync('assets/worlds/matcap-darkmetal.webp')
-  ]);
-  copperCap.colorSpace = darkCap.colorSpace = SRGBColorSpace;
-  track(copperCap); track(darkCap);
-  const caps = { copper: copperCap, dark: darkCap };
-
-  /* --- the model: layers, rods, per-layer materials --- */
-  const root = new Group();            // yaw and pointer sway
+  const root = new Group();
   const stack = new Group();
   root.add(stack);
   scene.add(root);
 
-  const layer = {};
-  let shaftSource = null;
-  let nutSource = null;
-  for (const child of [...gltf.scene.children]) {
-    const name = stripName(child.name);
-    const match = LAYERS.find(l => name === `Layer_${l[0].toUpperCase()}${l.slice(1)}`);
-    if (match) layer[match] = child;
-    else if (name === 'RodShaft') shaftSource = child;
-    else if (name.startsWith('RodNut')) nutSource = child;
-  }
-  if (!LAYERS.every(l => layer[l]) || !shaftSource || !nutSource) throw new Error('strata.glb is missing parts');
+  /* --- materials: one marble per layer so a layer can recede on its own --- */
+  const tints = { foundation: '#d9d2c5', trust: '#efe9de', experience: '#f4efe6' };
+  const seeds = { foundation: 11, trust: 29, experience: 47 };
+  const layerMats = {};
+  const marble = name => {
+    const map = track(marbleTexture(seeds[name], tints[name]));
+    const m = track(new MeshStandardMaterial({ map, color: new Color(0.74, 0.72, 0.7), roughness: 0.34, metalness: 0, envMapIntensity: 1.1 }));
+    m.userData.base = m.color.clone();
+    (layerMats[name] ||= []).push(m);
+    return m;
+  };
+  const shade = name => {   // slightly darker marble for the cella and recesses
+    const m = marble(name);
+    m.userData.base = new Color(0.46, 0.45, 0.43);
+    m.color.copy(m.userData.base);
+    return m;
+  };
+  const gold = name => {
+    const m = track(new MeshStandardMaterial({ color: new Color(0.85, 0.6, 0.26), metalness: 1, roughness: 0.28, envMapIntensity: 1.2 }));
+    m.userData.base = m.color.clone();
+    (layerMats[name] ||= []).push(m);
+    return m;
+  };
+  const dark = name => {
+    const m = track(new MeshStandardMaterial({ color: new Color(0.045, 0.04, 0.038), roughness: 0.55, metalness: 0.3 }));
+    m.userData.base = m.color.clone();
+    (layerMats[name] ||= []).push(m);
+    return m;
+  };
+  const glowMaterials = [];
+  const glow = () => { const m = track(new MeshBasicMaterial({ color: AMBER.clone().multiplyScalar(2.2), toneMapped: false })); glowMaterials.push(m); return m; };
 
-  const rest = {};
-  const sets = [];                      // { object, layer, kind, pbr, matcap, base }
-  const materialCache = new Map();
-  const getMaterial = (look, layerName, kind) => {
-    const key = `${look}|${layerName}|${kind}`;
-    if (!materialCache.has(key)) {
-      const m = look === 'pbr' ? pbr(kind) : matcapFor(kind, caps);
-      m.userData.base = m.color.clone();
-      m.userData.baseOpacity = m.opacity;
-      materialCache.set(key, track(m));
+  const mesh = (parent, geometry, material, x = 0, y = 0, z = 0) => {
+    track(geometry);
+    const o = new Mesh(geometry, material);
+    o.position.set(x, y, z);
+    o.castShadow = o.receiveShadow = true;
+    parent.add(o);
+    return o;
+  };
+
+  const layer = { foundation: new Group(), trust: new Group(), experience: new Group() };
+  for (const name of LAYERS) { layer[name].position.y = REST[name]; stack.add(layer[name]); }
+
+  /* Foundation: the stylobate, three steps. */
+  {
+    const m = marble('foundation');
+    [[2.6, 1.7], [2.4, 1.5], [2.2, 1.3]].forEach(([w, d], i) => mesh(layer.foundation, new BoxGeometry(w, 0.08, d), m, 0, 0.04 + i * 0.08, 0));
+  }
+
+  /* Trust: cella wall, a door, and twelve fluted columns. */
+  {
+    const m = marble('trust');
+    const wall = shade('trust');
+    mesh(layer.trust, new BoxGeometry(1.46, 0.78, 0.5), wall, 0, 0.39, 0);
+    mesh(layer.trust, new BoxGeometry(0.2, 0.44, 0.02), dark('trust'), 0, 0.22, 0.26);
+    const g = gold('trust');
+    mesh(layer.trust, new BoxGeometry(0.24, 0.02, 0.03), g, 0, 0.45, 0.26);
+    const xs = [-0.95, -0.57, -0.19, 0.19, 0.57, 0.95];
+    for (const z of [-0.52, 0.52]) for (const x of xs) {
+      const col = new Group();
+      col.position.set(x, 0, z);
+      layer.trust.add(col);
+      mesh(col, new CylinderGeometry(0.095, 0.1, 0.03, 40), m, 0, 0.015, 0);                 // plinth
+      mesh(col, new TorusGeometry(0.083, 0.014, 10, 40).rotateX(Math.PI / 2), m, 0, 0.045, 0); // base moulding
+      mesh(col, flutedShaft(0.08, 0.062, 0.62), m, 0, 0.375, 0);                           // shaft
+      mesh(col, new CylinderGeometry(0.095, 0.064, 0.05, 40), m, 0, 0.71, 0);              // echinus
+      mesh(col, new BoxGeometry(0.2, 0.03, 0.2), m, 0, 0.75, 0);                           // abacus
     }
-    return materialCache.get(key);
-  };
-
-  const register = (object, layerName) => {
-    object.traverse(node => {
-      if (!node.isMesh) return;
-      const kind = stripName(node.material.name || '');
-      node.userData.kind = kind;
-      node.userData.layer = layerName;
-      node.castShadow = kind !== 'glow' && kind !== 'glass';
-      node.receiveShadow = kind !== 'glow';
-      sets.push(node);
-    });
-  };
-  for (const name of LAYERS) {
-    rest[name] = layer[name].position.y;
-    stack.add(layer[name]);
-    register(layer[name], name);
   }
 
-  // Guide rods: four shafts and acorn nuts cloned from the Blender prototypes.
-  const rods = [];
-  const rodPositions = [[-0.8, -0.5], [-0.8, 0.5], [0.8, -0.5], [0.8, 0.5]];
-  const rodGroup = new Group();
-  stack.add(rodGroup);
-  for (const [x, z] of rodPositions) {
-    const shaft = shaftSource.clone();
-    const nut = nutSource.clone();
-    shaft.position.set(x, 0, z);
-    nut.position.set(x, 0, z);
-    rodGroup.add(shaft, nut);
-    rods.push({ shaft, nut });
-    register(shaft, 'rod');
-    register(nut, 'rod');
+  /* Experience: entablature, pediment, acroteria, and a lit oculus. */
+  {
+    const m = marble('experience');
+    const g = gold('experience');
+    mesh(layer.experience, new BoxGeometry(2.2, 0.1, 1.3), m, 0, 0.05, 0);                  // architrave
+    mesh(layer.experience, new BoxGeometry(2.16, 0.1, 1.26), shade('experience'), 0, 0.15, 0); // frieze
+    const triglyph = dark('experience');
+    for (let i = 0; i < 12; i++) for (const z of [-0.633, 0.633]) {
+      mesh(layer.experience, new BoxGeometry(0.07, 0.08, 0.012), triglyph, -0.99 + i * 0.18, 0.15, z);
+    }
+    mesh(layer.experience, new BoxGeometry(2.3, 0.04, 1.4), m, 0, 0.22, 0);                 // cornice
+    const tri = new Shape();
+    tri.moveTo(-1.1, 0); tri.lineTo(1.1, 0); tri.lineTo(0, 0.3); tri.closePath();
+    const roof = new ExtrudeGeometry(tri, { depth: 1.3, bevelEnabled: false });
+    roof.translate(0, 0.24, -0.65);
+    mesh(layer.experience, roof, m);
+    const oculus = mesh(layer.experience, new CircleGeometry(0.065, 32), glow(), 0, 0.33, 0.653);
+    oculus.castShadow = oculus.receiveShadow = false;
+    mesh(layer.experience, new TorusGeometry(0.075, 0.01, 10, 40), g, 0, 0.33, 0.654);
+    for (const [x, y] of [[0, 0.56], [-1.1, 0.27], [1.1, 0.27]]) {
+      mesh(layer.experience, new ConeGeometry(0.05, 0.13, 6), g, x, y, 0.645);
+      mesh(layer.experience, new SphereGeometry(0.022, 14, 10), g, x, y + 0.08, 0.645);
+    }
   }
 
-  /* --- ground: a dark worktop with a baked contact shadow --- */
+  /* --- ground and contact shadow --- */
   const floorTexture = track(gradientTexture([[0, '#2b251d'], [0.6, '#211b14'], [1, '#1c1711']]));
   const floorPbr = track(new MeshStandardMaterial({ color: 0x14110f, metalness: 0.1, roughness: 0.5, envMapIntensity: 0.55 }));
   const floorFlat = track(new MeshBasicMaterial({ map: floorTexture }));
   const floor = new Mesh(new CircleGeometry(9, 64), floorFlat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.026;
+  floor.position.y = -0.002;
   floor.receiveShadow = true;
   scene.add(floor);
   track(floor.geometry);
@@ -205,40 +222,34 @@ export async function create({ renderer, getEnvironment, state }) {
   const shadowTexture = track(gradientTexture([[0, 'rgba(0,0,0,0.85)'], [0.5, 'rgba(0,0,0,0.4)'], [1, 'rgba(0,0,0,0)']]));
   const contact = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false }));
   contact.rotation.x = -Math.PI / 2;
-  contact.position.y = -0.0245;
+  contact.position.y = 0.0;
   scene.add(contact);
   track(contact.geometry); track(contact.material);
 
-  /* --- lights (capable GPUs only) --- */
+  /* --- lights --- */
   const key = new DirectionalLight(0xffe4c8, 0);
-  key.position.set(-3.2, 5.2, 3.6);
+  key.position.set(-3.4, 5.2, 3.8);
   key.castShadow = true;
-  key.shadow.camera.left = key.shadow.camera.bottom = -2.6;
-  key.shadow.camera.right = key.shadow.camera.top = 2.6;
+  key.shadow.camera.left = key.shadow.camera.bottom = -3;
+  key.shadow.camera.right = key.shadow.camera.top = 3;
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 14;
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
-  key.target.position.set(0, 0.5, 0);
+  key.target.position.set(0, 0.8, 0);
   const rim = new DirectionalLight(0xff9a58, 0);
   rim.position.set(3.4, 2.4, -3.6);
-  scene.add(key, key.target, rim);
+  const fill = new HemisphereLight(0xfff1dc, 0x2a2118, 0);
+  scene.add(key, key.target, rim, fill);
 
   /* --- tiers --- */
   let look = 'pbr';
-  const applyLook = tier => {
-    look = tier === 'low' ? 'matcap' : 'pbr';
-    for (const node of sets) node.material = getMaterial(look, node.userData.layer, node.userData.kind);
+  const setTier = s => {
+    look = s.tier === 'low' ? 'flat' : 'pbr';
     floor.material = look === 'pbr' ? floorPbr : floorFlat;
-    // Page colour, so the canvas melts into the section. (Tone mapping lifts the composer path a little.)
     scene.background.set(look === 'pbr' ? 0x14100c : 0x1c1711);
     scene.fog.color.copy(scene.background);
-    key.visible = rim.visible = look === 'pbr';
     scene.environment = look === 'pbr' ? getEnvironment() : null;
-    contact.material.opacity = look === 'pbr' ? 0.5 : 0.8;
-  };
-  const setTier = s => {
-    applyLook(s.tier);
     const size = s.tier === 'high' ? 2048 : 1024;
     if (key.shadow.mapSize.x !== size) {
       key.shadow.mapSize.set(size, size);
@@ -249,7 +260,7 @@ export async function create({ renderer, getEnvironment, state }) {
   };
   setTier(state);
 
-  /* --- page state: the existing controls write to #system-rig --- */
+  /* --- page state --- */
   const rig = document.getElementById('system-rig');
   const readNumber = (property, fallback) => {
     const value = parseFloat(rig?.style.getPropertyValue(property));
@@ -260,13 +271,13 @@ export async function create({ renderer, getEnvironment, state }) {
   let aspect = 1;
   let boxWidth = 1;
   let boxHeight = 1;
-  let visibleHeight = 1;          // how much of the box is on screen (short laptops cut it off)
+  let visibleHeight = 1;
   let shiftY = 0;
   let time = 0;
   let igniteAt = -1;
   let spread = 0.05;
   let yaw = 0;
-  let focus = 0.3;
+  let focus = 0.8;
   const dim = { foundation: 1, trust: 1, experience: 1 };
   const lastDim = { foundation: -1, trust: -1, experience: -1 };
   const lookAt = new Vector3();
@@ -287,28 +298,17 @@ export async function create({ renderer, getEnvironment, state }) {
     const target = view === 'assembled' ? 0 : view === 'exploded' ? 1 : MathUtils.clamp(readNumber('--scroll-spread', 0.7), 0, 1);
     spread += (target - spread) * ease(view === 'auto' ? 10 : 4.2);
 
-    // Layers slide along the rods.
-    for (const name of LAYERS) layer[name].position.y = rest[name] + LIFT[name] * spread;
-    const nutY = TOP_WASHER + LIFT.experience * spread;
-    for (const { shaft, nut } of rods) {
-      shaft.scale.y = nutY + NUT_SEAT;
-      nut.position.y = nutY;
-    }
+    for (const name of LAYERS) layer[name].position.y = REST[name] + LIFT[name] * spread;
 
-    // Which layer is being inspected: the others recede a little, like the old CSS plates.
     const selected = rig?.dataset.layer || 'experience';
     for (const name of LAYERS) {
-      dim[name] += ((name === selected ? 1 : 0.7) - dim[name]) * ease(7);
+      dim[name] += ((name === selected ? 1 : 0.72) - dim[name]) * ease(7);
       if (Math.abs(dim[name] - lastDim[name]) > 0.002) {
         lastDim[name] = dim[name];
-        for (const [key2, m] of materialCache) {
-          if (key2.split('|')[1] !== name || m.userData.base === undefined) continue;
-          m.color.copy(m.userData.base).multiplyScalar(dim[name]);
-        }
+        for (const m of layerMats[name]) m.color.copy(m.userData.base).multiplyScalar(dim[name]);
       }
     }
 
-    // Turn: the page's drag and Rotate control, plus a little pointer sway.
     const manual = readNumber('--manual-rotation', 0) * Math.PI / 180;
     yaw += ((BASE_YAW - manual) - yaw) * ease(14);
     const entrance = igniteAt < 0 ? 0 : MathUtils.clamp((time - igniteAt) / 2.2, 0, 1);
@@ -316,7 +316,6 @@ export async function create({ renderer, getEnvironment, state }) {
     root.rotation.y = yaw + s.pointer.x * 0.1 + settle * 0.5;
     root.rotation.x = s.pointer.y * 0.025;
 
-    // Frame what is actually visible: the box can extend below a short viewport (header above, controls below).
     if (host) {
       const r = host.getBoundingClientRect();
       const top = Math.max(r.top, 76);
@@ -329,43 +328,40 @@ export async function create({ renderer, getEnvironment, state }) {
       }
     }
 
-    // Camera: far enough to hold the whole stack, rising a little as it opens.
     const halfTan = Math.tan(MathUtils.degToRad(camera.fov / 2));
-    const e0 = MathUtils.degToRad(27 + 14 * spread);
-    const needHeight = ((0.45 + 1.45 * spread) * Math.cos(e0) + 2.0 * Math.sin(e0)) * 1.08;
-    const needWidth = 2.3 * 1.05;
+    const e0 = MathUtils.degToRad(20 + 12 * spread);
+    const needHeight = ((1.65 + 0.9 * spread) * Math.cos(e0) + 2.5 * Math.sin(e0)) * 1.1;
+    const needWidth = 2.7 * 1.05;
     const distance = Math.max(needHeight / (2 * halfTan) * (boxHeight / visibleHeight), needWidth / (2 * halfTan * aspect)) * (1 + settle * 0.25);
-    const elevation = e0;
-    const selectedLift = rest[selected] + LIFT[selected] * spread;
-    focus += ((0.12 + 0.52 * spread + (selectedLift - (0.12 + 0.52 * spread)) * 0.1) - focus) * ease(5);
+    const selectedLift = REST[selected] + LIFT[selected] * spread;
+    const mid = 0.78 + 0.45 * spread;
+    focus += ((mid + (selectedLift - mid) * 0.1) - focus) * ease(5);
     lookAt.set(0, focus, 0);
-    camera.position.set(0, focus + Math.sin(elevation) * distance, Math.cos(elevation) * distance);
+    camera.position.set(0, focus + Math.sin(e0) * distance, Math.cos(e0) * distance);
     camera.lookAt(lookAt);
 
-    // Lighting and the baked contact shadow follow the opening.
     const lit = igniteAt < 0 ? 0 : MathUtils.clamp((time - igniteAt) / 1.4, 0, 1);
-    key.intensity = 3.1 * lit;
-    rim.intensity = 1.5 * lit;
-    const spreadGrow = 1 + spread * 0.16;
-    contact.scale.set(2.9 * spreadGrow, 2.1 * spreadGrow, 1);
+    key.intensity = (look === 'pbr' ? 2.2 : 1.8) * lit;
+    rim.intensity = 1.6 * lit;
+    fill.intensity = (look === 'pbr' ? 0.25 : 1.3) * lit;
+    const grow = 1 + spread * 0.14;
+    contact.scale.set(3.3 * grow, 2.3 * grow, 1);
     contact.rotation.z = root.rotation.y;
-    contact.material.opacity = (look === 'pbr' ? 0.5 : 0.8) * (1 - spread * 0.35) * (0.3 + 0.7 * lit);
+    contact.material.opacity = (look === 'pbr' ? 0.55 : 0.8) * (1 - spread * 0.3) * (0.3 + 0.7 * lit);
 
-    // The display is alive: a slow breath in the light lines, brighter when the layer is inspected.
     const glowColor = AMBER.clone().multiplyScalar((2.0 + Math.sin(time * 1.4) * 0.35) * (0.45 + 0.55 * dim.experience) * (0.25 + 0.75 * lit));
-    for (const [k, m] of materialCache) if (k.endsWith('|glow')) m.color.copy(glowColor);
+    for (const m of glowMaterials) m.color.copy(glowColor);
   };
 
   const dispose = () => {
     disposables.forEach(item => item.dispose?.());
-    gltf.scene.traverse(object => { if (object.isMesh) object.geometry.dispose(); });
     key.shadow.map?.dispose();
   };
 
   return {
     scene, camera, update, resize, setTier, dispose, ignite,
     debug: { get spread() { return spread; }, get yaw() { return yaw; }, dim },
-    bloom: { strength: 0.42, radius: 0.5, threshold: 0.92 },
+    bloom: { strength: 0.18, radius: 0.4, threshold: 1.6 },
     finish: { vignette: 0.38, grain: 0.03 }
   };
 }

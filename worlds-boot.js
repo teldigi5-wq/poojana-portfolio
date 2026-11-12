@@ -6,7 +6,7 @@
    without WebGL; the page is complete without it. */
 (() => {
   const CHUNKS = /*CHUNKS*/[];
-  const ASSETS = ['assets/worlds/matcap-copper.webp', 'assets/worlds/matcap-darkmetal.webp'];
+  const ASSETS = [];
   const query = new URLSearchParams(location.search);
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || query.get('motion') === 'off' || query.get('tier') === 'still') return;
   if (navigator.connection && navigator.connection.saveData) return;
