@@ -67,3 +67,10 @@ The source and factual limits are documented in `source/portfolio-copper/VERIFIC
 ## Current preview: evidence and toolkit
 
 The 9 November preview replaces the ribbons with `integration-hero.tsx`: 88 repository-backed technologies, two continuous opposite-direction rows, local icons, category filters and project-aware search. Hover does not pause movement. A static catalog is available without JavaScript. See [TECH-STACK-INVENTORY.md](TECH-STACK-INVENTORY.md) for sources and [EVIDENCE-EXPLORER-RELEASE.md](EVIDENCE-EXPLORER-RELEASE.md) for the local policy explorer and validation.
+
+
+---
+
+## AI/developer continuity — 9 November 2026
+
+For a reliable continuation, read [the source-pinned checkpoint and next milestones](docs/AI_HANDOFF_2026-11-09.md). Source at snapshot: `main` / `4340cf445f35`. Reverify current GitHub and release status; this documentation branch is not a deployment or production authorization.
