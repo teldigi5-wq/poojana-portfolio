@@ -10,14 +10,40 @@
  * device; it drops automatically when frames run slow. `?tier=` overrides it.
  */
 import {
-  ACESFilmicToneMapping, Clock, PMREMGenerator, SRGBColorSpace, Vector2, WebGLRenderer
+  ACESFilmicToneMapping, PMREMGenerator, SRGBColorSpace, Vector2, WebGLRenderer
 } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { TIERS, TIER_SETTINGS, initialTier, createGovernor } from './tiers.js';
+
+/* Film finish in display space: soft vignette and fine animated grain. */
+const FinishShader = {
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVignette: { value: 0.4 }, uGrain: { value: 0.03 } },
+  vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime, uVignette, uGrain; varying vec2 vUv;
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+    void main() {
+      vec4 c = texture2D(tDiffuse, vUv);
+      vec2 d = vUv - 0.5;
+      c.rgb *= 1.0 - uVignette * smoothstep(0.25, 0.85, dot(d, d) * 2.2);
+      c.rgb += (hash(vUv * 1000.0 + fract(uTime) * 61.0) - 0.5) * uGrain;
+      gl_FragColor = c;
+    }`
+};
+
+/** Resolves when the opening introduction has finished (or immediately if there is none). */
+function introSettled() {
+  if (root.dataset.introState !== 'loading') return Promise.resolve();
+  return new Promise(resolve => {
+    addEventListener('portfolio:intro-complete', resolve, { once: true });
+    // Never wait forever on the intro.
+    setTimeout(resolve, 9000);
+  });
+}
 
 const WORLDS = {
   gateway: { host: '#home .hero-visual', section: '#home', load: () => import('./gateway.js') }
@@ -40,6 +66,8 @@ function gpuName(gl) {
 
 function boot() {
   if (reducedMotion()) return;
+  const timings = { boot: Math.round(performance.now()) };
+  const mark = name => { timings[name] = Math.round(performance.now()); };
   const renderer = new WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
   const gl = renderer.getContext();
   let tier = initialTier({
@@ -67,13 +95,16 @@ function boot() {
   const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   pmrem.dispose();
 
+  mark('environment');
   const state = { tier, settings: TIER_SETTINGS[tier], pointer: new Vector2(), pointerTarget: new Vector2(), progress: 0 };
   const loaded = new Map();
   const governor = createGovernor();
-  const clock = new Clock(false);
+  let lastFrame = 0;
   let active = null;      // { name, world, host, section }
   let composer = null;
   let bloomPass = null;
+  let finishPass = null;
+  let revealed = false;
   let frame = 0;
   let visible = false;
 
@@ -97,6 +128,7 @@ function boot() {
     composer?.dispose();
     composer = null;
     bloomPass = null;
+    finishPass = null;
     if (!active || !state.settings.bloom) return;
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(active.world.scene, active.world.camera));
@@ -104,6 +136,13 @@ function boot() {
     bloomPass = new UnrealBloomPass(new Vector2(256, 256), bloom.strength, bloom.radius, bloom.threshold);
     composer.addPass(bloomPass);
     composer.addPass(new OutputPass());
+    const finish = active.world.finish;
+    if (finish) {
+      finishPass = new ShaderPass(FinishShader);
+      finishPass.uniforms.uVignette.value = finish.vignette;
+      finishPass.uniforms.uGrain.value = finish.grain;
+      composer.addPass(finishPass);
+    }
   };
 
   const setTier = next => {
@@ -126,13 +165,16 @@ function boot() {
       state.progress = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
     }
     active.world.update(dt, state);
+    if (finishPass) finishPass.uniforms.uTime.value += dt;
     if (composer) composer.render(dt); else renderer.render(active.world.scene, active.world.camera);
   };
 
   const loop = () => {
     frame = 0;
     if (!active || !visible || document.hidden) return;
-    const dt = Math.min(0.05, clock.getDelta());
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastFrame) / 1000);
+    lastFrame = now;
     const t0 = performance.now();
     render(dt);
     // Frame cost on the main thread plus the time between frames: both signal a struggling device.
@@ -141,8 +183,8 @@ function boot() {
     if (next) setTier(next);
     if (tier !== 'still') frame = requestAnimationFrame(loop);
   };
-  const start = () => { if (!frame && active && visible) { clock.start(); clock.getDelta(); frame = requestAnimationFrame(loop); } };
-  const stop = () => { cancelAnimationFrame(frame); frame = 0; clock.stop(); };
+  const start = () => { if (!frame && active && visible && revealed) { lastFrame = performance.now(); frame = requestAnimationFrame(loop); } };
+  const stop = () => { cancelAnimationFrame(frame); frame = 0; };
 
   const detach = () => {
     if (!active) return;
@@ -159,9 +201,12 @@ function boot() {
     let world = loaded.get(name);
     if (!world) {
       const module = await spec.load();
+      mark(`${name}:module`);
       world = await module.create({ renderer, environment, state });
+      mark(`${name}:created`);
       // Compile shaders before the first visible frame.
       try { await renderer.compileAsync(world.scene, world.camera); } catch { /* older drivers: compile on first frame */ }
+      mark(`${name}:compiled`);
       loaded.set(name, world);
     }
     if (tier === 'still') return;
@@ -171,11 +216,19 @@ function boot() {
     buildComposer();
     size();
     governor.reset();
-    // Reveal only after the first frame exists, so the fallback never flashes to black.
+    // Render one (dark, un-ignited) frame so nothing flashes, then wait for the intro to finish
+    // and ignite the moment the hero is actually on screen.
     render(0.016);
+    mark(`${name}:first-frame`);
+    await introSettled();
+    mark(`${name}:intro-settled`);
+    if (active?.name !== name) return;
+    revealed = true;
     requestAnimationFrame(() => {
       host.classList.add('world-live');
       active?.section?.classList.add('world-live');
+      active?.world.ignite?.();
+      mark(`${name}:revealed`);
     });
     start();
   }
@@ -211,7 +264,7 @@ function boot() {
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); stop(); detach(); canvas.remove(); root.dataset.worldTier = 'still'; });
 
   // Debug handle for the visual-audit script (read-only information).
-  window.__worldStage = { get tier() { return tier; }, get active() { return active?.name || null; }, setTier };
+  window.__worldStage = { get tier() { return tier; }, get active() { return active?.name || null; }, setTier, timings, get world() { return active?.world || null; } };
 }
 
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {

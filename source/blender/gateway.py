@@ -179,19 +179,52 @@ def build():
         t.rotation_euler = (0, 0, math.atan2(direction.y, direction.x) - math.pi / 2)
         ticks.append(t)
 
+    # Outer rail: a thin second frame standing off the main one — an engineered, layered silhouette.
+    rail_profile = profile_rect("RailProfile", 0.035, 0.05, 0.01)
+    rail = to_mesh(curve_object("Rail", arch_points(inset=-(FRAME_W / 2 + 0.11)), bevel_obj=rail_profile))
+    bpy.data.objects.remove(rail_profile, do_unlink=True)
+    rail.data.materials.append(copper)
+    rail.location.z = -0.08
+    shade_smooth_by_angle(rail)
+    # Stand-offs tying the rail to the frame.
+    standoffs = []
+    for i, p in enumerate(arch_points(inset=-(FRAME_W / 2 + 0.055), segments=12)[1:-1]):
+        if i % 2:
+            continue
+        centre = Vector((0, LEG_HEIGHT if p.y > LEG_HEIGHT else p.y, 0))
+        d = p - centre
+        so = box(f"Standoff{i}", (0.03, 0.11, 0.03), (p.x, p.y, -0.08), bevel=0.006, mat=copper)
+        so.rotation_euler = (0, 0, math.atan2(d.y, d.x) - math.pi / 2)
+        standoffs.append(so)
+
     # Plinth: two feet and a low step.
     feet = [box(f"Foot{s}", (0.42, 0.16, 0.56), (s * RADIUS, -0.08, 0), bevel=0.014, mat=dark) for s in (-1, 1)]
     step = box("Step", (WIDTH + 1.3, 0.07, 1.1), (0, -0.195, 0), bevel=0.01, mat=dark)
+    # A light strip along the step's front edge and bolts on each foot.
+    strip = box("StepStrip", (WIDTH + 1.1, 0.008, 0.012), (0, -0.165, 0.556), bevel=0.002, mat=glow)
+    bolts = []
+    for sx in (-1, 1):
+        for bx in (-0.14, 0.14):
+            for bz in (-0.2, 0.2):
+                bolt = bpy.data.objects.new(f"Bolt{sx}{bx}{bz}", bpy.data.meshes.new("Bolt"))
+                bm = bmesh.new()
+                bmesh.ops.create_cone(bm, cap_ends=True, segments=10, radius1=0.022, radius2=0.022, depth=0.016)
+                bm.to_mesh(bolt.data); bm.free()
+                bolt.data.materials.append(copper)
+                bolt.location = (sx * RADIUS + bx, 0.008, bz)
+                bolt.rotation_euler = (math.radians(90), 0, 0)
+                bpy.context.collection.objects.link(bolt)
+                bolts.append(bolt)
 
     # Join copper parts into one mesh to keep draw calls low.
     bpy.ops.object.select_all(action="DESELECT")
-    for o in [frame, *ticks]:
+    for o in [frame, *ticks, rail, *standoffs, *bolts]:
         o.select_set(True)
     bpy.context.view_layer.objects.active = frame
     bpy.ops.object.join()
     frame.name = "GatewayFrame"
     bpy.ops.object.select_all(action="DESELECT")
-    for o in [*feet, step]:
+    for o in [*feet, step, strip]:
         o.select_set(True)
     bpy.context.view_layer.objects.active = step
     bpy.ops.object.join()
@@ -224,6 +257,7 @@ def export(root):
         filepath=glb, export_format="GLB", use_selection=False, export_apply=True,
         export_yup=True, export_materials="EXPORT", export_cameras=False, export_lights=False,
         export_animations=False, export_draco_mesh_compression_enable=False, use_active_scene=True,
+        export_texcoords=False,  # no textures: UVs would only add bytes
     )
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUTPUT_DIR, "blend", "gateway.blend"), copy=True)
     return glb

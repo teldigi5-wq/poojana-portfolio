@@ -1,5 +1,4 @@
-/* Loads the world stage (immersive v3) during browser idle time, after the page and
-   introduction have settled. Skipped with reduced motion, ?motion=off, Save-Data,
+/* Loads the world stage (immersive v3) as soon as the page is parsed. Skipped with reduced motion, ?motion=off, Save-Data,
    or without WebGL; the page is complete without it. */
 (() => {
   const query = new URLSearchParams(location.search);
@@ -11,17 +10,20 @@
     if (!(canvas.getContext('webgl2') || canvas.getContext('webgl'))) return;
   } catch { return; }
 
-  const load = () => {
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = 'assets/worlds/js/stage.js?v=20261112-v3-3';
-    document.head.append(script);
-  };
-  const idle = cb => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 800));
-  const settled = () => {
-    if (document.documentElement.dataset.introState === 'loading') addEventListener('portfolio:intro-complete', () => idle(load), { once: true });
-    else idle(load);
-  };
-  if (document.readyState === 'complete') setTimeout(settled, 300);
-  else addEventListener('load', () => setTimeout(settled, 300), { once: true });
+  // Start at once so the Gateway is ready the moment the hero appears: while the
+  // introduction plays, or within about a second for returning visitors. Both
+  // requests are low priority so the portrait (the page's main image) loads first.
+  const preload = document.createElement('link');
+  preload.rel = 'preload';
+  preload.as = 'fetch';
+  preload.href = 'assets/worlds/gateway.glb';
+  preload.crossOrigin = 'anonymous';
+  preload.fetchPriority = 'low';
+  document.head.append(preload);
+
+  const script = document.createElement('script');
+  script.type = 'module';
+  script.fetchPriority = 'low';
+  script.src = 'assets/worlds/js/stage.js?v=20261112-v3-4';
+  document.head.append(script);
 })();
