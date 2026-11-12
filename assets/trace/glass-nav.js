@@ -27,6 +27,8 @@ uniform vec2 uLight;    // light direction
 uniform float uHasTex;
 uniform float uMode;    // 1 = full lens over the backdrop, 0 = rim only (content may sit underneath)
 uniform float uThick;   // glass thickness, css px
+uniform vec3 uZoom;     // backdrop zoom, origin (viewport uv)
+uniform vec2 uTone;     // veil (white), dark
 
 float sdCap(vec2 p, float hx, float r){ vec2 q = vec2(max(abs(p.x)-hx,0.), p.y); return length(q)-r; }
 float sdMain(vec2 p){ float R=uSize.y*0.5; return sdCap(p, uSize.x*0.5-R, R); }
@@ -36,6 +38,7 @@ vec3 scene(vec2 viewPx){
   vec2 uv = viewPx/uView;
   float va = uView.x/uView.y;
   vec2 s = va>uImgA ? vec2(1., uImgA/va) : vec2(va/uImgA, 1.);
+  uv = (uv-uZoom.yz)/uZoom.x+uZoom.yz;
   uv = (uv-0.5)*s+0.5;
   return texture(uTex, vec2(clamp(uv.x,0.,1.), clamp(uv.y,0.,1.))).rgb;
 }
@@ -89,6 +92,8 @@ void main(){
     acc[i] = c[i];
   }
   col = acc;
+  col = mix(col, vec3(1.), uTone.x);
+  col = mix(col, vec3(0.04,0.05,0.09), uTone.y);
 
   // glass body: slight milk, darker just inside the rim on bright scenes (like the reference)
   float lum = dot(col, vec3(.299,.587,.114));
@@ -134,7 +139,7 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
   const loc = gl.getAttribLocation(prog, 'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = n => gl.getUniformLocation(prog, n);
-  const u = { tex: U('uTex'), size: U('uSize'), origin: U('uOrigin'), view: U('uView'), imgA: U('uImgA'), blob: U('uBlob'), light: U('uLight'), hasTex: U('uHasTex'), mode: U('uMode'), thick: U('uThick') };
+  const u = { tex: U('uTex'), size: U('uSize'), origin: U('uOrigin'), view: U('uView'), imgA: U('uImgA'), blob: U('uBlob'), light: U('uLight'), hasTex: U('uHasTex'), mode: U('uMode'), thick: U('uThick'), zoom: U('uZoom'), tone: U('uTone') };
 
   const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([235, 240, 255, 255]));
@@ -154,6 +159,7 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
   const st = { x: 0, w: 80, vx: 0, vw: 0, tx: 0, tw: 80 };
   let light = [-0.55, 0.85], tlight = [-0.55, 0.85];
   let raf = 0, last = 0, modeV = mode, idle = 0;
+  const bd = { zoom: 1, ox: 0.5, oy: 0.5, veil: 0, dark: 0 };
 
   const resize = () => {
     const r = host.getBoundingClientRect(); dpr = Math.min(devicePixelRatio || 1, 2);
@@ -195,7 +201,7 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
     const stretch = st.w + Math.min(Math.abs(st.vx) * 0.018, 26);
     gl.uniform3f(u.blob, st.x, stretch, squash);
     const ang = idle; const lx = light[0] + Math.cos(ang) * 0.55, ly = light[1] + Math.sin(ang) * 0.35;
-    gl.uniform2f(u.light, lx, ly); gl.uniform1f(u.hasTex, hasTex); gl.uniform1f(u.mode, modeV); gl.uniform1f(u.thick, thickness);
+    gl.uniform2f(u.light, lx, ly); gl.uniform1f(u.hasTex, hasTex); gl.uniform1f(u.mode, modeV); gl.uniform3f(u.zoom, bd.zoom, bd.ox, bd.oy); gl.uniform2f(u.tone, bd.veil, bd.dark); gl.uniform1f(u.thick, thickness);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function tick(t) {
@@ -214,5 +220,5 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
   document.addEventListener('visibilitychange', () => { if (document.hidden && raf) { cancelAnimationFrame(raf); raf = 0; } else kick(); });
   resize();
   host.classList.add('has-gl');
-  return { redraw: kick, setMode(v) { modeV = Math.max(0, Math.min(1, v)); kick(); } };
+  return { redraw: kick, setMode(v) { modeV = Math.max(0, Math.min(1, v)); kick(); }, setBackdrop(o) { Object.assign(bd, o); kick(); } };
 }
