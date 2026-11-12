@@ -42,7 +42,7 @@ a{color:inherit}button{font:inherit;color:inherit}
 .rail a:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:6px}
 
 /* hero */
-.hero{position:relative;height:400vh}.hero-stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.hero{position:relative;height:340vh}.hero-stick{position:sticky;top:0;height:100vh;overflow:hidden}
 .hero-copy{position:absolute;left:0;right:0;top:clamp(92px,12vh,130px);text-align:center;padding:0 24px;will-change:opacity,transform}
 .status{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;font:500 12px/1 var(--mono);color:#28406b;margin-bottom:16px}
 .status i{width:8px;height:8px;border-radius:50%;background:var(--ok)}

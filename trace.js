@@ -29,7 +29,7 @@ const bootEl = $('#boot');
 /* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
 const enterBtn = $('#enter');
 const BOOT = [
-  ['$ ', 'cmd', './trace --target poojana-kaveesh', 38],
+  ['$ ', 'cmd', './trace --target poojana-kaveesh', 14],
   ['> ', 'dim', 'resolving gateway ........... ', 0, 'ok'],
   ['> ', 'dim', 'negotiating TLS 1.3 ......... ', 0, 'ok'],
   ['> ', 'dim', 'bypassing rate limiter ...... ', 0, 'ok'],
@@ -54,19 +54,19 @@ async function playBoot() {
       for (let i = 1; i <= t.length; i++) {
         if (id !== bootRun) return;
         bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`;
-        await sleep(d + Math.random() * 40);
+        await sleep(d + Math.random() * 22);
       }
-      out.push(line(p, c, t)); draw(); await sleep(380);
+      out.push(line(p, c, t)); draw(); await sleep(220);
     } else if (c === 'bar') {
       for (let n = 0; n <= 20; n++) {
         if (id !== bootRun) return;
         const bar = '█'.repeat(n) + '░'.repeat(20 - n);
         bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="bar">[${bar}] ${String(n * 5).padStart(3)}%</span><span class="caret"></span>`;
-        await sleep(55 + Math.random() * 70);
+        await sleep(28 + Math.random() * 36);
       }
       out.push(line(p, 'dim', t) + '<span class="bar">[' + '█'.repeat(20) + '] 100%</span>'); draw(); await sleep(260);
     } else {
-      draw(); await sleep(c === 'grant' ? 300 : 240 + Math.random() * 220);
+      draw(); await sleep(c === 'grant' ? 300 : 130 + Math.random() * 120);
       out.push(line(p, c, t, ok)); draw(); await sleep(c === 'grant' ? 200 : 120);
     }
   }
@@ -102,7 +102,7 @@ if (vid && !lite) {
   vid.load();
 }
 
-const A_END = 0.45, B_END = 0.8;   // dive | dark hold (terminal plays) | exit
+const A_END = 0.5, B_END = 0.6;   // dive | dark hold (terminal plays) | exit
 function frame() {
   const y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
