@@ -576,12 +576,12 @@ body{touch-action:manipulation}
 
 
 /* intro: scroll-revealed 3D hologram (Three.js + shaders, assets/trace/holo.js). Without WebGL it stays a plain video. */
-section.holo{position:relative;padding:0;color:#eaf1ff;background:linear-gradient(to bottom,rgba(6,10,24,0) 0,#060a18 150px,#070d22 calc(100% - 150px),rgba(7,13,34,0) 100%)}
-.holo-pin{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:100svh;padding:clamp(96px,14vh,140px) 20px 64px;overflow:hidden}
+section.holo{position:relative;padding:0;color:#eaf1ff;background:linear-gradient(to bottom,rgba(2,3,26,0) 0,#02031c 150px,#03052a calc(100% - 150px),rgba(3,5,42,0) 100%)}
+.holo-pin{background:radial-gradient(62% 46% at 50% 86%,rgba(20,40,255,.42),transparent 72%),radial-gradient(40% 30% at 50% 100%,rgba(120,30,200,.28),transparent 75%),radial-gradient(120% 90% at 50% 40%,rgba(5,10,70,.55),transparent 70%);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:100svh;padding:clamp(96px,14vh,140px) 20px 64px;overflow:hidden}
 .holo-head{position:relative;z-index:3;width:100%;max-width:1100px;margin:0 auto}
 .holo-head{text-align:center}.holo-head .lede{margin-left:auto!important;margin-right:auto!important}
-.holo-head h2{margin:0 auto;color:#f4f8ff;text-shadow:0 2px 24px rgba(40,100,255,.35)}
-.holo-head .lede{margin:12px 0 0;color:#9fb4e6;max-width:46ch}
+.holo-head h2{margin:0 auto;color:#f4f8ff;text-shadow:0 2px 28px rgba(60,90,255,.55)}
+.holo-head .lede{margin:12px 0 0;color:#a9b8f0;max-width:46ch}
 .holo-stage{position:absolute;inset:0;z-index:1}
 .holo-video{position:relative;z-index:2;width:min(100%,780px);border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px rgba(150,180,255,.25),0 30px 80px rgba(20,60,200,.35)}
 .holo-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#05080f}
@@ -611,7 +611,7 @@ section.holo{position:relative;padding:0;color:#eaf1ff;background:linear-gradien
   .holo-head{text-align:left}.holo-head .lede{margin-left:0!important}
   .holo-pin{padding:96px 18px 56px}
   .holo.holo-on{height:270vh}
-  .holo.holo-on .holo-hud{right:16px;top:auto;bottom:25vh;max-width:180px;padding:10px 12px 11px}
+  .holo.holo-on .holo-hud{right:16px;top:auto;bottom:15vh;max-width:180px;padding:10px 12px 11px}
   .holo.holo-on .holo-cue{right:auto;left:50%;transform:translateX(-50%);bottom:19vh}
   .holo.holo-on .holo-id{flex-direction:column;gap:8px;bottom:16px}.cc-note{display:none}
 }

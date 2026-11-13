@@ -4,7 +4,7 @@
    Build: node scripts/build-holo.mjs  ->  assets/trace/holo.js */
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, Points, LineLoop, Color,
-  PlaneGeometry, CylinderGeometry, RingGeometry, BufferGeometry, BufferAttribute,
+  PlaneGeometry, CylinderGeometry, LineSegments, RingGeometry, BufferGeometry, BufferAttribute,
   ShaderMaterial, MeshBasicMaterial, VideoTexture, LinearFilter, DoubleSide, AdditiveBlending, NoColorSpace,
 } from 'three';
 
@@ -31,7 +31,7 @@ void main(){
   vec3 c = vec3(texture2D(uTex, uv + vec2(ca, 0.0)).r, texture2D(uTex, uv).g, texture2D(uTex, uv - vec2(ca, 0.0)).b);
   if (uHasVideo < 0.5) c = vec3(0.05, 0.12, 0.25);
   float l = dot(c, vec3(0.299, 0.587, 0.114));
-  c = mix(c, vec3(0.25, 0.62, 1.15) * (l * 1.5 + 0.06), 0.42);   // holographic blue tint
+  c = mix(c, vec3(0.22, 0.5, 1.2) * (l * 1.5 + 0.06), 0.42);   // holographic blue tint
   c *= 1.0 + 0.5 * smoothstep(0.55, 1.0, l);
   float rowPx = gl_FragCoord.y;
   float scan = 0.86 + 0.14 * sin(rowPx * 2.4 + uTime * 6.0);
@@ -58,7 +58,7 @@ void main(){
   float up = smoothstep(0.0, 1.0, uCone * 1.25 - h * 0.6);
   float a = pow(1.0 - h, 1.7) * streak * up * 0.34;
   a *= 0.85 + 0.15 * sin(uTime * 2.0 + h * 9.0);
-  gl_FragColor = vec4(vec3(0.18, 0.55, 1.0) * 1.2, a);
+  gl_FragColor = vec4(vec3(0.12, 0.3, 1.0) * 1.25, a);
 }`;
 
 const RING_V = `varying float vA; uniform float uTime; void main(){ vA = atan(position.z, position.x); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
@@ -67,7 +67,7 @@ precision highp float; uniform float uTime, uOn; varying float vA;
 void main(){
   float d = 0.5 + 0.5 * sin(vA * 3.0 - uTime * 1.3);
   float a = (0.15 + 0.85 * d * d) * uOn;
-  gl_FragColor = vec4(vec3(0.3, 0.65, 1.0) * 1.5, a);
+  gl_FragColor = vec4(vec3(0.3, 0.5, 1.0) * 1.5, a);
 }`;
 
 const FLOOR_F = `
@@ -77,22 +77,38 @@ void main(){
   float glow = pow(max(0.0, 1.0 - r), 2.2);
   float ring = smoothstep(0.03, 0.0, abs(fract(r * 3.0 - uTime * 0.25) - 0.5) - 0.46) * (1.0 - r);
   float a = (glow * 0.9 + ring * 0.5) * uOn;
-  gl_FragColor = vec4(vec3(0.2, 0.55, 1.0) * 1.4, a);
+  gl_FragColor = vec4(vec3(0.1, 0.22, 1.0) * 1.5, a);
 }`;
 
+const STREAK_V = `
+attribute vec4 aS;   // x, z, h, seed
+attribute vec2 aQ;   // side (-1|1), t (0 base | 1 tip)
+uniform float uTime, uOn; varying float vT; varying float vA;
+void main(){
+  float p = fract(uTime * (0.05 + aS.w * 0.08) + aS.w * 7.0);
+  float base = -2.1 + p * 2.9;
+  vec3 right = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+  vec3 pos = vec3(aS.x, base + aQ.y * aS.z, aS.y) + right * aQ.x * 0.012;
+  vT = aQ.y; vA = sin(p * 3.14159) * uOn * (0.35 + 0.65 * aQ.y);
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0);
+}`;
+const STREAK_F = `precision highp float; varying float vT; varying float vA; void main(){ vec3 col = mix(vec3(0.15, 0.3, 1.0), vec3(1.0, 0.25, 0.9), smoothstep(0.35, 1.0, vT)); gl_FragColor = vec4(col * 1.6, vA); }`;
+const GLASS_V = `varying vec3 vN; varying vec3 vV; varying float vY; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); vY = position.y; gl_Position = projectionMatrix * mv; }`;
+const GLASS_F = `precision highp float; uniform float uOn; varying vec3 vN; varying vec3 vV; varying float vY; void main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.2); float a = (0.07 + f * 0.6) * uOn * (0.6 + 0.4 * smoothstep(-0.5, 0.5, vY)); gl_FragColor = vec4(vec3(0.2, 0.4, 1.0) * 1.5, a); }`;
+
 const PART_V = `
-attribute float aSeed; uniform float uTime, uSize, uOn; varying float vA;
+attribute float aSeed; uniform float uTime, uSize, uOn; varying float vA; varying float vS;
 void main(){
   float t = fract(aSeed * 7.13 + uTime * (0.05 + aSeed * 0.07));
   vec3 p = position; p.y = -2.1 + t * 4.4;
   float rad = mix(0.9, 1.9, t); p.x *= rad; p.z *= rad;
   p.x += sin(uTime * 0.7 + aSeed * 40.0) * 0.05;
-  vA = sin(t * 3.14159) * uOn;
+  vA = sin(t * 3.14159) * uOn; vS = aSeed;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_PointSize = uSize * (0.5 + aSeed) * (3.5 / -mv.z);
   gl_Position = projectionMatrix * mv;
 }`;
-const PART_F = `precision highp float; varying float vA; void main(){ float d = length(gl_PointCoord - 0.5) * 2.0; float a = smoothstep(1.0, 0.0, d) * vA * 0.5; gl_FragColor = vec4(vec3(0.5, 0.8, 1.0), a); }`;
+const PART_F = `precision highp float; varying float vA; varying float vS; void main(){ float d = length(gl_PointCoord - 0.5) * 2.0; float a = smoothstep(1.0, 0.0, d) * vA * 0.5; vec3 col = vS > 0.78 ? vec3(0.2, 1.0, 0.85) : vec3(0.45, 0.65, 1.0); gl_FragColor = vec4(col, a); }`;
 
 export function mountHolo(sec, opts = {}) {
   const stage = sec.querySelector('#holoStage');
@@ -124,9 +140,43 @@ export function mountHolo(sec, opts = {}) {
   // projector platform
   const plat = new Group(); plat.position.y = -2.3; world.add(plat);
   const base = new Mesh(new CylinderGeometry(1.25, 1.5, 0.22, 64), new MeshBasicMaterial({ color: new Color(0x0a1020) })); plat.add(base);
-  const topRing = new Mesh(new RingGeometry(0.95, 1.22, 96), new MeshBasicMaterial({ color: new Color(0x4aa8ff), transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false })); topRing.rotation.x = -Math.PI / 2; topRing.position.y = 0.125; plat.add(topRing);
-  const lens = new Mesh(new RingGeometry(0, 0.9, 64), new MeshBasicMaterial({ color: new Color(0x2a6cff), transparent: true, opacity: 0.55, blending: AdditiveBlending, depthWrite: false })); lens.rotation.x = -Math.PI / 2; lens.position.y = 0.13; plat.add(lens);
-  const edge = new Mesh(new CylinderGeometry(1.5, 1.5, 0.03, 64, 1, true), new MeshBasicMaterial({ color: new Color(0x3d86ff), transparent: true, opacity: 0.8, blending: AdditiveBlending, depthWrite: false })); edge.position.y = -0.1; plat.add(edge);
+  const topRing = new Mesh(new RingGeometry(0.95, 1.22, 96), new MeshBasicMaterial({ color: new Color(0x3b6bff), transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false })); topRing.rotation.x = -Math.PI / 2; topRing.position.y = 0.125; plat.add(topRing);
+  const lens = new Mesh(new RingGeometry(0, 0.9, 64), new MeshBasicMaterial({ color: new Color(0x1f3cff), transparent: true, opacity: 0.55, blending: AdditiveBlending, depthWrite: false })); lens.rotation.x = -Math.PI / 2; lens.position.y = 0.13; plat.add(lens);
+  const edge = new Mesh(new CylinderGeometry(1.5, 1.5, 0.03, 64, 1, true), new MeshBasicMaterial({ color: new Color(0x2f58ff), transparent: true, opacity: 0.8, blending: AdditiveBlending, depthWrite: false })); edge.position.y = -0.1; plat.add(edge);
+
+  // glass podium (reference look): translucent cylinder with a bright rim, concentric rings, dotted ring
+  const glassU = { uOn: { value: 0 } };
+  const glass = new Mesh(new CylinderGeometry(1.0, 1.0, 0.85, 72, 1, true), new ShaderMaterial({ uniforms: glassU, vertexShader: GLASS_V, fragmentShader: GLASS_F, transparent: true, depthWrite: false, blending: AdditiveBlending, side: DoubleSide }));
+  glass.position.y = 0.55; plat.add(glass);
+  const rim = new Mesh(new RingGeometry(0.97, 1.0, 96), new MeshBasicMaterial({ color: new Color(0x6f9bff), transparent: true, opacity: 0.0, blending: AdditiveBlending, depthWrite: false, side: DoubleSide })); rim.rotation.x = -Math.PI / 2; rim.position.y = 0.97; plat.add(rim);
+  const thin = [];
+  [1.32, 1.62, 1.9].forEach(r => { const m = new Mesh(new RingGeometry(r - 0.012, r + 0.012, 128), new MeshBasicMaterial({ color: new Color(0x5a8bff), transparent: true, opacity: 0, blending: AdditiveBlending, depthWrite: false, side: DoubleSide })); m.rotation.x = -Math.PI / 2; m.position.y = 0.14; plat.add(m); thin.push(m); });
+  const dotN = 160, dp = new Float32Array(dotN * 3), dseed = new Float32Array(dotN);
+  for (let i = 0; i < dotN; i++) { const a = (i / dotN) * Math.PI * 2; dp[i * 3] = Math.cos(a) * 1.75; dp[i * 3 + 1] = 0.16; dp[i * 3 + 2] = Math.sin(a) * 1.75; dseed[i] = 0.2 + (i % 5) * 0.2; }
+  const dg = new BufferGeometry(); dg.setAttribute('position', new BufferAttribute(dp, 3)); dg.setAttribute('aSeed', new BufferAttribute(dseed, 1));
+  const dotU = { uTime: U.uTime, uSize: { value: 11 }, uOn: { value: 0 } };
+  const dots = new Points(dg, new ShaderMaterial({ uniforms: dotU, vertexShader: `attribute float aSeed; uniform float uSize; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vA = 0.9; gl_PointSize = uSize * (3.5 / -mv.z); gl_Position = projectionMatrix * mv; }`, fragmentShader: `precision highp float; uniform float uOn; varying float vA; void main(){ float d = length(gl_PointCoord - 0.5) * 2.0; gl_FragColor = vec4(vec3(0.6, 0.8, 1.0), smoothstep(1.0, 0.0, d) * vA * uOn); }`, transparent: true, depthWrite: false, blending: AdditiveBlending }));
+  dots.frustumCulled = false; plat.add(dots);
+
+  // neon streaks rising around the podium (magenta tips, blue bases)
+  const SN = small ? 22 : 34, sPos = [], sQ = [], sIdx = [];
+  for (let i = 0; i < SN; i++) {
+    const a = Math.random() * Math.PI * 2, r = 1.55 + Math.random() * 0.85, h = 0.45 + Math.random() * 1.5, sd = Math.random();
+    const x = Math.cos(a) * r, z = Math.sin(a) * r, b = i * 4;
+    [[-1, 0], [1, 0], [-1, 1], [1, 1]].forEach(q => { sPos.push(x, z, h, sd); sQ.push(q[0], q[1]); });
+    sIdx.push(b, b + 1, b + 2, b + 2, b + 1, b + 3);
+  }
+  const sg = new BufferGeometry(); sg.setAttribute('aS', new BufferAttribute(new Float32Array(sPos), 4)); sg.setAttribute('aQ', new BufferAttribute(new Float32Array(sQ), 2)); sg.setAttribute('position', new BufferAttribute(new Float32Array(SN * 12), 3)); sg.setIndex(sIdx);
+  const streakU = { uTime: U.uTime, uOn: { value: 0 } };
+  const streaks = new Mesh(sg, new ShaderMaterial({ uniforms: streakU, vertexShader: STREAK_V, fragmentShader: STREAK_F, transparent: true, depthWrite: false, blending: AdditiveBlending, side: DoubleSide }));
+  streaks.frustumCulled = false; streaks.renderOrder = 4; world.add(streaks);
+
+  // light rays running across the floor toward the podium
+  const rp = [];
+  for (let i = 0; i < 7; i++) { const a = (i / 7) * Math.PI * 2 + 0.3; rp.push(Math.cos(a) * 2.3, 0, Math.sin(a) * 2.3, Math.cos(a) * 6.5, 0, Math.sin(a) * 6.5); }
+  const rg = new BufferGeometry(); rg.setAttribute('position', new BufferAttribute(new Float32Array(rp), 3));
+  const rayMat = new ShaderMaterial({ uniforms: { uOn: { value: 0 } }, vertexShader: `varying float vD; void main(){ vD = length(position.xz); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`, fragmentShader: `precision highp float; uniform float uOn; varying float vD; void main(){ gl_FragColor = vec4(vec3(0.15,0.3,1.0), (1.0 - smoothstep(2.3, 6.5, vD)) * 0.45 * uOn); }`, transparent: true, depthWrite: false, blending: AdditiveBlending });
+  const rays = new Group(); rays.position.y = -2.18; rays.add(new (LineSegments)(rg, rayMat)); world.add(rays);
 
   const floorMat = new ShaderMaterial({ uniforms: { uTime: U.uTime, uOn: { value: 0 } }, vertexShader: HOLO_V, fragmentShader: FLOOR_F, transparent: true, depthWrite: false, blending: AdditiveBlending });
   const floor = new Mesh(new PlaneGeometry(7.5, 7.5), floorMat); floor.rotation.x = -Math.PI / 2; floor.position.y = -2.17; floor.renderOrder = 1; world.add(floor);
@@ -201,6 +251,7 @@ export function mountHolo(sec, opts = {}) {
     const on = sstep(0.0, 0.2, p), coneP = sstep(0.04, 0.3, p), reveal = sstep(0.16, 0.58, p);
     U.uTime.value = t / 1000; U.uReveal.value = reveal; U.uHasVideo.value = video.readyState >= 2 ? 1 : 0;
     floorMat.uniforms.uOn.value = on; coneMat.uniforms.uCone.value = coneP; ringU.uOn.value = sstep(0.1, 0.5, p); partU.uOn.value = sstep(0.08, 0.4, p);
+    glassU.uOn.value = on; dotU.uOn.value = on; streakU.uOn.value = sstep(0.04, 0.35, p); rayMat.uniforms.uOn.value = on; rim.material.opacity = 0.9 * on; thin.forEach((m, i) => { m.material.opacity = (0.55 - i * 0.12) * on; });
     topRing.material.opacity = 0.15 + 0.8 * on; lens.material.opacity = 0.1 + 0.55 * on; edge.material.opacity = 0.2 + 0.7 * on;
     ringList.forEach(l => { l.rotation.y += l.userData.spin * dt * (0.4 + 1.6 * sstep(0.1, 0.6, p)); });
     const push = 1 - 0.1 * sstep(0.1, 0.7, p);
