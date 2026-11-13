@@ -38,7 +38,7 @@ void main(){
   float band = 0.94 + 0.06 * sin(y * 11.0 - uTime * 1.6);
   c *= scan * band * (0.97 + 0.03 * sin(uTime * 53.0));
   float dx = abs(vUv.x - 0.5);
-  float mask = (1.0 - sstep(0.2, 0.5, dx)) * sstep(0.0, 0.34, y) * (1.0 - sstep(0.72, 0.99, y));
+  float mask = (1.0 - sstep(0.2, 0.5, dx)) * sstep(0.0, 0.34, y) * (1.0 - sstep(0.6, 0.97, y));
   mask *= 0.9 + 0.1 * sstep(0.02, 0.22, l);
   float rim = sstep(0.16, 0.34, dx) * (1.0 - sstep(0.34, 0.5, dx));
   c += vec3(0.1, 0.4, 1.0) * (rim * 0.35 + near * 0.7) * (0.4 + l);
@@ -214,9 +214,9 @@ export function mountHolo(sec, opts = {}) {
     camera.aspect = aspect;
     const t = Math.tan((camera.fov * Math.PI) / 360);
     const wide = aspect >= 0.8;
-    const distV = (wide ? 3.85 : 3.5) / t, distH = 3.0 / (t * aspect);
+    const distV = (wide ? 4.3 : 3.5) / t, distH = 3.0 / (t * aspect);
     camera.userData.dist = Math.max(distV, distH);
-    camera.userData.shift = wide ? 0.4 : -0.05;
+    camera.userData.shift = wide ? 0.3 : -0.05;
     camera.updateProjectionMatrix();
   };
   resize(); addEventListener('resize', resize);
