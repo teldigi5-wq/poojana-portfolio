@@ -369,3 +369,5 @@ html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
 .mp-one{grid-template-columns:1fr!important}
 .mp-note{margin:18px 0 0;font:400 14px/1.5 var(--sans);color:#5b6a86}
 @media(min-width:760px){.mp-wide{flex-direction:row;align-items:stretch}.mp-wide .mp-art{flex:0 0 42%;margin:10px 0 10px 10px;aspect-ratio:auto;min-height:260px}.mp-wide .mp-body{padding:26px 28px 24px;justify-content:center}.mp-wide .mp-stack{margin-top:0}}
+.mp-diff{color:#5b6a86!important;font-size:14px!important}
+.mp p strong{font-weight:650;color:var(--ink)}
