@@ -490,7 +490,8 @@ try {
   if (clip && cb) {
     let userPaused = reduce;
     const sync = () => { cb.setAttribute('aria-pressed', String(clip.paused)); cb.setAttribute('aria-label', clip.paused ? 'Play the intro video' : 'Pause the intro video'); cb.firstElementChild.textContent = clip.paused ? '▶' : '❚❚'; };
-    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
+    clip.addEventListener('ended', sync);   // plays once, holds the last frame; the button replays
+    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; if (clip.ended) clip.currentTime = 0; clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
     new IntersectionObserver(([en]) => { if (en.isIntersecting && !userPaused) clip.play().catch(() => {}); else clip.pause(); sync(); }, { threshold: 0.35 }).observe(clip);
     sync();
   }

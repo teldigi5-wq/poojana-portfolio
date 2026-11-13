@@ -486,3 +486,13 @@ html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-int
 .clip-btn{position:absolute;right:14px;bottom:14px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,14,24,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font-size:12px;cursor:pointer;display:grid;place-items:center}
 .clip-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(max-width:699px){.clip{border-radius:24px;padding:8px;margin-top:22px}.clip-media{border-radius:17px}.clip-top{padding:4px 8px 10px}.clip figcaption{padding:14px 8px 4px;grid-template-columns:1fr}.cc-open{justify-self:start}.clip-btn{right:10px;bottom:10px}}
+
+/* section grounds: each chapter gets its own quiet tone; seams fade so there are no hard edges */
+#gateway{background:radial-gradient(70% 55% at 88% 0%,rgba(43,75,255,.11),transparent 70%),radial-gradient(60% 50% at 0% 100%,rgba(15,163,127,.06),transparent 70%)}
+#more{background:linear-gradient(to bottom,rgba(232,237,250,0) 0,#e8edfa 90px,#e8edfa calc(100% - 90px),rgba(232,237,250,0) 100%),radial-gradient(60% 40% at 8% 18%,rgba(43,75,255,.07),transparent 70%)}
+#oss{background:linear-gradient(to bottom,rgba(238,240,246,0) 0,#eef0f6 80px,#eef0f6 calc(100% - 80px),rgba(238,240,246,0) 100%)}
+#lab{background:linear-gradient(to bottom,rgba(212,224,248,0) 0,#d6e1f8 90px,#d3def6 calc(100% - 90px),rgba(212,224,248,0) 100%),radial-gradient(55% 45% at 92% 12%,rgba(43,75,255,.12),transparent 70%)}
+#intro{color:#eef2ff;background:linear-gradient(to bottom,rgba(10,14,24,0) 0,#0a0e18 100px,#0c1424 calc(100% - 100px),rgba(12,20,36,0) 100%),radial-gradient(60% 50% at 50% 55%,rgba(43,75,255,.16),transparent 72%)}
+#intro h2{color:#f4f6fb}#intro .lede{color:#a9b4d3}
+#contact{background:radial-gradient(65% 50% at 15% 0%,rgba(43,75,255,.10),transparent 70%)}
+@media(prefers-reduced-motion:no-preference){.blk{--rise:0}}
