@@ -498,22 +498,21 @@ try {
     const svg = lp.querySelector('#lpSvg'), arc = lp.querySelector('#lpArc'), bandA = lp.querySelector('#lpBandA'), bandB = lp.querySelector('#lpBandB');
     const pkt = lp.querySelector('#lpPkt'), tgt = lp.querySelector('#lpTarget'), hint = lp.querySelector('#lpHint');
     const postA = lp.querySelector('.lp-post-a'), postB = lp.querySelector('.lp-post-b');
-    const status = document.getElementById('lpStatus'), autoBtn = document.getElementById('lpAuto'), copyBtn = document.getElementById('lpCopy');
+    const done_ = document.getElementById('laDone'), againBtn = document.getElementById('laAgain'), sec = document.getElementById('launch'), status = document.getElementById('lpStatus'), autoBtn = document.getElementById('lpAuto'), copyBtn = document.getElementById('lpCopy');
     const VW = 900, G = 1500, K = 10, MAXP = 130, HIT = 62;
-    let s = 1, VH = 420, A = { x: 140, y: 300 }, T = { x: 770, y: 250 }, busy = false, aiming = false, pull = { x: 0, y: 0 }, raf = 0, auto = null;
+    let s = 1, VH = 420, floorV = 420, A = { x: 140, y: 300 }, T = { x: 770, y: 250 }, busy = false, aiming = false, pull = { x: 0, y: 0 }, raf = 0, auto = null;
     const setStatus = (t, cls) => { status.textContent = t; status.className = 'lp-status' + (cls ? ' ' + cls : ''); };
     const put = (el, x, y, cx = 0.5, cy = 0.5) => { el.style.transform = `translate(${x * s - el.offsetWidth * cx}px, ${y * s - el.offsetHeight * cy}px)`; };
     function layout() {
       s = lp.clientWidth / VW; VH = lp.clientHeight / s;
       const ts = Math.round(120 * Math.max(0.62, Math.min(1, s * 1.1))); tgt.style.width = tgt.style.height = ts + 'px';
-      A = { x: 140, y: VH - (VH > 480 ? 190 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: VH - (VH > 480 ? 300 : 190) };
+      const FOOT = innerWidth < 700 ? 190 : 150, floor = lp.clientHeight - FOOT, lift = innerWidth < 700 ? 60 : 110;
+      floorV = floor / s; A = { x: 140, y: floorV - (innerWidth < 700 ? 90 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: (floor - lift - 0.65 * ts) / s };
+      tgt.querySelector('.mb-post').setAttribute('height', (58 + lift * 120 / ts).toFixed(1));
       svg.setAttribute('viewBox', `0 0 ${lp.clientWidth} ${lp.clientHeight}`);
-      const grid = svg.querySelector('.lp-grid'); grid.innerHTML = '';
-      for (let x = 0; x <= VW; x += 60) grid.insertAdjacentHTML('beforeend', `<line x1="${x * s}" y1="0" x2="${x * s}" y2="${lp.clientHeight}"/>`);
-      for (let y = 0; y <= VH; y += 60) grid.insertAdjacentHTML('beforeend', `<line x1="0" y1="${y * s}" x2="${lp.clientWidth}" y2="${y * s}"/>`);
-      postA.style.cssText = `left:${(A.x - 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(VH - A.y + 6) * s}px`;
-      postB.style.cssText = `left:${(A.x + 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(VH - A.y + 6) * s}px`;
-      put(tgt, T.x, T.y);
+      postA.style.cssText = `left:${(A.x - 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
+      postB.style.cssText = `left:${(A.x + 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
+      put(tgt, T.x, T.y, 0.5, 0.35);
       if (!busy) rest();
     }
     function bands(p) {
@@ -543,7 +542,7 @@ try {
       busy = true; lp.dataset.state = 'fly'; arc.setAttribute('d', ''); bands(A);
       const pts = path(p, 400); let hit = false, last = pts.length - 1;
       for (let i = 0; i < pts.length; i++) { if (Math.hypot(pts[i][0] - T.x, pts[i][1] - T.y) < HIT) { hit = true; last = i; break; } }
-      const done = () => { busy = false; if (hit) { lp.dataset.state = 'hit'; pkt.style.opacity = '0'; setStatus('200 OK. Delivered to the inbox. Now write the real one below.', 'ok'); } else { lp.dataset.state = 'miss'; setStatus('404, missed. Pull back and try again, or let the button do it.', 'miss'); setTimeout(() => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); }, 900); } };
+      const done = () => { busy = false; if (hit) { lp.dataset.state = 'hit'; pkt.style.opacity = '0'; setStatus('Delivered. Now write the real one below.', 'ok'); } else { lp.dataset.state = 'miss'; setStatus('Missed. Pull back and try again, or let the button do it.', 'miss'); setTimeout(() => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); }, 900); } };
       if (reduce) { const q = pts[last]; put(pkt, q[0], q[1]); done(); return; }
       let i = 0, acc = 0, prev = performance.now();
       const step = now => { acc += Math.max(0, Math.min(now - prev, 40)) / 1000; prev = now; const f = acc * 60; i = Math.min(last, Math.floor(f)); const q = pts[i]; const ang = i > 0 ? Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) : 0; pkt.style.transform = `translate(${q[0] * s - pkt.offsetWidth / 2}px, ${q[1] * s - pkt.offsetHeight / 2}px) rotate(${ang}rad)`; if (i < last) raf = requestAnimationFrame(step); else done(); };
@@ -560,7 +559,17 @@ try {
     autoBtn.addEventListener('click', () => { if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); });
     pkt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); } });
     copyBtn.addEventListener('click', async () => { try { await navigator.clipboard.writeText('teldigi5@gmail.com'); copyBtn.textContent = 'Copied ✓'; } catch { copyBtn.textContent = 'teldigi5@gmail.com'; } setTimeout(() => copyBtn.textContent = 'Copy email', 2200); });
-    new ResizeObserver(layout).observe(lp); layout();
+    const reset = () => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; done_.setAttribute('aria-hidden', 'true'); rest(); setStatus('Ready when you are.'); };
+    againBtn.addEventListener('click', () => { reset(); pkt.focus({ preventScroll: true }); });
+    new MutationObserver(() => done_.setAttribute('aria-hidden', String(lp.dataset.state !== 'hit'))).observe(lp, { attributes: true, attributeFilter: ['data-state'] });
+    /* sky: day -> dusk -> night as the section scrolls into place; stars drawn once */
+    const stars = document.getElementById('laStars');
+    const paintStars = () => { const c = stars.getContext('2d'), w = stars.width = stars.clientWidth, h = stars.height = stars.clientHeight; c.clearRect(0, 0, w, h); let r = 7; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647; for (let i = 0; i < Math.round(w * h / 9000); i++) { const y = rnd() * h * 0.72; c.globalAlpha = 0.25 + rnd() * 0.6; c.fillStyle = '#fff'; c.beginPath(); c.arc(rnd() * w, y, 0.5 + rnd() * 1.1, 0, 7); c.fill(); } };
+    const skySmooth = (a, b, x) => { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
+    let skyT = 0;
+    const sky = () => { skyT = 0; const r = sec.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const pr = (innerHeight - r.top) / innerHeight; const nt = skySmooth(0.5, 1.0, pr); sec.style.setProperty('--dusk', skySmooth(0.05, 0.5, pr).toFixed(3)); sec.style.setProperty('--night', nt.toFixed(3)); sec.classList.toggle('is-night', nt > 0.45); if (nt > 0.45) sec.dataset.tone = 'dark'; else delete sec.dataset.tone; try { sampleTone(); } catch (_) {} };
+    addEventListener('scroll', () => { if (!skyT) skyT = requestAnimationFrame(sky); }, { passive: true });
+    new ResizeObserver(() => { layout(); paintStars(); sky(); }).observe(lp); layout(); paintStars(); sky();
   }
 } catch (err) { console.warn('launch', err); }
 

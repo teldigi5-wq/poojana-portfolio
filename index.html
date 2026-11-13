@@ -325,24 +325,36 @@
 </section>
 
 <section class="blk" id="launch" aria-labelledby="la-h">
-  <div class="wrap">
-    <h2 id="la-h" class="reveal">Send it my way.</h2>
-    <p class="lede reveal">Pull the packet back, aim at the inbox and let go. Or skip the game: my email is right below.</p>
-    <ol class="lp-steps reveal" aria-hidden="true"><li><b>1</b>Pull back</li><li><b>2</b>Aim at the inbox</li><li><b>3</b>Let go</li></ol>
-    <div class="lp reveal" id="lp" data-state="idle">
-      <svg class="lp-svg" id="lpSvg" aria-hidden="true">
-        <g class="lp-grid"></g>
-        <path id="lpArc" class="lp-arc" d=""/>
-        <line id="lpBandA" class="lp-band"/><line id="lpBandB" class="lp-band"/>
-      </svg>
-      <span class="lp-post lp-post-a" aria-hidden="true"></span><span class="lp-post lp-post-b" aria-hidden="true"></span>
-      <div class="lp-target" id="lpTarget" aria-hidden="true">
-        <svg viewBox="0 0 120 120"><circle class="r3" cx="60" cy="60" r="56"/><circle class="r2" cx="60" cy="60" r="40"/><circle class="r1" cx="60" cy="60" r="24"/><path class="env" d="M45 52h30v18H45zM45 52l15 11 15-11"/></svg>
-        <span class="lp-chip">Inbox</span>
-      </div>
-      <div class="lp-pkt" id="lpPkt" role="button" tabindex="0" aria-label="Request packet. Drag it back and release to launch it at the inbox, or press Enter to send it automatically."><i aria-hidden="true"></i><code>POST /hello</code></div>
-      <p class="lp-hint" id="lpHint" aria-hidden="true">Drag me back</p>
+  <div class="la-sky" aria-hidden="true">
+    <i class="sk sk-day"></i><i class="sk sk-dusk"></i><i class="sk sk-night"></i>
+    <canvas class="la-stars" id="laStars"></canvas>
+    <svg class="la-clouds la-far" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 300V210a88.9 44.0 0 0 1 177.8 0a88.9 52.7 0 0 1 177.8 0a88.9 25.5 0 0 1 177.8 0a88.9 23.8 0 0 1 177.8 0a88.9 51.4 0 0 1 177.8 0a88.9 46.0 0 0 1 177.8 0a88.9 19.8 0 0 1 177.8 0a88.9 32.0 0 0 1 177.8 0a88.9 55.0 0 0 1 177.8 0V300z"/></svg>
+    <svg class="la-clouds la-near" viewBox="0 0 1600 300" preserveAspectRatio="none"><path d="M0 300V238a114.3 68.4 0 0 1 228.6 0a114.3 36.1 0 0 1 228.6 0a114.3 27.1 0 0 1 228.6 0a114.3 61.6 0 0 1 228.6 0a114.3 61.8 0 0 1 228.6 0a114.3 27.2 0 0 1 228.6 0a114.3 36.0 0 0 1 228.6 0V300z"/></svg>
+  </div>
+  <div class="lp" id="lp" data-state="idle">
+    <svg class="lp-svg" id="lpSvg" aria-hidden="true">
+      <g class="lp-grid"></g>
+      <path id="lpArc" class="lp-arc" d=""/>
+      <line id="lpBandA" class="lp-band"/><line id="lpBandB" class="lp-band"/>
+    </svg>
+    <span class="lp-post lp-post-a" aria-hidden="true"></span><span class="lp-post lp-post-b" aria-hidden="true"></span>
+    <div class="lp-target" id="lpTarget" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><rect class="mb-post" x="55" y="62" width="10" height="58" rx="3"/><path class="mb-box" d="M22 62V46a28 28 0 0 1 28-28h20a28 28 0 0 1 28 28v16z"/><path class="mb-door" d="M30 62V47a20 20 0 0 1 20-20h20a20 20 0 0 1 20 20v15z"/><g class="mb-flag"><rect x="94" y="30" width="3.5" height="30" rx="1.7"/><path d="M97.5 30h14v10h-14z"/></g><path class="mb-slot" d="M44 50h32"/></svg>
+      <span class="lp-chip">Inbox</span>
     </div>
+    <div class="lp-pkt" id="lpPkt" role="button" tabindex="0" aria-label="Paper plane. Drag it back and release to throw it at the inbox, or press Enter to send it automatically."><svg viewBox="0 0 64 40" aria-hidden="true"><path class="pl-b" d="M2 20 62 3 40 37 30 24z"/><path class="pl-a" d="M2 20 62 3 30 24z"/><path class="pl-c" d="M30 24 40 37 34 26z"/></svg></div>
+    <p class="lp-hint" id="lpHint" aria-hidden="true">Drag me back</p>
+  </div>
+  <div class="la-copy wrap">
+    <h2 id="la-h" class="reveal">Send it my way.</h2>
+    <p class="lede reveal">Pull the plane back, aim at the inbox and let go. Or skip the game: my email is right below.</p>
+    <ol class="lp-steps reveal" aria-hidden="true"><li><b>1</b>Pull back</li><li><b>2</b>Aim at the inbox</li><li><b>3</b>Let go</li></ol>
+  </div>
+  <div class="la-done" id="laDone" aria-hidden="true">
+    <b class="tick">✓</b><h3>Delivered.</h3><p>Now write the real one.</p>
+    <div class="row"><a class="btn" href="mailto:teldigi5@gmail.com?subject=Hello%20from%20your%20portfolio">Write to me</a><button class="btn alt" id="laAgain" type="button">Throw another</button></div>
+  </div>
+  <div class="la-foot wrap">
     <p class="lp-status" id="lpStatus" role="status" aria-live="polite">Ready when you are.</p>
     <div class="lp-actions">
       <button class="btn" id="lpAuto" type="button">Send it for me</button>
