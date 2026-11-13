@@ -377,7 +377,7 @@ listEl.innerHTML = PROJECTS.map((p, i) => `<button class="row" role="option" typ
 function showProject(i) {
   sel = i; const p = PROJECTS[i];
   $$('.row', listEl).forEach((r, k) => r.setAttribute('aria-selected', k === i));
-  detailEl.innerHTML = `<span class="chip ac">0${i + 1} · ${STAGES[p.stage].toUpperCase()}</span><h3>${p.name}</h3><p>${p.lede}</p><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="evi">${p.evi}</div><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
+  detailEl.innerHTML = `<p class="pstatus"><i aria-hidden="true"></i>${STAGES[p.stage]} stage</p><h3>${p.name}</h3><p class="plede">${p.lede}</p><section class="evi" aria-label="Evidence and limits"><h4>Evidence and limits</h4><p>${p.evi}</p></section><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k[0].toUpperCase() + k.slice(1)}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
 }
 listEl.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) showProject(+r.dataset.i); });
 listEl.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); const n = (sel + (e.key === 'ArrowDown' ? 1 : -1) + PROJECTS.length) % PROJECTS.length; showProject(n); $$('.row', listEl)[n].focus(); } });
