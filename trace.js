@@ -357,11 +357,15 @@ const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3
 let current = '';
 function setActive(id) {
   if (id === current) return; current = id;
-  $$('#nav a').forEach(a => a.dataset.s === navMap[id] ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+  let want = navMap[id];
+  const shown = k => { const a = $('#nav a[data-s="' + k + '"]'); return !!(a && a.getClientRects().length); };
+  if (!shown(want)) want = want === 'services' ? 'work' : 'trace';   // the Services link is hidden on narrow screens: point the pill at the nearest visible link
+  $$('#nav a').forEach(a => a.dataset.s === want ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
   const r = railMap[id];
   $$('#rail a').forEach(a => { const i = +a.dataset.r; a.classList.toggle('act', i === r); a.classList.toggle('done', i < r); });
   $$('#rail .seg i').forEach((s, i) => { s.style.transform = `scaleY(${i < r ? 1 : 0})`; s.style.transition = 'transform .5s'; });
 }
+addEventListener('resize', () => { const c = current; current = ''; if (c) setActive(c); });
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
 sections.forEach(s => io.observe(s));
 const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
@@ -516,7 +520,7 @@ try {
   const root_ = document.getElementById('contactRoot');
   if (root_) {
     let started = false;
-    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=f7ad17a9').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
+    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=50f0d28f').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
     if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '900px 0px' }); io.observe(root_); }
     else start();
     addEventListener('hashchange', () => { if (location.hash === '#connect') start(); });

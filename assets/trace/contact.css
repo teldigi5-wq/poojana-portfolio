@@ -598,6 +598,13 @@
       color: color-mix(in oklab, var(--color-white) 20%, transparent);
     }
   }
+  .\[\&\:-webkit-autofill\]\:shadow-\[inset_0_0_0_1000px_\#f8fafc\]:-webkit-autofill {
+    --tw-shadow: inset 0 0 0 1000px var(--tw-shadow-color, #f8fafc);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .\[\&\:-webkit-autofill\]\:\[-webkit-text-fill-color\:\#1e293b\]:-webkit-autofill {
+    -webkit-text-fill-color: #1e293b;
+  }
 @property --tw-rotate-x {
   syntax: "*";
   inherits: false;
