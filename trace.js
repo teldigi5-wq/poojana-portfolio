@@ -220,6 +220,7 @@ if (vid && !lite) {
 const A_END = 0.5, B_END = 0.72;   // dive | dark hold (terminal plays) | exit
 let ys = scrollY, easing = false;   // eased scroll position: the hero follows the scroll smoothly instead of in steps
 function frame() {
+  if (root.classList.contains('past-intro')) { lightFrame(); return; }   // the intro is out of the page: skip the dive maths
   let y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
   const lockY = span * 0.56;             // inside the dark hold
@@ -281,6 +282,17 @@ function frame() {
   $('#progress').style.transform = `scaleX(${clamp(y / Math.max(document.documentElement.scrollHeight - vh, 1)).toFixed(4)})`;
   $('#rail').classList.toggle('on', y > span * 0.9 && innerWidth >= 1100);
 }
+/* cheap per-frame work once you are past the intro: progress bar, rail, throttled tone sampling */
+let lfT = 0, lfGlass = false;
+const progEl = $('#progress'), railEl = $('#rail');
+function lightFrame() {
+  const y = scrollY, vh = innerHeight;
+  progEl.style.transform = `scaleX(${clamp(y / Math.max(document.documentElement.scrollHeight - vh, 1)).toFixed(4)})`;
+  railEl.classList.toggle('on', innerWidth >= 1100);
+  if (!lfGlass && glass) { lfGlass = true; glass.setMode(0); }
+  const now = performance.now();
+  if (now - lfT > 110) { lfT = now; sampleTone(); }
+}
 /* adaptive tone: look at what sits under the bar and switch to light-on-dark when needed */
 let tone = '';
 function sampleTone() {
@@ -323,7 +335,8 @@ if (!reduce) {
     h.setAttribute('aria-label', words.join(' '));
     h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
   });
-  const leads = $$('.blk .lede').filter(p => !p.children.length).map(p => {
+  const fine = !matchMedia('(pointer: coarse)').matches && innerWidth >= 700;   // word-by-word reading effect: pointer devices only, it repaints on every scroll frame
+  const leads = (fine ? $$('.blk .lede') : []).filter(p => !p.children.length).map(p => {
     const words = p.textContent.trim().split(/\s+/);
     p.innerHTML = words.map(w => `<span class="lw">${w}</span>`).join(' ');
     p.classList.add('scrub');
@@ -338,7 +351,7 @@ if (!reduce) {
       if (r.bottom < -40 || r.top > vh) { if (r.top > vh) L.done = false; continue; }
       const prog = clamp((vh * 0.9 - r.top) / (vh * 0.34 + r.height * 0.6));
       const n = L.sw.length;
-      for (let i = 0; i < n; i++) L.sw[i].style.setProperty('--k', clamp(prog * (n + 5) - i).toFixed(2));
+      for (let i = 0; i < n; i++) { const k = clamp(prog * (n + 5) - i).toFixed(2); if (L.sw[i]._k !== k) { L.sw[i]._k = k; L.sw[i].style.setProperty('--k', k); } }
     }
   };
   addEventListener('scroll', () => { if (!sTick) { sTick = true; requestAnimationFrame(scrub); } }, { passive: true });
@@ -445,35 +458,27 @@ palIn.addEventListener('keydown', e => {
 palList.addEventListener('click', e => { if (e.target.closest('a')) pal.close(); });
 pal.addEventListener('click', e => { if (e.target === pal) pal.close(); });
 
-/* back to the top — instant jump, so you never replay the dive/terminal on the way up */
+/* back to the top, and the one-way scroll.
+   Once you settle in the live API (or anything below), the dive and the terminal above it are taken out of the page,
+   so there is nothing above to scroll into: no clamping, no fighting the scroll. Back to Trace puts them back. */
 const toTop = document.getElementById('toTop');
 if (toTop) {
-  const goTop = e => { e && e.preventDefault(); scrollTo({ top: 0, behavior: 'instant' }); history.replaceState(null, '', location.pathname); };
-  toTop.addEventListener('click', goTop);
-  document.querySelectorAll('a[href="#trace"]').forEach(a => a.addEventListener('click', goTop));
   const gw = document.getElementById('gateway');
+  let locked = false, idleT = 0;
   const gwTop = () => gw ? Math.round(gw.getBoundingClientRect().top + scrollY) : 0;
-  const sync = () => toTop.classList.toggle('on', scrollY >= gwTop() - 2);
-  addEventListener('scroll', sync, { passive: true }); sync();
-
-  /* one-way scroll: once you are in the live API (or anything below), the dive and terminal above it are closed.
-     The only ways back are the "Back to Trace" button, the Trace links and the keyboard-reachable #trace anchors. */
-  const floor = () => gwTop();
-  let released = !gw || scrollY < floor() - 2;           // true while the intro is still open to scroll through
-  const guard = () => {
-    const f = floor(), y = scrollY;
-    if (y >= f - 2) { released = false; }                // reached the gateway: the way back up closes
-    else if (!released && y < f) scrollTo({ top: f, behavior: 'instant' });
-  };
-  addEventListener('scroll', guard, { passive: true });
-  addEventListener('wheel', e => { if (!released && e.deltaY < 0 && scrollY <= floor() + 1) e.preventDefault(); }, { passive: false });
-  addEventListener('keydown', e => {
-    if (released || scrollY > floor() + 1) return;
-    if (['Home', 'PageUp', 'ArrowUp'].includes(e.key) && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName)) e.preventDefault();
-  });
-  document.addEventListener('click', e => { if (e.target.closest('a[href="#trace"], #toTop')) released = true; }, true);
-  addEventListener('hashchange', () => { if (location.hash === '#trace') released = true; });
-  guard();
+  const inGateway = () => !!gw && gw.getBoundingClientRect().top <= 1;
+  const lock = () => { if (locked || !gw) return; const y0 = scrollY, f = gwTop(); locked = true; root.classList.add('past-intro'); scrollTo({ top: Math.max(0, y0 - f), behavior: 'instant' }); sync(); };
+  const unlock = () => { if (!locked) return; locked = false; lfGlass = false; root.classList.remove('past-intro'); };
+  const goTop = e => { e && e.preventDefault(); unlock(); scrollTo({ top: 0, behavior: 'instant' }); history.replaceState(null, '', location.pathname); sync(); };
+  function sync() { toTop.classList.toggle('on', locked || scrollY >= gwTop() - 2); }
+  toTop.addEventListener('click', goTop);
+  document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[href="#trace"]'); if (a) goTop(e); }, true);
+  addEventListener('hashchange', () => { if (location.hash === '#trace') goTop(); });
+  addEventListener('scroll', () => {
+    sync();
+    if (!locked && inGateway()) { clearTimeout(idleT); idleT = setTimeout(() => { if (!locked && inGateway()) lock(); }, 140); }
+  }, { passive: true });
+  if (inGateway()) lock(); else sync();
 }
 
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */

@@ -395,7 +395,7 @@ html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg 
 .split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.05em .03em .14em;margin:-.05em -.03em -.14em}
 .split .w>span{display:inline-block;transform:translateY(112%) skewY(4deg);transform-origin:0 100%;transition:transform 1.15s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--i) * 80ms)}
 .split.in .w>span{transform:none}
-.scrub .lw{opacity:calc(.22 + var(--k, 0) * .78);transition:opacity .25s linear}
+.scrub .lw{opacity:calc(.22 + var(--k, 0) * .78)}
 .mp-links a,.hc-links a{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .45s cubic-bezier(.16,1,.3,1)}
 .mp-links a:hover,.mp-links a:focus-visible,.hc-links a:hover,.hc-links a:focus-visible{background-size:100% 1px}
 /* a longer, softer ease on every reveal */
@@ -467,3 +467,6 @@ html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg 
 @media(max-width:699px) and (prefers-reduced-motion:reduce){.mh-laptop{animation:none}.mh-term span{animation:none;opacity:1;transform:none}.mh-term .cur::after{animation:none}}
 @media(max-width:380px){.glass-nav{right:8px!important;min-width:0!important;overflow:hidden}.glass-nav nav{min-width:0}}
 @media(max-width:699px){.resp,.resp>*{min-width:0}.ctas{display:flex;flex-wrap:wrap;gap:10px}.ctas .btn{flex:1 1 auto;justify-content:center}.json{overflow-x:auto;max-width:100%;font-size:12.5px}}
+
+/* one-way scroll: past the API section the intro is removed from the page */
+html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-intro .loop,html.past-intro .pushin,html.past-intro .veil,html.past-intro .dark,html.past-intro .progress{display:none!important}
