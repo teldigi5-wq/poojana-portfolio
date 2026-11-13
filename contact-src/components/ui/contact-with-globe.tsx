@@ -709,30 +709,55 @@ export default function ContactWithGlobe({
   const reduceMotion =
     typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // The form composes a mail in the visitor's own mail app. Nothing is sent to, or stored by, this site.
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [sending, setSending] = useState(false);
+
+  // Free delivery: FormSubmit (no account, no key) emails the message to my inbox. If it cannot send (offline, or the
+  // address is not activated yet), the form falls back to opening the visitor's own mail app with the message filled in.
+  const sendDirect = async (data: Record<string, string>) => {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 9000);
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...data, _template: "table", _captcha: "false" }),
+        signal: ctl.signal,
+      });
+      const json = (await res.json().catch(() => ({}))) as { success?: boolean | string };
+      return res.ok && (json.success === true || json.success === "true");
+    } catch {
+      return false;
+    } finally {
+      clearTimeout(t);
+    }
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const f = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const f = new FormData(form);
     const v = (k: string) => String(f.get(k) ?? "").trim();
     if (v("website")) return;
     const name = v("name"), company = v("company"), email = v("email"), message = v("message");
-    const el = (n: string) => e.currentTarget.elements.namedItem(n) as HTMLElement | null;
+    const el = (n: string) => form.elements.namedItem(n) as HTMLElement | null;
     if (!name) { setStatus({ ok: false, text: "Add your name." }); el("name")?.focus(); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setStatus({ ok: false, text: "Add a valid email so I can reply." }); el("email")?.focus(); return; }
     if (!message) { setStatus({ ok: false, text: "Add a short message." }); el("message")?.focus(); return; }
-    const lines = [
-      "Hi Poojana,",
-      "",
-      message,
-      "",
-      "—",
-      `Name: ${name}`,
-      ...(company ? [`Company: ${company}`] : []),
-      `Reply to: ${email}`,
-    ];
+    if (message.length > 4000) { setStatus({ ok: false, text: "Please keep the message under 4000 characters." }); el("message")?.focus(); return; }
+
     const subject = `Portfolio message from ${name}${company ? ` (${company})` : ""}`;
+    setSending(true);
+    setStatus({ ok: false, text: "Sending…" });
+    const sent = await sendDirect({ name, company, email, message, _subject: subject, _replyto: email });
+    setSending(false);
+    if (sent) {
+      form.reset();
+      setStatus({ ok: true, text: "Sent. Thank you, I will reply to the email you gave." });
+      return;
+    }
+    const lines = ["Hi Poojana,", "", message, "", "—", `Name: ${name}`, ...(company ? [`Company: ${company}`] : []), `Reply to: ${email}`];
     window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
-    setStatus({ ok: true, text: `Your mail app should open with the message ready. If it does not, write to ${EMAIL}.` });
+    setStatus({ ok: true, text: `Could not send directly, so your mail app should open with the message ready. Or write to ${EMAIL}.` });
   };
 
   return (
@@ -837,7 +862,7 @@ export default function ContactWithGlobe({
               <div>
                 <h3 className="m-0 text-lg font-semibold text-[#0b1020] mb-0.5">Send a message</h3>
                 <p className="m-0 text-sm text-slate-600">
-                  This opens your own mail app with the message filled in. Nothing is stored on this site.
+                  Your message is emailed to me through FormSubmit, a free form service. Nothing is stored on this site.
                 </p>
               </div>
 
@@ -869,9 +894,10 @@ export default function ContactWithGlobe({
               <div className="flex flex-wrap items-center gap-4">
                 <Button
                   type="submit"
+                  disabled={sending}
                   className="w-fit h-11 px-8 rounded-xl font-semibold text-sm bg-[#0b1020] hover:bg-[#1b2550] text-white group"
                 >
-                  Send message
+                  {sending ? "Sending…" : "Send message"}
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Button>
                 <p role="status" aria-live="polite" className={cn("m-0 text-sm", status.ok ? "text-emerald-700" : "text-slate-600")}>

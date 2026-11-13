@@ -1,0 +1,8 @@
+# Keep build/test/source material out of the public deployment. Only the website itself is served.
+tests
+scripts
+contact-src
+source
+.github
+*.md
+staticwebapp.config.json

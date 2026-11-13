@@ -374,7 +374,7 @@ html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
 
 /* trace rail: compact, hairline */
 .rail{left:24px;padding:0;border-radius:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-.rail a{gap:11px;font-size:11px;letter-spacing:.04em;color:#7b88a3;transition:color .25s}
+.rail a{gap:11px;font-size:12px;letter-spacing:.04em;color:#7b88a3;transition:color .25s}
 .rail a b{font-weight:500;color:#a3aec6;font-variant-numeric:tabular-nums;transition:color .25s}
 .rail a em{font-style:normal;font-weight:500;letter-spacing:.1em;transition:color .25s}
 .rail a:hover em{color:var(--ink)}
@@ -513,7 +513,7 @@ html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-int
 .clip.hud-armed.holo .hud-line path{stroke-dashoffset:0}
 .clip.hud-armed.holo .hud-line circle{opacity:1}
 .clip.hud-armed.holo .hud-t span{opacity:1;transform:none;filter:none}
-@media(max-width:699px){.hud-line{display:none}.hud-card{left:auto;right:8px;top:14px;transform:none;max-width:44%;padding:8px 10px 9px;border-radius:12px}.hud-k{font-size:9.5px;margin-bottom:4px}.hud-t{font-size:13.5px}.clip.hud-armed .hud-card{transform:translateY(8px)}.clip.hud-armed.holo .hud-card{transform:none}}
+@media(max-width:699px){.hud-line{display:none}.hud-card{left:auto;right:8px;top:14px;transform:none;max-width:44%;padding:8px 10px 9px;border-radius:12px}.hud-k{font-size:11.5px;margin-bottom:4px}.hud-t{font-size:13.5px}.clip.hud-armed .hud-card{transform:translateY(8px)}.clip.hud-armed.holo .hud-card{transform:none}}
 @media(prefers-reduced-motion:reduce){.clip-media{transform:none}.clip.hud-armed .hud-card,.clip.hud-armed .hud-t span,.clip.hud-armed .hud-line path{transition:none}}
 
 /* services + toolkit: evidence-first, every card points at the project that shows it */
@@ -575,12 +575,6 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 /* phones: keep the nav clear of the avatar and let it scroll sideways rather than clip */
 @media(max-width:420px){.glass-nav{left:72px!important;right:10px!important;overflow:hidden}.glass-nav nav{overflow-x:auto;scrollbar-width:none;justify-content:flex-start!important;gap:0;-webkit-overflow-scrolling:touch}.glass-nav nav::-webkit-scrollbar{display:none}.glass-nav a{flex:none;padding:0 9px!important;font-size:12.5px!important}}
 
-/* always show the current section on the nav, even if the glass lens fails to draw */
-.glass-nav a[aria-current="true"]{background:rgba(255,255,255,.4);border-radius:999px}
-.glass-nav.tone-dark a[aria-current="true"]{background:rgba(255,255,255,.12)}
-.glass-nav.no-gl a[aria-current="true"]{background:rgba(255,255,255,.8)}
-.glass-nav.no-gl.tone-dark a[aria-current="true"]{background:rgba(255,255,255,.18)}
-
 /* connect: the React island supplies its own look; this only frames the section and styles the fallback + footer */
 #connect{padding:0;background:#f4f7ff}
 .cn-fallback{padding:clamp(72px,10vw,120px) 0;text-align:center}
@@ -608,3 +602,8 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 .hc-probe{margin-top:auto;padding-top:14px}
 .hc-card .hc-proof{margin-bottom:0}
 .hc-probe .dash{stroke-dasharray:none}
+
+/* phones: no double-tap zoom jumps; collapsed lists */
+body{touch-action:manipulation}
+[hidden].sv,[hidden].mp-li,.sv-grid>li[hidden],.mp-grid>li[hidden]{display:none!important}
+.more-btn{margin:18px 0 0;width:100%;justify-content:center}
