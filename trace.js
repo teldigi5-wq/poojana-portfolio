@@ -11,7 +11,7 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
 
 /* ---------- liquid glass nav ---------- */
 const nav = $('#nav');
-const glass = mountGlassNav(nav, { imgSrc: 'assets/trace/hero-scene.webp', thickness: 20, activeSelector: '[aria-current="true"]' });
+const glass = mountGlassNav(nav, { imgSrc: 'assets/trace/hero-scene-2k.webp', thickness: 20, activeSelector: '[aria-current="true"]' });
 if (glass && mountRefraction(nav, { thickness: 20 })) glass.setSpecOnly(true);   // Chromium: bend the real page behind the bar
 
 /* ---------- hero: dive into the terminal, driven by scroll ---------- */
