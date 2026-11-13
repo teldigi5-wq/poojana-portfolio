@@ -72,6 +72,22 @@
 
 <main id="main">
 <section class="hero" id="trace" aria-labelledby="h1">
+  <div class="mhero" aria-labelledby="mh1">
+    <p class="mh-status"><i aria-hidden="true"></i>Open to engineering internships</p>
+    <h1 id="mh1">I build the systems behind the screen.</h1>
+    <p class="mh-sub">Backend, AI and security, from Sri Lanka. I build systems whose behaviour you can inspect.</p>
+    <figure class="mh-laptop">
+      <img src="assets/trace/laptop-real.webp" width="1400" height="995" alt="A laptop showing a terminal that requests the engineer profile and receives 200 OK" decoding="async" fetchpriority="high">
+      <div class="mh-screen" role="img" aria-label="Terminal output: GET /poojana-kaveesh returns 200 OK, role backend, AI and security, status open to internships">
+        <div class="mh-bar" aria-hidden="true"><i></i><i></i><i></i><span>poojana@gateway</span></div>
+        <pre class="mh-term" aria-hidden="true"><span style="--d:0"><b>$</b> curl GET /poojana-kaveesh</span><span style="--d:1"><em>&gt;</em> routing through gateway</span><span style="--d:2"><em>&lt;</em> <u>200 OK</u></span><span style="--d:3"><em>&gt;</em> role: backend · AI · security</span><span style="--d:4"><em>&gt;</em> status: open_to_internships</span><span style="--d:5" class="cur"><b>$</b> </span></pre>
+      </div>
+    </figure>
+    <div class="mh-cta">
+      <a class="btn ac" href="#work">See the projects</a>
+      <a class="btn alt" href="#gateway">Try the API</a>
+    </div>
+  </div>
   <div class="hero-stick">
     <div class="hero-copy" id="heroCopy">
       <div class="status glassy"><i></i><span id="clock">Colombo</span><em>Open to engineering internships</em></div>
@@ -283,6 +299,27 @@
   </div>
 </section>
 
+<section class="blk" id="intro" data-tone="dark" aria-labelledby="in-h">
+  <div class="wrap">
+    <h2 id="in-h" class="reveal">Behind the requests.</h2>
+    <p class="lede reveal">A short intro film, built around my portrait.</p>
+    <figure class="clip reveal">
+      <div class="clip-top"><span class="ct-t"><i aria-hidden="true"></i>Intro film</span><span class="ct-d">0:06</span></div>
+      <div class="clip-media">
+        <video id="clip" muted playsinline preload="none" poster="assets/trace/intro-holo-poster.webp" aria-label="Intro film: Poojana Kaveesh greets the camera and raises a small network hologram in his palm">
+          <source src="assets/trace/intro-holo.mp4" type="video/mp4">
+        </video>
+        <button class="clip-btn" id="clipBtn" type="button" aria-pressed="false" aria-label="Pause the intro video"><span aria-hidden="true">❚❚</span></button>
+      </div>
+      <figcaption>
+        <span class="cc-id"><img src="assets/trace/avatar.webp" width="40" height="40" alt="" loading="lazy"><span><b>Poojana Kaveesh</b><em>Backend engineer · SLIIT</em></span></span>
+        <span class="cc-open"><i aria-hidden="true"></i>Open to internships</span>
+        <span class="cc-note">Generated with AI from my portrait · no audio</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <section class="blk" id="contact" aria-labelledby="ct-h">
   <div class="wrap">
     <span class="eyebrow reveal">05 · RESPONSE</span>
@@ -314,7 +351,7 @@
       <aside class="belt reveal" id="belt" data-tone="dark" role="group" aria-label="Interactive ID badge. Drag it to make it swing.">
         <div class="belt-stage"></div>
         <figure class="belt-static">
-          <img src="assets/trace/lanyard-portrait.webp" width="220" height="283" alt="Portrait of Poojana Kaveesh" loading="lazy">
+          <img src="assets/trace/card-portrait.webp" width="220" height="293" alt="Portrait of Poojana Kaveesh" loading="lazy">
           <figcaption><b>Poojana Kaveesh</b><span>Backend engineer · SLIIT · open to internships</span></figcaption>
         </figure>
         <p class="belt-hint" aria-hidden="true">Drag the badge</p>
