@@ -516,7 +516,7 @@ try {
   const root_ = document.getElementById('contactRoot');
   if (root_) {
     let started = false;
-    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=5b0c1c52').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
+    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=f7ad17a9').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
     if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '900px 0px' }); io.observe(root_); }
     else start();
     addEventListener('hashchange', () => { if (location.hash === '#connect') start(); });

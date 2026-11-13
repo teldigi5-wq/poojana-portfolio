@@ -5,6 +5,7 @@
     "ignoreDeprecations": "6.0", "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "d3": ["./shims/d3.ts"],
       "motion/react": ["./shims/motion.tsx"],
       "lucide-react": ["./shims/lucide.tsx"],
       "@radix-ui/react-slot": ["./shims/radix-slot.tsx"],
