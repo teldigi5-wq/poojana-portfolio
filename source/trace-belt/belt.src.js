@@ -30,33 +30,27 @@ function arcs(ctx, W, H, c, seed, ring2 = true) {
 }
 function drawTag(t, img, i) {
   const W = 720, H = 1080, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
-  const bg = x.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#111729'); bg.addColorStop(1, '#090d1a'); x.fillStyle = bg; x.fillRect(0, 0, W, H);
-  arcs(x, W, H, t.c, i * 0.4, t.kind !== 'id');
-  const vg = x.createRadialGradient(W * 0.5, H * 1.05, 20, W * 0.5, H * 0.9, W * 0.9); vg.addColorStop(0, t.c[0] + '55'); vg.addColorStop(1, 'transparent'); x.fillStyle = vg; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#fff'; x.textBaseline = 'alphabetic';
+  x.fillStyle = '#0a0e18'; x.fillRect(0, 0, W, H); x.textBaseline = 'alphabetic';
   if (t.kind === 'id') {
-    const fade = x.createLinearGradient(0, H * 0.42, 0, H * 0.9); fade.addColorStop(0, 'rgba(9,13,26,0)'); fade.addColorStop(1, 'rgba(9,13,26,.96)'); x.fillStyle = fade; x.fillRect(0, 0, W, H); x.fillStyle = '#fff';
-    if (img) {   // portrait with a soft top/side fade so the arcs behind it stay visible
-      const ar = img.naturalWidth / img.naturalHeight, w = W * 0.98, h = w / ar, oc = document.createElement('canvas'); oc.width = W; oc.height = H; const o = oc.getContext('2d');
-      o.drawImage(img, (W - w) / 2, H - h, w, h); o.globalCompositeOperation = 'destination-in';
-      const m1 = o.createLinearGradient(0, H - h, 0, H - h + h * 0.42); m1.addColorStop(0, 'rgba(0,0,0,0)'); m1.addColorStop(1, 'rgba(0,0,0,1)'); o.fillStyle = m1; o.fillRect(0, 0, W, H);
-      const m2 = o.createLinearGradient(0, 0, W, 0); m2.addColorStop(0, 'rgba(0,0,0,0)'); m2.addColorStop(.12, 'rgba(0,0,0,1)'); m2.addColorStop(.88, 'rgba(0,0,0,1)'); m2.addColorStop(1, 'rgba(0,0,0,0)'); o.fillRect(0, 0, W, H);
-      x.drawImage(oc, 0, 0);
+    /* premium ID: full-bleed portrait, graphite lower panel, hairline edge, no decoration */
+    const PH = 760;
+    if (img) {
+      const ar = img.naturalWidth / img.naturalHeight, w = W, h = w / ar; x.drawImage(img, 0, 0, w, h);
     }
-    x.font = `700 92px ${SANS}`; x.fillText(t.name[0], 44, 130); x.fillText(t.name[1], 44, 224);
-    x.font = `500 24px ${MONO}`; x.fillStyle = '#9fb0ff'; x.fillText(t.role, 46, 274);
-    x.fillStyle = '#8a95b3'; x.font = `400 21px ${MONO}`; x.fillText(t.sub, 46, 312);
-    x.fillStyle = 'rgba(8,12,24,.78)'; roundRect(x, 36, H - 86, 316, 54, 27); x.fill(); x.strokeStyle = 'rgba(124,240,200,.45)'; x.lineWidth = 2; x.stroke();
-    x.fillStyle = '#7cf0c8'; x.beginPath(); x.arc(66, H - 59, 7, 0, 7); x.fill(); x.fillStyle = '#d8fff1'; x.font = `500 22px ${MONO}`; x.fillText('Open to internships', 86, H - 51);
+    const fade = x.createLinearGradient(0, PH - 260, 0, PH + 40); fade.addColorStop(0, 'rgba(10,14,24,0)'); fade.addColorStop(1, 'rgba(10,14,24,1)'); x.fillStyle = fade; x.fillRect(0, PH - 260, W, 300);
+    x.fillStyle = '#0a0e18'; x.fillRect(0, PH + 40, W, H - PH - 40);
+    const top = x.createLinearGradient(0, 0, 0, 170); top.addColorStop(0, 'rgba(10,14,24,.72)'); top.addColorStop(1, 'rgba(10,14,24,0)'); x.fillStyle = top; x.fillRect(0, 0, W, 170);
+    x.fillStyle = '#f4f6fb'; x.font = `700 66px ${SANS}`; x.fillText('Poojana Kaveesh', 44, 846);
+    x.fillStyle = '#aab6d8'; x.font = `500 25px ${MONO}`; x.fillText('Backend engineer', 46, 896);
+    x.fillStyle = '#6f7a99'; x.font = `400 22px ${MONO}`; x.fillText('SLIIT · IT undergraduate', 46, 934);
+    x.strokeStyle = 'rgba(170,190,255,.18)'; x.lineWidth = 2; x.beginPath(); x.moveTo(44, 968); x.lineTo(W - 44, 968); x.stroke();
+    x.fillStyle = '#7cf0c8'; x.beginPath(); x.arc(52, 1019, 7, 0, 7); x.fill(); x.fillStyle = '#d8fff1'; x.font = `500 23px ${MONO}`; x.fillText('Open to internships', 72, 1027);
+    x.fillStyle = 'rgba(255,255,255,.88)'; x.font = `800 38px ${SANS}`; x.textAlign = 'right'; x.fillText('pk.', W - 44, 1028); x.textAlign = 'left';
   } else {
-    x.font = `700 ${t.name.length > 9 ? 84 : 100}px ${SANS}`; x.fillText(t.name, 44, 150);
-    x.fillStyle = 'rgba(8,12,24,.7)'; x.strokeStyle = t.c[1]; x.lineWidth = 2; roundRect(x, 44, 190, 52 + t.status.length * 15, 50, 25); x.fill(); x.stroke();
-    x.fillStyle = '#fff'; x.font = `500 24px ${MONO}`; x.fillText(t.status, 70, 224);
-    x.fillStyle = '#c9d1e6'; x.font = `500 38px ${SANS}`; t.line.forEach((l, k) => x.fillText(l, 46, H - 190 + k * 48));
-    x.fillStyle = t.c[1]; x.font = `500 24px ${MONO}`; x.fillText('tap to see the work →', 46, H - 70);
+    x.fillStyle = '#fff'; x.font = `700 ${t.name.length > 9 ? 84 : 100}px ${SANS}`; x.fillText(t.name, 44, 150);
   }
-  x.fillStyle = 'rgba(255,255,255,.88)'; x.font = `800 40px ${SANS}`; x.fillText('pk.', W - 104, H - 44);
-  x.strokeStyle = 'rgba(160,185,255,.25)'; x.lineWidth = 3; roundRect(x, 1.5, 1.5, W - 3, H - 3, 44); x.stroke();
+  const edge = x.createLinearGradient(0, 0, W, H); edge.addColorStop(0, 'rgba(200,215,255,.55)'); edge.addColorStop(.5, 'rgba(160,185,255,.16)'); edge.addColorStop(1, 'rgba(200,215,255,.4)');
+  x.strokeStyle = edge; x.lineWidth = 3; roundRect(x, 1.5, 1.5, W - 3, H - 3, 44); x.stroke();
   return cv;
 }
 function roundRect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }

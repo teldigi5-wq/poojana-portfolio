@@ -44,7 +44,7 @@ const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
   const bio = new IntersectionObserver(([en]) => {
     if (!en.isIntersecting) return; bio.disconnect();
-    import('./assets/trace/belt.js?v=2').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
+    import('./assets/trace/belt.js?v=3').then(m => m.mountBelt(belt, { portrait: 'assets/trace/card-portrait.webp' })).catch(() => {});
   }, { rootMargin: '500px' });
   bio.observe(belt);
 }
