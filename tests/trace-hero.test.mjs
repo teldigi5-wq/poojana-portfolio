@@ -73,6 +73,7 @@ test('Work showcase: horizontal cards enhance the no-JS project list and open an
 test('Also built section lists projects with external links that open safely', () => {
   const html = read('index.html');
   const sec = html.slice(html.indexOf('id="more"'), html.indexOf('id="lab"'));
+  assert.ok(sec.includes('id="oss"'));
   assert.equal((sec.match(/<article class="mp /g) || []).length, 5);
   for (const m of sec.matchAll(/<a href="https:[^>]*>/g)) assert.match(m[0], /target="_blank" rel="noopener noreferrer"/);
 });

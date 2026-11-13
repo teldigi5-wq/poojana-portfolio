@@ -362,3 +362,10 @@ html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
 .mp-all{margin:22px 0 0}
 @media(pointer:coarse){.mp-links a,.mp-all a{min-height:44px;display:inline-flex;align-items:center}}
 @media(prefers-reduced-motion:reduce){.mp,.mp-art img{transition:none}.mp:hover{transform:none}.mp:hover .mp-art img{transform:none}.mp-st.dev i{animation:none}}
+
+/* Open source: a wide card for the repositories that are not mine */
+#more .mp-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+#oss{scroll-margin-top:84px}
+.mp-one{grid-template-columns:1fr!important}
+.mp-note{margin:18px 0 0;font:400 14px/1.5 var(--sans);color:#5b6a86}
+@media(min-width:760px){.mp-wide{flex-direction:row;align-items:stretch}.mp-wide .mp-art{flex:0 0 42%;margin:10px 0 10px 10px;aspect-ratio:auto;min-height:260px}.mp-wide .mp-body{padding:26px 28px 24px;justify-content:center}.mp-wide .mp-stack{margin-top:0}}
