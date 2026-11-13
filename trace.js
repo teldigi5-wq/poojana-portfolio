@@ -421,8 +421,29 @@ if (toTop) {
   const goTop = e => { e && e.preventDefault(); scrollTo({ top: 0, behavior: 'instant' }); history.replaceState(null, '', location.pathname); };
   toTop.addEventListener('click', goTop);
   document.querySelectorAll('a[href="#trace"]').forEach(a => a.addEventListener('click', goTop));
-  const sync = () => toTop.classList.toggle('on', scrollY > innerHeight * 1.2);
+  const gw = document.getElementById('gateway');
+  const gwTop = () => gw ? Math.round(gw.getBoundingClientRect().top + scrollY) : 0;
+  const sync = () => toTop.classList.toggle('on', scrollY >= gwTop() - 2);
   addEventListener('scroll', sync, { passive: true }); sync();
+
+  /* one-way scroll: once you are in the live API (or anything below), the dive and terminal above it are closed.
+     The only ways back are the "Back to Trace" button, the Trace links and the keyboard-reachable #trace anchors. */
+  const floor = () => gwTop();
+  let released = !gw || scrollY < floor() - 2;           // true while the intro is still open to scroll through
+  const guard = () => {
+    const f = floor(), y = scrollY;
+    if (y >= f - 2) { released = false; }                // reached the gateway: the way back up closes
+    else if (!released && y < f) scrollTo({ top: f, behavior: 'instant' });
+  };
+  addEventListener('scroll', guard, { passive: true });
+  addEventListener('wheel', e => { if (!released && e.deltaY < 0 && scrollY <= floor() + 1) e.preventDefault(); }, { passive: false });
+  addEventListener('keydown', e => {
+    if (released || scrollY > floor() + 1) return;
+    if (['Home', 'PageUp', 'ArrowUp'].includes(e.key) && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName)) e.preventDefault();
+  });
+  document.addEventListener('click', e => { if (e.target.closest('a[href="#trace"], #toTop')) released = true; }, true);
+  addEventListener('hashchange', () => { if (location.hash === '#trace') released = true; });
+  guard();
 }
 
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
