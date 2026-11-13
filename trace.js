@@ -1,4 +1,6 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
+import { mountRefraction } from './assets/trace/glass-refract.js';
+import { mountShowcase } from './assets/trace/showcase.js?v=6';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -10,7 +12,8 @@ const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', 
 
 /* ---------- liquid glass nav ---------- */
 const nav = $('#nav');
-const glass = mountGlassNav(nav, { imgSrc: 'assets/trace/hero-scene.webp', thickness: 20, activeSelector: '[aria-current="true"]' });
+const glass = mountGlassNav(nav, { imgSrc: 'assets/trace/hero-scene-2k.webp', thickness: 20, activeSelector: '[aria-current="true"]' });
+if (glass && mountRefraction(nav, { thickness: 20 })) glass.setSpecOnly(true);   // Chromium: bend the real page behind the bar
 
 /* ---------- hero: dive into the terminal, driven by scroll ---------- */
 const hero = $('#trace');
@@ -24,32 +27,222 @@ const toViewport = (iu) => {         // image uv -> viewport uv under "cover"
   const s = va > IMG_A ? [1, IMG_A / va] : [va / IMG_A, 1];
   return [(iu[0] - 0.5) / s[0] + 0.5, (iu[1] - 0.5) / s[1] + 0.5];
 };
-const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); };
+const fitHero = () => {            // keep the headline clear of the laptop on any viewport shape
+  root.style.setProperty('--hs', 1); root.classList.remove('tight');
+  if (!heroCopy || vw < 721) return;
+  const room = toViewport([0.5, 0.44])[1] * vh - 16;   // top edge of the laptop in the viewport
+  const topPx = parseFloat(getComputedStyle(heroCopy).top);
+  const need = () => heroCopy.getBoundingClientRect().height + topPx;
+  const SLACK = 8, fitTo = () => { for (let i = 0; i < 3; i++) { const n = need(); if (n <= room + SLACK) return true; const cur = parseFloat(getComputedStyle(root).getPropertyValue('--hs')) || 1; root.style.setProperty('--hs', Math.max(0.5, cur * room / n).toFixed(3)); } return need() <= room + SLACK; };
+  if (!fitTo() || parseFloat(getComputedStyle(root).getPropertyValue('--hs')) < 0.72) {   // too cramped: drop the subhead, refit
+    root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
+  }
+};
+const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
+/* ID-badge lanyard (Three.js): loaded when the contact section is near */
+const belt = $('#belt');
+if (belt && 'IntersectionObserver' in window) {
+  const bio = new IntersectionObserver(([en]) => {
+    if (!en.isIntersecting) return; bio.disconnect();
+    import('./assets/trace/belt.js?v=2').then(m => m.mountBelt(belt, { portrait: 'assets/trace/lanyard-portrait.webp' })).catch(() => {});
+  }, { rootMargin: '500px' });
+  bio.observe(belt);
+}
+/* hero polish: word-by-word headline, Colombo clock, pointer spotlight, magnetic buttons */
+const h1 = $('#h1');
+if (h1 && !h1.dataset.split) { h1.dataset.split = 1; h1.innerHTML = h1.textContent.trim().split(/\s+/).map((w, i) => `<span class="w"><span style="--i:${i}">${esc(w)}</span></span>`).join(' '); }
+const clockEl = $('#clock');
+const tick = () => { if (clockEl) clockEl.textContent = 'Colombo ' + new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Colombo', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); };
+tick(); setInterval(tick, 30000);
+if (!reduce && matchMedia('(hover: hover)').matches) {
+  let sx = 0, sy = 0, mxp = 0, myp = 0, sraf = 0;
+  addEventListener('pointermove', e => { mxp = e.clientX; myp = e.clientY; if (!sraf) sraf = requestAnimationFrame(() => { sraf = 0; sx += (mxp - sx) * 0.9; sy += (myp - sy) * 0.9; root.style.setProperty('--mx', mxp + 'px'); root.style.setProperty('--my', myp + 'px'); }); }, { passive: true });
+  $$('.mag').forEach(b => {
+    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${((e.clientX - r.left) / r.width - 0.5) * 10}px, ${((e.clientY - r.top) / r.height - 0.5) * 8}px)`; });
+    b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+  });
+}
 const bootEl = $('#boot');
+let entered = !!location.hash;          // deep links skip the gate
+const unlock = () => { entered = true; };
+/* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
+const enterBtn = $('#enter');
+const BOOT = [
+  ['$ ', 'cmd', './trace --target poojana-kaveesh', 14],
+  ['> ', 'dim', 'resolving gateway ........... ', 0, 'ok'],
+  ['> ', 'dim', 'negotiating TLS 1.3 ......... ', 0, 'ok'],
+  ['> ', 'dim', 'bypassing rate limiter ...... ', 0, 'ok'],
+  ['> ', 'bar', 'decrypting ', 0, 'portfolio.enc'],
+  ['> ', 'dim', 'mounting file system ........ ', 0, 'ok'],
+  ['< ', 'grant', 'ACCESS GRANTED  200 OK  42 ms', 0],
+  ['', 'tree', '├─ projects/   BoundaryLab · Aetheris · Wayfarer'],
+  ['', 'tree', '├─ lab/        live demos you can run'],
+  ['', 'tree', '└─ contact/    open to internships'],
+];
+/* optional sound + haptics (off until the visitor opts in) */
+const sndBtn = $('#snd');
+let soundOn = false, actx = null;
+try { soundOn = localStorage.getItem('trace-sound') === '1'; } catch (e) {}
+const audio = () => { if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } if (actx && actx.state === 'suspended') actx.resume(); return actx; };
+let lastTick = 0;
+function sfx(kind) {
+  if (!soundOn) return;
+  const a = audio(); if (!a) return; const t = a.currentTime;
+  const tone = (f, at, dur, vol, type = 'sine') => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t + at); g.gain.exponentialRampToValueAtTime(vol, t + at + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + at + dur); o.connect(g).connect(a.destination); o.start(t + at); o.stop(t + at + dur + 0.05); };
+  if (kind === 'key') { const n = performance.now(); if (n - lastTick < 28) return; lastTick = n; tone(1800 + Math.random() * 500, 0, 0.035, 0.035, 'square'); }
+  else if (kind === 'blip') tone(660 + Math.random() * 240, 0, 0.06, 0.05, 'triangle');
+  else if (kind === 'grant') { tone(523, 0, 0.35, 0.07); tone(784, 0.09, 0.45, 0.07); tone(1046, 0.18, 0.7, 0.06); }
+  else if (kind === 'enter') { tone(880, 0, 0.12, 0.06, 'triangle'); tone(1320, 0.05, 0.18, 0.05, 'triangle'); }
+}
+const buzz = p => { if (soundOn && navigator.vibrate) try { navigator.vibrate(p); } catch (e) {} };
+const paintSnd = () => { if (!sndBtn) return; sndBtn.setAttribute('aria-pressed', soundOn); sndBtn.textContent = soundOn ? 'sound on' : 'sound off'; sndBtn.setAttribute('aria-label', soundOn ? 'Turn terminal sound and haptics off' : 'Turn terminal sound and haptics on'); };
+sndBtn && sndBtn.addEventListener('click', () => { soundOn = !soundOn; try { localStorage.setItem('trace-sound', soundOn ? '1' : '0'); } catch (e) {} if (soundOn) { audio(); sfx('enter'); } paintSnd(); });
+paintSnd();
+const SMALL = innerWidth < 700, NB = SMALL ? 10 : 20, TOUCH = matchMedia('(hover: none)').matches;
+if (SMALL) { BOOT[8][2] = '├─ lab/        live demos'; BOOT[7][2] = '├─ projects/   3 projects'; BOOT[9][2] = '└─ contact/    open to work'; }
+if (TOUCH && enterBtn) enterBtn.innerHTML = 'Tap to step into the stack';
+const term = $('#term'), stat1 = $('#stat1'), stat2 = $('#stat2');
+const setStat = (s, run) => { if (stat1) stat1.innerHTML = `<u></u>${s}`; term.classList.toggle('run', !!run); };
+const sess = Array.from({ length: 4 }, () => '0123456789abcdef'[Math.random() * 16 | 0]).join('');
+const GL = '▒▓░#@%&$01';
+const scr = (s, p) => { const k = Math.floor(p * s.length); return s.slice(0, k) + [...s.slice(k)].map(ch => ch === '.' ? '.' : GL[Math.random() * GL.length | 0]).join(''); };
+let bootRun = 0, bootDone = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const line = (pre, cls, txt, ok) => cls === 'tree' ? `<span class="tree">${esc(txt).replace(/(projects\/|lab\/|contact\/)/, '<em>$1</em>')}</span>` : `<i>${esc(pre.trim())}</i> ${cls === 'grant' ? `<span class="grant">${esc(txt)}</span>` : cls === 'dim' ? `<span class="dim">${esc(txt)}</span>${ok ? `<b class="ok">${ok}</b>` : ''}` : esc(txt)}`;
+function bootStatic() {
+  bootEl.innerHTML = BOOT.map(([p, c, t, , ok]) => c === 'bar' ? line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(NB)}] 100%</span>` : line(p, c, t, ok)).join('\n');
+  term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
+  showEnter(true);
+}
+function showEnter(on) { if (!enterBtn) return; enterBtn.classList.toggle('on', on); enterBtn.tabIndex = on ? 0 : -1; }
+async function playBoot() {
+  const id = ++bootRun; bootDone = false; showEnter(false);
+  term.classList.remove('granted'); setStat('connecting', true); if (stat2) stat2.textContent = `session ${sess}`;
+  const out = []; const draw = () => { if (id === bootRun) bootEl.innerHTML = out.join('\n') + (out.length ? '\n' : '') + '<span class="caret"></span>'; };
+  const STAT = { 2: 'resolving', 3: 'handshake', 4: 'bypassing', 5: 'decrypting', 6: 'mounting' };
+  let k = 0;
+  for (const [p, c, t, d, ok] of BOOT) {
+    if (id !== bootRun) return;
+    k++; if (STAT[k]) setStat(STAT[k], true);
+    if (c === 'cmd') {
+      for (let i = 1; i <= t.length; i++) {
+        if (id !== bootRun) return;
+        bootEl.innerHTML = `<i>$</i> ${esc(t.slice(0, i))}<span class="caret"></span>`; sfx('key');
+        await sleep(d + Math.random() * 22);
+      }
+      out.push(line(p, c, t)); draw(); await sleep(240);
+    } else if (c === 'bar') {
+      for (let n = 0; n <= NB; n++) {
+        if (id !== bootRun) return;
+        const bar = '█'.repeat(n) + '░'.repeat(NB - n);
+        bootEl.innerHTML = out.join('\n') + '\n' + line(p, 'dim', t) + `<span class="scr">${scr(ok, n / NB)}</span> <span class="bar">[${bar}] ${String(Math.round(n * 100 / NB)).padStart(3)}%</span><span class="caret"></span>`;
+        if (stat2) stat2.textContent = `session ${sess} · ${Math.round(n * 100 / NB)}%`; if (n % 2 === 0) sfx('blip');
+        await sleep(30 + Math.random() * 40);
+      }
+      out.push(line(p, 'dim', t) + `<span class="scr">${ok}</span> <span class="bar">[${'█'.repeat(NB)}] 100%</span>`); draw(); await sleep(280);
+    } else if (c === 'grant') {
+      draw(); await sleep(320);
+      out.push(line(p, c, t)); draw();
+      sfx('grant'); buzz([18, 40, 26]); term.classList.add('granted'); setStat('session open', false); if (stat2) stat2.textContent = `session ${sess} · 42 ms`;
+      await sleep(380);
+    } else if (c === 'tree') {
+      out.push(line(p, c, t)); draw(); await sleep(170);
+    } else {
+      draw(); await sleep(130 + Math.random() * 120);
+      out.push(line(p, c, t, ok)); draw(); await sleep(110);
+    }
+  }
+  if (id !== bootRun) return;
+  bootEl.innerHTML = out.join('\n') + '\n<i>$</i> <span class="caret"></span>';
+  bootDone = true; showEnter(true);
+}
+function bootSync(boot) {
+  const live = boot > 0.5; term.classList.toggle('live', live); if (sndBtn) sndBtn.tabIndex = live ? 0 : -1;
+  if (boot > 0.35 && !bootRun) { reduce ? (bootRun = 1, bootStatic()) : playBoot(); }
+  else if (boot < 0.02 && bootRun) { bootRun = 0; bootDone = false; showEnter(false); bootEl.innerHTML = ''; term.classList.remove('granted', 'run'); setStat('idle', false); }
+}
+/* faint falling code behind the terminal, only runs while the dark layer is showing */
+const rain = $('#rain'); const rctx = rain && rain.getContext('2d');
+let rainOn = false, cols = [], rw = 0, rh = 0;
+const RG = '0123456789abcdef{}[]<>/=;:·'.split('');
+function rainSize() { if (!rain) return; rw = rain.width = Math.ceil(innerWidth / 2); rh = rain.height = Math.ceil(innerHeight / 2); cols = Array.from({ length: Math.ceil(rw / 11) }, () => ({ y: Math.random() * rh, v: 0.6 + Math.random() * 1.6 })); }
+function rainTick() {
+  if (!rainOn) return;
+  rctx.fillStyle = 'rgba(7,11,22,.16)'; rctx.fillRect(0, 0, rw, rh);
+  rctx.font = '10px monospace';
+  cols.forEach((c, i) => { rctx.fillStyle = Math.random() < 0.06 ? 'rgba(200,255,238,.9)' : 'rgba(124,240,200,.55)'; rctx.fillText(RG[Math.random() * RG.length | 0], i * 11, c.y); c.y += c.v * 5; if (c.y > rh && Math.random() > 0.975) c.y = 0; else if (c.y > rh + 80) c.y = 0; });
+  requestAnimationFrame(rainTick);
+}
+function rainSync(dark) {
+  if (!rain || reduce) return;
+  const want = dark > 0.05;
+  if (want && !rainOn) { rainSize(); rainOn = true; requestAnimationFrame(rainTick); }
+  else if (!want && rainOn) { rainOn = false; rctx.clearRect(0, 0, rw, rh); }
+}
+addEventListener('resize', () => { if (rainOn) rainSize(); });
+function enterStack() {
+  if (!bootDone && !reduce) { bootRun++; bootStatic(); bootDone = true; return; }
+  entered = true; sfx('enter'); buzz(12);
+  const g = $('#gateway'); if (g) g.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+enterBtn && enterBtn.addEventListener('click', enterStack);
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('a[href^="#"]')) unlock(); }, true);
+addEventListener('hashchange', unlock);
+addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.repeat || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
+  if (!enterBtn.classList.contains('on') && !(bootRun && !bootDone)) return;
+  const a = document.activeElement; if (a && a !== document.body && a !== enterBtn && /^(A|BUTTON|INPUT|TEXTAREA|SELECT|SUMMARY)$/.test(a.tagName)) return;
+  e.preventDefault(); enterStack();
+});
+
 /* scroll-scrubbed push-in video (progressive: still + CSS zoom remain the fallback) */
+/* looping live scene: plays on its own at the top, freezes on the first scroll, then the scrubbed dive takes over */
+const loop = $('#loop');
+const saveData = !!(navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
+let loopOn = false;
+if (loop && !reduce && !saveData) {
+  loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
+  loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq2-720.mp4' : 'assets/trace/hero-loop-hq2.mp4';   // 1080p on large screens
+  loop.play().catch(() => {});
+}
 const vid = $('#pushin');
-const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
+const VEND = [0.49, 0.5];               // laptop screen centre in the last video frame (image uv)
 let vidReady = false, vidDur = 0;
 const lite = reduce || innerWidth < 700 || (navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
 if (vid && !lite) {
-  vid.src = 'assets/trace/hero-pushin.mp4';
+  vid.src = 'assets/trace/hero-pushin-v2.mp4';
   vid.addEventListener('loadeddata', () => { vidDur = vid.duration || 5; vidReady = true; root.classList.add('has-video'); frame(); }, { once: true });
   vid.addEventListener('error', () => { vidReady = false; root.classList.remove('has-video'); vid.style.opacity = 0; });
   vid.load();
 }
 
+const A_END = 0.5, B_END = 0.72;   // dive | dark hold (terminal plays) | exit
+let ys = scrollY, easing = false;   // eased scroll position: the hero follows the scroll smoothly instead of in steps
 function frame() {
-  const y = scrollY;
+  let y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
-  const t = clamp(y / span);
+  const lockY = span * 0.56;             // inside the dark hold
+  if (!reduce) {
+    if (!entered && y > lockY) { scrollTo({ top: lockY, behavior: 'instant' }); y = lockY; }
+  }
+  if (reduce || Math.abs(y - ys) > vh * 1.5) ys = y;          // reduced motion and big jumps (back to top) don't ease
+  else { ys += (y - ys) * 0.16; if (Math.abs(y - ys) < 0.4) ys = y; }
+  if (ys !== y && !easing) { easing = true; requestAnimationFrame(() => { easing = false; frame(); }); }
+  const tr = clamp(ys / span);
+  const t = tr <= A_END ? tr / A_END * 0.72 : tr <= B_END ? 0.72 + (tr - A_END) / (B_END - A_END) * 0.06 : 0.78 + (tr - B_END) / (1 - B_END) * 0.22;
+  if (loopOn) {                                   // live at the very top; frozen the moment scrolling starts
+    if (y > 4 && !loop.paused) loop.pause();
+    else if (y <= 4 && loop.paused && !document.hidden) loop.play().catch(() => {});
+    if (!vidReady) loop.style.opacity = 1 - clamp(y / 90);   // no scrub video: hand back to the still + CSS zoom
+  }
   let z = 1, dark = 0, veil, boot = 0;
   if (reduce) { veil = clamp(y / (vh * 0.8)) * 0.86; }
   else {
     const e = x => x * x * (3 - 2 * x);
     z = t < 0.7 ? 1 + 2.7 * e(t / 0.7) : 1 + 2.7 * (1 - e((t - 0.7) / 0.3));
-    dark = smooth(0.5, 0.72, t) * (1 - smooth(0.8, 1.0, t));
-    boot = smooth(0.62, 0.74, t) * (1 - smooth(0.82, 0.92, t));
-    veil = smooth(0.72, 1.0, t) * 0.86;
+    dark = Math.pow(smooth(0.52, 0.70, t), 2.6) * (1 - smooth(0.81, 0.865, t));   // snaps in/out: no long half-dark grey fog
+    boot = smooth(0.62, 0.74, t) * (1 - smooth(0.78, 0.83, t));
+    veil = smooth(0.74, 0.84, t) * 0.86;
   }
   let zEff = z;
   if (vidReady) {
@@ -60,13 +253,14 @@ function frame() {
     const vo = toViewport(VEND);
     vid.style.transformOrigin = (vo[0] * 100) + '% ' + (vo[1] * 100) + '%';
     vid.style.transform = `scale(${extra.toFixed(4)})`;
-    vid.style.opacity = t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t);
+    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(y / 48) : 1);
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
+  root.style.setProperty('--spot', reduce ? 0 : (0.9 * (1 - smooth(0, 0.35, t))).toFixed(3));
   root.style.setProperty('--z', z.toFixed(4)); root.style.setProperty('--veil', veil.toFixed(3));
   root.style.setProperty('--dark', dark.toFixed(3)); root.style.setProperty('--boot', boot.toFixed(3));
-  if (bootEl) bootEl.style.opacity = boot;
+  bootSync(boot); rainSync(dark);
   const onDark = dark > 0.45; root.style.setProperty('--navink', onDark ? '#eef2ff' : '#0e1116'); root.style.setProperty('--navkbd', onDark ? '#a9bbff' : '#1f3fd0');
   const fade = 1 - smooth(0, 0.22, t);
   heroCopy.style.opacity = fade; heroCopy.style.transform = `translateY(${(-t * 60).toFixed(1)}px) scale(${(1 - t * 0.04).toFixed(3)})`;
@@ -97,7 +291,7 @@ function sampleTone() {
     if (t && t.dataset.tone === 'dark') dark++;
   }
   const next = dark >= 2 || root.style.getPropertyValue('--dark') > 0.45 ? 'dark' : '';
-  if (next !== tone) { tone = next; nav.classList.toggle('tone-dark', !!tone); glass && glass.setBackdrop({ adaptT: tone ? 1 : 0 }); }
+  if (next !== tone) { tone = next; nav.classList.toggle('tone-dark', !!tone); root.classList.toggle('ui-dark', !!tone); glass && glass.setBackdrop({ adaptT: tone ? 1 : 0 }); }
 }
 let ticking = false;
 const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } };
@@ -120,7 +314,36 @@ function setActive(id) {
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
 sections.forEach(s => io.observe(s));
 const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-$$('.reveal').forEach(el => rv.observe(el));
+/* ---------- text motion: headings rise out of a mask, lede copy darkens as you read it ---------- */
+if (!reduce) {
+  $$('.blk h2.reveal').forEach(h => {
+    const words = h.textContent.trim().split(/\s+/);
+    h.classList.remove('reveal'); h.classList.add('split');
+    h.setAttribute('aria-label', words.join(' '));
+    h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+  });
+  const leads = $$('.blk .lede').filter(p => !p.children.length).map(p => {
+    const words = p.textContent.trim().split(/\s+/);
+    p.innerHTML = words.map(w => `<span class="lw">${w}</span>`).join(' ');
+    p.classList.add('scrub');
+    return { p, sw: [...p.querySelectorAll('.lw')], done: false };
+  });
+  let sTick = false;
+  const scrub = () => {
+    sTick = false;
+    const vh = innerHeight;
+    for (const L of leads) {
+      const r = L.p.getBoundingClientRect();
+      if (r.bottom < -40 || r.top > vh) { if (r.top > vh) L.done = false; continue; }
+      const prog = clamp((vh * 0.9 - r.top) / (vh * 0.34 + r.height * 0.6));
+      const n = L.sw.length;
+      for (let i = 0; i < n; i++) L.sw[i].style.setProperty('--k', clamp(prog * (n + 5) - i).toFixed(2));
+    }
+  };
+  addEventListener('scroll', () => { if (!sTick) { sTick = true; requestAnimationFrame(scrub); } }, { passive: true });
+  addEventListener('resize', scrub); scrub();
+}
+$$('.reveal, .split').forEach(el => rv.observe(el));
 setActive('trace');
 
 /* ---------- shared rate limiter (console + lab) ---------- */
@@ -166,33 +389,7 @@ function send() {
 $('#send').addEventListener('click', send);
 $('#limitBtn').addEventListener('click', () => { const ok = limiter.take(); paintDots(); $('#limitMsg').textContent = ok ? `200 OK. ${Math.floor(limiter.tokens)} of ${CAP} tokens left.` : `429. Bucket empty, next token in ${(limiter.retryMs() / 1000).toFixed(1)} s.`; });
 
-/* ---------- 03 projects ---------- */
-const PROJECTS = [
-  { id: 'bl', name: 'BoundaryLab', tag: 'Local-first authorization verification', stage: 1, lede: 'Local-first authorization verification, independent of Aetheris Platform. Change the identity, resource or rule and follow the checks behind each decision.',
-    kv: [['focus', 'Authorization engineering'], ['scope', 'Ownership · tenant isolation · evidence'], ['status', 'Pre-release prototype']],
-    evi: 'The in-browser model on this site demonstrates the rules only. It does not validate BoundaryLab’s emulator or any live system.',
-    links: [['Product overview ↗', 'https://boundarylab.vercel.app/']] },
-  { id: 'ae', name: 'Aetheris Platform', tag: 'Backend services with explicit boundaries', stage: 0, lede: 'Backend services with explicit boundaries and an independently owned AI runtime, fronted by a single gateway.',
-    kv: [['focus', 'Backend & distributed systems'], ['stack', 'Java · Spring · PostgreSQL · Redis · RabbitMQ'], ['status', 'Research · hardware validation pending']],
-    evi: 'Verified in CI: 8 relay workers competed for 24 events and each was claimed once. That proves this controlled test, not an exactly-once guarantee. Not production-ready.',
-    links: [['Architecture & source ↗', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Inspect the CI run ↗', 'https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377']] },
-  { id: 'wf', name: 'Wayfarer', tag: 'Discovery, planning and arrival', stage: 2, lede: 'Connecting discovery, planning and the first moments of arrival, and still useful without paid APIs.',
-    kv: [['focus', 'Full-stack product development'], ['scope', 'Discovery · itineraries · local persistence'], ['status', 'Public planning experience · no live booking']],
-    evi: 'Six rule-based planning assistants work with browser-local plans. Provider-based AI and live booking are disabled.',
-    links: [['Try the live app ↗', 'https://wayfarer-world-travel.vercel.app/'], ['Source ↗', 'https://github.com/teldigi5-wq/wayfarer-world-travel']] }
-];
-const STAGES = ['Research', 'Prototype', 'Public'];
-const listEl = $('#list'), detailEl = $('#detail');
-let sel = 0;
-listEl.innerHTML = PROJECTS.map((p, i) => `<button class="row" role="option" type="button" data-i="${i}" aria-selected="${i === 0}"><span><b>${p.name}</b><small>${p.tag}</small></span><span><span class="track"><i style="left:${p.stage * 33.3}%;width:33.4%"></i></span><span class="stages">${STAGES.map(s => `<span>${s}</span>`).join('')}</span></span></button>`).join('');
-function showProject(i) {
-  sel = i; const p = PROJECTS[i];
-  $$('.row', listEl).forEach((r, k) => r.setAttribute('aria-selected', k === i));
-  detailEl.innerHTML = `<span class="chip ac">0${i + 1} · ${STAGES[p.stage].toUpperCase()}</span><h3>${p.name}</h3><p>${p.lede}</p><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="evi">${p.evi}</div><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
-}
-listEl.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) showProject(+r.dataset.i); });
-listEl.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); const n = (sel + (e.key === 'ArrowDown' ? 1 : -1) + PROJECTS.length) % PROJECTS.length; showProject(n); $$('.row', listEl)[n].focus(); } });
-showProject(0);
+/* ---------- 03 projects: static cards in index.html, no script needed ---------- */
 
 /* ---------- 04 query plan ---------- */
 const swEl = $('#idxSw'), planBars = $('#planBars'), planMsg = $('#planMsg');
@@ -246,3 +443,37 @@ palIn.addEventListener('keydown', e => {
 });
 palList.addEventListener('click', e => { if (e.target.closest('a')) pal.close(); });
 pal.addEventListener('click', e => { if (e.target === pal) pal.close(); });
+
+/* back to the top — instant jump, so you never replay the dive/terminal on the way up */
+const toTop = document.getElementById('toTop');
+if (toTop) {
+  const goTop = e => { e && e.preventDefault(); scrollTo({ top: 0, behavior: 'instant' }); history.replaceState(null, '', location.pathname); };
+  toTop.addEventListener('click', goTop);
+  document.querySelectorAll('a[href="#trace"]').forEach(a => a.addEventListener('click', goTop));
+  const gw = document.getElementById('gateway');
+  const gwTop = () => gw ? Math.round(gw.getBoundingClientRect().top + scrollY) : 0;
+  const sync = () => toTop.classList.toggle('on', scrollY >= gwTop() - 2);
+  addEventListener('scroll', sync, { passive: true }); sync();
+
+  /* one-way scroll: once you are in the live API (or anything below), the dive and terminal above it are closed.
+     The only ways back are the "Back to Trace" button, the Trace links and the keyboard-reachable #trace anchors. */
+  const floor = () => gwTop();
+  let released = !gw || scrollY < floor() - 2;           // true while the intro is still open to scroll through
+  const guard = () => {
+    const f = floor(), y = scrollY;
+    if (y >= f - 2) { released = false; }                // reached the gateway: the way back up closes
+    else if (!released && y < f) scrollTo({ top: f, behavior: 'instant' });
+  };
+  addEventListener('scroll', guard, { passive: true });
+  addEventListener('wheel', e => { if (!released && e.deltaY < 0 && scrollY <= floor() + 1) e.preventDefault(); }, { passive: false });
+  addEventListener('keydown', e => {
+    if (released || scrollY > floor() + 1) return;
+    if (['Home', 'PageUp', 'ArrowUp'].includes(e.key) && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName)) e.preventDefault();
+  });
+  document.addEventListener('click', e => { if (e.target.closest('a[href="#trace"], #toTop')) released = true; }, true);
+  addEventListener('hashchange', () => { if (location.hash === '#trace') released = true; });
+  guard();
+}
+
+/* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
+try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }
