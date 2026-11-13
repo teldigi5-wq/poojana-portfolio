@@ -201,7 +201,7 @@ const saveData = !!(navigator.connection && (navigator.connection.saveData || /(
 let loopOn = false;
 if (loop && !reduce && !saveData) {
   loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
-  loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-720.mp4' : 'assets/trace/hero-loop.mp4';   // 1080p on large screens
+  loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq-720.mp4' : 'assets/trace/hero-loop-hq.mp4';   // 1080p on large screens
   loop.play().catch(() => {});
 }
 const vid = $('#pushin');
