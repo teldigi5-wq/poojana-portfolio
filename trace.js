@@ -326,12 +326,20 @@ try {
     rp.addEventListener('click', () => { const on = rb.classList.toggle('paused'); rp.setAttribute('aria-pressed', String(on)); rp.textContent = on ? '▶' : '❚❚'; rp.setAttribute('aria-label', on ? 'Play the tool ribbon' : 'Pause the tool ribbon'); });
     if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => rb.classList.toggle('off', !en.isIntersecting)).observe(rb);
   }
+    if (rb && !reduce && rb.animate) {   // the ribbon speeds up with scroll velocity, then eases back
+      const track = document.getElementById('rbTrack'); let lastY = scrollY, rate = 1, vis = true;
+      new IntersectionObserver(([en]) => { vis = en.isIntersecting; }).observe(rb);
+      const tick = () => { const y = scrollY, v = Math.abs(y - lastY); lastY = y; if (vis) { const target = 1 + Math.min(v * 0.12, 5); rate += (target - rate) * 0.08; const an = track.getAnimations()[0]; if (an) an.playbackRate = rate; } requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    }
 } catch (err) { console.warn('ribbon', err); }
+/* cards: a soft light follows the pointer */
+$$('.sv').forEach(c => c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }, { passive: true }));
 
 /* ---------- section tracking: nav, rail ---------- */
-const sections = ['trace', 'gateway', 'services', 'work', 'toolkit', 'lab', 'about', 'contact', 'launch'].map(id => $('#' + id)).filter(Boolean);
-const navMap = { trace: 'trace', gateway: 'trace', services: 'work', work: 'work', toolkit: 'lab', lab: 'lab', about: 'about', contact: 'about', launch: 'about' };
-const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3, about: 4, contact: 4, launch: 4 };
+const sections = ['trace', 'gateway', 'services', 'work', 'toolkit', 'lab', 'intro', 'about', 'contact', 'launch'].map(id => $('#' + id)).filter(Boolean);
+const navMap = { trace: 'trace', gateway: 'trace', services: 'services', work: 'work', toolkit: 'work', lab: 'lab', intro: 'lab', about: 'about', contact: 'about', launch: 'contact' };
+const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3, intro: 3, about: 4, contact: 4, launch: 4 };
 let current = '';
 function setActive(id) {
   if (id === current) return; current = id;
@@ -352,26 +360,15 @@ if (!reduce) {
     h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
   });
   const fine = !matchMedia('(pointer: coarse)').matches && innerWidth >= 700;   // word-by-word reading effect: pointer devices only, it repaints on every scroll frame
-  const leads = (fine ? $$('.blk .lede') : []).filter(p => !p.children.length).map(p => {
-    const words = p.textContent.trim().split(/\s+/);
-    p.innerHTML = words.map(w => `<span class="lw">${w}</span>`).join(' ');
-    p.classList.add('scrub');
-    return { p, sw: [...p.querySelectorAll('.lw')], done: false };
-  });
-  let sTick = false;
-  const scrub = () => {
-    sTick = false;
-    const vh = innerHeight;
-    for (const L of leads) {
-      const r = L.p.getBoundingClientRect();
-      if (r.bottom < -40 || r.top > vh) { if (r.top > vh) L.done = false; continue; }
-      const prog = clamp((vh * 0.9 - r.top) / (vh * 0.34 + r.height * 0.6));
-      const n = L.sw.length;
-      for (let i = 0; i < n; i++) { const k = clamp(prog * (n + 5) - i).toFixed(2); if (L.sw[i]._k !== k) { L.sw[i]._k = k; L.sw[i].style.setProperty('--k', k); } }
-    }
-  };
-  addEventListener('scroll', () => { if (!sTick) { sTick = true; requestAnimationFrame(scrub); } }, { passive: true });
-  addEventListener('resize', scrub); scrub();
+  const leads = (fine ? $$('.blk .lede') : []).filter(p => !p.children.length);
+  if (leads.length && 'IntersectionObserver' in window) {   // one-shot reveal: words fade up in a short stagger when the paragraph enters, no per-scroll work
+    const lio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('read'); lio.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+    leads.forEach(p => {
+      const words = p.textContent.trim().split(/\s+/);
+      p.innerHTML = words.map((w, i) => `<span class="lw" style="--d:${Math.min(i * 18, 520)}ms">${w}</span>`).join(' ');
+      p.classList.add('scrub'); lio.observe(p);
+    });
+  }
 }
 $$('.reveal, .split').forEach(el => rv.observe(el));
 setActive('trace');
@@ -454,7 +451,7 @@ $('#copyMail').addEventListener('click', async e => { try { await navigator.clip
 
 /* ---------- command palette ---------- */
 const pal = $('#pal'), palIn = $('#palIn'), palList = $('#palList');
-const ITEMS = [['Trace', '#trace', 'top hero home'], ['Gateway · live API', '#gateway', 'api console'], ['Services · what I can do', '#services', 'offer skills help'], ['Work · projects', '#work', 'boundarylab aetheris wayfarer'], ['Toolkit · tools I use', '#toolkit', 'stack languages skills'], ['Lab · playable demos', '#lab', 'rate limiter query access'], ['About', '#about', 'bio sliit'], ['Contact · hire me', '#contact', 'email hire'], ['CV (PDF)', 'assets/Poojana_Kaveesh_ATS_2026.pdf', 'resume'], ['GitHub', 'https://github.com/teldigi5-wq', 'code'], ['LinkedIn', 'https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/', 'profile']];
+const ITEMS = [['Trace', '#trace', 'top hero home'], ['Gateway · live API', '#gateway', 'api console'], ['Services · what I can do', '#services', 'offer skills help'], ['Work · projects', '#work', 'boundarylab aetheris wayfarer'], ['Toolkit · tools I use', '#toolkit', 'stack languages skills'], ['Lab · playable demos', '#lab', 'rate limiter query access'], ['About', '#about', 'bio sliit'], ['Contact · hire me', '#contact', 'email hire'], ['Contact · send a paper plane', '#launch', 'email hire game'], ['CV (PDF)', 'assets/Poojana_Kaveesh_ATS_2026.pdf', 'resume'], ['GitHub', 'https://github.com/teldigi5-wq', 'code'], ['LinkedIn', 'https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/', 'profile']];
 let shown = [], pi = 0;
 function paintPal() {
   const q = palIn.value.trim().toLowerCase();
@@ -505,7 +502,7 @@ try {
   const lp = document.getElementById('lp');
   if (lp) {
     const svg = lp.querySelector('#lpSvg'), arc = lp.querySelector('#lpArc'), bandA = lp.querySelector('#lpBandA'), bandB = lp.querySelector('#lpBandB');
-    const pkt = lp.querySelector('#lpPkt'), tgt = lp.querySelector('#lpTarget'), hint = lp.querySelector('#lpHint');
+    const trailEl = lp.querySelector('#lpTrail'), pkt = lp.querySelector('#lpPkt'), tgt = lp.querySelector('#lpTarget'), hint = lp.querySelector('#lpHint');
     const postA = lp.querySelector('.lp-post-a'), postB = lp.querySelector('.lp-post-b');
     const done_ = document.getElementById('laDone'), againBtn = document.getElementById('laAgain'), sec = document.getElementById('launch'), status = document.getElementById('lpStatus'), autoBtn = document.getElementById('lpAuto'), copyBtn = document.getElementById('lpCopy');
     const VW = 900, G = 1500, K = 10, MAXP = 130, HIT = 62;
@@ -553,7 +550,7 @@ try {
       const done = () => { busy = false; if (hit) { lp.dataset.state = 'hit'; pkt.style.opacity = '0'; setStatus('Delivered. Now write the real one below.', 'ok'); } else { lp.dataset.state = 'miss'; setStatus('Missed. Pull back and try again, or let the button do it.', 'miss'); setTimeout(() => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); }, 900); } };
       if (reduce) { const q = pts[last]; put(pkt, q[0], q[1]); done(); return; }
       let i = 0, acc = 0, prev = performance.now();
-      const step = now => { acc += Math.max(0, Math.min(now - prev, 40)) / 1000; prev = now; const f = acc * 60; i = Math.min(last, Math.floor(f)); const q = pts[i]; const ang = i > 0 ? Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) : 0; pkt.style.transform = `translate(${q[0] * s - pkt.offsetWidth / 2}px, ${q[1] * s - pkt.offsetHeight / 2}px) rotate(${ang}rad)`; if (i < last) raf = requestAnimationFrame(step); else done(); };
+      const step = now => { acc += Math.max(0, Math.min(now - prev, 40)) / 1000; prev = now; const f = acc * 60; i = Math.min(last, Math.floor(f)); const q = pts[i]; const ang = i > 0 ? Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) : 0; pkt.style.transform = `translate(${q[0] * s - pkt.offsetWidth / 2}px, ${q[1] * s - pkt.offsetHeight / 2}px) rotate(${ang}rad)`; if (i % 2 === 0 && trailEl) { const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('cx', q[0] * s); c.setAttribute('cy', q[1] * s); c.setAttribute('r', 2.6); c.setAttribute('class', 'tr'); trailEl.appendChild(c); if (trailEl.childElementCount > 36) trailEl.firstChild.remove(); setTimeout(() => c.remove(), 900); } if (i < last) raf = requestAnimationFrame(step); else done(); };
       raf = requestAnimationFrame(step);
     }
     function solve() {   // a pull that lands in the inbox, used by the button and the keyboard
