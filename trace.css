@@ -111,7 +111,7 @@ h2{margin:18px 0 12px;font:650 clamp(34px,5vw,60px)/1.02 var(--sans);letter-spac
 .row b{font:600 17px/1.2 var(--sans);letter-spacing:-.02em}.row small{display:block;margin-top:4px;font:400 13px/1.35 var(--sans);color:var(--muted)}
 .track{display:block;position:relative;height:14px;border-radius:7px;background:rgba(14,17,22,.08)}.track i{position:absolute;top:0;bottom:0;border-radius:7px;background:var(--ink);transition:.5s cubic-bezier(.2,.7,.2,1)}
 .row[aria-selected="true"] .track i{background:var(--accent)}
-.stages{display:flex;width:100%;justify-content:space-between;margin-top:6px;font:500 10px/1 var(--mono);color:#6a7794}
+.stages{display:flex;width:100%;justify-content:space-between;margin-top:6px;font:500 12px/1 var(--mono);color:#6a7794}
 .detail{padding:30px;border:1.5px solid rgba(43,75,255,.55);box-shadow:0 24px 70px rgba(43,75,255,.12),0 24px 70px rgba(30,50,120,.1)}
 .detail h3{margin:14px 0 8px;font:650 30px/1.1 var(--sans);letter-spacing:-.03em}.detail p{margin:0 0 18px;font:400 16px/1.55 var(--sans);color:#2a3652}
 .kv{margin:0 0 18px;padding:16px 18px;border-radius:16px;background:rgba(14,17,22,.045);font:12.5px/1.9 var(--mono)}.kv div{display:flex;gap:14px}.kv dt{width:70px;color:#6a7794;flex:none}.kv dd{margin:0;color:var(--ink);font-weight:500}
@@ -204,3 +204,16 @@ html.ui-dark .badge span{opacity:.78}
 .marker:nth-of-type(2){animation-delay:-1.2s}.marker:nth-of-type(3){animation-delay:-2.4s}.marker:nth-of-type(4){animation-delay:-3.6s}.marker:nth-of-type(5){animation-delay:-4.8s}
 @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -5px}}
 @media(prefers-reduced-motion:reduce){.loop{display:none}.marker{animation:none}}
+
+/* UX audit: touch targets >=44px on touch devices, no body text under 12px */
+.term-tag,.snd,.rail a,.term-foot{font-size:12px}
+@media(max-width:700px){.term-foot{font-size:12px}}
+.rail a{position:relative}.rail a::before{content:"";position:absolute;left:-12px;right:-12px;top:-17px;bottom:-17px}
+@media(pointer:coarse){
+ .snd,.send,.ep,.seg-btn,.idxSw,#idxSw,.to-top,.talk,.hint,.glass-nav a,.glass-nav button{min-height:44px}
+ .snd,.ep,.seg-btn,.glass-nav a,.glass-nav button{min-width:44px}
+ .snd,.ep,.seg-btn,.send,#idxSw,.to-top,.glass-nav a,.glass-nav button{display:inline-flex;align-items:center;justify-content:center}
+ #idxSw{display:flex;justify-content:flex-start}
+ .links a,.foot a,footer a,.contact a{display:inline-flex;align-items:center;min-height:44px}
+}
+@media(pointer:coarse){.enter{min-height:44px}.dark pre a{display:inline-block;padding:14px 0;margin:-14px 0}}
