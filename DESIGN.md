@@ -260,7 +260,7 @@ A hybrid system with one clear division. Frosted glass and lift belong to chrome
 
 ## Shapes
 
-Anything pressable is a pill (999px): buttons, chips, eyebrows, the nav, the badge, endpoint toggles and segment controls. Containers use large soft radii that step down as they nest: glass panel 28px, console and JSON 24px, project row 20px, inset blocks 16px, Send button 10px, tags 8px, keycaps 6px. Status is a small filled circle (8–10px) and never an icon. Evidence is marked by a 3px left rule in Verified Green, and selection by a 3px inset edge in Trace Cobalt. Progress is a rounded 14px track with an ink or cobalt fill.
+Anything pressable is a pill (999px): buttons, chips, eyebrows, the nav, the badge, endpoint toggles and segment controls. Containers use large soft radii that step down as they nest: glass panel 28px, console and JSON 24px, project row 20px, inset blocks 16px, Send button 10px, tags 8px, keycaps 6px. Status is a small filled circle (8–10px) and never an icon. Evidence is marked by a 3px left rule: Body Slate by default, Verified Green only when the block states a verified result, and selection by a 3px inset edge in Trace Cobalt. Progress is a rounded 14px track with an ink or cobalt fill.
 
 ## Components
 
@@ -280,7 +280,7 @@ Precise and quiet: pill shapes, instant press feedback, no flourish.
 
 ### Cards / Containers
 - **Glass panel:** 28px radius, 74% white, 22px blur, white rim, Panel ambient shadow. Used for Lab demos, the project list and About.
-- **Work detail:** quieter than a panel. Hairline border, Reading-quiet shadow and 30px padding (22px on phones). It shows the status line first, then Evidence and limits (a 3px green left rule with a green heading), then the facts list (a hairline-topped definition list with Label Slate keys), then links.
+- **Work detail:** quieter than a panel. Hairline border, Reading-quiet shadow and 30px padding (22px on phones). It shows the status line first, then Evidence and limits (a 3px left rule: Body Slate with an Ink heading by default; Verified Green with a Verified Deep heading only when the block states a verified result, e.g. a CI run), then the facts list (a hairline-topped definition list with Label Slate keys), then links.
 
 ### Inputs and Toggles
 - **Segment control:** a pill track at 7% ink. The selected segment becomes a white pill with a small shadow.
@@ -306,7 +306,7 @@ A two-column button (150px name, maturity track) with a 20px radius. When select
 - **Do** keep every section on the numbered path (01 Client → 05 Response), each opening with an eyebrow, headline and lede.
 - **Do** use Trace Cobalt (#2b4bff) only for the path, the current selection, the primary next step and focus rings.
 - **Do** put machine output (terminal, console, headers, JSON) in a night-ink inset with mono type, and keep everything else porcelain and sans.
-- **Do** show evidence with the 3px Verified Green left rule and keep its copy at 15px, 60ch.
+- **Do** mark evidence with a 3px left rule and keep its copy at 15px, 60ch. Use Verified Green only for blocks that state a verified result; limits-only or descriptive blocks take the Body Slate rule.
 - **Do** give every glass surface its reduced-transparency and more-contrast solid fallbacks.
 - **Do** meet 44px touch targets under `pointer: coarse` and keep all text at 12px or larger.
 - **Do** give every animated element a reduced-motion state that shows the final frame.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-13T03:18:15.359Z",
+  "generatedAt": "2026-11-13T03:46:22.846Z",
   "title": "Design System: Poojana Kaveesh · Trace",
   "extensions": {
     "colorMeta": {
@@ -570,7 +570,7 @@
       "**Do** keep every section on the numbered path (01 Client → 05 Response), each opening with an eyebrow, headline and lede.",
       "**Do** use Trace Cobalt (#2b4bff) only for the path, the current selection, the primary next step and focus rings.",
       "**Do** put machine output (terminal, console, headers, JSON) in a night-ink inset with mono type, and keep everything else porcelain and sans.",
-      "**Do** show evidence with the 3px Verified Green left rule and keep its copy at 15px, 60ch.",
+      "**Do** mark evidence with a 3px left rule and keep its copy at 15px, 60ch. Use Verified Green only for blocks that state a verified result; limits-only or descriptive blocks take the Body Slate rule.",
       "**Do** give every glass surface its reduced-transparency and more-contrast solid fallbacks.",
       "**Do** meet 44px touch targets under `pointer: coarse` and keep all text at 12px or larger.",
       "**Do** give every animated element a reduced-motion state that shows the final frame."
