@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,statSync} from 'node:fs';
+import {readFileSync,statSync,existsSync} from 'node:fs';
 
 const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),'utf8');
 const html=read('index.html'),js=read('trace.js');
@@ -84,6 +84,11 @@ test('intro clip section is labelled as AI-generated, muted and pausable',()=>{
   assert.match(sec,/generated with AI/i);
   assert.match(sec,/<video[^>]*\bmuted\b/);
   assert.match(sec,/id="clipBtn"/);
+  assert.match(sec,/id="holoStage"/);
+  const js=readFileSync('trace.js','utf8');
+  assert.match(js,/assets\/trace\/holo\.js/);
+  assert.ok(existsSync('assets/trace/holo.js'));
+  assert.match(js,/clip\.controls = true/);   // plain-video fallback
   assert.match(sec,/Nice to meet|<span style="--i:0">Nice<\/span>/);
   assert.match(sec,/poster="assets\/trace\/intro-hd-poster\.webp"/);
 });
