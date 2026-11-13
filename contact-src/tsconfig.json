@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", "module": "ESNext", "moduleResolution": "Bundler", "jsx": "react-jsx",
+    "strict": true, "skipLibCheck": true, "noEmit": true, "esModuleInterop": true,
+    "ignoreDeprecations": "6.0", "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "motion/react": ["./shims/motion.tsx"],
+      "lucide-react": ["./shims/lucide.tsx"],
+      "@radix-ui/react-slot": ["./shims/radix-slot.tsx"],
+      "@radix-ui/react-separator": ["./shims/radix-separator.tsx"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}

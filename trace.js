@@ -511,23 +511,16 @@ if (toTop) {
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
 try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }
 
-/* connect: the form composes a mail in the visitor's own mail app; nothing is sent to or stored by this site */
+/* connect: a React + Tailwind island, loaded only when the section is near the viewport */
 try {
-  const f = document.getElementById('cnForm'), st = document.getElementById('cnStatus'), cc = document.getElementById('cnCopy');
-  if (cc) cc.addEventListener('click', async () => { try { await navigator.clipboard.writeText('teldigi5@gmail.com'); cc.textContent = 'Copied'; } catch { cc.textContent = 'teldigi5@gmail.com'; } setTimeout(() => cc.textContent = 'Copy', 2200); });
-  if (f) f.addEventListener('submit', e => {
-    e.preventDefault();
-    const v = id => (document.getElementById(id).value || '').trim();
-    if (v('cnHp')) return;
-    const name = v('cnName'), email = v('cnEmail'), msg = v('cnMsg');
-    const bad = !name ? 'cnName' : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? 'cnEmail' : !msg ? 'cnMsg' : '';
-    if (bad) { st.className = 'cn-msg'; st.textContent = bad === 'cnName' ? 'Add your name.' : bad === 'cnEmail' ? 'Add a valid email so I can reply.' : 'Add a short message.'; document.getElementById(bad).focus(); return; }
-    const topics = [...f.querySelectorAll('input[name=topic]:checked')].map(i => i.value).join(', ') || 'Hello';
-    const co = v('cnCompany');
-    const body = msg + '\n\n' + name + (co ? '\n' + co : '') + '\n' + email;
-    location.href = 'mailto:teldigi5@gmail.com?subject=' + encodeURIComponent(topics + ' (from ' + name + ')') + '&body=' + encodeURIComponent(body);
-    st.className = 'cn-msg ok'; st.textContent = 'Your mail app should open with the message ready. If it does not, write to teldigi5@gmail.com.';
-  });
+  const root_ = document.getElementById('contactRoot');
+  if (root_) {
+    let started = false;
+    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=5b0c1c52').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '900px 0px' }); io.observe(root_); }
+    else start();
+    addEventListener('hashchange', () => { if (location.hash === '#connect') start(); });
+  }
 } catch (err) { console.warn('connect', err); }
 
 /* intro film: scroll-triggered. Plays from the start each time it enters view, the greeting card is cued to the

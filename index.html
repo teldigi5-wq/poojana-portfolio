@@ -30,6 +30,7 @@
 <link rel="preload" as="image" href="assets/trace/hero-scene-2k.webp" fetchpriority="high">
 <link rel="stylesheet" href="assets/trace/glass-nav.css?v=06dda4ad">
 <link rel="stylesheet" href="trace.css">
+<link rel="stylesheet" href="assets/trace/contact.css?v=ec45c9b4">
 </head>
 <body>
 <a class="sr" href="#gateway">Skip the introduction</a>
@@ -418,51 +419,15 @@ addEventListener('pointerdown',r,{once:true});addEventListener('keydown',r,{once
   </div>
 </section>
 
-<section class="blk" id="connect" data-tone="dark" aria-labelledby="cn-h">
-  <div class="wrap">
-    <div class="cn">
-      <div class="cn-l">
-        <span class="cn-eb reveal">Contact</span>
-        <h2 id="cn-h" class="reveal">Let's talk about an internship.</h2>
-        <p class="lede reveal">I am looking for a backend engineering internship. Tell me about the team and the role, or ask anything about my projects. I reply to every message myself.</p>
-        <p class="cn-status reveal"><i aria-hidden="true"></i>Open to internships · Sri Lanka, UTC+05:30</p>
-        <ul class="cn-list reveal">
-          <li><b>Email</b><a href="mailto:teldigi5@gmail.com">teldigi5@gmail.com</a><button class="cn-copy" id="cnCopy" type="button">Copy</button></li>
-          <li><b>CV</b><a href="assets/Poojana_Kaveesh_ATS_2026.pdf" target="_blank" rel="noopener">Poojana_Kaveesh_ATS_2026.pdf</a><span class="v">PDF</span></li>
-          <li><b>GitHub</b><a href="https://github.com/teldigi5-wq" target="_blank" rel="noopener">github.com/teldigi5-wq</a><span></span></li>
-          <li><b>LinkedIn</b><a href="https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/" target="_blank" rel="noopener">poojana-kaveesh</a><span></span></li>
-        </ul>
-        <p class="cn-note reveal">The form opens your own mail app with the message filled in. Nothing is stored on this site.</p>
-      </div>
-      <form class="cn-form reveal" id="cnForm" novalidate>
-        <h3>Send a message</h3>
-        <p>Say who you are and what you have in mind. Fields marked optional can be left empty.</p>
-        <div class="cn-row">
-          <label class="cn-f"><span>Name</span><input name="name" id="cnName" autocomplete="name" required></label>
-          <label class="cn-f"><span>Email</span><input name="email" id="cnEmail" type="email" autocomplete="email" required></label>
-        </div>
-        <label class="cn-f"><span>Company <em>(optional)</em></span><input name="company" id="cnCompany" autocomplete="organization"></label>
-        <fieldset class="cn-fs"><legend>What is this about?</legend>
-          <div class="cn-chips">
-            <label><input type="checkbox" name="topic" value="Internship role" checked><span>Internship role</span></label>
-            <label><input type="checkbox" name="topic" value="Interview"><span>Interview</span></label>
-            <label><input type="checkbox" name="topic" value="A project question"><span>A project question</span></label>
-            <label><input type="checkbox" name="topic" value="Something else"><span>Something else</span></label>
-          </div>
-        </fieldset>
-        <label class="cn-f"><span>Message</span><textarea name="message" id="cnMsg" required></textarea></label>
-        <label class="cn-hp" aria-hidden="true">Leave this empty<input name="website" id="cnHp" tabindex="-1" autocomplete="off"></label>
-        <div class="cn-go"><button class="btn" type="submit">Send message</button><p class="cn-msg" id="cnStatus" role="status" aria-live="polite"></p></div>
-      </form>
+<section class="blk" id="connect" data-tone="light" aria-labelledby="cn-h">
+  <!-- React + Tailwind + TypeScript island (source in contact-src/, built to assets/trace/contact.js?v=5b0c1c52). The markup below is what shows until it loads, and without JavaScript. -->
+  <div id="contactRoot" class="cn-fallback">
+    <div class="wrap">
+      <h2 id="cn-h">Let's talk about an internship</h2>
+      <p class="lede">I am looking for a backend engineering internship. Write to <a href="mailto:teldigi5@gmail.com">teldigi5@gmail.com</a>, or find me on <a href="https://github.com/teldigi5-wq" target="_blank" rel="noopener">GitHub</a> and <a href="https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/" target="_blank" rel="noopener">LinkedIn</a>.</p>
     </div>
-    <div class="cn-trust">
-      <div><h3>What I am looking for</h3><p>A backend internship with real ownership, on APIs, data or security. I learn fastest by shipping small, complete pieces.</p></div>
-      <div><h3>Check the work first</h3><p>The code is public. Try the <a href="#gateway">live API console</a> or the <a href="#lab">playable demos</a> before you write.</p></div>
-      <div><h3>How I work</h3><p>Clear contracts, structured errors and limits that are stated up front, as in <a href="#work">my projects</a>.</p></div>
-    </div>
-    <div class="cn-mark" aria-hidden="true">Poojana Kaveesh</div>
-    <footer class="cn-end"><span>Poojana Kaveesh · Sri Lanka</span><span><a href="https://github.com/teldigi5-wq/poojana-portfolio" target="_blank" rel="noopener">View the source</a> · Press <b>⌘K</b> or <b>Ctrl K</b> to jump anywhere</span></footer>
   </div>
+  <footer class="cn-end wrap"><span>Poojana Kaveesh · Sri Lanka</span><span><a href="https://github.com/teldigi5-wq/poojana-portfolio" target="_blank" rel="noopener">View the source</a> · Press <b>⌘K</b> or <b>Ctrl K</b> to jump anywhere</span></footer>
 </section>
 </main>
 
