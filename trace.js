@@ -563,14 +563,6 @@ try {
       addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(upd); } }, { passive: true });
       upd();
     }
-    const seek = document.getElementById('clipSeek'), tm = document.getElementById('clipTime');
-    if (seek) {
-      const fmt = t => '0:' + String(Math.floor(t)).padStart(2, '0');
-      const paint = () => { const d = clip.duration || 6, f = Math.min(1, clip.currentTime / d); seek.value = String(Math.round(f * 1000)); seek.style.setProperty('--p', (f * 100).toFixed(1) + '%'); if (tm) tm.textContent = fmt(clip.currentTime) + ' / ' + fmt(d); };
-      clip.addEventListener('timeupdate', paint); clip.addEventListener('loadedmetadata', paint); clip.addEventListener('ended', paint);
-      seek.addEventListener('input', () => { const d = clip.duration || 6; try { clip.currentTime = (seek.value / 1000) * d; } catch (_) {} if (clip.currentTime >= CUE) showHud(true); else if (!reduce) showHud(false); paint(); });
-      paint();
-    }
     sync();
   }
 } catch (err) { console.warn('clip', err); }

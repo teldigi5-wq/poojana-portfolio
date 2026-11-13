@@ -358,7 +358,8 @@ addEventListener('pointerdown',r,{once:true});addEventListener('keydown',r,{once
     <h2 id="in-h" class="reveal">Behind the requests.</h2>
     <p class="lede reveal">A short intro film, built around my portrait.</p>
     <figure class="clip reveal" data-tone="dark">
-      <div class="clip-top"><span class="ct-t"><i aria-hidden="true"></i>Intro film</span><span class="ct-d">0:06 · no audio</span></div>
+      <span class="clip-glint" aria-hidden="true"></span>
+      <div class="clip-top"><span class="ct-t"><i aria-hidden="true"></i>Intro film</span><span class="ct-d">0:06</span></div>
       <div class="clip-media">
         <video id="clip" muted playsinline preload="none" poster="assets/trace/intro-hd-poster.webp" aria-label="Intro film: Poojana Kaveesh greets the camera and raises a small network hologram in his palm">
           <source src="assets/trace/intro-hd.mp4" type="video/mp4">
@@ -367,21 +368,13 @@ addEventListener('pointerdown',r,{once:true});addEventListener('keydown',r,{once
           <svg class="hud-line" viewBox="0 0 100 56.25" preserveAspectRatio="none" aria-hidden="true"><path d="M54.5 34.5 H60.5 L63 29.8 H66" pathLength="1"/><circle cx="54.5" cy="34.5" r="0.7"/></svg>
           <div class="hud-card"><span class="hud-k">Welcome</span><b class="hud-t"><span style="--i:0">Nice</span> <span style="--i:1">to</span> <span style="--i:2">meet</span> <span style="--i:3">you.</span></b></div>
         </div>
-        <div class="clip-ctl">
-          <button class="clip-btn" id="clipBtn" type="button" aria-pressed="false" aria-label="Pause the intro video"><span aria-hidden="true">❚❚</span></button>
-          <input class="clip-seek" id="clipSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek the intro film">
-          <span class="clip-time" id="clipTime" aria-hidden="true">0:00 / 0:06</span>
-        </div>
+        <button class="clip-btn" id="clipBtn" type="button" aria-pressed="false" aria-label="Pause the intro video"><span aria-hidden="true">❚❚</span></button>
       </div>
       <figcaption>
         <span class="cc-id"><img src="assets/trace/avatar.webp" width="40" height="40" alt="" loading="lazy"><span><b>Poojana Kaveesh</b><em>Backend engineer · SLIIT</em></span></span>
         <span class="cc-open"><i aria-hidden="true"></i>Open to internships</span>
         <span class="cc-note">Generated with AI from my portrait · no audio</span>
       </figcaption>
-      <details class="clip-tx">
-        <summary>Text description of the film</summary>
-        <p>Poojana greets the camera and raises a small network hologram in his palm. A card reading "Nice to meet you." appears beside it.</p>
-      </details>
     </figure>
   </div>
 </section>
