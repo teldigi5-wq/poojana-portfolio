@@ -372,23 +372,20 @@ html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
 .mp-diff{color:#5b6a86!important;font-size:14px!important}
 .mp p strong{font-weight:650;color:var(--ink)}
 
-/* premium trace rail: frosted capsule, gradient progress line, quiet type */
-.rail{left:22px;padding:20px 22px 20px 18px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.74),rgba(246,249,255,.58));border:1px solid rgba(255,255,255,.85);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 18px 50px rgba(20,34,80,.14),0 2px 6px rgba(20,34,80,.06),inset 0 1px 0 #fff}
-.rail a{gap:14px;font-size:11.5px;letter-spacing:.02em;color:#6b7893;transition:color .3s}
-.rail a b{font-weight:500;color:#9aa6c0;font-variant-numeric:tabular-nums;transition:color .3s}
-.rail a em{font-style:normal;font-weight:600;letter-spacing:.08em;transition:color .3s,transform .3s}
-.rail a:hover em{color:var(--ink);transform:translateX(2px)}
-.rail a.act{color:var(--ink)}.rail a.act b{color:var(--accent)}
-.rail a .n{width:9px;height:9px;border-width:1.5px;border-color:#b4bfd8;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.7)}
+/* trace rail: compact, hairline */
+.rail{left:24px;padding:0;border-radius:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.rail a{gap:11px;font-size:11px;letter-spacing:.04em;color:#7b88a3;transition:color .25s}
+.rail a b{font-weight:500;color:#a3aec6;font-variant-numeric:tabular-nums;transition:color .25s}
+.rail a em{font-style:normal;font-weight:500;letter-spacing:.1em;transition:color .25s}
+.rail a:hover em{color:var(--ink)}
+.rail a.act,.rail a.act em{color:var(--ink)}.rail a.act b{color:var(--accent)}
+.rail a .n{width:7px;height:7px;border:1px solid #9aa7c2;background:transparent;box-shadow:none;border-radius:50%;transition:background .25s,border-color .25s,transform .25s}
 .rail a.done .n{background:var(--ink);border-color:var(--ink)}
-.rail a.act .n{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px #fff,0 0 0 6px rgba(43,75,255,.2),0 0 16px rgba(43,75,255,.55);animation:railPulse 2.8s ease-in-out infinite}
-.rail .seg{width:1.5px;height:38px;margin:2px 0 2px 3.75px;border-radius:2px;background:rgba(107,120,147,.28)}
-.rail .seg i{background:linear-gradient(180deg,var(--ink),var(--accent))}
-@keyframes railPulse{50%{box-shadow:0 0 0 3px #fff,0 0 0 9px rgba(43,75,255,.08),0 0 22px rgba(43,75,255,.7)}}
-html.ui-dark .rail{background:linear-gradient(180deg,rgba(14,20,42,.7),rgba(10,15,32,.55));border-color:rgba(255,255,255,.16);box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14)}
+.rail a.act .n{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,75,255,.16);transform:none;animation:none}
+.rail .seg{display:block;padding:0;box-sizing:content-box;width:1px;height:26px;margin:3px 0 3px 3px;border-radius:0;background:rgba(107,120,147,.35)}
+.rail .seg i{background:var(--ink)}
+html.ui-dark .rail{background:none;border:0;box-shadow:none}
 html.ui-dark .rail a,html.ui-dark .rail a em{color:#aeb9d6}html.ui-dark .rail a.act,html.ui-dark .rail a.act em,html.ui-dark .rail a:hover em{color:#fff}
 html.ui-dark .rail a b{color:#7c89aa}html.ui-dark .rail a.act b{color:#8fa4ff}
-html.ui-dark .rail a .n{background:#10172a;border-color:#6b7893;box-shadow:none}html.ui-dark .rail a.done .n{background:#fff;border-color:#fff}
-html.ui-dark .rail .seg{background:rgba(255,255,255,.18)}html.ui-dark .rail .seg i{background:linear-gradient(180deg,#fff,#8fa4ff)}
-@media(prefers-reduced-motion:reduce){.rail a.act .n{animation:none}}
-@media(forced-colors:active),(prefers-contrast:more){.rail{background:#fff;border:1.5px solid #0b1020;backdrop-filter:none}}
+html.ui-dark .rail a .n{background:transparent;border-color:#7c89aa;box-shadow:none}html.ui-dark .rail a.done .n{background:#fff;border-color:#fff}html.ui-dark .rail a.act .n{background:#8fa4ff;border-color:#8fa4ff;box-shadow:0 0 0 3px rgba(143,164,255,.2)}
+html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg i{background:#fff}
