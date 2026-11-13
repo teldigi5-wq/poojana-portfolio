@@ -70,9 +70,9 @@ test('Work showcase: horizontal cards enhance the no-JS project list and open an
   assert.ok(statSync(new URL('../assets/trace/showcase.js',import.meta.url)).size<12e3);
 });
 
-test('Also built section lists public repositories with external links that open safely', () => {
+test('Also built section lists projects with external links that open safely', () => {
   const html = read('index.html');
   const sec = html.slice(html.indexOf('id="more"'), html.indexOf('id="lab"'));
-  assert.equal((sec.match(/<article class="mp /g) || []).length, 3);
+  assert.equal((sec.match(/<article class="mp /g) || []).length, 5);
   for (const m of sec.matchAll(/<a href="https:[^>]*>/g)) assert.match(m[0], /target="_blank" rel="noopener noreferrer"/);
 });
