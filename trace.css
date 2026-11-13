@@ -108,13 +108,13 @@ h2{margin:18px 0 12px;font:650 clamp(34px,5vw,60px)/1.02 var(--sans);letter-spac
    Left column = identity, stage and the proof link; right column = what it is, evidence and limits, facts. */
 #work{scroll-margin-top:84px}
 .pj-list{list-style:none;margin:0;padding:0;display:grid;gap:18px}
-.pj{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(24px,4vw,56px);padding:clamp(24px,3vw,36px);border-radius:28px;background:#fbfcff;border:1px solid var(--line);box-shadow:0 18px 50px rgba(30,50,120,.08)}
+.pj{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(24px,4vw,56px);padding:clamp(24px,3vw,36px);border-radius:28px;background:#fbfcff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(14,17,22,.04),0 10px 30px rgba(30,50,120,.05)}
 .pj-head{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .pj h3{margin:0;font:650 clamp(26px,2.6vw,34px)/1.1 var(--sans);letter-spacing:-.03em;color:#0b1020;text-wrap:balance}
 .pj-tag{margin:6px 0 24px;font:400 15px/1.45 var(--sans);color:var(--muted)}
 .pj-stage{width:100%;max-width:340px}
-.track{display:block;position:relative;height:10px;border-radius:999px;background:rgba(14,17,22,.08);overflow:hidden}
-.track i{position:absolute;left:0;top:0;bottom:0;width:calc((var(--stage,0) + 1) / 3 * 100%);border-radius:999px;background:var(--ink)}
+.track{display:block;position:relative;height:6px;border-radius:999px;background:rgba(14,17,22,.07);overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;width:calc((var(--stage,0) + 1) / 3 * 100%);border-radius:999px;background:#2a3652}
 .stages{display:flex;justify-content:space-between;margin-top:8px;font:500 12px/1 var(--sans);color:#5b6a86}
 .stages .on{color:var(--ink);font-weight:600}
 .pstatus{display:flex;align-items:center;gap:8px;margin:16px 0 24px;font:500 14px/1.4 var(--sans);color:#2a3652}
@@ -126,11 +126,15 @@ h2{margin:18px 0 12px;font:650 clamp(34px,5vw,60px)/1.02 var(--sans);letter-spac
 .evi h4{margin:0 0 6px;font:600 14px/1.3 var(--sans);color:#134d3e}
 .evi p{margin:0;max-width:60ch;font:400 15px/1.6 var(--sans);color:#1d2840}
 .kv{margin:0;padding:14px 0 0;border-top:1px solid var(--line);display:grid;gap:4px;font:400 14px/1.6 var(--sans)}
-.kv div{display:flex;gap:16px}.kv dt{width:84px;flex:none;color:#5b6a86;font-weight:500}.kv dd{margin:0;color:var(--ink);font-weight:500}
+.kv div{display:flex;gap:16px}.kv dt{width:84px;flex:none;color:#5b6a86;font-weight:500}.kv dd{margin:0;color:var(--ink);font-weight:400}
 .pj-next{margin:28px 0 0;font:400 16px/1.5 var(--sans);color:#2a3652}
 .pj-next a{color:var(--ink);font-weight:600;text-decoration-color:rgba(43,75,255,.45);text-underline-offset:3px}
 .pj-next a:hover{text-decoration-color:var(--accent)}
 .pj-next a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+/* quieter: calmer entrance and hover inside Work; the proof link stays the one ink anchor per card */
+#work .reveal{transform:translateY(12px);transition-duration:.6s}#work .reveal.in{transform:none}
+#work .btn:hover{transform:none;box-shadow:0 2px 8px rgba(14,17,22,.14)}#work .btn:not(.alt):hover{background:#1d2433}#work .btn:active{transform:scale(.97);transition:transform 90ms ease-out}
+@media(prefers-reduced-motion:reduce){#work .reveal{transform:none;transition:none}}
 @media(max-width:860px){.pj{grid-template-columns:1fr;gap:24px}.pj-stage{max-width:none}}
 @media(max-width:560px){.kv div{flex-direction:column;gap:0}.pj-tag{margin-bottom:20px}}
 @media(pointer:coarse){.pj-next a{display:inline-flex;align-items:center;min-height:44px}}
