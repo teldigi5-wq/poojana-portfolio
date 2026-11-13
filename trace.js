@@ -63,7 +63,8 @@ if (!reduce && matchMedia('(hover: hover)').matches) {
   });
 }
 const bootEl = $('#boot');
-let entered = !!location.hash;          // deep links skip the gate
+const MOBILE = matchMedia('(max-width: 699px)').matches;   // phones get their own static hero
+let entered = !!location.hash || MOBILE;          // deep links skip the gate
 const unlock = () => { entered = true; };
 /* ---------- terminal sequence: plays by itself, then asks for Enter ---------- */
 const enterBtn = $('#enter');
@@ -200,7 +201,7 @@ addEventListener('keydown', e => {
 const loop = $('#loop');
 const saveData = !!(navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
 let loopOn = false;
-if (loop && !reduce && !saveData) {
+if (loop && !reduce && !saveData && !MOBILE) {
   loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
   loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq2-720.mp4' : 'assets/trace/hero-loop-hq2.mp4';   // 1080p on large screens
   loop.play().catch(() => {});
