@@ -515,8 +515,8 @@ try {
     function layout() {
       s = lp.clientWidth / VW; VH = lp.clientHeight / s;
       const ts = Math.round(120 * Math.max(0.62, Math.min(1, s * 1.1))); tgt.style.width = tgt.style.height = ts + 'px';
-      const FOOT = innerWidth < 700 ? 190 : 150, floor = lp.clientHeight - FOOT, lift = innerWidth < 700 ? 60 : 110;
-      floorV = floor / s; A = { x: 140, y: floorV - (innerWidth < 700 ? 90 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: (floor - lift - 0.5 * ts) / s };
+      const footEl = sec.querySelector('.la-foot'), small = innerWidth < 700, floor = (footEl ? footEl.offsetTop : lp.clientHeight - 150) - 14, lift = small ? 40 : 110;   // the playfield ends where the buttons begin
+      floorV = floor / s; A = { x: small ? 150 : 140, y: floorV - (small ? 70 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: (floor - lift - 0.5 * ts) / s };
       svg.setAttribute('viewBox', `0 0 ${lp.clientWidth} ${lp.clientHeight}`);
       postA.style.cssText = `left:${(A.x - 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
       postB.style.cssText = `left:${(A.x + 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
@@ -528,7 +528,7 @@ try {
       bandA.setAttribute('x1', ax); bandA.setAttribute('y1', y); bandA.setAttribute('x2', px); bandA.setAttribute('y2', py);
       bandB.setAttribute('x1', bx); bandB.setAttribute('y1', y); bandB.setAttribute('x2', px); bandB.setAttribute('y2', py);
     }
-    function rest() { pull = { x: 0, y: 0 }; put(pkt, A.x, A.y); bands(A); arc.setAttribute('d', ''); put(hint, A.x, A.y - 52); }
+    function rest() { pull = { x: 0, y: 0 }; put(pkt, A.x, A.y); bands(A); arc.setAttribute('d', ''); hint.style.transform = `translate(${Math.max(10, A.x * s - hint.offsetWidth / 2)}px, ${A.y * s - 56}px)`; }
     const vel = p => { const k = K * Math.sqrt(1); return { x: (A.x - p.x) * k, y: (A.y - p.y) * k }; };
     function path(p, steps = 90, dt = 1 / 60) {
       const v = vel(p), pts = []; let x = p.x, y = p.y, vx = v.x, vy = v.y;
@@ -581,7 +581,7 @@ try {
     const paintStars = () => { const c = stars.getContext('2d'), w = stars.width = stars.clientWidth, h = stars.height = stars.clientHeight; c.clearRect(0, 0, w, h); let r = 7; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647; for (let i = 0; i < Math.round(w * h / 9000); i++) { const y = rnd() * h * 0.72; c.globalAlpha = 0.25 + rnd() * 0.6; c.fillStyle = '#fff'; c.beginPath(); c.arc(rnd() * w, y, 0.5 + rnd() * 1.1, 0, 7); c.fill(); } };
     const skySmooth = (a, b, x) => { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
     let skyT = 0, wasNight = false;
-    const sky = () => { skyT = 0; const r = sec.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const pr = (innerHeight - r.top) / innerHeight; const nt = skySmooth(0.5, 1.0, pr); sec.style.setProperty('--dusk', skySmooth(0.05, 0.5, pr).toFixed(3)); sec.style.setProperty('--night', nt.toFixed(3)); const nightNow = nt > 0.45; if (nightNow !== wasNight) { wasNight = nightNow; sec.classList.toggle('is-night', nightNow); if (nightNow) sec.dataset.tone = 'dark'; else delete sec.dataset.tone; try { sampleTone(); } catch (_) {} } };
+    const sky = () => { skyT = 0; const r = sec.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const pr = (innerHeight - r.top) / innerHeight; root.classList.toggle('in-launch', r.top < innerHeight * 0.5 && r.bottom > innerHeight * 0.5); const nt = skySmooth(0.5, 1.0, pr); sec.style.setProperty('--dusk', skySmooth(0.05, 0.5, pr).toFixed(3)); sec.style.setProperty('--night', nt.toFixed(3)); const nightNow = nt > 0.45; if (nightNow !== wasNight) { wasNight = nightNow; sec.classList.toggle('is-night', nightNow); if (nightNow) sec.dataset.tone = 'dark'; else delete sec.dataset.tone; try { sampleTone(); } catch (_) {} } };
     addEventListener('scroll', () => { if (!skyT) skyT = requestAnimationFrame(sky); }, { passive: true });
     new ResizeObserver(() => { layout(); paintStars(); sky(); }).observe(lp); layout(); paintStars(); sky();
   }
