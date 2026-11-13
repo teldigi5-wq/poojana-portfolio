@@ -319,10 +319,19 @@ addEventListener('scroll', onScroll, { passive: true });
 addEventListener('resize', () => { measure(); frame(); });
 measure(); frame();
 
+/* tool ribbon: pause button, and it only runs while on screen */
+try {
+  const rb = document.getElementById('ribbon'), rp = document.getElementById('rbPause');
+  if (rb && rp) {
+    rp.addEventListener('click', () => { const on = rb.classList.toggle('paused'); rp.setAttribute('aria-pressed', String(on)); rp.textContent = on ? '▶' : '❚❚'; rp.setAttribute('aria-label', on ? 'Play the tool ribbon' : 'Pause the tool ribbon'); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => rb.classList.toggle('off', !en.isIntersecting)).observe(rb);
+  }
+} catch (err) { console.warn('ribbon', err); }
+
 /* ---------- section tracking: nav, rail ---------- */
-const sections = ['trace', 'gateway', 'work', 'lab', 'about', 'contact', 'launch'].map(id => $('#' + id)).filter(Boolean);
-const navMap = { trace: 'trace', gateway: 'trace', work: 'work', lab: 'lab', about: 'about', contact: 'about', launch: 'about' };
-const railMap = { trace: 0, gateway: 1, work: 2, lab: 3, about: 4, contact: 4, launch: 4 };
+const sections = ['trace', 'gateway', 'services', 'work', 'toolkit', 'lab', 'about', 'contact', 'launch'].map(id => $('#' + id)).filter(Boolean);
+const navMap = { trace: 'trace', gateway: 'trace', services: 'work', work: 'work', toolkit: 'lab', lab: 'lab', about: 'about', contact: 'about', launch: 'about' };
+const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3, about: 4, contact: 4, launch: 4 };
 let current = '';
 function setActive(id) {
   if (id === current) return; current = id;
@@ -445,7 +454,7 @@ $('#copyMail').addEventListener('click', async e => { try { await navigator.clip
 
 /* ---------- command palette ---------- */
 const pal = $('#pal'), palIn = $('#palIn'), palList = $('#palList');
-const ITEMS = [['Trace', '#trace', 'top hero home'], ['Gateway · live API', '#gateway', 'api console'], ['Work · projects', '#work', 'boundarylab aetheris wayfarer'], ['Lab · playable demos', '#lab', 'rate limiter query access'], ['About', '#about', 'bio sliit'], ['Contact · hire me', '#contact', 'email hire'], ['CV (PDF)', 'assets/Poojana_Kaveesh_ATS_2026.pdf', 'resume'], ['GitHub', 'https://github.com/teldigi5-wq', 'code'], ['LinkedIn', 'https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/', 'profile']];
+const ITEMS = [['Trace', '#trace', 'top hero home'], ['Gateway · live API', '#gateway', 'api console'], ['Services · what I can do', '#services', 'offer skills help'], ['Work · projects', '#work', 'boundarylab aetheris wayfarer'], ['Toolkit · tools I use', '#toolkit', 'stack languages skills'], ['Lab · playable demos', '#lab', 'rate limiter query access'], ['About', '#about', 'bio sliit'], ['Contact · hire me', '#contact', 'email hire'], ['CV (PDF)', 'assets/Poojana_Kaveesh_ATS_2026.pdf', 'resume'], ['GitHub', 'https://github.com/teldigi5-wq', 'code'], ['LinkedIn', 'https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/', 'profile']];
 let shown = [], pi = 0;
 function paintPal() {
   const q = palIn.value.trim().toLowerCase();
@@ -507,12 +516,11 @@ try {
       s = lp.clientWidth / VW; VH = lp.clientHeight / s;
       const ts = Math.round(120 * Math.max(0.62, Math.min(1, s * 1.1))); tgt.style.width = tgt.style.height = ts + 'px';
       const FOOT = innerWidth < 700 ? 190 : 150, floor = lp.clientHeight - FOOT, lift = innerWidth < 700 ? 60 : 110;
-      floorV = floor / s; A = { x: 140, y: floorV - (innerWidth < 700 ? 90 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: (floor - lift - 0.65 * ts) / s };
-      tgt.querySelector('.mb-post').setAttribute('height', (58 + lift * 120 / ts).toFixed(1));
+      floorV = floor / s; A = { x: 140, y: floorV - (innerWidth < 700 ? 90 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: (floor - lift - 0.5 * ts) / s };
       svg.setAttribute('viewBox', `0 0 ${lp.clientWidth} ${lp.clientHeight}`);
       postA.style.cssText = `left:${(A.x - 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
       postB.style.cssText = `left:${(A.x + 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(floorV - A.y + 6) * s}px`;
-      put(tgt, T.x, T.y, 0.5, 0.35);
+      put(tgt, T.x, T.y);
       if (!busy) rest();
     }
     function bands(p) {
@@ -572,8 +580,8 @@ try {
     const stars = document.getElementById('laStars');
     const paintStars = () => { const c = stars.getContext('2d'), w = stars.width = stars.clientWidth, h = stars.height = stars.clientHeight; c.clearRect(0, 0, w, h); let r = 7; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647; for (let i = 0; i < Math.round(w * h / 9000); i++) { const y = rnd() * h * 0.72; c.globalAlpha = 0.25 + rnd() * 0.6; c.fillStyle = '#fff'; c.beginPath(); c.arc(rnd() * w, y, 0.5 + rnd() * 1.1, 0, 7); c.fill(); } };
     const skySmooth = (a, b, x) => { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
-    let skyT = 0;
-    const sky = () => { skyT = 0; const r = sec.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const pr = (innerHeight - r.top) / innerHeight; const nt = skySmooth(0.5, 1.0, pr); sec.style.setProperty('--dusk', skySmooth(0.05, 0.5, pr).toFixed(3)); sec.style.setProperty('--night', nt.toFixed(3)); sec.classList.toggle('is-night', nt > 0.45); if (nt > 0.45) sec.dataset.tone = 'dark'; else delete sec.dataset.tone; try { sampleTone(); } catch (_) {} };
+    let skyT = 0, wasNight = false;
+    const sky = () => { skyT = 0; const r = sec.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const pr = (innerHeight - r.top) / innerHeight; const nt = skySmooth(0.5, 1.0, pr); sec.style.setProperty('--dusk', skySmooth(0.05, 0.5, pr).toFixed(3)); sec.style.setProperty('--night', nt.toFixed(3)); const nightNow = nt > 0.45; if (nightNow !== wasNight) { wasNight = nightNow; sec.classList.toggle('is-night', nightNow); if (nightNow) sec.dataset.tone = 'dark'; else delete sec.dataset.tone; try { sampleTone(); } catch (_) {} } };
     addEventListener('scroll', () => { if (!skyT) skyT = requestAnimationFrame(sky); }, { passive: true });
     new ResizeObserver(() => { layout(); paintStars(); sky(); }).observe(lp); layout(); paintStars(); sky();
   }
