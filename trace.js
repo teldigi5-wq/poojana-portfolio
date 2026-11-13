@@ -38,9 +38,7 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
     root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
   }
 };
-const scrFx = $('#scrFx');
-const placeFx = () => { if (!scrFx) return; const a = toViewport([0.414, 0.49]), b = toViewport([0.588, 0.668]); Object.assign(scrFx.style, { left: a[0] * vw + 'px', top: a[1] * vh + 'px', width: (b[0] - a[0]) * vw + 'px', height: (b[1] - a[1]) * vh + 'px' }); };
-const measure = () => { vw = innerWidth; vh = innerHeight; placeFx(); origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
+const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 /* ID-badge lanyard (Three.js): loaded when the contact section is near */
 const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
@@ -207,9 +205,9 @@ const loop = $('#loop');
 const saveData = !!(navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
 let loopOn = false, loopK = 0;
 if (loop && !reduce && !saveData && !MOBILE) {
-  loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
-  loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq2-720.mp4' : 'assets/trace/hero-loop-hq2.mp4';   // 1080p on large screens
-  loop.play().catch(() => {});
+  const markOn = () => { loopOn = true; loop.classList.add('on'); };
+  if (loop.getAttribute('src')) { if (!loop.paused && loop.readyState > 2) markOn(); else loop.addEventListener('playing', markOn, { once: true }); }   // already started by the inline script in index.html
+  else { loop.addEventListener('playing', markOn, { once: true }); loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-up-720.mp4' : 'assets/trace/hero-loop-up.mp4'; loop.play().catch(() => {}); }
 }
 const vid = $('#pushin');
 const VEND = [0.49, 0.5];               // laptop screen centre in the last video frame (image uv)
@@ -277,7 +275,6 @@ function frame() {
   heroCopy.style.opacity = fade; heroCopy.style.transform = `translateY(${(-t * 60).toFixed(1)}px) scale(${(1 - t * 0.04).toFixed(3)})`;
   const hint = $('#hint'); hint.style.opacity = 1 - smooth(0, 0.12, t); hint.style.pointerEvents = t > 0.12 ? 'none' : 'auto';
   const mk = 1 - smooth(0, 0.14, t);
-  if (scrFx) scrFx.style.opacity = mk;
   for (const m of markers) {
     const vp = toViewport(m.iu);
     const px = (origin[0] + (vp[0] - origin[0]) * zEff) * vw, py = (origin[1] + (vp[1] - origin[1]) * zEff) * vh;

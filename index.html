@@ -27,6 +27,8 @@
   </script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="image" href="assets/trace/hero-scene-2k.webp" fetchpriority="high">
+<link rel="preload" as="video" href="assets/trace/hero-loop-up.mp4" type="video/mp4" media="(min-width:1100px)">
+<link rel="preload" as="video" href="assets/trace/hero-loop-up-720.mp4" type="video/mp4" media="(min-width:700px) and (max-width:1099px)">
 <link rel="stylesheet" href="assets/trace/glass-nav.css?v=06dda4ad">
 <link rel="stylesheet" href="trace.css">
 </head>
@@ -34,7 +36,17 @@
 <a class="sr" href="#gateway">Skip the introduction</a>
 <div class="scene" id="scene" aria-hidden="true"></div>
 <div class="spot" id="spot" aria-hidden="true"></div>
-<video class="loop" id="loop" muted loop playsinline preload="auto" poster="assets/trace/hero-scene-2k.webp" tabindex="-1" aria-hidden="true" disablepictureinpicture></video>
+<video class="loop" id="loop" muted loop playsinline preload="auto" poster="assets/trace/hero-loop-up-poster.webp" tabindex="-1" aria-hidden="true" disablepictureinpicture></video>
+<script>
+/* start the hero loop straight from the HTML: no waiting for trace.js */
+(function(){var v=document.getElementById('loop'),n=navigator.connection||{};
+if(!v||innerWidth<700||matchMedia('(prefers-reduced-motion:reduce)').matches||n.saveData||/(^|-)2g$/.test(n.effectiveType||''))return;
+v.addEventListener('playing',function(){v.classList.add('on')},{once:true});
+v.src=innerWidth<1100?'assets/trace/hero-loop-up-720.mp4':'assets/trace/hero-loop-up.mp4';
+var p=v.play();if(p&&p.catch)p.catch(function(){});
+var r=function(){if(v.paused)v.play().catch(function(){})};
+addEventListener('pointerdown',r,{once:true});addEventListener('keydown',r,{once:true});addEventListener('scroll',r,{once:true,passive:true});})();
+</script>
 <video class="pushin" id="pushin" muted playsinline preload="none" tabindex="-1" aria-hidden="true" disablepictureinpicture></video>
 <div class="veil" aria-hidden="true"></div>
 <div class="dark" id="darkLayer">
@@ -90,7 +102,6 @@
     </div>
   </div>
   <div class="hero-stick">
-    <div class="scr-fx" id="scrFx" aria-hidden="true"><i class="sheen"></i><i class="ln l1"></i><i class="ln l2"></i><i class="ln l3"></i><i class="cur"></i></div>
     <div class="hero-copy" id="heroCopy">
       <div class="status glassy"><i></i><span id="clock">Colombo</span><em>Open to engineering internships</em></div>
       <h1 id="h1">I build the systems behind the screen.</h1>
