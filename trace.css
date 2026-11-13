@@ -591,3 +591,15 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 
 /* scroll cost: the hero labels sit over a playing video, so they use a plain translucent fill instead of a live blur */
 .marker.glassy,.hint.glassy,.status.glassy{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(255,255,255,.8)!important}
+
+/* engineering log: what I built, what broke, what I fixed, each tied to a public PR */
+.elog{margin:18px 0 0}
+.elog h4{margin:0 0 10px;font:650 15px/1.3 var(--sans);color:var(--ink)}
+.elog ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.elog li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:4px 14px;padding:13px 0;border-bottom:1px solid var(--line);font:400 14.5px/1.55 var(--sans);color:#2a3652}
+.elog .t{font:600 12.5px/1.7 var(--sans);color:var(--muted)}
+.elog .t.broke,.elog .t.incident{color:#b4232c}.elog .t.fixed{color:#0e7a5f}.elog .t.built{color:var(--accent)}.elog .t.tested{color:#6b4fd0}
+.elog li a{grid-column:2;justify-self:start;font:500 13px/1.4 var(--mono);color:var(--accent);text-decoration:none}
+.elog li a:hover{text-decoration:underline;text-underline-offset:3px}
+.elog-note{margin:16px 0 0;font:400 14px/1.6 var(--sans);color:var(--muted)}
+@media(max-width:560px){.elog li{grid-template-columns:1fr}.elog li a{grid-column:1}}
