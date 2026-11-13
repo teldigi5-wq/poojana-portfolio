@@ -195,9 +195,10 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
   };
   let hovered = null;
   links.forEach(a => {
-    a.addEventListener('pointerenter', () => { hovered = a; retarget(); });
-    a.addEventListener('focus', () => { hovered = a; retarget(); });
+    a.addEventListener('pointerenter', e => { if (e.pointerType && e.pointerType !== 'mouse') return; hovered = a; retarget(); });   // touch taps must not leave a second pill behind
+    a.addEventListener('focus', () => { if (!a.matches(':focus-visible')) return; hovered = a; retarget(); });
   });
+  host.addEventListener('pointerup', e => { if (e.pointerType && e.pointerType !== 'mouse') { hovered = null; retarget(); } });
   host.addEventListener('pointerleave', () => { hovered = null; tlight = [-0.55, 0.85]; retarget(); });
   host.addEventListener('pointermove', e => {
     const r = host.getBoundingClientRect();

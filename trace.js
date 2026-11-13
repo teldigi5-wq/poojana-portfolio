@@ -1,4 +1,4 @@
-import { mountGlassNav } from './assets/trace/glass-nav.js?v=4ecff648';
+import { mountGlassNav } from './assets/trace/glass-nav.js?v=2e0f0265';
 import { mountRefraction } from './assets/trace/glass-refract.js?v=f768b2e2';
 import { mountShowcase } from './assets/trace/showcase.js?v=66dbfe5c';
 
@@ -369,6 +369,15 @@ addEventListener('resize', () => { const c = current; current = ''; if (c) setAc
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
 sections.forEach(s => io.observe(s));
 const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+/* phones: long lists start short, with one button to show the rest (everything stays in the HTML for no-JS and search) */
+if (MOBILE) for (const [sel, keep, label] of [['.sv-grid', 3, 'Show all six'], ['.mp-grid', 2, 'Show all projects']]) {
+  const ul = $(sel); if (!ul) continue;
+  const items = [...ul.children]; if (items.length <= keep + 1) continue;
+  items.slice(keep).forEach(li => { li.hidden = true; });
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn alt more-btn'; btn.textContent = label; btn.setAttribute('aria-expanded', 'false');
+  btn.addEventListener('click', () => { items.forEach(li => { li.hidden = false; }); btn.remove(); });
+  ul.after(btn);
+}
 /* ---------- text motion: headings rise out of a mask, lede copy darkens as you read it ---------- */
 if (!reduce) {
   $$('.blk h2.reveal').forEach(h => {
@@ -465,7 +474,6 @@ function paintAuth() {
 seg($('#who'), WHO, () => who, v => who = v); seg($('#op'), OPS, () => op, v => op = v); paintAuth();
 
 /* ---------- 05 copy email ---------- */
-$('#copyMail').addEventListener('click', async e => { try { await navigator.clipboard.writeText('teldigi5@gmail.com'); e.target.textContent = 'Copied ✓'; } catch { e.target.textContent = 'teldigi5@gmail.com'; } setTimeout(() => e.target.textContent = 'Copy email', 2200); });
 
 /* ---------- command palette ---------- */
 const pal = $('#pal'), palIn = $('#palIn'), palList = $('#palList');
@@ -520,7 +528,7 @@ try {
   const root_ = document.getElementById('contactRoot');
   if (root_) {
     let started = false;
-    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=50f0d28f').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
+    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=9dcff3b7').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
     if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '900px 0px' }); io.observe(root_); }
     else start();
     addEventListener('hashchange', () => { if (location.hash === '#connect') start(); });
