@@ -88,11 +88,12 @@ test('intro clip section is labelled as AI-generated, muted and pausable',()=>{
   assert.match(sec,/poster="assets\/trace\/intro-hd-poster\.webp"/);
 });
 
-test('launch section: playable, with a keyboard path and a plain email fallback',()=>{
+test('connect section: a working mail form with a plain email fallback',()=>{
   const h=readFileSync('index.html','utf8');
-  const sec=h.slice(h.indexOf('id="launch"'),h.indexOf('</main>'));
-  assert.match(sec,/id="lpPkt"[^>]*role="button"[^>]*tabindex="0"/);
-  assert.match(sec,/id="lpAuto"/);
+  const sec=h.slice(h.indexOf('id="connect"'),h.indexOf('</main>'));
+  assert.match(sec,/id="cnForm"/);
+  assert.match(sec,/id="cnName"[^>]*required/);
   assert.match(sec,/href="mailto:teldigi5@gmail\.com"/);
   assert.match(sec,/aria-live="polite"/);
+  assert.ok(!/id="lpPkt"/.test(h),'the plane game is gone');
 });
