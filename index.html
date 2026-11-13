@@ -324,6 +324,34 @@
   </div>
 </section>
 
+<section class="blk" id="launch" aria-labelledby="la-h">
+  <div class="wrap">
+    <h2 id="la-h" class="reveal">Send it my way.</h2>
+    <p class="lede reveal">Pull the packet back, aim at the inbox and let go. Or skip the game: my email is right below.</p>
+    <ol class="lp-steps reveal" aria-hidden="true"><li><b>1</b>Pull back</li><li><b>2</b>Aim at the inbox</li><li><b>3</b>Let go</li></ol>
+    <div class="lp reveal" id="lp" data-state="idle">
+      <svg class="lp-svg" id="lpSvg" aria-hidden="true">
+        <g class="lp-grid"></g>
+        <path id="lpArc" class="lp-arc" d=""/>
+        <line id="lpBandA" class="lp-band"/><line id="lpBandB" class="lp-band"/>
+      </svg>
+      <span class="lp-post lp-post-a" aria-hidden="true"></span><span class="lp-post lp-post-b" aria-hidden="true"></span>
+      <div class="lp-target" id="lpTarget" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><circle class="r3" cx="60" cy="60" r="56"/><circle class="r2" cx="60" cy="60" r="40"/><circle class="r1" cx="60" cy="60" r="24"/><path class="env" d="M45 52h30v18H45zM45 52l15 11 15-11"/></svg>
+        <span class="lp-chip">Inbox</span>
+      </div>
+      <div class="lp-pkt" id="lpPkt" role="button" tabindex="0" aria-label="Request packet. Drag it back and release to launch it at the inbox, or press Enter to send it automatically."><i aria-hidden="true"></i><code>POST /hello</code></div>
+      <p class="lp-hint" id="lpHint" aria-hidden="true">Drag me back</p>
+    </div>
+    <p class="lp-status" id="lpStatus" role="status" aria-live="polite">Ready when you are.</p>
+    <div class="lp-actions">
+      <button class="btn" id="lpAuto" type="button">Send it for me</button>
+      <a class="btn alt" href="mailto:teldigi5@gmail.com">teldigi5@gmail.com</a>
+      <button class="btn alt" id="lpCopy" type="button">Copy email</button>
+    </div>
+  </div>
+</section>
+
 <section class="blk" id="contact" aria-labelledby="ct-h">
   <div class="wrap">
     <span class="eyebrow reveal">05 · RESPONSE</span>

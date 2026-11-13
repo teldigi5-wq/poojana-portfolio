@@ -484,6 +484,79 @@ if (toTop) {
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
 try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }
 
+/* launch: drag the packet back, aim along the dotted arc, let go. Physics runs in a virtual 900-wide space so it plays the same at any size. */
+try {
+  const lp = document.getElementById('lp');
+  if (lp) {
+    const svg = lp.querySelector('#lpSvg'), arc = lp.querySelector('#lpArc'), bandA = lp.querySelector('#lpBandA'), bandB = lp.querySelector('#lpBandB');
+    const pkt = lp.querySelector('#lpPkt'), tgt = lp.querySelector('#lpTarget'), hint = lp.querySelector('#lpHint');
+    const postA = lp.querySelector('.lp-post-a'), postB = lp.querySelector('.lp-post-b');
+    const status = document.getElementById('lpStatus'), autoBtn = document.getElementById('lpAuto'), copyBtn = document.getElementById('lpCopy');
+    const VW = 900, G = 1500, K = 10, MAXP = 130, HIT = 62;
+    let s = 1, VH = 420, A = { x: 140, y: 300 }, T = { x: 770, y: 250 }, busy = false, aiming = false, pull = { x: 0, y: 0 }, raf = 0, auto = null;
+    const setStatus = (t, cls) => { status.textContent = t; status.className = 'lp-status' + (cls ? ' ' + cls : ''); };
+    const put = (el, x, y, cx = 0.5, cy = 0.5) => { el.style.transform = `translate(${x * s - el.offsetWidth * cx}px, ${y * s - el.offsetHeight * cy}px)`; };
+    function layout() {
+      s = lp.clientWidth / VW; VH = lp.clientHeight / s;
+      const ts = Math.round(120 * Math.max(0.62, Math.min(1, s * 1.1))); tgt.style.width = tgt.style.height = ts + 'px';
+      A = { x: 140, y: VH - (VH > 480 ? 190 : 120) }; T = { x: VW - (ts / 2 + 16) / s, y: VH - (VH > 480 ? 300 : 190) };
+      svg.setAttribute('viewBox', `0 0 ${lp.clientWidth} ${lp.clientHeight}`);
+      const grid = svg.querySelector('.lp-grid'); grid.innerHTML = '';
+      for (let x = 0; x <= VW; x += 60) grid.insertAdjacentHTML('beforeend', `<line x1="${x * s}" y1="0" x2="${x * s}" y2="${lp.clientHeight}"/>`);
+      for (let y = 0; y <= VH; y += 60) grid.insertAdjacentHTML('beforeend', `<line x1="0" y1="${y * s}" x2="${lp.clientWidth}" y2="${y * s}"/>`);
+      postA.style.cssText = `left:${(A.x - 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(VH - A.y + 6) * s}px`;
+      postB.style.cssText = `left:${(A.x + 34) * s - 5}px;top:${(A.y - 6) * s}px;height:${(VH - A.y + 6) * s}px`;
+      put(tgt, T.x, T.y);
+      if (!busy) rest();
+    }
+    function bands(p) {
+      const ax = (A.x - 34) * s, bx = (A.x + 34) * s, y = (A.y - 2) * s, px = p.x * s, py = p.y * s;
+      bandA.setAttribute('x1', ax); bandA.setAttribute('y1', y); bandA.setAttribute('x2', px); bandA.setAttribute('y2', py);
+      bandB.setAttribute('x1', bx); bandB.setAttribute('y1', y); bandB.setAttribute('x2', px); bandB.setAttribute('y2', py);
+    }
+    function rest() { pull = { x: 0, y: 0 }; put(pkt, A.x, A.y); bands(A); arc.setAttribute('d', ''); put(hint, A.x, A.y - 52); }
+    const vel = p => { const k = K * Math.sqrt(1); return { x: (A.x - p.x) * k, y: (A.y - p.y) * k }; };
+    function path(p, steps = 90, dt = 1 / 60) {
+      const v = vel(p), pts = []; let x = p.x, y = p.y, vx = v.x, vy = v.y;
+      for (let i = 0; i < steps; i++) { pts.push([x, y]); vy += G * dt; x += vx * dt; y += vy * dt; if (y > VH - 24 || x > VW + 40 || x < -40) break; }
+      return pts;
+    }
+    function drawArc(p) {
+      const pts = path(p, 120).filter((_, i) => i % 2 === 0);
+      arc.setAttribute('d', pts.length > 1 ? 'M' + pts.map(q => `${(q[0] * s).toFixed(1)} ${(q[1] * s).toFixed(1)}`).join(' L') : '');
+    }
+    const clampPull = (x, y) => { let dx = x - A.x, dy = y - A.y; const d = Math.hypot(dx, dy); if (d > MAXP) { dx *= MAXP / d; dy *= MAXP / d; } return { x: A.x + dx, y: A.y + dy }; };
+    function toV(e) { const r = lp.getBoundingClientRect(); return { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s }; }
+    function drag(p) { pull = clampPull(p.x, p.y); put(pkt, pull.x, pull.y); bands(pull); drawArc(pull); }
+    pkt.addEventListener('pointerdown', e => { if (busy) return; aiming = true; pkt.setPointerCapture(e.pointerId); lp.dataset.state = 'aim'; setStatus('Aim along the dotted arc, then let go.'); drag(toV(e)); e.preventDefault(); });
+    pkt.addEventListener('pointermove', e => { if (aiming) drag(toV(e)); });
+    const release = () => { if (!aiming) return; aiming = false; const d = Math.hypot(pull.x - A.x, pull.y - A.y); if (d < 14) { lp.dataset.state = 'idle'; rest(); setStatus('Pull it back a little further.'); return; } fire(pull); };
+    pkt.addEventListener('pointerup', release); pkt.addEventListener('pointercancel', release);
+    function fire(p) {
+      busy = true; lp.dataset.state = 'fly'; arc.setAttribute('d', ''); bands(A);
+      const pts = path(p, 400); let hit = false, last = pts.length - 1;
+      for (let i = 0; i < pts.length; i++) { if (Math.hypot(pts[i][0] - T.x, pts[i][1] - T.y) < HIT) { hit = true; last = i; break; } }
+      const done = () => { busy = false; if (hit) { lp.dataset.state = 'hit'; pkt.style.opacity = '0'; setStatus('200 OK. Delivered to the inbox. Now write the real one below.', 'ok'); } else { lp.dataset.state = 'miss'; setStatus('404, missed. Pull back and try again, or let the button do it.', 'miss'); setTimeout(() => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); }, 900); } };
+      if (reduce) { const q = pts[last]; put(pkt, q[0], q[1]); done(); return; }
+      let i = 0, acc = 0, prev = performance.now();
+      const step = now => { acc += Math.max(0, Math.min(now - prev, 40)) / 1000; prev = now; const f = acc * 60; i = Math.min(last, Math.floor(f)); const q = pts[i]; const ang = i > 0 ? Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) : 0; pkt.style.transform = `translate(${q[0] * s - pkt.offsetWidth / 2}px, ${q[1] * s - pkt.offsetHeight / 2}px) rotate(${ang}rad)`; if (i < last) raf = requestAnimationFrame(step); else done(); };
+      raf = requestAnimationFrame(step);
+    }
+    function solve() {   // a pull that lands in the inbox, used by the button and the keyboard
+      for (let pullLen = 70; pullLen <= MAXP; pullLen += 5) for (let a = 30; a <= 62; a += 2) {
+        const r = a * Math.PI / 180, p = { x: A.x - Math.cos(r) * pullLen, y: A.y + Math.sin(r) * pullLen };
+        if (path(p, 400).some(q => Math.hypot(q[0] - T.x, q[1] - T.y) < HIT * 0.7)) return p;
+      }
+      return { x: A.x - 100, y: A.y + 80 };
+    }
+    function sendAuto() { if (busy || aiming) return; const p = solve(); pull = p; lp.dataset.state = 'aim'; put(pkt, p.x, p.y); bands(p); drawArc(p); setStatus('Locking on…'); setTimeout(() => fire(p), reduce ? 0 : 520); }
+    autoBtn.addEventListener('click', () => { if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); });
+    pkt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); } });
+    copyBtn.addEventListener('click', async () => { try { await navigator.clipboard.writeText('teldigi5@gmail.com'); copyBtn.textContent = 'Copied ✓'; } catch { copyBtn.textContent = 'teldigi5@gmail.com'; } setTimeout(() => copyBtn.textContent = 'Copy email', 2200); });
+    new ResizeObserver(layout).observe(lp); layout();
+  }
+} catch (err) { console.warn('launch', err); }
+
 /* intro film: scroll-triggered. Plays from the start each time it enters view, the greeting card is cued to the
    hologram moment, and the card eases in with scroll progress. Pause control; static greeting with reduced motion. */
 try {
