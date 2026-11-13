@@ -5,7 +5,7 @@
    Build: node scripts/build-holo.mjs  ->  assets/trace/holo.js */
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, Points, Color,
-  PlaneGeometry, CylinderGeometry, RingGeometry, BufferGeometry, BufferAttribute,
+  PlaneGeometry, CylinderGeometry, RingGeometry, BufferGeometry, BufferAttribute, LatheGeometry, SphereGeometry, BoxGeometry, PMREMGenerator, MeshStandardMaterial, Vector2, BackSide, CanvasTexture, RepeatWrapping,
   ShaderMaterial, MeshBasicMaterial, VideoTexture, LinearFilter, DoubleSide, NormalBlending, AdditiveBlending, NoColorSpace,
 } from 'three';
 
@@ -125,13 +125,28 @@ export function mountHolo(sec) {
   const holo = new Mesh(new PlaneGeometry(PW, PH), new ShaderMaterial({ uniforms: U, vertexShader: VERT, fragmentShader: HOLO_F, transparent: true, depthWrite: false, blending: NormalBlending }));
   holo.position.y = -2.1 + PH / 2; holo.renderOrder = 3; world.add(holo);
 
-  // podium: dark glossy disc, glowing blue rings, bright lens
+  // podium: machined metal. Lathe-turned profile (chamfers, two tiers, dished top), polished-metal PBR material lit by a
+  // small procedural studio (softboxes + gradient) through PMREM, segmented blocks around the base, glowing grooves.
   const plat = new Group(); plat.position.y = -2.3; world.add(plat);
-  plat.add(new Mesh(new CylinderGeometry(1.32, 1.5, 0.2, 80), new MeshBasicMaterial({ color: new Color(0x0a1230) })));
+  const env = (() => {
+    const es = new Scene();
+    const dome = new Mesh(new SphereGeometry(20, 32, 16), new ShaderMaterial({ side: BackSide, vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }', fragmentShader: 'varying vec3 vP; void main(){ float h = normalize(vP).y; vec3 top = vec3(0.22,0.28,0.42), hor = vec3(0.5,0.58,0.76), bot = vec3(0.01,0.03,0.1); vec3 c = h > 0.0 ? mix(hor, top, pow(h, 0.7)) : mix(hor * 0.55, bot, pow(-h, 0.5)); gl_FragColor = vec4(c, 1.0); }' }));
+    es.add(dome);
+    const box = (w, h, x, y, z, k) => { const m = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ color: new Color().setScalar(k), side: DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m); };
+    box(12, 2.2, 0, 12, 5, 6); box(2.2, 10, -13, 3, 3, 5); box(2.2, 10, 13, 3, -3, 4); box(9, 1.2, 0, 2, -14, 3.5); box(6, 0.8, 0, 1.2, 14, 2.5);
+    const pm = new PMREMGenerator(renderer); const t = pm.fromScene(es, 0.03).texture; pm.dispose(); return t;
+  })();
+  const brushed = (() => { const c = document.createElement('canvas'); c.width = 1024; c.height = 8; const g = c.getContext('2d'); for (let x = 0; x < 1024; x++) { const v = 150 + Math.random() * 105; g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(x, 0, 1, 8); } const t = new CanvasTexture(c); t.wrapS = t.wrapT = RepeatWrapping; t.repeat.set(3, 1); return t; })();
+  const metal = (rough, color = 0x9aa6bd) => new MeshStandardMaterial({ color: new Color(color), metalness: 1, roughness: rough, roughnessMap: brushed, envMap: env, envMapIntensity: 1.1 });
+  const prof = [[0, -0.14], [1.46, -0.14], [1.56, -0.11], [1.6, -0.04], [1.6, 0.03], [1.57, 0.07], [1.5, 0.09], [1.42, 0.095], [1.4, 0.11], [1.36, 0.115], [1.33, 0.15], [1.3, 0.19], [1.25, 0.205], [1.14, 0.205], [1.12, 0.19], [1.08, 0.19], [1.06, 0.205], [0.95, 0.205], [0.9, 0.195], [0.4, 0.185], [0, 0.18]].map(q => new Vector2(q[0], q[1]));
+  const body = new Mesh(new LatheGeometry(prof, 160), metal(0.3)); plat.add(body);
+  const dark = new MeshStandardMaterial({ color: new Color(0x0b1226), metalness: 0.9, roughness: 0.5, envMap: env, envMapIntensity: 0.8 });
+  const SEG = 28;                                              // segmented collar around the base
+  for (let i = 0; i < SEG; i++) { const a = (i / SEG) * Math.PI * 2; const blk = new Mesh(new BoxGeometry(0.2, 0.07, 0.1), i % 2 ? dark : metal(0.45, 0x6f7b96)); blk.position.set(Math.cos(a) * 1.6, -0.035, Math.sin(a) * 1.6); blk.rotation.y = -a + Math.PI / 2; plat.add(blk); }
   const mkRing = (a, b, color, y, op) => { const m = new Mesh(new RingGeometry(a, b, 128), new MeshBasicMaterial({ color: new Color(color), transparent: true, opacity: 0, depthWrite: false, side: DoubleSide })); m.rotation.x = -Math.PI / 2; m.position.y = y; m.userData.op = op; plat.add(m); return m; };
-  const pr = [mkRing(1.18, 1.3, 0x2f7bff, 0.112, 1), mkRing(0.98, 1.04, 0x7fb6ff, 0.114, 0.9), mkRing(0.62, 0.66, 0x9fd0ff, 0.116, 0.8)];
-  const lens = new Mesh(new RingGeometry(0, 0.95, 80), new MeshBasicMaterial({ color: new Color(0x2a6cff), transparent: true, opacity: 0, depthWrite: false })); lens.rotation.x = -Math.PI / 2; lens.position.y = 0.105; plat.add(lens);
-  const edge = new Mesh(new CylinderGeometry(1.5, 1.5, 0.025, 80, 1, true), new MeshBasicMaterial({ color: new Color(0x3b8cff), transparent: true, opacity: 0, depthWrite: false })); edge.position.y = 0.0; plat.add(edge);
+  const pr = [mkRing(1.15, 1.2, 0x3d8bff, 0.2, 1), mkRing(0.99, 1.04, 0x8cc0ff, 0.208, 0.9), mkRing(0.6, 0.63, 0xb0d8ff, 0.19, 0.8)];
+  const lens = new Mesh(new RingGeometry(0, 0.9, 80), new MeshBasicMaterial({ color: new Color(0x2a6cff), transparent: true, opacity: 0, depthWrite: false })); lens.rotation.x = -Math.PI / 2; lens.position.y = 0.192; plat.add(lens);
+  const edge = new Mesh(new CylinderGeometry(1.62, 1.62, 0.02, 96, 1, true), new MeshBasicMaterial({ color: new Color(0x3b8cff), transparent: true, opacity: 0, depthWrite: false })); edge.position.y = -0.13; plat.add(edge);
 
   const glowU = { uOn: { value: 0 }, uTime: U.uTime };
   const glow = new Mesh(new PlaneGeometry(8.5, 8.5), new ShaderMaterial({ uniforms: glowU, vertexShader: VERT, fragmentShader: GLOW_F, transparent: true, depthWrite: false, blending: NormalBlending }));
@@ -156,7 +171,7 @@ export function mountHolo(sec) {
     camera.aspect = aspect;
     const t = Math.tan((camera.fov * Math.PI) / 360), wide = aspect >= 0.8;
     camera.userData.dist = Math.max((wide ? 4.0 : 3.6) / t, 3.0 / (t * aspect));
-    camera.userData.shift = wide ? 0.22 : -0.05;
+    camera.userData.shift = wide ? 0.02 : -0.05;
     camera.updateProjectionMatrix();
   };
   resize(); addEventListener('resize', resize);
