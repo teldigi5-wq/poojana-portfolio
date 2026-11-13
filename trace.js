@@ -355,33 +355,7 @@ function send() {
 $('#send').addEventListener('click', send);
 $('#limitBtn').addEventListener('click', () => { const ok = limiter.take(); paintDots(); $('#limitMsg').textContent = ok ? `200 OK. ${Math.floor(limiter.tokens)} of ${CAP} tokens left.` : `429. Bucket empty, next token in ${(limiter.retryMs() / 1000).toFixed(1)} s.`; });
 
-/* ---------- 03 projects ---------- */
-const PROJECTS = [
-  { id: 'bl', name: 'BoundaryLab', tag: 'Local-first authorization verification', stage: 1, lede: 'Local-first authorization verification, independent of Aetheris Platform. Change the identity, resource or rule and follow the checks behind each decision.',
-    kv: [['focus', 'Authorization engineering'], ['scope', 'Ownership · tenant isolation · evidence'], ['status', 'Pre-release prototype']],
-    evi: 'The in-browser model on this site demonstrates the rules only. It does not validate BoundaryLab’s emulator or any live system.',
-    links: [['Product overview ↗', 'https://boundarylab.vercel.app/']] },
-  { id: 'ae', name: 'Aetheris Platform', tag: 'Backend services with explicit boundaries', stage: 0, lede: 'Backend services with explicit boundaries and an independently owned AI runtime, fronted by a single gateway.',
-    kv: [['focus', 'Backend & distributed systems'], ['stack', 'Java · Spring · PostgreSQL · Redis · RabbitMQ'], ['status', 'Research · hardware validation pending']],
-    evi: 'Verified in CI: 8 relay workers competed for 24 events and each was claimed once. That proves this controlled test, not an exactly-once guarantee. Not production-ready.',
-    links: [['Architecture & source ↗', 'https://github.com/teldigi5-wq/aetheris-platform'], ['Inspect the CI run ↗', 'https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377']] },
-  { id: 'wf', name: 'Wayfarer', tag: 'Discovery, planning and arrival', stage: 2, lede: 'Connecting discovery, planning and the first moments of arrival, and still useful without paid APIs.',
-    kv: [['focus', 'Full-stack product development'], ['scope', 'Discovery · itineraries · local persistence'], ['status', 'Public planning experience · no live booking']],
-    evi: 'Six rule-based planning assistants work with browser-local plans. Provider-based AI and live booking are disabled.',
-    links: [['Try the live app ↗', 'https://wayfarer-world-travel.vercel.app/'], ['Source ↗', 'https://github.com/teldigi5-wq/wayfarer-world-travel']] }
-];
-const STAGES = ['Research', 'Prototype', 'Public'];
-const listEl = $('#list'), detailEl = $('#detail');
-let sel = 0;
-listEl.innerHTML = PROJECTS.map((p, i) => `<button class="row" role="option" type="button" data-i="${i}" aria-selected="${i === 0}"><span><b>${p.name}</b><small>${p.tag}</small></span><span><span class="track"><i style="left:${p.stage * 33.3}%;width:33.4%"></i></span><span class="stages">${STAGES.map(s => `<span>${s}</span>`).join('')}</span></span></button>`).join('');
-function showProject(i) {
-  sel = i; const p = PROJECTS[i];
-  $$('.row', listEl).forEach((r, k) => r.setAttribute('aria-selected', k === i));
-  detailEl.innerHTML = `<p class="pstatus"><i aria-hidden="true"></i>${STAGES[p.stage]} stage</p><h3>${p.name}</h3><p class="plede">${p.lede}</p><section class="evi" aria-label="Evidence and limits"><h4>Evidence and limits</h4><p>${p.evi}</p></section><dl class="kv">${p.kv.map(([k, v]) => `<div><dt>${k[0].toUpperCase() + k.slice(1)}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="links">${p.links.map(([t, u], n) => `<a class="btn ${n ? 'alt' : ''}" href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('')}</div>`;
-}
-listEl.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) showProject(+r.dataset.i); });
-listEl.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); const n = (sel + (e.key === 'ArrowDown' ? 1 : -1) + PROJECTS.length) % PROJECTS.length; showProject(n); $$('.row', listEl)[n].focus(); } });
-showProject(0);
+/* ---------- 03 projects: static cards in index.html, no script needed ---------- */
 
 /* ---------- 04 query plan ---------- */
 const swEl = $('#idxSw'), planBars = $('#planBars'), planMsg = $('#planMsg');
