@@ -123,9 +123,16 @@ void main(){
   vec3 rgb = mix(col, vec3(1.), lit);
   float a = clamp(body + lit, 0., 1.) * aa;
   if (uSpec > 0.5) {
-    float lensBody = inBMask * (0.13 + 0.10*clamp(-nlb,0.,1.)) * (1.-smoothstep(0.,H*0.30,inB)*0.0);
-    float a2 = clamp(lit*0.9 + lensBody, 0., 1.) * aa;
-    outColor = vec4(vec3(a2), a2);
+    /* lens body: a clearly readable milky pill (brighter on light pages, restrained on dark), with a soft inner shade
+       just inside the rim and a bright specular edge, so the active link is always identifiable */
+    float adapt = mix(1.0, 0.62, uAdapt);
+    float lensBody = inBMask * (0.16 + 0.12*clamp(-nlb,0.,1.)) * adapt;
+    float aw = clamp(lit*0.95 + lensBody, 0., 1.) * aa;
+    /* cool tint through the body + deeper shade just inside the rim: this is what keeps the lens readable on a light bar */
+    float tint = inBMask * 0.085 * (1.-uAdapt);
+    float shade = inBMask * (1.-smoothstep(1.5, H*0.17, inB)) * 0.20 * (1.-uAdapt*0.4);
+    float ad = clamp(tint + shade, 0., 1.) * aa * (1.-aw);
+    outColor = vec4(vec3(aw) + vec3(0.04,0.08,0.26)*ad, aw + ad);
     return;
   }
   outColor = vec4(rgb*a, a);

@@ -473,8 +473,8 @@ html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg 
 /* one-way scroll: past the API section the intro is removed from the page */
 html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-intro .loop,html.past-intro .pushin,html.past-intro .veil,html.past-intro .dark,html.past-intro .progress{display:none!important}
 /* intro clip */
-.clip{position:relative;margin:30px 0 0;border-radius:30px;padding:10px;background:linear-gradient(180deg,#121a2e 0%,#0a0e18 100%);box-shadow:0 34px 90px rgba(15,25,70,.28),inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(150,170,230,.22)}
-.clip-media{position:relative;border-radius:22px;overflow:hidden;background:#070a12}
+.clip{position:relative;margin:30px 0 0;width:min(100%,860px);border-radius:26px;padding:8px;background:linear-gradient(180deg,#121a2e 0%,#0a0e18 100%);box-shadow:0 34px 90px rgba(15,25,70,.28),inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(150,170,230,.22)}
+.clip-media{position:relative;border-radius:19px;overflow:hidden;background:#070a12}
 .clip video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
 .clip-top{display:flex;align-items:center;justify-content:space-between;padding:6px 10px 12px;font:500 12px/1 var(--mono);color:#8e9bbd}
 .ct-t{display:inline-flex;align-items:center;gap:8px;color:#dbe3ff}.ct-t i,.cc-open i{width:7px;height:7px;border-radius:50%;background:#7cf0c8;box-shadow:0 0 0 3px rgba(124,240,200,.16)}
@@ -492,7 +492,5 @@ html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-int
 #more{background:linear-gradient(to bottom,rgba(232,237,250,0) 0,#e8edfa 90px,#e8edfa calc(100% - 90px),rgba(232,237,250,0) 100%),radial-gradient(60% 40% at 8% 18%,rgba(43,75,255,.07),transparent 70%)}
 #oss{background:linear-gradient(to bottom,rgba(238,240,246,0) 0,#eef0f6 80px,#eef0f6 calc(100% - 80px),rgba(238,240,246,0) 100%)}
 #lab{background:linear-gradient(to bottom,rgba(212,224,248,0) 0,#d6e1f8 90px,#d3def6 calc(100% - 90px),rgba(212,224,248,0) 100%),radial-gradient(55% 45% at 92% 12%,rgba(43,75,255,.12),transparent 70%)}
-#intro{color:#eef2ff;background:linear-gradient(to bottom,rgba(10,14,24,0) 0,#0a0e18 100px,#0c1424 calc(100% - 100px),rgba(12,20,36,0) 100%),radial-gradient(60% 50% at 50% 55%,rgba(43,75,255,.16),transparent 72%)}
-#intro h2{color:#f4f6fb}#intro .lede{color:#a9b4d3}
 #contact{background:radial-gradient(65% 50% at 15% 0%,rgba(43,75,255,.10),transparent 70%)}
 @media(prefers-reduced-motion:no-preference){.blk{--rise:0}}

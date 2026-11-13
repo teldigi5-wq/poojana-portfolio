@@ -1,4 +1,4 @@
-import { mountGlassNav } from './assets/trace/glass-nav.js';
+import { mountGlassNav } from './assets/trace/glass-nav.js?v=3';
 import { mountRefraction } from './assets/trace/glass-refract.js';
 import { mountShowcase } from './assets/trace/showcase.js?v=6';
 
