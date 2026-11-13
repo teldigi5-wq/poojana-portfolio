@@ -80,10 +80,13 @@ const BOOT = [
   ['', 'tree', '├─ lab/        live demos you can run'],
   ['', 'tree', '└─ contact/    open to internships'],
 ];
-/* optional sound + haptics (off until the visitor opts in) */
+/* terminal sound + haptics (on by default, one tap to mute) */
 const sndBtn = $('#snd');
-let soundOn = false, actx = null;
-try { soundOn = localStorage.getItem('trace-sound') === '1'; } catch (e) {}
+let soundOn = true, actx = null;   // on by default; a stored '0' (visitor turned it off) wins
+try { soundOn = localStorage.getItem('trace-sound') !== '0'; } catch (e) {}
+/* browsers keep audio locked until a gesture: unlock on the first one so the default-on sound can play */
+const unlock = () => { if (soundOn) audio(); removeEventListener('pointerdown', unlock, true); removeEventListener('keydown', unlock, true); removeEventListener('touchstart', unlock, true); };
+addEventListener('pointerdown', unlock, true); addEventListener('keydown', unlock, true); addEventListener('touchstart', unlock, true);
 const audio = () => { if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } if (actx && actx.state === 'suspended') actx.resume(); return actx; };
 let lastTick = 0;
 function sfx(kind) {
@@ -200,7 +203,7 @@ addEventListener('keydown', e => {
 /* looping live scene: plays on its own at the top, freezes on the first scroll, then the scrubbed dive takes over */
 const loop = $('#loop');
 const saveData = !!(navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
-let loopOn = false;
+let loopOn = false, loopK = 0;
 if (loop && !reduce && !saveData && !MOBILE) {
   loop.addEventListener('playing', () => { loopOn = true; loop.classList.add('on'); }, { once: true });
   loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq2-720.mp4' : 'assets/trace/hero-loop-hq2.mp4';   // 1080p on large screens
@@ -236,6 +239,10 @@ function frame() {
     if (y > 4 && !loop.paused) loop.pause();
     else if (y <= 4 && loop.paused && !document.hidden) loop.play().catch(() => {});
     if (!vidReady) loop.style.opacity = 1 - clamp(y / 90);   // no scrub video: hand back to the still + CSS zoom
+    else {   // the loop and the push-in were framed slightly differently: ease the loop onto the push-in's first frame while they cross-fade, so there is no double laptop
+      const k = clamp(ys / 10);   // aligned within the first few px, well before the push-in is visible
+      if (k !== loopK) { loopK = k; loop.style.transform = k ? `translate(${(-0.94 * k).toFixed(3)}%, ${(-3.33 * k).toFixed(3)}%) scale(${(1 - 0.02 * k).toFixed(4)})` : ''; }
+    }
   }
   let z = 1, dark = 0, veil, boot = 0;
   if (reduce) { veil = clamp(y / (vh * 0.8)) * 0.86; }
@@ -255,7 +262,7 @@ function frame() {
     const vo = toViewport(VEND);
     vid.style.transformOrigin = (vo[0] * 100) + '% ' + (vo[1] * 100) + '%';
     vid.style.transform = `scale(${extra.toFixed(4)})`;
-    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(y / 48) : 1);
+    vid.style.opacity = (t < 0.85 ? 1 : 1 - smooth(0.85, 0.98, t)) * (loopOn ? clamp(ys / 48) : 1);
     zEff = (1 + 1.25 * smooth(0, 0.5, t)) * extra;
     if (t > 0.7) zEff = 1 + (zEff - 1) * (1 - smooth(0.7, 1, t));
   }
