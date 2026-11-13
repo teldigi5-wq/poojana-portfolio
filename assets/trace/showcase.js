@@ -44,13 +44,18 @@ export function mountShowcase(host, list) {
 
   /* desktop: the section pins and vertical scroll moves the cards sideways; touch devices scroll the track natively */
   const pinned = !reduce && matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)').matches;
-  let max = 0, top = 0;
+  let max = 0, top = 0, tx = 0;
   const measure = () => {
-    max = Math.max(0, track.scrollWidth - track.clientWidth);
-    if (pinned) { host.style.height = `calc(100vh + ${max}px)`; top = host.getBoundingClientRect().top + scrollY; }
+    if (pinned) {
+      const last = cards[cards.length - 1], tail = Math.max(24, (track.clientWidth - last.offsetWidth) / 2);   // room for the last card to reach the centre
+      track.style.setProperty('--tail', tail + 'px');
+      const right = last.getBoundingClientRect().right - track.getBoundingClientRect().left + tx;           // clip does not count end padding, so measure by hand
+      max = Math.max(0, right + tail - track.clientWidth);
+      host.style.height = `calc(100vh + ${max}px)`; top = host.getBoundingClientRect().top + scrollY;
+    } else max = Math.max(0, track.scrollWidth - track.clientWidth);
   };
   /* the cards ride an eased value (translate), not the raw scroll offset: wheel notches glide instead of stepping */
-  let tx = 0, tgt = 0, raf = 0, last = 0, setP = () => {};
+  let tgt = 0, raf = 0, last = 0, setP = () => {};
   const paint = () => { track.style.setProperty('--tx', tx.toFixed(2)); setP(max > 0 ? tx / max : 0, tx); };
   const step = t => {
     const dt = Math.min(64, t - (last || t)); last = t;
@@ -70,7 +75,7 @@ export function mountShowcase(host, list) {
     track.addEventListener('scroll', () => { if (track.scrollLeft) track.scrollLeft = 0; }, { passive: true });   // focus must not move the clipped track
     let pr = 0; addEventListener('scroll', () => { if (!pr) pr = requestAnimationFrame(() => { pr = 0; pinScroll(); }); }, { passive: true });
   }
-  const leftFor = c => Math.min(max, Math.max(0, c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2));
+  const leftFor = c => Math.min(max, Math.max(0, (pinned ? c.getBoundingClientRect().left - track.getBoundingClientRect().left + tx : c.offsetLeft) - (track.clientWidth - c.offsetWidth) / 2));
 
   /* playhead: follows the scroll position of the track, marks the current span */
   let cur = -1, ticking = false, touched = false;

@@ -335,3 +335,4 @@ html.hc-pinned .hc-rail{margin-top:0;padding-top:30px}
 html.hc-pinned .hc-card{translate:calc(var(--tx,0) * -1px) 0;will-change:translate}
 /* short windows: size the cards to the height so the rail always fits inside the pinned stage */
 @media(min-width:900px) and (max-height:960px){.hc-pin .hc-art{aspect-ratio:16/9}.hc-pin .hc-card{width:max(340px,min(clamp(400px,34vw,600px),calc((100vh - 520px) * 1.78)))}}
+html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
