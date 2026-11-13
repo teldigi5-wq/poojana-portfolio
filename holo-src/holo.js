@@ -59,15 +59,15 @@ void main(){
 
 const CONE_F = `
 precision highp float;
-uniform float uTime, uCone; varying vec2 vUv;
+uniform float uTime, uCone; varying vec2 vUv; varying float vF;
 void main(){
   float h = vUv.y;                                          // 0 at base, 1 at top
   float up = smoothstep(0.0, 1.0, uCone * 1.3 - h * 0.7);
   float a = pow(1.0 - h, 1.2) * up * 0.42;
-  a *= 0.9 + 0.1 * sin(uTime * 1.6 + h * 7.0);
+  a *= (0.9 + 0.1 * sin(uTime * 1.6 + h * 7.0)) * (0.15 + 0.85 * vF);
   gl_FragColor = vec4(vec3(0.28, 0.58, 1.0), a);
 }`;
-const CONE_V = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+const CONE_V = `varying vec2 vUv; varying float vF; void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.0); vec3 n = normalize(normalMatrix * normal); vF = pow(abs(dot(n, normalize(-mv.xyz))), 1.6); gl_Position = projectionMatrix * mv; }`;
 
 const GLOW_F = `
 precision highp float; uniform float uOn, uTime; varying vec2 vUv;
@@ -152,6 +152,14 @@ export function mountHolo(sec) {
   const glow = new Mesh(new PlaneGeometry(8.5, 8.5), new ShaderMaterial({ uniforms: glowU, vertexShader: VERT, fragmentShader: GLOW_F, transparent: true, depthWrite: false, blending: NormalBlending }));
   glow.rotation.x = -Math.PI / 2; glow.position.y = -2.19; glow.renderOrder = 1; world.add(glow);
 
+  const bgU = { uOn: { value: 0 } };
+  const bgMat = f => new ShaderMaterial({ uniforms: bgU, vertexShader: VERT, fragmentShader: f, transparent: true, depthWrite: false, blending: NormalBlending });
+  const horizon = new Mesh(new PlaneGeometry(70, 0.7), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ float d = 1.0 - abs(vUv.y - 0.5) * 2.0; gl_FragColor = vec4(vec3(0.86, 0.94, 1.0), (pow(d, 2.6) * 0.95) * uOn); }'));
+  horizon.position.set(0, -1.3, -7); horizon.renderOrder = 0; world.add(horizon);
+  const floorTint = new Mesh(new PlaneGeometry(70, 12), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ gl_FragColor = vec4(vec3(0.22, 0.34, 0.7), (0.1 + 0.16 * (1.0 - vUv.y)) * uOn); }'));
+  floorTint.position.set(0, -1.3 - 6.0, -7); floorTint.renderOrder = 0; world.add(floorTint);
+  const halo = new Mesh(new PlaneGeometry(8, 8), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ float r = length((vUv - 0.5) * 2.0); gl_FragColor = vec4(vec3(0.7, 0.85, 1.0), pow(max(0.0, 1.0 - r), 2.0) * 0.42 * uOn); }'));
+  halo.position.set(0, 0.1, -2.2); halo.renderOrder = 0; world.add(halo);
   const coneU = { uTime: U.uTime, uCone: { value: 0 } };
   const cone = new Mesh(new CylinderGeometry(1.9, 0.95, 4.4, 96, 1, true), new ShaderMaterial({ uniforms: coneU, vertexShader: CONE_V, fragmentShader: CONE_F, transparent: true, depthWrite: false, blending: NormalBlending, side: DoubleSide }));
   cone.position.y = -0.1; cone.renderOrder = 2; world.add(cone);
@@ -170,8 +178,8 @@ export function mountHolo(sec) {
     renderer.domElement.style.width = W + 'px'; renderer.domElement.style.height = H + 'px';
     camera.aspect = aspect;
     const t = Math.tan((camera.fov * Math.PI) / 360), wide = aspect >= 0.8;
-    camera.userData.dist = Math.max((wide ? 4.0 : 3.6) / t, 3.0 / (t * aspect));
-    camera.userData.shift = wide ? 0.02 : -0.05;
+    camera.userData.dist = Math.max((wide ? 3.15 : 3.0) / t, 3.1 / (t * aspect));
+    camera.userData.shift = wide ? -0.62 : -0.95;
     camera.updateProjectionMatrix();
   };
   resize(); addEventListener('resize', resize);
@@ -197,7 +205,7 @@ export function mountHolo(sec) {
     sp += (target - sp) * (1 - Math.exp(-dt * 7)); px += (tpx - px) * (1 - Math.exp(-dt * 3));
     const p = sp, on = sstep(0.0, 0.2, p), coneP = sstep(0.04, 0.3, p), reveal = sstep(0.16, 0.58, p);
     U.uTime.value = t / 1000; U.uReveal.value = reveal; U.uHasVideo.value = video.readyState >= 2 ? 1 : 0;
-    glowU.uOn.value = on; coneU.uCone.value = coneP; partU.uOn.value = sstep(0.1, 0.45, p);
+    glowU.uOn.value = on; bgU.uOn.value = sstep(0.0, 0.25, p); coneU.uCone.value = coneP; partU.uOn.value = sstep(0.1, 0.45, p);
     pr.forEach(m => { m.material.opacity = m.userData.op * (0.15 + 0.85 * on); }); lens.material.opacity = 0.12 + 0.3 * on; edge.material.opacity = 0.2 + 0.7 * on;
     const push = 1 - 0.07 * sstep(0.1, 0.7, p);
     camera.position.set(px * 0.3, 0.3 + camera.userData.shift, camera.userData.dist * push);
