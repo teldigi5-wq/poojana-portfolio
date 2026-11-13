@@ -44,12 +44,12 @@ test('ID-badge lanyard (Three.js) is lazy, accessible and degrades gracefully',(
 test('hero loops live, freezes on scroll and respects reduced motion / data saver',()=>{
   const js=read('trace.js'), html=read('index.html'), css=read('trace.css');
   assert.match(html,/id="loop"[^>]*muted[^>]*loop[^>]*playsinline/);
-  assert.match(js,/hero-loop-hq\.mp4/);
+  assert.match(js,/hero-loop-hq2\.mp4/);
   assert.match(js,/!reduce && !saveData/);                    // no autoplay for reduced motion / data saver
   assert.match(js,/loop\.pause\(\)/);                          // freezes when scrolling starts
   assert.match(js,/loop\.play\(\)/);                           // resumes at the top
   assert.match(css,/prefers-reduced-motion:reduce\)\{\.loop\{display:none\}/);
-  for(const f of ['hero-loop-hq.mp4','hero-loop-hq-720.mp4']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size<3e6,f);
+  for(const f of ['hero-loop-hq2.mp4','hero-loop-hq2-720.mp4']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size<3e6,f);
 });
 
 test('Work showcase: horizontal cards enhance the no-JS project list and open an accessible dialog',()=>{
