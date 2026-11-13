@@ -206,11 +206,11 @@ if (loop && !reduce && !saveData) {
   loop.play().catch(() => {});
 }
 const vid = $('#pushin');
-const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
+const VEND = [0.49, 0.5];               // laptop screen centre in the last video frame (image uv)
 let vidReady = false, vidDur = 0;
 const lite = reduce || innerWidth < 700 || (navigator.connection && (navigator.connection.saveData || /(^|-)2g$/.test(navigator.connection.effectiveType || '')));
 if (vid && !lite) {
-  vid.src = 'assets/trace/hero-pushin-hq.mp4';
+  vid.src = 'assets/trace/hero-pushin-v2.mp4';
   vid.addEventListener('loadeddata', () => { vidDur = vid.duration || 5; vidReady = true; root.classList.add('has-video'); frame(); }, { once: true });
   vid.addEventListener('error', () => { vidReady = false; root.classList.remove('has-video'); vid.style.opacity = 0; });
   vid.load();
