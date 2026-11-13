@@ -217,3 +217,16 @@ html.ui-dark .badge span{opacity:.78}
  .links a,.foot a,footer a,.contact a{display:inline-flex;align-items:center;min-height:44px}
 }
 @media(pointer:coarse){.enter{min-height:44px}.dark pre a{display:inline-block;padding:14px 0;margin:-14px 0}}
+
+/* Apple-style details: instant press feedback, solid fallbacks for reduced transparency / more contrast */
+.btn:active,.talk:active,.hint:active,.to-top:active,.enter:active,.ep:active,.seg-btn:active,.glass-nav a:active{transform:scale(.97);transition:transform 90ms ease-out}
+.hero h1,h2{font-optical-sizing:auto}
+@media(prefers-reduced-transparency:reduce){
+ .glassy,.glass-nav,.glass-nav.lg-real,.hint,.to-top,.badge,.talk{background:#f4f7ff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+ html.ui-dark .glassy,html.ui-dark .glass-nav,html.ui-dark .to-top,html.ui-dark .badge,html.ui-dark .talk{background:#10172a!important;color:#eef3ff!important}
+ .loop{opacity:0!important}
+}
+@media(prefers-contrast:more){
+ .glassy,.glass-nav,.hint,.to-top,.badge,.talk{background:#fff!important;border:1.5px solid #0b1020!important;backdrop-filter:none!important}
+ html.ui-dark .glassy,html.ui-dark .glass-nav,html.ui-dark .to-top,html.ui-dark .badge,html.ui-dark .talk{background:#0b1020!important;border-color:#fff!important;color:#fff!important}
+}
