@@ -562,7 +562,7 @@ html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-int
 .la-done h3{margin:0;font:650 26px/1.1 var(--sans);letter-spacing:-.03em}.la-done p{margin:6px 0 16px;color:#33406a}
 .la-done .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 #launch:has(.lp[data-state="hit"]) .la-done{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
-@media(max-width:699px){.la-done{top:56%}.lp-steps li{font-size:13px}.lp-actions .btn{flex:1 1 100%;justify-content:center}.la-copy{padding-top:96px}}
+@media(max-width:699px){#launch{min-height:max(100svh,900px)}.la-done{top:60%}.lp-steps li{font-size:13px}.lp-actions{gap:8px}.lp-actions .btn{flex:1 1 auto;justify-content:center;height:44px;padding:0 16px;font-size:14px}.la-copy{padding-top:96px}.la-end{padding-top:14px;font-size:12.5px;line-height:1.5}.la-foot{padding-bottom:22px}}
 @media(prefers-reduced-motion:reduce){.la-far,.la-near{animation:none}.lp[data-state="hit"] .lp-target{animation:none}}
 
 @keyframes lpPulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
@@ -616,3 +616,5 @@ html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-int
 .lp[data-state="hit"] .en rect{fill:#e1fbf1}.lp[data-state="hit"] .en path{stroke:#0fa37f}
 @keyframes enBob{50%{transform:translateY(-5px)}}@keyframes enSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.en,.en-halo{animation:none}}
+
+.in-launch .to-top{opacity:0;pointer-events:none}
