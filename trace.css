@@ -465,4 +465,5 @@ html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg 
 }
 @media(max-width:380px){.glass-nav a{padding:0 3px!important;font-size:12px!important}.glass-nav{left:70px!important}.badge{left:10px!important}}
 @media(max-width:699px) and (prefers-reduced-motion:reduce){.mh-laptop{animation:none}.mh-term span{animation:none;opacity:1;transform:none}.mh-term .cur::after{animation:none}}
-@media(max-width:380px){.glass-nav a[data-s="cv"]{display:none!important}}
+@media(max-width:380px){.glass-nav{right:8px!important;min-width:0!important;overflow:hidden}.glass-nav nav{min-width:0}}
+@media(max-width:699px){.resp,.resp>*{min-width:0}.ctas{display:flex;flex-wrap:wrap;gap:10px}.ctas .btn{flex:1 1 auto;justify-content:center}.json{overflow-x:auto;max-width:100%;font-size:12.5px}}
