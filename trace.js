@@ -1,5 +1,6 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
 import { mountRefraction } from './assets/trace/glass-refract.js';
+import { mountShowcase } from './assets/trace/showcase.js?v=1';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -423,3 +424,6 @@ if (toTop) {
   const sync = () => toTop.classList.toggle('on', scrollY > innerHeight * 1.2);
   addEventListener('scroll', sync, { passive: true }); sync();
 }
+
+/* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
+try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }

@@ -51,3 +51,21 @@ test('hero loops live, freezes on scroll and respects reduced motion / data save
   assert.match(css,/prefers-reduced-motion:reduce\)\{\.loop\{display:none\}/);
   for(const f of ['hero-loop-hq.mp4','hero-loop-hq-720.mp4']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size<3e6,f);
 });
+
+test('Work showcase: horizontal cards enhance the no-JS project list and open an accessible dialog',()=>{
+  const js=read('trace.js'), html=read('index.html'), css=read('trace.css'), sc=read('assets/trace/showcase.js');
+  assert.match(js,/showcase\.js\?v=\d+/);
+  assert.match(html,/<ol class="pj-list">/);                                   // the vertical list stays as the no-JS version
+  for(const a of ['aetheris','wayfarer','boundarylab']){
+    assert.match(html,new RegExp('data-art="'+a+'"'));
+    assert.ok(statSync(new URL('../assets/trace/card-'+a+'.webp',import.meta.url)).size<90e3,a);
+  }
+  assert.match(sc,/showModal\(\)/);                                            // native dialog: focus trap and Esc come for free
+  assert.match(sc,/aria-haspopup="dialog"/);
+  assert.match(sc,/opener\.focus/);                                           // focus returns to the card
+  assert.match(sc,/matchMedia\('\(prefers-reduced-motion: reduce\)'\)/);
+  assert.match(css,/html\.has-showcase \.pj-list\{display:none\}/);
+  assert.match(css,/\.hc-card:focus-visible\{outline/);
+  assert.match(css,/prefers-reduced-motion:reduce\)\{\.hc-card/);
+  assert.ok(statSync(new URL('../assets/trace/showcase.js',import.meta.url)).size<12e3);
+});
