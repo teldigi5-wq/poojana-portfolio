@@ -336,3 +336,20 @@ html.hc-pinned .hc-card{translate:calc(var(--tx,0) * -1px) 0;will-change:transla
 /* short windows: size the cards to the height so the rail always fits inside the pinned stage */
 @media(min-width:900px) and (max-height:960px){.hc-pin .hc-art{aspect-ratio:16/9}.hc-pin .hc-card{width:max(340px,min(clamp(400px,34vw,600px),calc((100vh - 520px) * 1.78)))}}
 html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
+
+/* Also built: small public projects, evidence-first */
+#more{scroll-margin-top:84px}
+.mp-grid{list-style:none;margin:0;padding:0;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.mp{height:100%;display:flex;flex-direction:column;padding:26px 26px 22px;border-radius:24px;background:#fbfcff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(20,30,60,.04),0 14px 36px -22px rgba(20,30,60,.22);transition:box-shadow .25s,transform .25s}
+.mp:hover{box-shadow:0 1px 2px rgba(20,30,60,.05),0 22px 44px -22px rgba(20,30,60,.3);transform:translateY(-2px)}
+.mp h3{margin:0;font:650 22px/1.2 var(--sans);letter-spacing:-.02em;color:var(--ink)}
+.mp-tag{margin:6px 0 14px;font:500 14px/1.4 var(--sans);color:#5b6a86}
+.mp p:not(.mp-tag){margin:0 0 18px;font:400 15px/1.6 var(--sans);color:#243050}
+.mp-stack{list-style:none;margin:auto 0 18px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.mp-stack li{padding:4px 10px;border-radius:999px;background:#eef2fb;font:500 12.5px/1.4 var(--sans);color:#33415f}
+.mp-links{display:flex;flex-wrap:wrap;gap:6px 18px;padding-top:14px;border-top:1px solid var(--line)}
+.mp-links a,.mp-all a{font:600 14px/1.5 var(--sans);color:var(--accent);text-decoration:none;min-height:24px}
+.mp-links a:hover,.mp-all a:hover{text-decoration:underline}
+.mp-all{margin:22px 0 0}
+@media(pointer:coarse){.mp-links a,.mp-all a{min-height:44px;display:inline-flex;align-items:center}}
+@media(prefers-reduced-motion:reduce){.mp{transition:none}.mp:hover{transform:none}}
