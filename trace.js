@@ -85,8 +85,8 @@ const sndBtn = $('#snd');
 let soundOn = true, actx = null;   // on by default; a stored '0' (visitor turned it off) wins
 try { soundOn = localStorage.getItem('trace-sound') !== '0'; } catch (e) {}
 /* browsers keep audio locked until a gesture: unlock on the first one so the default-on sound can play */
-const unlock = () => { if (soundOn) audio(); removeEventListener('pointerdown', unlock, true); removeEventListener('keydown', unlock, true); removeEventListener('touchstart', unlock, true); };
-addEventListener('pointerdown', unlock, true); addEventListener('keydown', unlock, true); addEventListener('touchstart', unlock, true);
+const unlockAudio = () => { if (soundOn) audio(); removeEventListener('pointerdown', unlockAudio, true); removeEventListener('keydown', unlockAudio, true); removeEventListener('touchstart', unlockAudio, true); };
+addEventListener('pointerdown', unlockAudio, true); addEventListener('keydown', unlockAudio, true); addEventListener('touchstart', unlockAudio, true);
 const audio = () => { if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } if (actx && actx.state === 'suspended') actx.resume(); return actx; };
 let lastTick = 0;
 function sfx(kind) {
