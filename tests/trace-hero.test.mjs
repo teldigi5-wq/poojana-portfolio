@@ -69,3 +69,10 @@ test('Work showcase: horizontal cards enhance the no-JS project list and open an
   assert.match(css,/prefers-reduced-motion:reduce\)\{\.hc-card/);
   assert.ok(statSync(new URL('../assets/trace/showcase.js',import.meta.url)).size<12e3);
 });
+
+test('hero cable light is decorative, off for reduced motion and small screens', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../trace.css', import.meta.url), 'utf8');
+  assert.match(html, /<svg class="flow" id="flow"[^>]*aria-hidden="true"/);
+  assert.match(css, /max-width:700px\),\(prefers-reduced-motion:reduce\)\{\.flow\{display:none\}/);
+});

@@ -205,6 +205,7 @@ if (loop && !reduce && !saveData) {
   loop.src = innerWidth < 1100 ? 'assets/trace/hero-loop-hq2-720.mp4' : 'assets/trace/hero-loop-hq2.mp4';   // 1080p on large screens
   loop.play().catch(() => {});
 }
+const flow = $('#flow');
 const vid = $('#pushin');
 const VEND = [0.49, 0.43];            // laptop screen centre in the last video frame (image uv)
 let vidReady = false, vidDur = 0;
@@ -235,6 +236,7 @@ function frame() {
     else if (y <= 4 && loop.paused && !document.hidden) loop.play().catch(() => {});
     if (!vidReady) loop.style.opacity = 1 - clamp(y / 90);   // no scrub video: hand back to the still + CSS zoom
   }
+  if (flow) { const o = (reduce || saveData) ? 0 : 1 - clamp(y / 70); flow.style.opacity = o.toFixed(3); flow.classList.toggle('idle', o === 0); }
   let z = 1, dark = 0, veil, boot = 0;
   if (reduce) { veil = clamp(y / (vh * 0.8)) * 0.86; }
   else {

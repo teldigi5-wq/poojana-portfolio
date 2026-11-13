@@ -331,3 +331,22 @@ html.hc-pinned .hc-track{overflow:hidden;scroll-snap-type:none;cursor:default;pa
 html.hc-pinned .hc-rail{margin-top:0;padding-top:30px}
 @media(min-width:1100px){.hc-track{clip-path:inset(-40px 0 -60px 176px)}}   /* cards slide under the side rail instead of over it */
 @media(max-height:860px){.hc-pin .hc-art{aspect-ratio:16/9}.hc-pin .hc-row{min-height:34px}.hc-pin .hc-cap{display:none}}
+
+/* hero: light travels the cables (request -> server -> data -> response). Sits on the video, fades out as the dive begins. */
+.flow{position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none}
+.flow .fx{animation:flow-in 1.4s .5s both}
+@keyframes flow-in{from{opacity:0}to{opacity:1}}
+.flow path{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.flow .fg{stroke:#2f7bff;stroke-width:10;stroke-opacity:.45;stroke-dasharray:26 200}
+.flow .fc{stroke:#fff;stroke-width:3.4;stroke-dasharray:10 200}
+.flow .fg,.flow .fc{animation:6s infinite}
+.flow .fc{animation-name:run-c}.flow .fg{animation-name:run-g}
+.flow .r1{animation-delay:.2s}.flow .q1{animation-delay:1.7s}.flow .q2{animation-delay:2.7s}.flow .t1{animation-delay:3.7s}
+@keyframes run-c{0%{stroke-dashoffset:10;opacity:1;animation-timing-function:cubic-bezier(.5,0,.25,1)}15%{stroke-dashoffset:-116;opacity:1}15.1%,100%{stroke-dashoffset:-116;opacity:0}}
+@keyframes run-g{0%{stroke-dashoffset:26;opacity:1;animation-timing-function:cubic-bezier(.5,0,.25,1)}15%{stroke-dashoffset:-100;opacity:1}15.1%,100%{stroke-dashoffset:-100;opacity:0}}
+.flow .pg{fill:none;stroke:#2f7bff;stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center;animation:ping 6s infinite}
+.flow .s1{animation-delay:1.15s}.flow .s2{animation-delay:1.27s}.flow .s3{animation-delay:1.39s}.flow .s4{animation-delay:1.51s}
+.flow .db{animation-delay:2.65s}.flow .lp{animation-delay:3.7s}.flow .pl{animation-delay:4.7s}
+@keyframes ping{0%{opacity:.85;transform:scale(.5)}9%{opacity:0;transform:scale(2.6)}100%{opacity:0;transform:scale(2.6)}}
+.flow.idle *{animation-play-state:paused!important}
+@media(max-width:700px),(prefers-reduced-motion:reduce){.flow{display:none}}
