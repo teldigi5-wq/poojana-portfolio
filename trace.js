@@ -1,6 +1,6 @@
-import { mountGlassNav } from './assets/trace/glass-nav.js?v=3';
-import { mountRefraction } from './assets/trace/glass-refract.js';
-import { mountShowcase } from './assets/trace/showcase.js?v=6';
+import { mountGlassNav } from './assets/trace/glass-nav.js?v=4ecff648';
+import { mountRefraction } from './assets/trace/glass-refract.js?v=f768b2e2';
+import { mountShowcase } from './assets/trace/showcase.js?v=66dbfe5c';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -44,7 +44,7 @@ const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
   const bio = new IntersectionObserver(([en]) => {
     if (!en.isIntersecting) return; bio.disconnect();
-    import('./assets/trace/belt.js?v=3').then(m => m.mountBelt(belt, { portrait: 'assets/trace/card-portrait.webp' })).catch(() => {});
+    import('./assets/trace/belt.js?v=127a990e').then(m => m.mountBelt(belt, { portrait: 'assets/trace/card-portrait.webp' })).catch(() => {});
   }, { rootMargin: '500px' });
   bio.observe(belt);
 }
