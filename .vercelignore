@@ -6,3 +6,4 @@ source
 .github
 *.md
 staticwebapp.config.json
+holo-src

@@ -537,32 +537,22 @@ try {
   }
 } catch (err) { console.warn('connect', err); }
 
-/* intro film: scroll-triggered. Plays from the start each time it enters view, the greeting card is cued to the
-   hologram moment, and the card eases in with scroll progress. Pause control; static greeting with reduced motion. */
+/* intro hologram: Three.js scene (assets/trace/holo.js?v=4d43f13b) that projects the real intro video as a hologram and reveals it with scroll.
+   Falls back to the plain video with native controls when WebGL is missing, motion is reduced, or the module fails to load. */
 try {
-  const fig = document.querySelector('.clip'), clip = document.getElementById('clip'), cb = document.getElementById('clipBtn');
-  if (fig && clip && cb) {
-    const CUE = 1.5;                                   // seconds into the film when the hologram forms
-    let userPaused = reduce;
-    fig.classList.add('hud-armed');
-    const showHud = on => fig.classList.toggle('holo', on || reduce);
-    if (reduce) showHud(true);
-    const sync = () => { cb.setAttribute('aria-pressed', String(clip.paused)); cb.setAttribute('aria-label', clip.paused ? 'Play the intro video' : 'Pause the intro video'); cb.firstElementChild.textContent = clip.paused ? '▶' : '❚❚'; };
-    clip.addEventListener('ended', () => { showHud(true); sync(); });   // plays once, holds the last frame; the button replays
-    clip.addEventListener('timeupdate', () => { if (clip.currentTime >= CUE) showHud(true); });
-    const restart = () => { try { clip.currentTime = 0; } catch (_) {} if (!reduce) showHud(false); };
-    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; if (clip.ended) restart(); clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
-    new IntersectionObserver(([en]) => {
-      if (en.isIntersecting && !userPaused) { if (clip.ended) restart(); clip.play().catch(() => {}); } else clip.pause();
-      sync();
-    }, { threshold: 0.4 }).observe(clip);
-    new IntersectionObserver(([en]) => { if (!en.isIntersecting && clip.currentTime > 0) { clip.pause(); restart(); if (!reduce) userPaused = false; sync(); } }, { threshold: 0 }).observe(fig);
-    if (!reduce) {                                     // scroll-linked entrance: the film settles as the card arrives
-      let tk = false;
-      const upd = () => { tk = false; const r = fig.getBoundingClientRect(), vh = innerHeight; const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.62))); fig.style.setProperty('--cp', p.toFixed(3)); };
-      addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(upd); } }, { passive: true });
-      upd();
+  const sec = document.getElementById('intro'), clip = document.getElementById('clip');
+  if (sec && clip) {
+    const plain = () => { sec.classList.remove('holo-on'); clip.controls = true; };
+    const cantGL = () => { try { const c = document.createElement('canvas'); return !(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return true; } };
+    if (reduce || cantGL()) plain();
+    else {
+      let started = false;
+      const start = () => {
+        if (started) return; started = true;
+        sec.classList.add('holo-on');
+        import('./assets/trace/holo.js?v=4d43f13b').then(m => { if (!m.mountHolo(sec)) plain(); }).catch(() => plain());
+      };
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '1400px 0px' }).observe(sec);
     }
-    sync();
   }
-} catch (err) { console.warn('clip', err); }
+} catch (err) { console.warn('holo', err); }
