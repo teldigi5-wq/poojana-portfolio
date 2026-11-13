@@ -484,15 +484,32 @@ if (toTop) {
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
 try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }
 
-/* intro clip: plays muted while on screen, with a pause control */
+/* intro film: scroll-triggered. Plays from the start each time it enters view, the greeting card is cued to the
+   hologram moment, and the card eases in with scroll progress. Pause control; static greeting with reduced motion. */
 try {
-  const clip = document.getElementById('clip'), cb = document.getElementById('clipBtn');
-  if (clip && cb) {
+  const fig = document.querySelector('.clip'), clip = document.getElementById('clip'), cb = document.getElementById('clipBtn');
+  if (fig && clip && cb) {
+    const CUE = 1.5;                                   // seconds into the film when the hologram forms
     let userPaused = reduce;
+    fig.classList.add('hud-armed');
+    const showHud = on => fig.classList.toggle('holo', on || reduce);
+    if (reduce) showHud(true);
     const sync = () => { cb.setAttribute('aria-pressed', String(clip.paused)); cb.setAttribute('aria-label', clip.paused ? 'Play the intro video' : 'Pause the intro video'); cb.firstElementChild.textContent = clip.paused ? '▶' : '❚❚'; };
-    clip.addEventListener('ended', sync);   // plays once, holds the last frame; the button replays
-    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; if (clip.ended) clip.currentTime = 0; clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
-    new IntersectionObserver(([en]) => { if (en.isIntersecting && !userPaused) clip.play().catch(() => {}); else clip.pause(); sync(); }, { threshold: 0.35 }).observe(clip);
+    clip.addEventListener('ended', () => { showHud(true); sync(); });   // plays once, holds the last frame; the button replays
+    clip.addEventListener('timeupdate', () => { if (clip.currentTime >= CUE) showHud(true); });
+    const restart = () => { try { clip.currentTime = 0; } catch (_) {} if (!reduce) showHud(false); };
+    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; if (clip.ended) restart(); clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
+    new IntersectionObserver(([en]) => {
+      if (en.isIntersecting && !userPaused) { if (clip.ended) restart(); clip.play().catch(() => {}); } else clip.pause();
+      sync();
+    }, { threshold: 0.4 }).observe(clip);
+    new IntersectionObserver(([en]) => { if (!en.isIntersecting && clip.currentTime > 0) { clip.pause(); restart(); if (!reduce) userPaused = false; sync(); } }, { threshold: 0 }).observe(fig);
+    if (!reduce) {                                     // scroll-linked entrance: the film settles as the card arrives
+      let tk = false;
+      const upd = () => { tk = false; const r = fig.getBoundingClientRect(), vh = innerHeight; const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.62))); fig.style.setProperty('--cp', p.toFixed(3)); };
+      addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(upd); } }, { passive: true });
+      upd();
+    }
     sync();
   }
 } catch (err) { console.warn('clip', err); }
