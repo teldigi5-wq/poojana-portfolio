@@ -1,4 +1,4 @@
-import { mountGlassNav } from './assets/trace/glass-nav.js?v=2e0f0265';
+import { mountGlassNav } from './assets/trace/glass-nav.js?v=7677949e';
 import { mountRefraction } from './assets/trace/glass-refract.js?v=f768b2e2';
 import { mountShowcase } from './assets/trace/showcase.js?v=66dbfe5c';
 
@@ -361,6 +361,8 @@ function setActive(id) {
   const shown = k => { const a = $('#nav a[data-s="' + k + '"]'); return !!(a && a.getClientRects().length); };
   if (!shown(want)) want = want === 'services' ? 'work' : 'trace';   // the Services link is hidden on narrow screens: point the pill at the nearest visible link
   $$('#nav a').forEach(a => a.dataset.s === want ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+  const act = $('#nav a[aria-current="true"]'), sc = act && act.closest('nav');
+  if (sc && sc.scrollWidth > sc.clientWidth + 1) sc.scrollTo({ left: Math.max(0, act.offsetLeft - 8), behavior: 'auto' });
   const r = railMap[id];
   $$('#rail a').forEach(a => { const i = +a.dataset.r; a.classList.toggle('act', i === r); a.classList.toggle('done', i < r); });
   $$('#rail .seg i').forEach((s, i) => { s.style.transform = `scaleY(${i < r ? 1 : 0})`; s.style.transition = 'transform .5s'; });
@@ -560,6 +562,14 @@ try {
       const upd = () => { tk = false; const r = fig.getBoundingClientRect(), vh = innerHeight; const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.62))); fig.style.setProperty('--cp', p.toFixed(3)); };
       addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(upd); } }, { passive: true });
       upd();
+    }
+    const seek = document.getElementById('clipSeek'), tm = document.getElementById('clipTime');
+    if (seek) {
+      const fmt = t => '0:' + String(Math.floor(t)).padStart(2, '0');
+      const paint = () => { const d = clip.duration || 6, f = Math.min(1, clip.currentTime / d); seek.value = String(Math.round(f * 1000)); seek.style.setProperty('--p', (f * 100).toFixed(1) + '%'); if (tm) tm.textContent = fmt(clip.currentTime) + ' / ' + fmt(d); };
+      clip.addEventListener('timeupdate', paint); clip.addEventListener('loadedmetadata', paint); clip.addEventListener('ended', paint);
+      seek.addEventListener('input', () => { const d = clip.duration || 6; try { clip.currentTime = (seek.value / 1000) * d; } catch (_) {} if (clip.currentTime >= CUE) showHud(true); else if (!reduce) showHud(false); paint(); });
+      paint();
     }
     sync();
   }

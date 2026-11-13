@@ -188,7 +188,7 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
     const el = hovered || links.find(a => a.matches(activeSelector)) || links[0];
     if (!blob || !el) { st.tx = st.x = 0; st.tw = st.w = 0; kick(); return; }
     const r = el.getBoundingClientRect();
-    const tw = r.width + 12; const cx = r.left - hr.left + r.width / 2;
+    const tw = r.width + 4; const cx = r.left - hr.left + r.width / 2;
     st.tw = tw; st.tx = Math.min(Math.max(cx, tw / 2 + 6), hr.width - tw / 2 - 6);
     if (snap || reduce) { st.x = st.tx; st.w = st.tw; st.vx = st.vw = 0; }
     kick();
@@ -206,6 +206,12 @@ export function mountGlassNav(host, { imgSrc, activeSelector = '[aria-current="t
     tlight = [-0.55 + nx * 0.9, 0.85]; kick();
   });
   new ResizeObserver(resize).observe(host);
+  // the lens must follow its link whenever layout moves under it: nav scrolling on phones, late font load, text-size changes
+  const nav = host.querySelector('nav');
+  if (nav) { nav.addEventListener('scroll', () => retarget(true), { passive: true }); const lro = new ResizeObserver(() => retarget(true)); links.forEach(a => lro.observe(a)); lro.observe(nav); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => retarget(true));
+  addEventListener('load', () => retarget(true));
+  if (window.visualViewport) visualViewport.addEventListener('resize', () => retarget(true));
   addEventListener('resize', resize);
   const mo = new MutationObserver(() => retarget()); links.forEach(a => mo.observe(a, { attributes: true, attributeFilter: ['aria-current'] }));
 
