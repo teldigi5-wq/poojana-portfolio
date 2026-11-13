@@ -314,7 +314,36 @@ function setActive(id) {
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
 sections.forEach(s => io.observe(s));
 const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-$$('.reveal').forEach(el => rv.observe(el));
+/* ---------- text motion: headings rise out of a mask, lede copy darkens as you read it ---------- */
+if (!reduce) {
+  $$('.blk h2.reveal').forEach(h => {
+    const words = h.textContent.trim().split(/\s+/);
+    h.classList.remove('reveal'); h.classList.add('split');
+    h.setAttribute('aria-label', words.join(' '));
+    h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+  });
+  const leads = $$('.blk .lede').filter(p => !p.children.length).map(p => {
+    const words = p.textContent.trim().split(/\s+/);
+    p.innerHTML = words.map(w => `<span class="lw">${w}</span>`).join(' ');
+    p.classList.add('scrub');
+    return { p, sw: [...p.querySelectorAll('.lw')], done: false };
+  });
+  let sTick = false;
+  const scrub = () => {
+    sTick = false;
+    const vh = innerHeight;
+    for (const L of leads) {
+      const r = L.p.getBoundingClientRect();
+      if (r.bottom < -40 || r.top > vh) { if (r.top > vh) L.done = false; continue; }
+      const prog = clamp((vh * 0.9 - r.top) / (vh * 0.34 + r.height * 0.6));
+      const n = L.sw.length;
+      for (let i = 0; i < n; i++) L.sw[i].style.setProperty('--k', clamp(prog * (n + 5) - i).toFixed(2));
+    }
+  };
+  addEventListener('scroll', () => { if (!sTick) { sTick = true; requestAnimationFrame(scrub); } }, { passive: true });
+  addEventListener('resize', scrub); scrub();
+}
+$$('.reveal, .split').forEach(el => rv.observe(el));
 setActive('trace');
 
 /* ---------- shared rate limiter (console + lab) ---------- */

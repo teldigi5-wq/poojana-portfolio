@@ -389,3 +389,16 @@ html.ui-dark .rail a,html.ui-dark .rail a em{color:#aeb9d6}html.ui-dark .rail a.
 html.ui-dark .rail a b{color:#7c89aa}html.ui-dark .rail a.act b{color:#8fa4ff}
 html.ui-dark .rail a .n{background:transparent;border-color:#7c89aa;box-shadow:none}html.ui-dark .rail a.done .n{background:#fff;border-color:#fff}html.ui-dark .rail a.act .n{background:#8fa4ff;border-color:#8fa4ff;box-shadow:0 0 0 3px rgba(143,164,255,.2)}
 html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg i{background:#fff}
+
+/* text motion */
+.split{overflow:visible}
+.split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.05em .03em .14em;margin:-.05em -.03em -.14em}
+.split .w>span{display:inline-block;transform:translateY(112%) skewY(4deg);transform-origin:0 100%;transition:transform 1.15s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--i) * 80ms)}
+.split.in .w>span{transform:none}
+.scrub .lw{opacity:calc(.22 + var(--k, 0) * .78);transition:opacity .25s linear}
+.mp-links a,.hc-links a{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .45s cubic-bezier(.16,1,.3,1)}
+.mp-links a:hover,.mp-links a:focus-visible,.hc-links a:hover,.hc-links a:focus-visible{background-size:100% 1px}
+/* a longer, softer ease on every reveal */
+.reveal{transition-duration:1s,1s;transition-timing-function:cubic-bezier(.16,1,.3,1)}
+#work .reveal{transition-duration:.7s,.7s}
+@media(prefers-reduced-motion:reduce){.split .w>span{transform:none;transition:none}.scrub .lw{opacity:1}}
