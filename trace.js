@@ -38,7 +38,9 @@ const fitHero = () => {            // keep the headline clear of the laptop on a
     root.classList.add('tight'); root.style.setProperty('--hs', 1); fitTo();
   }
 };
-const measure = () => { vw = innerWidth; vh = innerHeight; origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
+const scrFx = $('#scrFx');
+const placeFx = () => { if (!scrFx) return; const a = toViewport([0.414, 0.49]), b = toViewport([0.588, 0.668]); Object.assign(scrFx.style, { left: a[0] * vw + 'px', top: a[1] * vh + 'px', width: (b[0] - a[0]) * vw + 'px', height: (b[1] - a[1]) * vh + 'px' }); };
+const measure = () => { vw = innerWidth; vh = innerHeight; placeFx(); origin = toViewport(TERM); root.style.setProperty('--ox', origin[0] * 100 + '%'); root.style.setProperty('--oy', origin[1] * 100 + '%'); fitHero(); };
 /* ID-badge lanyard (Three.js): loaded when the contact section is near */
 const belt = $('#belt');
 if (belt && 'IntersectionObserver' in window) {
@@ -275,6 +277,7 @@ function frame() {
   heroCopy.style.opacity = fade; heroCopy.style.transform = `translateY(${(-t * 60).toFixed(1)}px) scale(${(1 - t * 0.04).toFixed(3)})`;
   const hint = $('#hint'); hint.style.opacity = 1 - smooth(0, 0.12, t); hint.style.pointerEvents = t > 0.12 ? 'none' : 'auto';
   const mk = 1 - smooth(0, 0.14, t);
+  if (scrFx) scrFx.style.opacity = mk;
   for (const m of markers) {
     const vp = toViewport(m.iu);
     const px = (origin[0] + (vp[0] - origin[0]) * zEff) * vw, py = (origin[1] + (vp[1] - origin[1]) * zEff) * vh;
@@ -318,6 +321,20 @@ const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame((
 addEventListener('scroll', onScroll, { passive: true });
 addEventListener('resize', () => { measure(); frame(); });
 measure(); frame();
+
+/* hero depth: the labels and the headline drift against the pointer while you are at the top; no layer of the videos is touched */
+if (!reduce && !MOBILE && matchMedia('(pointer: fine)').matches) {
+  let tx = 0, ty = 0, cx = 0, cy = 0, run = false;
+  addEventListener('pointermove', e => { tx = (e.clientX / innerWidth - 0.5) * 2; ty = (e.clientY / innerHeight - 0.5) * 2; if (!run) { run = true; requestAnimationFrame(par); } }, { passive: true });
+  function par() {
+    const top = scrollY < 6 && !root.classList.contains('past-intro'), gx = top ? tx : 0, gy = top ? ty : 0;
+    cx += (gx - cx) * 0.08; cy += (gy - cy) * 0.08;
+    if (Math.abs(gx - cx) < 0.002 && Math.abs(gy - cy) < 0.002) { cx = gx; cy = gy; run = false; }
+    markers.forEach((m, i) => { const d = 10 + (i % 3) * 5; m.el.style.translate = `${(cx * d).toFixed(1)}px ${(cy * d * 0.7).toFixed(1)}px`; });
+    heroCopy.style.translate = `${(-cx * 6).toFixed(1)}px ${(-cy * 4).toFixed(1)}px`;
+    if (run) requestAnimationFrame(par);
+  }
+}
 
 /* tool ribbon: pause button, and it only runs while on screen */
 try {
