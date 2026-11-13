@@ -1,6 +1,6 @@
 import { mountGlassNav } from './assets/trace/glass-nav.js';
 import { mountRefraction } from './assets/trace/glass-refract.js';
-import { mountShowcase } from './assets/trace/showcase.js?v=1';
+import { mountShowcase } from './assets/trace/showcase.js?v=2';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];

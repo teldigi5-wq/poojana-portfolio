@@ -263,18 +263,13 @@ html.has-showcase .pj-list{display:none}
 .hc-track{--edge:24px;display:flex;gap:clamp(16px,2vw,28px);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--edge);max-width:none;padding:36px var(--edge) 56px;scrollbar-width:none;cursor:grab}
 .hc-track::-webkit-scrollbar{display:none}
 .hc-track.drag{scroll-snap-type:none;cursor:grabbing;user-select:none}
-.hc-card{all:unset;box-sizing:border-box;flex:none;width:min(84vw,420px);scroll-snap-align:center;display:flex;flex-direction:column;gap:6px;padding:14px 14px 22px;border-radius:34px;background:#fbfcff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(14,17,22,.04),0 16px 40px rgba(30,50,120,.08);cursor:pointer;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;-webkit-tap-highlight-color:transparent}
-@media(min-width:900px){.hc-card:nth-child(2){margin-top:34px}.hc-card:nth-child(3){margin-top:12px}}
+.hc-card{all:unset;box-sizing:border-box;flex:none;width:min(84vw,clamp(400px,34vw,600px));scroll-snap-align:center;display:flex;flex-direction:column;gap:6px;padding:14px 14px 22px;border-radius:34px;background:#fbfcff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(14,17,22,.04),0 16px 40px rgba(30,50,120,.08);cursor:pointer;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;-webkit-tap-highlight-color:transparent}
 .hc-card:hover{transform:translateY(-8px);box-shadow:0 1px 2px rgba(14,17,22,.04),0 28px 60px rgba(30,50,120,.16)}
 .hc-card:active{transform:translateY(-4px) scale(.985);transition-duration:.12s}
 .hc-card:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.hc-art{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:#cfdcf5;isolation:isolate}
-.hc-card[data-art=aetheris] .hc-art{border-radius:999px 999px 24px 24px}
-.hc-card[data-art=wayfarer] .hc-art{border-radius:24px;clip-path:polygon(0 0,100% 0,100% calc(100% - 30px),calc(100% - 30px) 100%,30px 100%,0 calc(100% - 30px))}
-.hc-card[data-art=boundarylab] .hc-art{border-radius:130px 24px 24px 24px}
+.hc-art{position:relative;display:block;aspect-ratio:16/11;overflow:hidden;border-radius:24px;background:#cfdcf5;isolation:isolate}
 .hc-art img{position:absolute;inset:-6%;width:112%;height:112%;max-width:none;object-fit:cover;transform:translate3d(calc(var(--px,0)*10px),calc(var(--py,0)*8px),0) scale(1);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 .hc-chip{position:absolute;left:14px;bottom:14px;z-index:3;padding:7px 12px;border-radius:999px;background:#fbfcff;color:var(--ink);font:500 13px/1 var(--sans);box-shadow:0 2px 10px rgba(14,17,22,.12)}
-.hc-card[data-art=aetheris] .hc-chip{left:50%;transform:translateX(-50%)}
 .hc-title{display:block;margin:12px 8px 0;font:650 clamp(24px,2.4vw,30px)/1.1 var(--sans);letter-spacing:-.03em;color:#0b1020}
 .hc-tag{display:block;margin:0 8px;font:400 15px/1.45 var(--sans);color:var(--muted)}
 .hc-proof{display:block;margin:10px 8px 0;padding-top:12px;border-top:1px solid var(--line);font:500 14px/1.5 var(--sans);color:#1d2840}
@@ -293,7 +288,7 @@ html.has-showcase .pj-list{display:none}
 .hc-card[data-art=wayfarer]:hover .hc-art img{transform:translate3d(calc(var(--px,0)*18px),calc(var(--py,0)*12px),0) scale(1.04)}
 .hc-scan{position:absolute;top:0;bottom:0;left:0;width:2px;z-index:2;background:linear-gradient(to bottom,transparent,var(--accent),transparent);box-shadow:0 0 18px 3px rgba(43,75,255,.35);opacity:0}
 .hc-card.vis .hc-scan{animation:hc-scan 5.5s cubic-bezier(.5,0,.3,1) infinite}
-@keyframes hc-scan{0%{transform:translateX(0);opacity:0}12%{opacity:.9}88%{opacity:.9}100%{transform:translateX(min(420px,76vw));opacity:0}}
+@keyframes hc-scan{0%{transform:translateX(0);opacity:0}12%{opacity:.9}88%{opacity:.9}100%{transform:translateX(min(600px,84vw));opacity:0}}
 /* entrance: one settle, staggered */
 .hc-track:not(.in) .hc-card{opacity:0;transform:translateY(26px) rotate(1.2deg)}
 .hc-track.in .hc-card{animation:hc-settle .8s cubic-bezier(.2,.8,.2,1) backwards}
@@ -331,3 +326,11 @@ html.dlg-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.hc-card,.hc-art img,.hc-probe svg{transition:none}.hc-track .hc-card{animation:none!important;opacity:1!important;transform:none!important}.hc-card.vis .hc-art img,.hc-card.vis .hc-scan,.hc-card:hover .hc-route path{animation:none}.pj-dialog[open]{animation:none}.hc-play{transition:none}}
 @media(prefers-contrast:more){.hc-card,.pj-dialog{border:1.5px solid #0b1020}}
 @media(pointer:coarse){.hc-track{cursor:auto}}
+
+/* pinned desktop mode: vertical scroll moves the cards sideways */
+.hc.hc-pin{position:relative}
+.hc-pin .hc-stick{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:64px;box-sizing:border-box}
+html.hc-pinned .hc-track{overflow:hidden;scroll-snap-type:none;cursor:default;padding-top:20px;padding-bottom:24px}
+html.hc-pinned .hc-rail{margin-top:0;padding-top:30px}
+@media(min-width:1100px){.hc-track{clip-path:inset(-40px 0 -60px 176px)}}   /* cards slide under the side rail instead of over it */
+@media(max-height:860px){.hc-pin .hc-art{aspect-ratio:16/9}.hc-pin .hc-row{min-height:34px}.hc-pin .hc-cap{display:none}}
