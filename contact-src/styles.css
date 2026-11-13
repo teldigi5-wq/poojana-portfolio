@@ -1,0 +1,9 @@
+/* Tailwind v4: theme + utilities only. No preflight, so nothing here can reset the rest of the page. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --color-ring: #2b4bff;
+  --color-primary: #0b1020;
+  --color-primary-foreground: #ffffff;
+}

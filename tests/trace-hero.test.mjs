@@ -88,12 +88,12 @@ test('intro clip section is labelled as AI-generated, muted and pausable',()=>{
   assert.match(sec,/poster="assets\/trace\/intro-hd-poster\.webp"/);
 });
 
-test('connect section: a working mail form with a plain email fallback',()=>{
+test('connect section: React island with a plain email fallback, old form and plane game gone',()=>{
   const h=readFileSync('index.html','utf8');
   const sec=h.slice(h.indexOf('id="connect"'),h.indexOf('</main>'));
-  assert.match(sec,/id="cnForm"/);
-  assert.match(sec,/id="cnName"[^>]*required/);
+  assert.match(sec,/id="contactRoot"/);
   assert.match(sec,/href="mailto:teldigi5@gmail\.com"/);
-  assert.match(sec,/aria-live="polite"/);
-  assert.ok(!/id="lpPkt"/.test(h),'the plane game is gone');
+  assert.ok(!/id="cnForm"|id="lpPkt"/.test(h));
+  assert.match(readFileSync('trace.js','utf8'),/assets\/trace\/contact\.js/);
+  for(const f of ['contact.js','contact.css','world-110.json']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size>1000,f);
 });

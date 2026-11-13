@@ -572,55 +572,6 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 .sv-grid .sv:nth-child(3n+2){transition-delay:.06s}.sv-grid .sv:nth-child(3n){transition-delay:.12s}
 @media(prefers-reduced-motion:reduce){.sv{transition:none}}
 
-/* connect: a plain, professional contact section. A real form that opens the visitor's mail app, with direct links beside it. */
-#connect{padding:clamp(72px,10vw,132px) 0 0;scroll-margin-top:0;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.7) 18%,#fff)}
-.cn{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,72px);align-items:start}
-.cn-l h2{max-width:14ch}
-.cn-l .lede{margin-bottom:28px}
-.cn-status{display:inline-flex;align-items:center;gap:9px;margin:0 0 6px;font:500 14px/1.4 var(--sans);color:#1d6b55}
-.cn-status i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px rgba(15,163,127,.15)}
-.cn-list{list-style:none;margin:0 0 28px;padding:0;border-top:1px solid var(--line)}
-.cn-list li{display:grid;grid-template-columns:96px minmax(0,1fr) auto;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line);font:400 15.5px/1.4 var(--sans)}
-.cn-list b{font:500 13px/1.4 var(--sans);color:var(--muted)}
-.cn-list a,.cn-list span.v{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
-.cn-list a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-.cn-copy{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font:500 13px/1 var(--sans);cursor:pointer}
-.cn-copy:hover{border-color:rgba(14,17,22,.3)}
-.cn-note{margin:0;font:400 14px/1.6 var(--sans);color:var(--muted);max-width:34em}
-.cn-form{padding:clamp(22px,3vw,36px);border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:0 24px 60px -30px rgba(20,32,80,.28)}
-.cn-form h3{margin:0 0 4px;font:650 22px/1.25 var(--sans);letter-spacing:-.02em}
-.cn-form>p{margin:0 0 22px;font:400 14.5px/1.55 var(--sans);color:var(--muted)}
-.cn-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.cn-f{display:block;margin:0 0 16px}
-.cn-f>span,.cn-fs legend{display:block;margin:0 0 7px;padding:0;font:600 13.5px/1.3 var(--sans);color:var(--ink)}
-.cn-f em{font-style:normal;font-weight:400;color:var(--muted)}
-.cn-f input,.cn-f textarea{width:100%;padding:12px 14px;border:1px solid rgba(14,17,22,.18);border-radius:10px;background:#fff;color:var(--ink);font:400 16px/1.4 var(--sans);transition:border-color .2s,box-shadow .2s}
-.cn-f textarea{min-height:132px;resize:vertical}
-.cn-f input:hover,.cn-f textarea:hover{border-color:rgba(14,17,22,.35)}
-.cn-f input:focus-visible,.cn-f textarea:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,75,255,.18)}
-.cn-fs{border:0;margin:0 0 18px;padding:0;min-width:0}
-.cn-chips{display:flex;flex-wrap:wrap;gap:8px}
-.cn-chips label{position:relative}
-.cn-chips input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
-.cn-chips span{display:inline-flex;align-items:center;height:38px;padding:0 15px;border-radius:999px;border:1px solid rgba(14,17,22,.18);font:500 14px/1 var(--sans);color:var(--ink);background:#fff;transition:background .2s,border-color .2s,color .2s}
-.cn-chips input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
-.cn-chips input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
-.cn-hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
-.cn-go{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
-.cn-go .btn{height:48px}
-.cn-msg{margin:0;font:400 13.5px/1.5 var(--sans);color:var(--muted)}
-.cn-msg.ok{color:#1d6b55}
-.cn-trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:clamp(56px,7vw,96px);border-top:1px solid var(--line)}
-.cn-trust>div{padding:26px 28px 26px 0}
-.cn-trust>div+div{padding-left:28px;border-left:1px solid var(--line)}
-.cn-trust h3{margin:0 0 8px;font:650 16px/1.3 var(--sans);letter-spacing:-.01em}
-.cn-trust p{margin:0;font:400 14.5px/1.6 var(--sans);color:var(--muted)}
-.cn-trust a{color:var(--accent);text-decoration:none;font-weight:600}.cn-trust a:hover{text-decoration:underline}
-.cn-end{margin-top:0;padding:22px 0 30px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font:400 13.5px/1.5 var(--sans);color:var(--muted)}
-.cn-end a{color:inherit}.cn-end a:hover{color:var(--accent)}
-@media(max-width:899px){.cn{grid-template-columns:1fr}.cn-l h2{max-width:none}}
-@media(max-width:699px){.cn-row{grid-template-columns:1fr;gap:0}.cn-list li{grid-template-columns:78px minmax(0,1fr) auto}.cn-trust{grid-template-columns:1fr}.cn-trust>div,.cn-trust>div+div{padding:20px 0;border-left:0}.cn-trust>div+div{border-top:1px solid var(--line)}.cn-go .btn{width:100%;justify-content:center}}
-
 /* phones: keep the nav clear of the avatar and let it scroll sideways rather than clip */
 @media(max-width:420px){.glass-nav{left:72px!important;right:10px!important;overflow:hidden}.glass-nav nav{overflow-x:auto;scrollbar-width:none;justify-content:flex-start!important;gap:0;-webkit-overflow-scrolling:touch}.glass-nav nav::-webkit-scrollbar{display:none}.glass-nav a{flex:none;padding:0 9px!important;font-size:12.5px!important}}
 
@@ -630,31 +581,10 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 .glass-nav.no-gl a[aria-current="true"]{background:rgba(255,255,255,.8)}
 .glass-nav.no-gl.tone-dark a[aria-current="true"]{background:rgba(255,255,255,.18)}
 
-/* connect, premium: an ink sheet that closes the page, hairlines instead of boxes, one white form card */
-#connect{background:radial-gradient(120% 80% at 80% 0%,#18245a 0,#0b1020 55%) ,#0b1020;color:#e9eeff;padding-top:clamp(84px,11vw,148px);margin-top:0;position:relative;overflow:hidden}
-#connect::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(80% 60% at 70% 20%,#000,transparent);mask-image:radial-gradient(80% 60% at 70% 20%,#000,transparent)}
-#connect .wrap{position:relative}
-.cn-eb{display:inline-block;font:500 13px/1 var(--mono);letter-spacing:.02em;color:#9db0ff;padding:0 0 12px;border-bottom:1px solid rgba(157,176,255,.45)}
-#connect h2{color:#fff;font-size:clamp(38px,5.4vw,68px);line-height:1.04;letter-spacing:-.045em;max-width:13ch}
-#connect .lede{color:#b9c4e6;max-width:30em}
-.cn-status{color:#7ee0c3}.cn-status i{background:#35d3a4;box-shadow:0 0 0 4px rgba(53,211,164,.18)}
-.cn-list{border-top:1px solid rgba(255,255,255,.14)}
-.cn-list li{border-bottom:1px solid rgba(255,255,255,.14);padding:17px 0}
-.cn-list b{color:#8b98c4}.cn-list a,.cn-list span.v{color:#fff}.cn-list span.v{font:500 12px/1 var(--mono);color:#8b98c4}
-.cn-list a:hover{color:#a9b9ff}
-.cn-copy{background:transparent;color:#e9eeff;border-color:rgba(255,255,255,.28)}.cn-copy:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
-.cn-note{color:#8b98c4}
-.cn-form{background:#fff;color:#0e1116;border:0;border-radius:24px;padding:clamp(26px,3.4vw,44px);box-shadow:0 50px 90px -40px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.06)}
-.cn-form h3{font-size:24px}
-.cn-f input,.cn-f textarea{background:#f6f8ff;border-color:transparent}
-.cn-f input:hover,.cn-f textarea:hover{background:#eef2ff;border-color:transparent}
-.cn-f input:focus-visible,.cn-f textarea:focus-visible{background:#fff;border-color:var(--accent)}
-.cn-chips span{background:#f6f8ff;border-color:transparent}
-.cn-go .btn{background:var(--accent);height:52px;padding:0 30px;box-shadow:0 14px 30px -14px rgba(43,75,255,.8)}.cn-go .btn:hover{background:#1f3ee0}
-.cn-trust{border-top:1px solid rgba(255,255,255,.14);margin-top:clamp(64px,8vw,110px)}
-.cn-trust>div+div{border-left-color:rgba(255,255,255,.14)}
-.cn-trust h3{color:#fff}.cn-trust p{color:#9aa8d2}.cn-trust a{color:#a9b9ff}
-.cn-mark{margin:clamp(28px,5vw,64px) 0 0;font:700 clamp(40px,8.6vw,124px)/.95 var(--sans);letter-spacing:-.06em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.16);user-select:none;overflow:hidden}
-.cn-end{border-top:0;color:#8b98c4;padding:18px 0 76px}
-.cn-end a{color:#c7d2ff}.cn-end b{color:#e9eeff}
-@media(max-width:699px){.cn-mark{font-size:9.4vw}}
+/* connect: the React island supplies its own look; this only frames the section and styles the fallback + footer */
+#connect{padding:0;background:#f4f7ff}
+.cn-fallback{padding:clamp(72px,10vw,120px) 0;text-align:center}
+.cn-fallback h2{margin:0 auto 12px;max-width:20ch}
+.cn-fallback .lede{margin:0 auto}
+.cn-end{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;padding:22px 0 76px;border-top:1px solid var(--line);font:400 13.5px/1.5 var(--sans);color:var(--muted)}
+.cn-end a{color:inherit}.cn-end a:hover{color:var(--accent)}
