@@ -603,3 +603,8 @@ html.ui-dark .cv{background:#fff;color:#0e1116;box-shadow:0 10px 28px -10px rgba
 .elog li a:hover{text-decoration:underline;text-underline-offset:3px}
 .elog-note{margin:16px 0 0;font:400 14px/1.6 var(--sans);color:var(--muted)}
 @media(max-width:560px){.elog li{grid-template-columns:1fr}.elog li a{grid-column:1}}
+
+/* project cards: the "Open the trace" link always sits at the bottom, with a plain solid arrow */
+.hc-probe{margin-top:auto;padding-top:14px}
+.hc-card .hc-proof{margin-bottom:0}
+.hc-probe .dash{stroke-dasharray:none}

@@ -696,7 +696,7 @@ interface ContactWithGlobeProps {
 }
 
 const FIELD =
-  "[font-family:inherit] w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-[#2b4bff] focus:ring-2 focus:ring-[#2b4bff]/15 transition-all duration-200";
+  "[font-family:inherit] [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#f8fafc] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-[#2b4bff] focus:ring-2 focus:ring-[#2b4bff]/15 transition-all duration-200";
 const LABEL = "text-xs font-semibold tracking-widest uppercase text-slate-500";
 
 export default function ContactWithGlobe({
@@ -720,8 +720,18 @@ export default function ContactWithGlobe({
     if (!name) { setStatus({ ok: false, text: "Add your name." }); el("name")?.focus(); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setStatus({ ok: false, text: "Add a valid email so I can reply." }); el("email")?.focus(); return; }
     if (!message) { setStatus({ ok: false, text: "Add a short message." }); el("message")?.focus(); return; }
-    const body = `${message}\n\n${name}${company ? `\n${company}` : ""}\n${email}`;
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(`Hello from ${name}`)}&body=${encodeURIComponent(body)}`;
+    const lines = [
+      "Hi Poojana,",
+      "",
+      message,
+      "",
+      "—",
+      `Name: ${name}`,
+      ...(company ? [`Company: ${company}`] : []),
+      `Reply to: ${email}`,
+    ];
+    const subject = `Portfolio message from ${name}${company ? ` (${company})` : ""}`;
+    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
     setStatus({ ok: true, text: `Your mail app should open with the message ready. If it does not, write to ${EMAIL}.` });
   };
 
