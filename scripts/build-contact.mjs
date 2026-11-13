@@ -17,6 +17,7 @@ await build({
   nodePaths: [NM],
   alias: {
     '@': src,
+    d3: join(src, 'shims/d3.ts'),
     'motion/react': join(src, 'shims/motion.tsx'),
     'lucide-react': join(src, 'shims/lucide.tsx'),
     '@radix-ui/react-slot': join(src, 'shims/radix-slot.tsx'),
