@@ -320,9 +320,9 @@ addEventListener('resize', () => { measure(); frame(); });
 measure(); frame();
 
 /* ---------- section tracking: nav, rail ---------- */
-const sections = ['trace', 'gateway', 'work', 'lab', 'about', 'contact'].map(id => $('#' + id)).filter(Boolean);
-const navMap = { trace: 'trace', gateway: 'trace', work: 'work', lab: 'lab', about: 'about', contact: 'about' };
-const railMap = { trace: 0, gateway: 1, work: 2, lab: 3, about: 4, contact: 4 };
+const sections = ['trace', 'gateway', 'work', 'lab', 'about', 'contact', 'launch'].map(id => $('#' + id)).filter(Boolean);
+const navMap = { trace: 'trace', gateway: 'trace', work: 'work', lab: 'lab', about: 'about', contact: 'about', launch: 'about' };
+const railMap = { trace: 0, gateway: 1, work: 2, lab: 3, about: 4, contact: 4, launch: 4 };
 let current = '';
 function setActive(id) {
   if (id === current) return; current = id;
@@ -559,7 +559,13 @@ try {
     autoBtn.addEventListener('click', () => { if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); });
     pkt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (lp.dataset.state === 'hit') { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; rest(); } sendAuto(); } });
     copyBtn.addEventListener('click', async () => { try { await navigator.clipboard.writeText('teldigi5@gmail.com'); copyBtn.textContent = 'Copied ✓'; } catch { copyBtn.textContent = 'teldigi5@gmail.com'; } setTimeout(() => copyBtn.textContent = 'Copy email', 2200); });
-    const reset = () => { pkt.style.opacity = '1'; lp.dataset.state = 'idle'; done_.setAttribute('aria-hidden', 'true'); rest(); setStatus('Ready when you are.'); };
+    const reset = () => { writeBtn.textContent = 'Write to me'; msg.textContent = 'Now write the real one.'; pkt.style.opacity = '1'; lp.dataset.state = 'idle'; done_.setAttribute('aria-hidden', 'true'); rest(); setStatus('Ready when you are.'); };
+    const writeBtn = document.getElementById('laWrite'), msg = document.getElementById('laMsg');
+    writeBtn.addEventListener('click', async () => {   // a bare mailto does nothing without a mail app: copy the address too and say so
+      let ok = false; try { await navigator.clipboard.writeText('teldigi5@gmail.com'); ok = true; } catch (_) {}
+      msg.textContent = ok ? 'Opening your mail app. If nothing opens, the address teldigi5@gmail.com is copied.' : 'Opening your mail app. If nothing opens, write to teldigi5@gmail.com.';
+      writeBtn.textContent = ok ? 'Address copied ✓' : 'Write to me';
+    });
     againBtn.addEventListener('click', () => { reset(); pkt.focus({ preventScroll: true }); });
     new MutationObserver(() => done_.setAttribute('aria-hidden', String(lp.dataset.state !== 'hit'))).observe(lp, { attributes: true, attributeFilter: ['data-state'] });
     /* sky: day -> dusk -> night as the section scrolls into place; stars drawn once */
