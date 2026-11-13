@@ -537,7 +537,7 @@ try {
   }
 } catch (err) { console.warn('connect', err); }
 
-/* intro hologram: Three.js scene (assets/trace/holo.js?v=eb672ac5) that projects the real intro video as a hologram and reveals it with scroll.
+/* intro hologram: Three.js scene (assets/trace/holo.js?v=b0b7c0e2) that projects the real intro video as a hologram and reveals it with scroll.
    Falls back to the plain video with native controls when WebGL is missing, motion is reduced, or the module fails to load. */
 try {
   const sec = document.getElementById('intro'), clip = document.getElementById('clip');
@@ -550,7 +550,7 @@ try {
       const start = () => {
         if (started) return; started = true;
         sec.classList.add('holo-on');
-        import('./assets/trace/holo.js?v=eb672ac5').then(m => { if (!m.mountHolo(sec)) plain(); }).catch(() => plain());
+        import('./assets/trace/holo.js?v=b0b7c0e2').then(m => { if (!m.mountHolo(sec)) plain(); }).catch(() => plain());
       };
       new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '1400px 0px' }).observe(sec);
     }
