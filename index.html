@@ -100,7 +100,7 @@
   <div class="wrap">
     <span class="eyebrow reveal">03 · SERVICES</span>
     <h2 id="wk-h" class="reveal">Three projects. Honest status on each.</h2>
-    <p class="lede reveal">Strongest evidence first. Each project shows what it is, what has actually been verified, and where to inspect it. The track shows how far each one has travelled.</p>
+    <p class="lede reveal">Strongest evidence first. Each project shows what it is, what has actually been verified, and where to inspect it. The track shows each one’s stage: research, prototype or public.</p>
     <ol class="pj-list">
       <li><article class="pj reveal" aria-labelledby="pj-ae">
         <header class="pj-head">
@@ -110,7 +110,7 @@
             <span class="track" role="img" aria-label="Stage 1 of 3: Research"><i></i></span>
             <span class="stages" aria-hidden="true"><span class="on">Research</span><span>Prototype</span><span>Public</span></span>
           </div>
-          <p class="pstatus"><i aria-hidden="true"></i>Research · hardware validation pending</p>
+          <p class="pstatus"><i aria-hidden="true"></i>Research stage · hardware validation pending</p>
           <div class="links">
             <a class="btn" href="https://github.com/teldigi5-wq/aetheris-platform/actions/runs/42329287377" target="_blank" rel="noopener noreferrer">Inspect the CI run <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
             <a class="btn alt" href="https://github.com/teldigi5-wq/aetheris-platform" target="_blank" rel="noopener noreferrer">Architecture &amp; source <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
@@ -118,7 +118,7 @@
         </header>
         <div class="pj-body">
           <p class="plede">Backend services with explicit boundaries and an independently owned AI runtime, fronted by a single gateway.</p>
-          <section class="evi verified" aria-labelledby="pj-ae-ev"><h4 id="pj-ae-ev">Evidence and limits</h4><p>Verified in CI: 8 relay workers competed for 24 events and each was claimed once. That proves this controlled test, not an exactly-once guarantee. Not production-ready.</p></section>
+          <section class="evi verified" aria-labelledby="pj-ae-ev"><h4 id="pj-ae-ev">Verified evidence and limits</h4><p>Verified in CI: 8 relay workers competed for 24 events and each was claimed once. That proves this controlled test, not an exactly-once guarantee. Not production-ready.</p></section>
           <dl class="kv"><div><dt>Focus</dt><dd>Backend &amp; distributed systems</dd></div><div><dt>Stack</dt><dd>Java · Spring · PostgreSQL · Redis · RabbitMQ</dd></div></dl>
         </div>
       </article></li>
@@ -130,15 +130,15 @@
             <span class="track" role="img" aria-label="Stage 3 of 3: Public"><i></i></span>
             <span class="stages" aria-hidden="true"><span>Research</span><span>Prototype</span><span class="on">Public</span></span>
           </div>
-          <p class="pstatus"><i aria-hidden="true"></i>Public planning experience · no live booking</p>
+          <p class="pstatus"><i aria-hidden="true"></i>Public stage · planning experience, no live booking</p>
           <div class="links">
             <a class="btn" href="https://wayfarer-world-travel.vercel.app/" target="_blank" rel="noopener noreferrer">Try the live app <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
-            <a class="btn alt" href="https://github.com/teldigi5-wq/wayfarer-world-travel" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
+            <a class="btn alt" href="https://github.com/teldigi5-wq/wayfarer-world-travel" target="_blank" rel="noopener noreferrer">Source on GitHub <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
           </div>
         </header>
         <div class="pj-body">
           <p class="plede">Connecting discovery, planning and the first moments of arrival, and still useful without paid APIs.</p>
-          <section class="evi" aria-labelledby="pj-wf-ev"><h4 id="pj-wf-ev">Evidence and limits</h4><p>Six rule-based planning assistants work with browser-local plans. Provider-based AI and live booking are disabled.</p></section>
+          <section class="evi" aria-labelledby="pj-wf-ev"><h4 id="pj-wf-ev">What it does and its limits</h4><p>Six rule-based planning assistants work with browser-local plans. Provider-based AI and live booking are disabled.</p></section>
           <dl class="kv"><div><dt>Focus</dt><dd>Full-stack product development</dd></div><div><dt>Scope</dt><dd>Discovery · itineraries · local persistence</dd></div></dl>
         </div>
       </article></li>
@@ -150,14 +150,14 @@
             <span class="track" role="img" aria-label="Stage 2 of 3: Prototype"><i></i></span>
             <span class="stages" aria-hidden="true"><span>Research</span><span class="on">Prototype</span><span>Public</span></span>
           </div>
-          <p class="pstatus"><i aria-hidden="true"></i>Pre-release prototype</p>
+          <p class="pstatus"><i aria-hidden="true"></i>Prototype stage · pre-release</p>
           <div class="links">
             <a class="btn" href="https://boundarylab.vercel.app/" target="_blank" rel="noopener noreferrer">Product overview <span aria-hidden="true">↗</span><span class="sr">(opens in a new tab)</span></a>
           </div>
         </header>
         <div class="pj-body">
-          <p class="plede">Local-first authorization verification, independent of Aetheris Platform. Change the identity, resource or rule and follow the checks behind each decision.</p>
-          <section class="evi" aria-labelledby="pj-bl-ev"><h4 id="pj-bl-ev">Evidence and limits</h4><p>The in-browser model on this site demonstrates the rules only. It does not validate BoundaryLab’s emulator or any live system.</p></section>
+          <p class="plede">Local-first authorization verification, independent of Aetheris Platform. In BoundaryLab you change the identity, resource or rule and follow the checks behind each decision.</p>
+          <section class="evi" aria-labelledby="pj-bl-ev"><h4 id="pj-bl-ev">Limits</h4><p>The <a href="#demoAuth">in-browser model on this site</a> demonstrates the rules only. It does not validate BoundaryLab’s emulator or any live system.</p></section>
           <dl class="kv"><div><dt>Focus</dt><dd>Authorization engineering</dd></div><div><dt>Scope</dt><dd>Ownership · tenant isolation · evidence</dd></div></dl>
         </div>
       </article></li>

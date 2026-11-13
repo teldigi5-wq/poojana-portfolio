@@ -79,7 +79,7 @@ rounded:
   tag: "8px"
   control: "10px"
   inset: "16px"
-  row: "20px"
+  media: "20px"
   console: "24px"
   panel: "28px"
   pill: "999px"
@@ -137,11 +137,11 @@ components:
     textColor: "{colors.refusal-red}"
     rounded: "{rounded.pill}"
     padding: "6px 12px"
-  project-row-selected:
-    backgroundColor: "{colors.cobalt-wash}"
+  project-card:
+    backgroundColor: "#fbfcff"
     textColor: "{colors.ink}"
-    rounded: "{rounded.row}"
-    padding: "18px"
+    rounded: "{rounded.panel}"
+    padding: "clamp(24px, 3vw, 36px)"
   instrument-console:
     backgroundColor: "{colors.night-ink}"
     textColor: "{colors.instrument-text}"
@@ -179,8 +179,8 @@ This is a restrained, evidence-first system. It should never look like a templat
 A cool porcelain-and-ink neutral field with one cobalt path, two semantic status hues, and a separate night palette that exists only inside instruments.
 
 ### Primary
-- **Trace Cobalt** (#2b4bff): the colour of the request's path. It marks the active rail step, the progress bar, the selected project row (fill plus a 3px inset edge), the selected project's status line, the Send button, eyebrow labels and every focus ring.
-- **Cobalt Wash** (#e9edff): the quiet field behind cobalt text, used for eyebrow pills, the selected project row and the selected palette item. It is never used as a section background.
+- **Trace Cobalt** (#2b4bff): the colour of the request's path. It marks the active rail step, the progress bar, the Send button, eyebrow labels and every focus ring.
+- **Cobalt Wash** (#e9edff): the quiet field behind cobalt text, used for eyebrow pills and the selected palette item. It is never used as a section background.
 
 ### Neutral
 - **Ink** (#0e1116): the base text colour, primary button fill, completed rail steps and progress tracks.
@@ -220,7 +220,7 @@ A cool porcelain-and-ink neutral field with one cobalt path, two semantic status
 - **Display** (650, clamp(38px→78px), line-height 1, −0.045em): the hero statement only. It is balanced, at most 17ch, and each word rises in on load.
 - **Statement** (650, clamp(48px→112px), 0.92, −0.05em): the single closing line in Response ("200 OK. Your move.").
 - **Headline** (650, clamp(34px→60px), 1.02, −0.04em): section titles. Balanced, at most 16ch, in Night Ink.
-- **Title** (650, 34px, 1.1, −0.03em): the selected project's name in the Work detail. **Title Small** (650, 19px, 1.2) is used for Lab demo titles; the About title sits at 22px.
+- **Title** (650, clamp(26px→34px), 1.1, −0.03em): project names on the Work cards. **Title Small** (650, 19px, 1.2) is used for Lab demo titles; the About title sits at 22px.
 - **Lede** (400, 18px, 1.55): section introductions, at most 36em, in Body Slate.
 - **Body** (400, 15–16px, 1.55–1.6): project detail, evidence and about copy, held to 60ch.
 - **Label** (500, 13px sans): status lines, definition keys and other UI labels on reading surfaces.
@@ -243,12 +243,12 @@ Spacing runs on a loose 8px-based rhythm: 8, 12, 16, 24 and 30px inside componen
 
 ## Elevation & Depth
 
-A hybrid system with one clear division. Frosted glass and lift belong to chrome that floats over the scene; reading surfaces are quiet. Floating chrome uses translucent white with a backdrop blur (14px) and saturation boost, a 1px white rim, and a soft blue-tinted shadow. Content panels (`.panel`) still carry a lighter glass, but the direction is quieter: the Work detail has already moved to a hairline border with a faint shadow. Instruments sit on night ink with deep, cool shadows that read as weight rather than glow.
+A hybrid system with one clear division. Frosted glass and lift belong to chrome that floats over the scene; reading surfaces are quiet. Floating chrome uses translucent white with a backdrop blur (14px) and saturation boost, a 1px white rim, and a soft blue-tinted shadow. Content panels (`.panel`) still carry a lighter glass, but the direction is quieter: the Work project cards are already solid, with a hairline border and a faint shadow. Instruments sit on night ink with deep, cool shadows that read as weight rather than glow.
 
 ### Shadow Vocabulary
 - **Chrome float** (`box-shadow: 0 10px 30px rgba(32,56,140,.12)`): the nav, badge, talk button and hint pills.
 - **Panel ambient** (`box-shadow: 0 24px 70px rgba(30,50,120,.12)`): glass content panels.
-- **Reading quiet** (`box-shadow: 0 18px 50px rgba(30,50,120,.08)`): the Work detail and other evidence surfaces.
+- **Reading quiet** (`box-shadow: 0 1px 2px rgba(14,17,22,.04), 0 10px 30px rgba(30,50,120,.05)`): the Work project cards and other evidence surfaces.
 - **Instrument weight** (`box-shadow: 0 30px 80px rgba(15,25,70,.3)`): the API console and JSON card.
 - **Palette lift** (`box-shadow: 0 40px 120px rgba(20,30,80,.35)`): the command palette dialog.
 - **Button hover** (`box-shadow: 0 8px 22px rgba(14,17,22,.25)`): the primary button on hover, with a 1px rise.
@@ -260,7 +260,7 @@ A hybrid system with one clear division. Frosted glass and lift belong to chrome
 
 ## Shapes
 
-Anything pressable is a pill (999px): buttons, chips, eyebrows, the nav, the badge, endpoint toggles and segment controls. Containers use large soft radii that step down as they nest: glass panel 28px, console and JSON 24px, project row 20px, inset blocks 16px, Send button 10px, tags 8px, keycaps 6px. Status is a small filled circle (8–10px) and never an icon. Evidence is marked by a 3px left rule: Body Slate by default, Verified Green only when the block states a verified result, and selection by a 3px inset edge in Trace Cobalt. Progress is a rounded 14px track with an ink or cobalt fill.
+Anything pressable is a pill (999px): buttons, chips, eyebrows, the nav, the badge, endpoint toggles and segment controls. Containers use large soft radii that step down as they nest: glass panel 28px, console and JSON 24px, inset blocks 16px, Send button 10px, tags 8px, keycaps 6px. Status is a small filled circle (8–10px) and never an icon. Evidence is marked by a 3px left rule: Body Slate by default, Verified Green only when the block states a verified result. Progress is a 6px pill track filled from the left in Body Slate.
 
 ## Components
 
@@ -280,7 +280,6 @@ Precise and quiet: pill shapes, instant press feedback, no flourish.
 
 ### Cards / Containers
 - **Glass panel:** 28px radius, 74% white, 22px blur, white rim, Panel ambient shadow. Used for Lab demos, the project list and About.
-- **Work detail:** quieter than a panel. Hairline border, Reading-quiet shadow and 30px padding (22px on phones). It shows the status line first, then Evidence and limits (a 3px left rule: Body Slate with an Ink heading by default; Verified Green with a Verified Deep heading only when the block states a verified result, e.g. a CI run), then the facts list (a hairline-topped definition list with Label Slate keys), then links.
 
 ### Inputs and Toggles
 - **Segment control:** a pill track at 7% ink. The selected segment becomes a white pill with a small shadow.
@@ -297,8 +296,8 @@ Precise and quiet: pill shapes, instant press feedback, no flourish.
 ### Instrument Console (signature)
 A night-ink inset with a 24px radius and the Instrument weight shadow. The bar has a mint verb tag, the path and a cobalt Send button, with endpoint pills below. Two panes (headers, body) stack under 760px. A mono footnote states plainly that the console is simulated. This is the only place mint, syntax colours and dense mono live.
 
-### Project Row (signature)
-A two-column button (150px name, maturity track) with a 20px radius. When selected it gets a Cobalt Wash fill, a 3px cobalt inset edge and a cobalt track fill. The track shows how far each project has really travelled, never further.
+### Project Card (signature)
+One always-open card per project, ordered by strength of evidence and written in the HTML so it works without JavaScript. Solid #fbfcff surface, 28px radius, hairline border and the Reading-quiet shadow, on the solid Work ground (#f4f7fc) so the hero photo never shows behind text. The left column holds the name (Title), tagline, the stage track (filled from the left; captions in sans Label Slate, current stage in Ink) with a screen-reader label such as "Stage 1 of 3: Research", one status line and the proof links (solid Ink primary, quiet secondary). The right column holds what the project is, then the evidence block (3px left rule: Body Slate by default, Verified Green only for a verified result), then a hairline-topped facts list. It stacks to one column under 860px, with the proof link still above the evidence. The track shows how far each project has really travelled, never further.
 
 ## Do's and Don'ts
 
