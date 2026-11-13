@@ -154,10 +154,6 @@ export function mountHolo(sec) {
 
   const bgU = { uOn: { value: 0 } };
   const bgMat = f => new ShaderMaterial({ uniforms: bgU, vertexShader: VERT, fragmentShader: f, transparent: true, depthWrite: false, blending: NormalBlending });
-  const horizon = new Mesh(new PlaneGeometry(70, 0.7), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ float d = 1.0 - abs(vUv.y - 0.5) * 2.0; gl_FragColor = vec4(vec3(0.86, 0.94, 1.0), (pow(d, 2.6) * 0.95) * uOn); }'));
-  horizon.position.set(0, -1.3, -7); horizon.renderOrder = 0; world.add(horizon);
-  const floorTint = new Mesh(new PlaneGeometry(70, 12), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ gl_FragColor = vec4(vec3(0.22, 0.34, 0.7), (0.1 + 0.16 * (1.0 - vUv.y)) * uOn); }'));
-  floorTint.position.set(0, -1.3 - 6.0, -7); floorTint.renderOrder = 0; world.add(floorTint);
   const halo = new Mesh(new PlaneGeometry(8, 8), bgMat('precision highp float; uniform float uOn; varying vec2 vUv; void main(){ float r = length((vUv - 0.5) * 2.0); gl_FragColor = vec4(vec3(0.7, 0.85, 1.0), pow(max(0.0, 1.0 - r), 2.0) * 0.42 * uOn); }'));
   halo.position.set(0, 0.1, -2.2); halo.renderOrder = 0; world.add(halo);
   const coneU = { uTime: U.uTime, uCone: { value: 0 } };
