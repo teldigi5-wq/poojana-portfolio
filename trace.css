@@ -286,9 +286,6 @@ html.has-showcase .pj-list{display:none}
 .hc-card:hover .hc-route path{animation:hc-flow 1.6s linear infinite}
 @keyframes hc-flow{to{stroke-dashoffset:-32}}
 .hc-card[data-art=wayfarer]:hover .hc-art img{transform:translate3d(calc(var(--px,0)*18px),calc(var(--py,0)*12px),0) scale(1.04)}
-.hc-scan{position:absolute;top:0;bottom:0;left:0;width:2px;z-index:2;background:linear-gradient(to bottom,transparent,var(--accent),transparent);box-shadow:0 0 18px 3px rgba(43,75,255,.35);opacity:0}
-.hc-card.vis .hc-scan{animation:hc-scan 5.5s cubic-bezier(.5,0,.3,1) infinite}
-@keyframes hc-scan{0%{transform:translateX(0);opacity:0}12%{opacity:.9}88%{opacity:.9}100%{transform:translateX(min(600px,84vw));opacity:0}}
 /* entrance: one settle, staggered */
 .hc-track:not(.in) .hc-card{opacity:0;transform:translateY(26px) rotate(1.2deg)}
 .hc-track.in .hc-card{animation:hc-settle .8s cubic-bezier(.2,.8,.2,1) backwards}

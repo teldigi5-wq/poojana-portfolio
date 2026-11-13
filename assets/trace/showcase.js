@@ -7,7 +7,7 @@ const ARROW = '<svg viewBox="0 0 44 12" aria-hidden="true"><path class="dash" d=
 const FX = {
   aetheris: '',
   wayfarer: '<svg class="hc-route" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path d="M6 52C22 14 40 58 58 30S82 8 94 12"/></svg>',
-  boundarylab: '<span class="hc-scan" aria-hidden="true"></span>'
+  boundarylab: ''
 };
 
 export function mountShowcase(host, list) {
