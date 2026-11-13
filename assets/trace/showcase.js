@@ -49,28 +49,45 @@ export function mountShowcase(host, list) {
     max = Math.max(0, track.scrollWidth - track.clientWidth);
     if (pinned) { host.style.height = `calc(100vh + ${max}px)`; top = host.getBoundingClientRect().top + scrollY; }
   };
-  const pinScroll = () => { if (max > 0) track.scrollLeft = Math.min(1, Math.max(0, (scrollY - top) / max)) * max; };
+  /* the cards ride an eased value (translate), not the raw scroll offset: wheel notches glide instead of stepping */
+  let tx = 0, tgt = 0, raf = 0, last = 0, setP = () => {};
+  const paint = () => { track.style.setProperty('--tx', tx.toFixed(2)); setP(max > 0 ? tx / max : 0, tx); };
+  const step = t => {
+    const dt = Math.min(64, t - (last || t)); last = t;
+    tx += (tgt - tx) * (1 - Math.exp(-dt / 120));
+    if (Math.abs(tgt - tx) < 0.25) { tx = tgt; raf = 0; last = 0; } else raf = requestAnimationFrame(step);
+    paint();
+  };
+  const pinScroll = jump => {
+    tgt = max > 0 ? Math.min(1, Math.max(0, (scrollY - top) / max)) * max : 0;
+    if (jump) { tx = tgt; paint(); } else if (!raf) raf = requestAnimationFrame(step);
+  };
   if (pinned) {
     host.classList.add('hc-pin'); document.documentElement.classList.add('hc-pinned');
     cap.textContent = 'Keep scrolling to move through the projects. Open a card for the evidence.';
-    measure(); addEventListener('load', () => { measure(); pinScroll(); });
-    addEventListener('resize', () => { measure(); pinScroll(); });
+    measure(); addEventListener('load', () => { measure(); pinScroll(true); });
+    addEventListener('resize', () => { measure(); pinScroll(true); });
+    track.addEventListener('scroll', () => { if (track.scrollLeft) track.scrollLeft = 0; }, { passive: true });   // focus must not move the clipped track
     let pr = 0; addEventListener('scroll', () => { if (!pr) pr = requestAnimationFrame(() => { pr = 0; pinScroll(); }); }, { passive: true });
   }
   const leftFor = c => Math.min(max, Math.max(0, c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2));
 
   /* playhead: follows the scroll position of the track, marks the current span */
   let cur = -1, ticking = false, touched = false;
-  const sync = () => {
-    ticking = false;
-    const max = track.scrollWidth - track.clientWidth, p = max > 0 ? Math.min(1, Math.max(0, track.scrollLeft / max)) : 0;
+  const show = (p, px) => {
     rail.style.setProperty('--p', p.toFixed(4));
     const i = Math.round(p * (items.length - 1));
     if (i !== cur) { cur = i; rows.forEach((r, k) => { if (k === i) r.setAttribute('aria-current', 'true'); else r.removeAttribute('aria-current'); }); nEl.textContent = (i + 1) + '/' + items.length; }
-    if (!touched && track.scrollLeft > 12) { touched = true; cap.classList.add('quiet'); }
+    if (!touched && px > 12) { touched = true; cap.classList.add('quiet'); }
+  };
+  setP = show;
+  const sync = () => {
+    ticking = false; if (pinned) return;
+    const max = track.scrollWidth - track.clientWidth;
+    show(max > 0 ? Math.min(1, Math.max(0, track.scrollLeft / max)) : 0, track.scrollLeft);
   };
   track.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(sync); } }, { passive: true });
-  sync();
+  if (pinned) pinScroll(true); else sync();
   const goTo = i => { if (pinned) { measure(); scrollTo({ top: top + leftFor(cards[i]), behavior: 'smooth' }); } else cards[i].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' }); };
   if (pinned) cards.forEach((c, i) => c.addEventListener('focus', () => { if (c.matches(':focus-visible')) { measure(); scrollTo({ top: top + leftFor(c), behavior: 'auto' }); } }));
   rows.forEach(r => r.addEventListener('click', () => goTo(+r.dataset.i)));
