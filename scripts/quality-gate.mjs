@@ -79,7 +79,7 @@ for (const ref of [...html.matchAll(/href="#([^"]+)"/g)].map(match => match[1]))
 }
 
 const budgets = {
-  'assets/trace/intro-hd.mp4': 1.5e6,
+  'assets/trace/intro-hd.mp4': 1.5e6, 'assets/trace/intro-holo.mp4': 500e3,
   'assets/trace/intro-hd-poster.webp': 60e3,
   'assets/trace/holo.js': 600e3, 'assets/trace/contact.js': 340e3, 'assets/trace/contact.css': 24e3, 'assets/trace/world-110.json': 190e3,
   // Optional toolkit catalog: shared React, local icons, no CDN dependency.
