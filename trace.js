@@ -216,6 +216,7 @@ if (vid && !lite) {
 }
 
 const A_END = 0.5, B_END = 0.72;   // dive | dark hold (terminal plays) | exit
+let ys = scrollY, easing = false;   // eased scroll position: the hero follows the scroll smoothly instead of in steps
 function frame() {
   let y = scrollY;
   const span = Math.max(hero.offsetHeight - vh, 1);
@@ -223,7 +224,10 @@ function frame() {
   if (!reduce) {
     if (!entered && y > lockY) { scrollTo({ top: lockY, behavior: 'instant' }); y = lockY; }
   }
-  const tr = clamp(y / span);
+  if (reduce || Math.abs(y - ys) > vh * 1.5) ys = y;          // reduced motion and big jumps (back to top) don't ease
+  else { ys += (y - ys) * 0.16; if (Math.abs(y - ys) < 0.4) ys = y; }
+  if (ys !== y && !easing) { easing = true; requestAnimationFrame(() => { easing = false; frame(); }); }
+  const tr = clamp(ys / span);
   const t = tr <= A_END ? tr / A_END * 0.72 : tr <= B_END ? 0.72 + (tr - A_END) / (B_END - A_END) * 0.06 : 0.78 + (tr - B_END) / (1 - B_END) * 0.22;
   if (loopOn) {                                   // live at the very top; frozen the moment scrolling starts
     if (y > 4 && !loop.paused) loop.pause();
