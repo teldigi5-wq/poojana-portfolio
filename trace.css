@@ -470,3 +470,10 @@ html.ui-dark .rail .seg{background:rgba(255,255,255,.2)}html.ui-dark .rail .seg 
 
 /* one-way scroll: past the API section the intro is removed from the page */
 html.past-intro .hero,html.past-intro .scene,html.past-intro .spot,html.past-intro .loop,html.past-intro .pushin,html.past-intro .veil,html.past-intro .dark,html.past-intro .progress{display:none!important}
+/* intro clip */
+.clip{position:relative;margin:30px 0 0;border-radius:28px;overflow:hidden;background:#0b1020;box-shadow:0 30px 80px rgba(20,34,80,.2),0 0 0 1px rgba(14,17,22,.06)}
+.clip video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.clip figcaption{position:absolute;left:18px;bottom:16px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.82);font:500 12px/1 var(--mono);color:#35435f}
+.clip-btn{position:absolute;right:16px;bottom:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:var(--ink);font-size:12px;cursor:pointer;display:grid;place-items:center}
+.clip-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:699px){.clip{border-radius:22px;margin-top:22px}.clip{overflow:visible;background:none;box-shadow:none}.clip video{border-radius:22px;box-shadow:0 24px 60px rgba(20,34,80,.2)}.clip figcaption{position:static;display:block;margin-top:12px;padding:0;background:none;border-radius:0;font-size:12px;line-height:1.5;color:#5b6a86}.clip-btn{right:10px;top:10px;bottom:auto;width:44px;height:44px}}

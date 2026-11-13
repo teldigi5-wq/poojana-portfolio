@@ -6,7 +6,7 @@ const read=p=>readFileSync(new URL(`../${p}`,import.meta.url),'utf8');
 const html=read('index.html'),js=read('trace.js');
 
 test('hero assets referenced by the trace page exist and stay light',()=>{
-  for(const [p,max] of [['assets/trace/hero-scene-2k.webp',150e3],['assets/trace/hero-pushin-v2.mp4',4.5e6],['assets/trace/glass-nav.js',60e3]])
+  for(const [p,max] of [['assets/trace/hero-scene-2k.webp',150e3],['assets/trace/hero-pushin-v2.mp4',4.5e6],['assets/trace/glass-nav.js',60e3],['assets/trace/intro-clip.mp4',1.5e6],['assets/trace/intro-poster.webp',60e3]])
     assert.ok(statSync(new URL(`../${p}`,import.meta.url)).size<max,p);
 });
 test('push-in video is progressive enhancement with a still fallback',()=>{
@@ -76,4 +76,13 @@ test('Also built section lists projects with external links that open safely', (
   assert.ok(sec.includes('id="oss"'));
   assert.equal((sec.match(/<article class="mp /g) || []).length, 5);
   for (const m of sec.matchAll(/<a href="https:[^>]*>/g)) assert.match(m[0], /target="_blank" rel="noopener noreferrer"/);
+});
+
+test('intro clip section is labelled as AI-generated, muted and pausable',()=>{
+  const h=readFileSync('index.html','utf8');
+  const sec=h.slice(h.indexOf('id="intro"'),h.indexOf('id="contact"'));
+  assert.match(sec,/generated with AI/i);
+  assert.match(sec,/<video[^>]*\bmuted\b[^>]*\bloop\b/);
+  assert.match(sec,/id="clipBtn"/);
+  assert.match(sec,/poster="assets\/trace\/intro-poster\.webp"/);
 });

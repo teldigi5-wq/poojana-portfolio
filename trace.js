@@ -483,3 +483,15 @@ if (toTop) {
 
 /* ---------- work showcase: horizontal cards + inspect dialog (the vertical list stays as the no-JS version) ---------- */
 try { const hc = $('#hc'), pl = $('.pj-list'); if (hc && pl) mountShowcase(hc, pl); } catch (err) { console.warn('showcase', err); }
+
+/* intro clip: plays muted while on screen, with a pause control */
+try {
+  const clip = document.getElementById('clip'), cb = document.getElementById('clipBtn');
+  if (clip && cb) {
+    let userPaused = reduce;
+    const sync = () => { cb.setAttribute('aria-pressed', String(clip.paused)); cb.setAttribute('aria-label', clip.paused ? 'Play the intro video' : 'Pause the intro video'); cb.firstElementChild.textContent = clip.paused ? '▶' : '❚❚'; };
+    cb.addEventListener('click', () => { if (clip.paused) { userPaused = false; clip.play().catch(() => {}); } else { userPaused = true; clip.pause(); } sync(); });
+    new IntersectionObserver(([en]) => { if (en.isIntersecting && !userPaused) clip.play().catch(() => {}); else clip.pause(); sync(); }, { threshold: 0.35 }).observe(clip);
+    sync();
+  }
+} catch (err) { console.warn('clip', err); }
