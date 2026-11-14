@@ -109,11 +109,28 @@ void main(){
 }`;
 const HALO_F = `precision highp float; uniform float uOn; varying vec2 vUv; void main(){ float r = length((vUv - 0.5) * 2.0); gl_FragColor = vec4(vec3(0.05, 0.28, 1.0), pow(max(0.0, 1.0 - r), 2.2) * 0.4 * uOn); }`;
 
-const DOT_V = `
-attribute float aSeed; uniform float uSize, uOn; varying float vA;
+const RING_V = `varying vec2 vP; varying float vD; void main(){ vP = position.xy; vec4 mv = modelViewMatrix * vec4(position, 1.0); vD = -mv.z; gl_Position = projectionMatrix * mv; }`;
+const RING_F = `
+precision highp float;
+uniform float uR, uW, uOn, uTime, uSpeed, uNear, uDash, uGain; varying vec2 vP; varying float vD;
 void main(){
-  vA = (0.35 + 0.65 * aSeed) * uOn;
+  float r = length(vP), ang = atan(vP.y, vP.x);
+  float d = abs(r - uR) / uW, prof = exp(-d * d * 2.2);
+  float phase = fract(ang * 0.15915 - uTime * uSpeed * 0.15915);
+  float comet = pow(phase, 4.0);                              // bright head, long fading tail, like light travelling round the ring
+  float base = 0.2 + 0.8 * comet;
+  float dash = step(0.5, fract(ang * 3.8197));                // 24 tick marks
+  base *= mix(1.0, 0.18 + 0.82 * dash, uDash);
+  float depth = mix(0.28, 1.0, smoothstep(1.5, -1.5, vD - uNear));   // far side of the ring is dimmer, near side brighter
+  float a = prof * base * depth * uOn * uGain;
+  vec3 col = mix(vec3(0.12, 0.45, 1.0), vec3(0.85, 0.97, 1.0), comet * prof);
+  gl_FragColor = vec4(col, clamp(a, 0.0, 1.0));
+}`;
+const DOT_V = `
+attribute float aSeed; uniform float uSize, uOn, uNear; varying float vA;
+void main(){
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vA = (0.35 + 0.65 * aSeed) * uOn * mix(0.25, 1.0, smoothstep(1.5, -1.5, -mv.z - uNear));
   gl_PointSize = uSize * (0.45 + aSeed * 1.2) * (4.0 / -mv.z);
   gl_Position = projectionMatrix * mv;
 }`;
@@ -145,7 +162,6 @@ export function mountHolo(sec) {
   const src = sec.dataset.holoSrc;
   const hud = sec.querySelector('#holoHud');
   const cue = sec.querySelector('#holoCue');
-  const btn = sec.querySelector('#clipBtn');
   const head = sec.querySelector('.holo-head');
   if (!stage || !src) return null;
 
@@ -233,20 +249,21 @@ export function mountHolo(sec) {
 
   // orbiting rings with travelling light dots (back halves hide behind the figure, front halves cross it)
   const orbits = [];
-  const mkOrbit = (R, y, tx, tz, speed, n) => {
-    const g = new Group(); g.position.y = y; g.rotation.x = tx; g.rotation.z = tz; world.add(g);
+  const mkOrbit = (R, y, tx, tz, speed, n, dash) => {
+    const g = new Group(); g.position.y = -1.95; g.rotation.x = tx; g.rotation.z = tz; world.add(g);
+    const on = { value: 0 }, near = { value: 8 };
+    const layer = (w, gain, dsh, Rr, ro) => { const m = new Mesh(new RingGeometry(Rr - 0.3, Rr + 0.3, 256, 1), new ShaderMaterial({ uniforms: { uR: { value: Rr }, uW: { value: w }, uOn: on, uTime: U.uTime, uSpeed: { value: speed }, uNear: near, uDash: { value: dsh }, uGain: { value: gain } }, vertexShader: RING_V, fragmentShader: RING_F, transparent: true, depthWrite: false, blending: AdditiveBlending, side: DoubleSide })); m.rotation.x = -Math.PI / 2; m.renderOrder = ro; g.add(m); };
+    layer(0.055, 0.45, 0, R, 8); layer(0.01, 2.2, 0, R, 8); if (dash) layer(0.008, 1.6, 1, R + 0.09, 8);
     const inner = new Group(); g.add(inner);
-    const ringMat = new MeshBasicMaterial({ color: new Color(0.3, 0.7, 1.5), transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending, toneMapped: false });
-    const ring = new Mesh(new TorusGeometry(R, 0.0045, 6, 240), ringMat); ring.rotation.x = Math.PI / 2; ring.renderOrder = 8; inner.add(ring);
     const pos = new Float32Array(n * 3), sd = new Float32Array(n);
-    for (let i = 0; i < n; i++) { const a = Math.random() < 0.5 ? Math.random() * Math.PI * 2 : (Math.floor(Math.random() * 5) / 5 + Math.random() * 0.06) * Math.PI * 2; pos[i * 3] = Math.cos(a) * R; pos[i * 3 + 2] = Math.sin(a) * R; sd[i] = Math.random(); }
+    for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2; pos[i * 3] = Math.cos(a) * R; pos[i * 3 + 1] = (Math.random() - 0.5) * 0.03; pos[i * 3 + 2] = Math.sin(a) * R; sd[i] = Math.random(); }
     const geo = new BufferGeometry(); geo.setAttribute('position', new BufferAttribute(pos, 3)); geo.setAttribute('aSeed', new BufferAttribute(sd, 1));
-    const du = { uSize: { value: small ? 11 : 15 }, uOn: { value: 0 } };
+    const du = { uSize: { value: small ? 8 : 11 }, uOn: on, uNear: near };
     const pts = new Points(geo, new ShaderMaterial({ uniforms: du, vertexShader: DOT_V, fragmentShader: DOT_F, transparent: true, depthWrite: false, blending: AdditiveBlending }));
     pts.frustumCulled = false; pts.renderOrder = 9; inner.add(pts);
-    orbits.push({ inner, ringMat, du, speed });
+    orbits.push({ g, inner, on, near, speed, y, k: orbits.length });
   };
-  mkOrbit(2.1, 0.5, 0.3, 0.05, 0.32, 70); mkOrbit(1.8, 1.0, -0.2, 0.2, -0.46, 60); mkOrbit(2.55, 0.15, 0.1, -0.22, 0.2, 80); mkOrbit(1.55, 1.55, 0.42, 0.08, 0.58, 46);
+  mkOrbit(2.1, 0.5, 0.3, 0.05, 0.9, 34, true); mkOrbit(1.8, 1.0, -0.2, 0.2, -1.1, 30, false); mkOrbit(2.55, 0.15, 0.1, -0.22, 0.6, 40, true); mkOrbit(1.55, 1.55, 0.42, 0.08, 1.3, 24, false);
   const ripples = [0.95, 1.15, 1.4].map((r, i) => { const m = new Mesh(new TorusGeometry(r, 0.0035, 6, 160), glowMat(0x58b4ff, 0)); m.rotation.x = Math.PI / 2; m.position.y = -1.3 - i * 0.22; m.userData.op = 0.35 - i * 0.07; world.add(m); return m; });
 
   const PN = small ? 60 : 110, pp = new Float32Array(PN * 3), ps = new Float32Array(PN);
@@ -281,11 +298,8 @@ export function mountHolo(sec) {
   if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
 
-  let userPaused = false, hudOn = false;
+  let hudOn = false;
   const setHud = on => { if (on === hudOn) return; hudOn = on; hud && hud.classList.toggle('on', on); };
-  const syncBtn = () => { if (!btn) return; btn.setAttribute('aria-pressed', String(video.paused)); btn.setAttribute('aria-label', video.paused ? 'Play the intro video' : 'Pause the intro video'); btn.firstElementChild.textContent = video.paused ? '▶' : '❚❚'; };
-  if (btn) btn.addEventListener('click', () => { if (video.paused) { userPaused = false; if (video.ended) video.currentTime = 0; video.play().catch(() => {}); } else { userPaused = true; video.pause(); } syncBtn(); });
-  video.addEventListener('pause', syncBtn); video.addEventListener('play', syncBtn);
   video.addEventListener('timeupdate', () => { if (video.currentTime >= 1.5 && U.uReveal.value > 0.85) setHud(true); });
 
   let target = 0, sp = 0, inView = true, last = 0, raf = 0, px = 0, tpx = 0;
@@ -299,20 +313,25 @@ export function mountHolo(sec) {
     raf = 0; if (!inView || document.hidden) return;
     const dt = Math.min((t - last) / 1000 || 0.016, 0.05); last = t;
     sp += (target - sp) * (1 - Math.exp(-dt * 7)); px += (tpx - px) * (1 - Math.exp(-dt * 3));
-    const p = sp, on = sstep(0.0, 0.2, p), coneP = sstep(0.04, 0.3, p), reveal = sstep(0.16, 0.58, p), orb = sstep(0.14, 0.5, p);
+    const p = sp, on = sstep(0.0, 0.2, p), coneP = sstep(0.04, 0.3, p), reveal = sstep(0.16, 0.58, p);
     const pulse = 0.92 + 0.08 * Math.sin(t / 1000 * 1.7);
     U.uTime.value = t / 1000; U.uReveal.value = reveal; U.uHasVideo.value = video.readyState >= 2 ? 1 : 0;
     glowU.uOn.value = on; bgU.uOn.value = sstep(0.0, 0.25, p); coneU.uCone.value = coneP; partU.uOn.value = sstep(0.1, 0.45, p); starU.uOn.value = sstep(0.0, 0.3, p);
     edges.forEach((m, i) => { m.material.opacity = (0.16 + 0.1 * (i === 3)) * (0.15 + 0.85 * on) * pulse; });
     lens.material.opacity = 0.14 + 0.32 * on; core.material.opacity = (0.1 + 0.5 * on) * pulse; edge.material.opacity = (0.1 + 0.5 * on) * pulse;
     leds.forEach((m, i) => { m.material.opacity = (0.25 + 0.75 * on) * (0.8 + 0.2 * Math.sin(t / 1000 * 2 + i)); });
-    orbits.forEach(o => { o.inner.rotation.y = (t / 1000) * o.speed; o.ringMat.opacity = 0.5 * orb; o.du.uOn.value = orb; });
-    ripples.forEach((m, i) => { m.material.opacity = m.userData.op * orb * (0.7 + 0.3 * Math.sin(t / 1000 * 1.3 + i * 1.7)); });
+    const cd = camera.position.length();
+    orbits.forEach(o => {                                       // rings leave the podium with the reveal and climb to their orbits
+      const e0 = clamp((reveal - 0.04 * o.k) / (0.62 - 0.04 * o.k)), e = 1 - Math.pow(1 - e0, 3);
+      o.g.position.y = -1.95 + (o.y + 1.95) * e; o.g.scale.setScalar(0.45 + 0.55 * e);
+      o.on.value = sstep(0.0, 0.2, e0); o.near.value = cd; o.inner.rotation.y = (t / 1000) * o.speed * 0.4;
+    });
+    ripples.forEach((m, i) => { m.material.opacity = m.userData.op * sstep(0.1, 0.5, reveal) * (0.7 + 0.3 * Math.sin(t / 1000 * 1.3 + i * 1.7)); });
     const push = 1 - 0.07 * sstep(0.1, 0.7, p);
     camera.position.set(px * 0.3, 0.3 + camera.userData.shift, camera.userData.dist * push);
     camera.lookAt(px * 0.08, camera.userData.shift, 0);
     holo.rotation.y = holoM.rotation.y = px * 0.05; holo.scale.setScalar(0.985 + 0.015 * reveal); holoM.scale.copy(holo.scale);
-    if (reveal > 0.55 && !userPaused) { if (video.paused) video.play().catch(() => {}); }
+    if (reveal > 0.55) { if (video.paused) video.play().catch(() => {}); }
     else if (reveal < 0.2) { if (!video.paused) video.pause(); if (video.currentTime > 0) { try { video.currentTime = 0; } catch (_) {} } setHud(false); }
     if (cue) cue.style.opacity = String(1 - sstep(0.04, 0.22, p));
     sec.style.setProperty('--hp', p.toFixed(3));
@@ -320,6 +339,6 @@ export function mountHolo(sec) {
     if (inView) raf = requestAnimationFrame(frame);
   };
   function kick() { if (!raf && inView && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-  kick(); syncBtn();
+  kick();
   return { destroy() { cancelAnimationFrame(raf); renderer.dispose(); } };
 }
