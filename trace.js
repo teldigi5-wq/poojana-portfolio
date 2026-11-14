@@ -379,6 +379,9 @@ if (MOBILE) for (const [sel, keep, label] of [['.sv-grid', 3, 'Show all six'], [
   const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn alt more-btn'; btn.textContent = label; btn.setAttribute('aria-expanded', 'false');
   btn.addEventListener('click', () => { items.forEach(li => { li.hidden = false; }); btn.remove(); });
   ul.after(btn);
+  const reveal = id => { const el = id && document.getElementById(id); if (el && el.closest('[hidden]') && btn.isConnected) btn.click(); };
+  addEventListener('hashchange', () => reveal(decodeURIComponent(location.hash.slice(1))));
+  document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[href^="#"]'); if (a) reveal(decodeURIComponent(a.getAttribute('href').slice(1))); }, true);
 }
 /* ---------- text motion: headings rise out of a mask, lede copy darkens as you read it ---------- */
 if (!reduce) {
@@ -544,7 +547,8 @@ try {
   if (sec && clip) {
     const plain = () => { sec.classList.remove('holo-on'); clip.controls = true; };
     const cantGL = () => { try { const c = document.createElement('canvas'); return !(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return true; } };
-    if (reduce || cantGL()) plain();
+    const weak = () => { const n = navigator, c = n.connection || {}; return !!(c.saveData || /(^|-)2g$/.test(c.effectiveType || '') || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)); };   // phones and laptops that would struggle get the plain video
+    if (reduce || cantGL() || weak()) plain();
     else {
       let started = false;
       const start = () => {

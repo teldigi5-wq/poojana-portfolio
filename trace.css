@@ -365,6 +365,7 @@ html.hc-pinned .hc-track{padding-inline-end:var(--tail,var(--edge))}
 
 /* Open source: a wide card for the repositories that are not mine */
 #more .mp-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+@media(min-width:760px){#more .mp-art{aspect-ratio:16/8}}
 #oss{scroll-margin-top:84px}
 .mp-one{grid-template-columns:1fr!important}
 .mp-note{margin:18px 0 0;font:400 14px/1.5 var(--sans);color:#5b6a86}
