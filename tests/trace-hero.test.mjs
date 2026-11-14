@@ -83,7 +83,7 @@ test('intro clip section is labelled as AI-generated, muted and pausable',()=>{
   const sec=h.slice(h.indexOf('id="intro"'),h.indexOf('id="contact"'));
   assert.match(sec,/generated with AI/i);
   assert.match(sec,/<video[^>]*\bmuted\b/);
-  assert.match(sec,/id="clipBtn"/);
+  assert.doesNotMatch(sec,/clipBtn/);
   assert.match(sec,/id="holoStage"/);
   const js=readFileSync('trace.js','utf8');
   assert.match(js,/assets\/trace\/holo\.js/);
