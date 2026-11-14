@@ -351,9 +351,9 @@ try {
 $$('.sv').forEach(c => c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }, { passive: true }));
 
 /* ---------- section tracking: nav, rail ---------- */
-const sections = ['trace', 'gateway', 'services', 'work', 'toolkit', 'lab', 'intro', 'about', 'contact', 'connect'].map(id => $('#' + id)).filter(Boolean);
-const navMap = { trace: 'trace', gateway: 'trace', services: 'services', work: 'work', toolkit: 'work', lab: 'lab', intro: 'lab', about: 'about', contact: 'about', connect: 'contact' };
-const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3, intro: 3, about: 4, contact: 4, connect: 4 };
+const sections = ['trace', 'gateway', 'intro', 'services', 'work', 'toolkit', 'lab', 'about', 'contact', 'connect'].map(id => $('#' + id)).filter(Boolean);
+const navMap = { trace: 'trace', gateway: 'trace', services: 'services', work: 'work', toolkit: 'work', lab: 'lab', intro: 'trace', about: 'about', contact: 'about', connect: 'contact' };
+const railMap = { trace: 0, gateway: 1, services: 2, work: 2, toolkit: 3, lab: 3, intro: 1, about: 4, contact: 4, connect: 4 };
 let current = '';
 function setActive(id) {
   if (id === current) return; current = id;
@@ -537,7 +537,7 @@ try {
   }
 } catch (err) { console.warn('connect', err); }
 
-/* intro hologram: Three.js scene (assets/trace/holo.js?v=c3d9aa0c) that projects the real intro video as a hologram and reveals it with scroll.
+/* intro hologram: Three.js scene (assets/trace/holo.js?v=2e0dbdd6) that projects the real intro video as a hologram and reveals it with scroll.
    Falls back to the plain video with native controls when WebGL is missing, motion is reduced, or the module fails to load. */
 try {
   const sec = document.getElementById('intro'), clip = document.getElementById('clip');
@@ -550,7 +550,7 @@ try {
       const start = () => {
         if (started) return; started = true;
         sec.classList.add('holo-on');
-        import('./assets/trace/holo.js?v=c3d9aa0c').then(m => { if (!m.mountHolo(sec)) plain(); }).catch(() => plain());
+        import('./assets/trace/holo.js?v=2e0dbdd6').then(m => { if (!m.mountHolo(sec)) plain(); }).catch(() => plain());
       };
       new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '1400px 0px' }).observe(sec);
     }
