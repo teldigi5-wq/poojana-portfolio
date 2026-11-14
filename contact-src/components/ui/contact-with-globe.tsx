@@ -4,7 +4,7 @@ import * as React from "react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Mail, Github, Linkedin, FileText } from "lucide-react";
+import { ArrowRight, Mail, Github, Linkedin, FileText, MessageCircle, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import * as d3 from "d3";
@@ -31,6 +31,18 @@ const CONTACT_LINKS = [
     icon: Linkedin,
     label: "linkedin.com/in/poojana-kaveesh",
     href: "https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/",
+    external: true,
+  },
+  {
+    icon: MessageCircle,
+    label: "WhatsApp +94 76 129 7530",
+    href: "https://wa.me/94761297530",
+    external: true,
+  },
+  {
+    icon: Instagram,
+    label: "instagram.com/kxveeshjay",
+    href: "https://www.instagram.com/kxveeshjay/",
     external: true,
   },
   {
