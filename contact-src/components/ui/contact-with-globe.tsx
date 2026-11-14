@@ -17,13 +17,13 @@ type GeometryObject = { type: string; coordinates?: unknown; geometries?: unknow
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
 const WORLD_URL = "assets/trace/world-110.json";
 
-const EMAIL = "teldigi5@gmail.com";
+const EMAIL = "moc.liamg@5igidlet".split("").reverse().join("");   // assembled at run time, not plain text in the bundle
 
 const CONTACT_LINKS = [
-  { icon: Mail, label: EMAIL, href: `mailto:${EMAIL}` },
+  { icon: Mail, label: "Email me", href: `mailto:${EMAIL}` },
   {
     icon: Github,
-    label: "github.com/teldigi5-wq",
+    label: "See my code on GitHub",
     href: "https://github.com/teldigi5-wq",
     external: true,
   },

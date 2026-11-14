@@ -97,7 +97,7 @@ test('connect section: React island with a plain email fallback, old form and pl
   const h=readFileSync('index.html','utf8');
   const sec=h.slice(h.indexOf('id="connect"'),h.indexOf('</main>'));
   assert.match(sec,/id="contactRoot"/);
-  assert.match(sec,/href="mailto:teldigi5@gmail\.com"/);
+  assert.match(sec,/data-mail/);
   assert.ok(!/id="cnForm"|id="lpPkt"/.test(h));
   assert.match(readFileSync('trace.js','utf8'),/assets\/trace\/contact\.js/);
   for(const f of ['contact.js','contact.css','world-110.json']) assert.ok(statSync(new URL('../assets/trace/'+f,import.meta.url)).size>1000,f);
