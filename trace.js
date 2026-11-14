@@ -63,6 +63,9 @@ if (!reduce && matchMedia('(hover: hover)').matches) {
   });
 }
 const bootEl = $('#boot');
+/* the address is assembled at run time so it is not sitting as plain text in the page source */
+const MAIL = 'moc.liamg@5igidlet'.split('').reverse().join('');
+$$('a[data-mail]').forEach(a => { a.href = 'mailto:' + MAIL; });
 const MOBILE = matchMedia('(max-width: 699px)').matches;   // phones get their own static hero
 let entered = !!location.hash || MOBILE;          // deep links skip the gate
 const unlock = () => { entered = true; };
@@ -425,7 +428,7 @@ const ENDPOINTS = [
     { name: 'Aetheris Platform', status: 'research, hardware validation pending', stack: ['Java', 'Spring', 'PostgreSQL', 'Redis', 'RabbitMQ'] },
     { name: 'Wayfarer', status: 'public planning app, no live booking' }] }) },
   { label: '?include=skills', path: '/api/v1/engineer/poojana?include=skills', body: () => ({ ...PROFILE, skills: { backend: ['Java', 'Spring', 'PostgreSQL', 'Redis', 'RabbitMQ'], practice: ['system design', 'authorization', 'tests', 'observability'] } }) },
-  { label: '/contact', path: '/api/v1/engineer/poojana/contact', body: () => ({ email: 'teldigi5@gmail.com', github: 'github.com/teldigi5-wq', linkedin: 'linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387' }) }
+  { label: '/contact', path: '/api/v1/engineer/poojana/contact', body: () => ({ message: 'Use the contact form at the end of this page, or the links beside it.', open_to: 'backend engineering internships' }) }
 ];
 let ep = 0;
 const epsEl = $('#eps');
@@ -533,7 +536,7 @@ try {
   const root_ = document.getElementById('contactRoot');
   if (root_) {
     let started = false;
-    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=b7ba0daa').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
+    const start = () => { if (started) return; started = true; import('./assets/trace/contact.js?v=459df587').then(m => { root_.className = ''; root_.textContent = ''; m.mountContact(root_); }).catch(() => {}); };
     if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '900px 0px' }); io.observe(root_); }
     else start();
     addEventListener('hashchange', () => { if (location.hash === '#connect') start(); });
