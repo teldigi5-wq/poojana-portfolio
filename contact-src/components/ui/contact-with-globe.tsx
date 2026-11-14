@@ -35,7 +35,7 @@ const CONTACT_LINKS = [
   },
   {
     icon: MessageCircle,
-    label: "WhatsApp +94 76 129 7530",
+    label: "Message me on WhatsApp",
     href: "https://wa.me/94761297530",
     external: true,
   },
