@@ -29,7 +29,7 @@ const CONTACT_LINKS = [
   },
   {
     icon: Linkedin,
-    label: "linkedin.com/in/poojana-kaveesh",
+    label: "Connect on LinkedIn",
     href: "https://www.linkedin.com/in/poojana-kaveesh-sellahewa-3048b8387/",
     external: true,
   },
@@ -41,7 +41,7 @@ const CONTACT_LINKS = [
   },
   {
     icon: Instagram,
-    label: "instagram.com/kxveeshjay",
+    label: "Follow on Instagram",
     href: "https://www.instagram.com/kxveeshjay/",
     external: true,
   },
