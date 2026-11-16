@@ -551,7 +551,8 @@ try {
     const plain = () => { sec.classList.remove('holo-on'); clip.controls = true; };
     const cantGL = () => { try { const c = document.createElement('canvas'); return !(c.getContext('webgl2') || c.getContext('webgl')); } catch (_) { return true; } };
     const weak = () => { const n = navigator, c = n.connection || {}; return !!(c.saveData || /(^|-)2g$/.test(c.effectiveType || '') || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)); };   // phones and laptops that would struggle get the plain video
-    if (reduce || cantGL() || weak()) plain();
+    const shortLandscape = matchMedia('(max-height: 520px) and (orientation: landscape)').matches;   // a phone on its side has no room for the 3D scene
+    if (reduce || cantGL() || weak() || shortLandscape) plain();
     else {
       let started = false;
       const start = () => {

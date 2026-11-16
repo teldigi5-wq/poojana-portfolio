@@ -621,3 +621,19 @@ html.holo-view #rail{opacity:0!important;pointer-events:none;transition:opacity 
 
 
 html{scrollbar-width:thin;scrollbar-color:rgba(70,90,150,.55) transparent}
+
+/* responsive pass: very small phones, short landscape screens, tablets, touch targets, very large displays */
+@media(max-width:360px){.glass-nav a{padding:0 6px!important;font-size:12px!important}}
+@media(max-height:520px) and (orientation:landscape){
+  .holo:not(.holo-on) .holo-video{width:min(100%,calc((100svh - 200px) * 1.7778));margin-inline:auto}
+  .holo:not(.holo-on) .holo-pin{padding-top:84px;padding-bottom:20px}
+  .holo:not(.holo-on) .holo-head .lede{display:none}
+  .holo:not(.holo-on) .holo-head h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+@media(max-width:1100px){
+  .holo.holo-on .cc-note{display:none}
+  html.holo-view .to-top{opacity:0!important;pointer-events:none!important}
+}
+@media(pointer:coarse){
+  .glance li a,.sv-ev a,.mp-links a,.pj-links a{padding-block:10px;margin-block:-10px}
+}
